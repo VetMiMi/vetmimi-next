@@ -1,0 +1,16 @@
+export const C = {
+  canvas:  "#FFF7EF",
+  paper:   "#F8F1E8",
+  ink:     "#28252D",
+  rose:    "#B2667B",
+  coral:   "#DB5F59",
+  red:     "#C04D46",
+  indigo:  "#494C6D",
+  violet:  "#6B6396",
+  blue:    "#7A8FAA",
+  aqua:    "#91C0D3",
+  ochre:   "#CDAA73",
+  butter:  "#E2CA85",
+  olive:   "#6F7144",
+  white:   "#FFFFFF",
+} as const;

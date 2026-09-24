@@ -1,7 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import { PageEnd } from "@/components/Editorial"
 import artImage from "@/imports/image-4.png";
-const art = artImage.src;
+
 
 export default function About() {
   return (
@@ -26,10 +27,11 @@ export default function About() {
           </div>
         </div>
         <figure className="ed-portrait">
-          <img
-            src={art}
-            alt="The ULX & Eddington Limit, a colourful mixed-media portrait"
-          />
+          <Image
+  src={artImage}
+  alt="The ULX & Eddington Limit, a colourful mixed-media portrait"
+  sizes="(max-width: 768px) 100vw, 50vw"
+/>
         </figure>
       </section>
       <section className="ed-paper">

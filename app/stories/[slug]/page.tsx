@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { MissingEntry, StoryCard } from "@/components/Editorial"
 import { STORIES } from "@/lib/data"
+import Image from "next/image";
 
 export default function StoryDetail() {
   const{ slug } = useParams<{ slug: string }>();
@@ -31,11 +32,12 @@ export default function StoryDetail() {
             Story preview · Not yet a final published article
           </p>
         </header>
-        <img
-          className="ed-article-image"
-          src={story.img}
-          alt="Artwork accompanying this reflection"
-        />
+        <Image
+  className="ed-article-image"
+  src={story.img}
+  alt="Artwork accompanying this reflection"
+  sizes="(max-width: 768px) 100vw, 760px"
+/>
         <div className="ed-article-body">
           {(paragraphs.length ? paragraphs : [story.excerpt]).map(
             (text, index) => (

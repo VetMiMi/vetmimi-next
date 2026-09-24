@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { services } from "@/lib/services";
 import "@/styles/services.css";
+import Image from "next/image";
 
 export default function Services() {
   return (
@@ -14,7 +15,11 @@ export default function Services() {
         <section className="services-grid" aria-label="Explore our services">
           {services.map((service) => (
             <article key={service.slug} className={`service-card service-tone-${service.tone}`}>
-              <img src={service.image} alt={service.imageAlt} />
+              <Image
+  src={service.image}
+  alt={service.imageAlt}
+  sizes="(max-width: 768px) 100vw, 33vw"
+/>
               <div className="service-card-body">
                 <p className="service-eyebrow">{service.audience}</p>
                 <h2>{service.name}</h2>

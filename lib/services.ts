@@ -1,6 +1,7 @@
 import art3 from "@/imports/image-3.png";
 import art5 from "@/imports/image-5.png";
 import art7 from "@/imports/image-7.png";
+import type { StaticImageData } from "next/image";
 
 type Service = {
   slug: string;
@@ -8,7 +9,7 @@ type Service = {
   audience: string;
   summary: string;
   intro: string;
-  image: string;
+  image: StaticImageData;
   imageAlt: string;
   tone: "rose" | "blue" | "gold";
   action: string;
@@ -31,7 +32,7 @@ export const services: Service[] = [
     audience: "For yourself",
     summary: "One-to-one time with Daw Mi to explore thoughts and feelings through art and conversation.",
     intro: "Sometimes it is hard to put a feeling into words. In a private session with Daw Mi, you can use art and conversation to explore what is on your mind.",
-    image: art3.src,
+    image: art3,
     imageAlt: "Flowing figure in sage, lavender and peach against a red background",
     tone: "rose",
     action: "Request an appointment",
@@ -64,7 +65,7 @@ export const services: Service[] = [
     audience: "To create with others",
     summary: "Make art alongside other people, with time to pause, reflect and share if you want to.",
     intro: "A group session brings people together through a creative activity. You can make something in your own way, spend time with others, and choose what you want to share.",
-    image: art5.src,
+    image: art5,
     imageAlt: "Pink peonies painted in a blue and white vase",
     tone: "blue",
     action: "Ask about a group",
@@ -97,7 +98,7 @@ export const services: Service[] = [
     audience: "For your organisation or community",
     summary: "Plan a creative workshop with Daw Mi around your group, setting and goals.",
     intro: "Bring a creative activity to your organisation, community or healthcare setting. Start by telling Daw Mi who it is for and what you have in mind, then discuss an approach that fits.",
-    image: art7.src,
+    image: art7,
     imageAlt: "Expressive golden face with colourful marks against deep indigo",
     tone: "gold",
     action: "Discuss a workshop",

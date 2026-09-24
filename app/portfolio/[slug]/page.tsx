@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { MissingEntry, PageEnd, WorkCard } from "@/components/Editorial"
 import { PORTFOLIO } from "@/lib/data"
+import Image from "next/image";
 
 export default function PortfolioDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -26,7 +27,11 @@ export default function PortfolioDetail() {
         </nav>
         <section className="ed-piece">
           <figure className="ed-piece-art">
-            <img src={item.img} alt={item.title} />
+            <Image
+  src={item.img}
+  alt={item.title}
+  sizes="(max-width: 768px) 100vw, 50vw"
+/>
           </figure>
           <div>
             <p className="ed-label">{item.category}</p>

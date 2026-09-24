@@ -1,8 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { PageEnd, WorkCard } from "@/components/Editorial"
 import { PORTFOLIO } from "@/lib/data"
 import artImage from "@/imports/image-7.png";
-const art = artImage.src;
+
 
 export default function ArtOfWellness() {
   return (
@@ -26,10 +27,11 @@ export default function ArtOfWellness() {
             </Link>
           </div>
           <figure className="ed-wellness-art">
-            <img
-              src={art}
-              alt="Expressive artwork with a golden face against deep indigo"
-            />
+            <Image
+  src={artImage}
+  alt="Expressive artwork with a golden face against deep indigo"
+  sizes="(max-width: 768px) 100vw, 50vw"
+/>
           </figure>
         </div>
       </section>

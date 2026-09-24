@@ -3,6 +3,7 @@ import { useState } from "react"
 import Link from "next/link";
 import { FilterBar, StoryCard } from "@/components/Editorial"
 import { STORIES } from "@/lib/data"
+import Image from "next/image";
 
 const categories = ["All", ...new Set(STORIES.map((story) => story.category))]
 export default function Stories() {
@@ -32,7 +33,11 @@ export default function Stories() {
         />
         {featured && (
           <article className="ed-feature">
-            <img src={featured.img} alt="" />
+            <Image
+  src={featured.img}
+  alt=""
+  sizes="(max-width: 768px) 100vw, 50vw"
+/>
             <div>
               <p className="ed-label">{featured.category}</p>
               <h2>

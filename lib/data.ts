@@ -3,16 +3,17 @@ import art4 from "@/imports/image-4.png";
 import art5 from "@/imports/image-5.png";
 import art6 from "@/imports/image-6.png";
 import art7 from "@/imports/image-7.png";
+import type { StaticImageData } from "next/image";
 
 export type PortfolioItem = {
   slug: string; category: string; title: string; year: string;
   medium?: string; context?: string; summary: string; role?: string;
-  img: string; featured?: boolean;
+  img: StaticImageData; featured?: boolean;
 };
 
 export type Story = {
   slug: string; category: string; title: string; subtitle?: string;
-  excerpt: string; author: string; date: string; img: string; featured?: boolean;
+  excerpt: string; author: string; date: string; img: StaticImageData; featured?: boolean;
   body?: string;
 };
 
@@ -25,7 +26,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     medium: "Mixed media",
     context: "Personal creative practice",
     summary: "A mixed-media portrait bringing together a woman, flowers, and references to science.",
-    img: art4.src,
+    img: art4,
     featured: true,
   },
   {
@@ -35,7 +36,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     year: "[Year to confirm]",
     medium: "Acrylic on canvas",
     summary: "Flowing shapes in sage, lavender, and peach against a red background.",
-    img: art3.src,
+    img: art3,
     featured: true,
   },
   {
@@ -45,7 +46,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     year: "[Year to confirm]",
     medium: "Watercolour",
     summary: "Pink peonies in a blue-and-white vase, painted in soft watercolour tones.",
-    img: art5.src,
+    img: art5,
   },
   {
     slug: "expression",
@@ -54,7 +55,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     year: "[Year to confirm]",
     medium: "Oil/acrylic",
     summary: "A golden face emerging from deep indigo, surrounded by expressive marks and colour.",
-    img: art7.src,
+    img: art7,
   },
   {
     slug: "life-and-grief-community-diptych",
@@ -65,7 +66,7 @@ export const PORTFOLIO: PortfolioItem[] = [
     context: "Community art project [To confirm]",
     role: "[Daw Mi's role — To confirm]",
     summary: "A mixed-media diptych exploring the relationship between life and grief through found imagery, colour and texture. Created in a community context.",
-    img: art6.src,
+    img: art6,
     featured: true,
   },
 ];
@@ -79,7 +80,7 @@ export const STORIES: Story[] = [
     excerpt: "A reflection on creating without needing an answer first. What opens up when the pressure to get it right is set aside for a while.",
     author: "Daw Mi",
     date: "October 2025",
-    img: art5.src,
+    img: art5,
     featured: true,
     body: `Some experiences arrive before we have the words for them. This reflection begins with noticing what changed when there was permission to make first and explain later.
 
@@ -98,7 +99,7 @@ There did not have to be a perfect answer. There only had to be a place to start
     excerpt: "Sometimes the things we most need to say do not arrive as sentences. They arrive as colour, weight, pressure on paper.",
     author: "Daw Mi",
     date: "September 2025",
-    img: art3.src,
+    img: art3,
     body: `[Prototype story — layout placeholder only. Final content to be written and approved.]\n\nThis is a space for the full story text. Reading width is constrained to 680–760px for comfortable reading.`,
   },
   {
@@ -108,7 +109,7 @@ There did not have to be a perfect answer. There only had to be a place to start
     excerpt: "A reflection on what happens when art is offered in places of waiting, uncertainty and care.",
     author: "Daw Mi",
     date: "August 2025",
-    img: art7.src,
+    img: art7,
     body: `[Prototype story — layout placeholder only. Final content to be written and approved.]`,
   },
 ];

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { services } from "@/lib/services";
 import "@/styles/services.css";
+import Image from "next/image";
 
 export default function ServiceDetail({ slug }: { slug: string }) {
   const service = services.find((item) => item.slug === slug)!;
@@ -25,7 +26,11 @@ export default function ServiceDetail({ slug }: { slug: string }) {
             <p className="service-reassurance">{service.reassurance}</p>
           </div>
           <figure className="service-hero-art">
-            <img src={service.image} alt={service.imageAlt} />
+            <Image
+  src={service.image}
+  alt={service.imageAlt}
+  sizes="(max-width: 768px) 100vw, 50vw"
+/>
             <figcaption>Art, expression & connection</figcaption>
           </figure>
         </section>

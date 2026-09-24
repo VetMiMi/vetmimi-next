@@ -2,12 +2,17 @@
 import Link from "next/link";
 import type { PortfolioItem, Story } from "@/lib/data"
 import "@/styles/editorial.css"
+import Image from "next/image";
 
 export function WorkCard({ item }: { item: PortfolioItem }) {
   return (
     <Link className="ed-work" href={`/portfolio/${item.slug}`}>
       <div className="ed-work-image">
-        <img src={item.img} alt={item.title} loading="lazy" />
+        <Image
+  src={item.img}
+  alt={item.title}
+  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+/>
       </div>
       <div className="ed-work-caption">
         <div>
@@ -23,7 +28,11 @@ export function WorkCard({ item }: { item: PortfolioItem }) {
 export function StoryCard({ story }: { story: Story }) {
   return (
     <article className="ed-story">
-      <img src={story.img} alt="" loading="lazy" />
+      <Image
+  src={story.img}
+  alt=""
+  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+/>
       <div>
         <p className="ed-label">{story.category}</p>
         <h3>

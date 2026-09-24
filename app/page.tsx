@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
   WaveDivider, AquaRibbon,
   GoldMark, MintOpenCircle, PetalOutline, NestedOval,
@@ -530,8 +531,18 @@ export default function Home() {
                 display: "flex", flexDirection: "column", minWidth: 0,
                 boxShadow: "0 2px 16px rgba(107,99,150,0.09)",
               }}>
-                <img src={story.img} alt="" loading="lazy"
-                  style={{ width: "100%", height: "200px", objectFit: "cover", objectPosition: "center 30%", display: "block" }} />
+                <Image
+  src={story.img}
+  alt=""
+  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+  style={{
+    width: "100%",
+    height: "200px",
+    objectFit: "cover",
+    objectPosition: "center 30%",
+    display: "block",
+  }}
+/>
                 <div style={{ padding: "1.5rem", display: "flex", flexDirection: "column", flex: 1 }}>
                   <div style={{ fontFamily: "var(--sans)", fontSize: "0.65rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.12em", color: C.violet, marginBottom: "0.75rem" }}>{story.category}</div>
                   <h3 style={{ fontFamily: "var(--serif)", fontSize: "1.35rem", color: C.ink, margin: "0 0 0.75rem", lineHeight: 1.3 }}>

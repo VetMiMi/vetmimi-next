@@ -8,7 +8,7 @@ export default function NotFound() {
     <div
       style={{
         backgroundColor: C.canvas,
-        minHeight: "100vh",
+        minHeight: "100dvh",
         padding: "10rem 2rem",
         textAlign: "center",
         position: "relative",

@@ -5,7 +5,7 @@ import { C } from "@/lib/tokens";
 import { MintOpenCircle } from "@/components/art/Shapes";
 import { Btn } from "@/components/ui/Button";
 
-type FormData = {
+type ContactFormData = {
   name: string;
   email: string;
   organisation: string;
@@ -50,7 +50,7 @@ const labelStyle: React.CSSProperties = {
 };
 
 export default function Contact() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
     organisation: "",
@@ -74,13 +74,15 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    // TODO: nothing is sent yet. This delay fakes a submission and the
+    // message is discarded. Wire up a Server Action or form service.
     await new Promise((resolve) => setTimeout(resolve, 1000));
     setIsSubmitting(false);
     setSubmitState("success");
   };
 
   return (
-    <div style={{ backgroundColor: C.canvas, minHeight: "100vh" }}>
+    <div style={{ backgroundColor: C.canvas, minHeight: "100dvh" }}>
       {/* ── Hero ─────────────────────────────────────────── */}
       <section style={{ padding: "7rem 0 5rem", backgroundColor: C.canvas }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 2rem" }}>

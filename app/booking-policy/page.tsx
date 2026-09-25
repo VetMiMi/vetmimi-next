@@ -39,7 +39,7 @@ const sections = [
 
 export default function BookingPolicy() {
   return (
-    <div style={{ backgroundColor: C.canvas, minHeight: "100vh" }}>
+    <div style={{ backgroundColor: C.canvas, minHeight: "100dvh" }}>
       {/* Header */}
       <div style={{ padding: "7rem 0 4rem" }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 2rem" }}>

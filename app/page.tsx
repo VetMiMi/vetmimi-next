@@ -10,17 +10,12 @@ import {
 import { C } from "@/lib/tokens";
 import { STORIES } from "@/lib/data";
 
-import art3Image from "@/imports/image-3.png";
-import art4Image from "@/imports/image-4.png";
-import art5Image from "@/imports/image-5.png";
-import art6Image from "@/imports/image-6.png";
-import art7Image from "@/imports/image-7.png";
+import art3 from "@/imports/image-3.png";
+import art4 from "@/imports/image-4.png";
+import art5 from "@/imports/image-5.png";
+import art6 from "@/imports/image-6.png";
+import art7 from "@/imports/image-7.png";
 
-const art3 = art3Image.src;
-const art4 = art4Image.src;
-const art5 = art5Image.src;
-const art6 = art6Image.src;
-const art7 = art7Image.src;
 /* ── Floating CTA ── */
 function FloatingCTA() {
   const [vis, setVis] = useState(false);
@@ -103,12 +98,14 @@ export default function Home() {
         display: "flex", alignItems: "center",
       }}>
         {/* art7 full-bleed background */}
-        <img src={art7} alt=""
-          style={{
-            position: "absolute", inset: 0,
-            width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 28%",
-            display: "block", pointerEvents: "none",
-          }}
+        <Image
+          src={art7}
+          alt=""
+          fill
+          preload
+          sizes="100vw"
+          placeholder="blur"
+          style={{ objectFit: "cover", objectPosition: "center 28%", pointerEvents: "none" }}
           aria-hidden
         />
         {/* Dark gradient overlay — heavy left, fades right */}
@@ -259,16 +256,17 @@ export default function Home() {
         {/* Asymmetric art grid */}
         <div style={{
           display: "grid",
-          
           gridTemplateRows: "280px 280px",
+          gridAutoRows: "280px",
           gap: "3px",
           background: C.indigo,
         }} className="grid-cols-2 md:grid-cols-[2fr_1.3fr_1.5fr]">
 
           {/* 1 — Organic figure (tall) */}
           <div style={{ gridRow: "1 / 3", position: "relative", overflow: "hidden" }}>
-            <img src={art3} alt="Organic flowing figure — sage, lavender and peach swirls on red, by Daw Mi"
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 18%", display: "block", transition: "transform 0.6s ease" }}
+            <Image src={art3} alt="Organic flowing figure — sage, lavender and peach swirls on red, by Daw Mi"
+              fill sizes="(max-width: 768px) 50vw, 40vw"
+              style={{ objectFit: "cover", objectPosition: "center 18%", transition: "transform 0.6s ease" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.04)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(40,37,45,0.55) 0%, transparent 50%)" }} />
@@ -280,8 +278,9 @@ export default function Home() {
 
           {/* 2 — Pink peonies */}
           <div style={{ position: "relative", overflow: "hidden" }}>
-            <img src={art5} alt="Pink peonies watercolor in blue-and-white vase"
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 35%", display: "block", transition: "transform 0.6s ease" }}
+            <Image src={art5} alt="Pink peonies watercolor in blue-and-white vase"
+              fill sizes="(max-width: 768px) 50vw, 40vw"
+              style={{ objectFit: "cover", objectPosition: "center 35%", transition: "transform 0.6s ease" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(40,37,45,0.48) 0%, transparent 55%)" }} />
@@ -290,8 +289,9 @@ export default function Home() {
 
           {/* 3 — Woman portrait with poppy */}
           <div style={{ position: "relative", overflow: "hidden" }}>
-            <img src={art4} alt="Portrait of a woman with pink poppy — The ULX & Eddington Limit, 2023"
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 18%", display: "block", transition: "transform 0.6s ease" }}
+            <Image src={art4} alt="Portrait of a woman with pink poppy — The ULX & Eddington Limit, 2023"
+              fill sizes="(max-width: 768px) 50vw, 40vw"
+              style={{ objectFit: "cover", objectPosition: "center 18%", transition: "transform 0.6s ease" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.04)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(40,37,45,0.52) 0%, transparent 55%)" }} />
@@ -303,8 +303,9 @@ export default function Home() {
 
           {/* 4 — Roses + skeleton collage */}
           <div style={{ position: "relative", overflow: "hidden" }}>
-            <img src={art6} alt="Mixed-media diptych — colourful roses and skeleton, exploring life and grief"
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "30% 40%", display: "block", transition: "transform 0.6s ease" }}
+            <Image src={art6} alt="Mixed-media diptych — colourful roses and skeleton, exploring life and grief"
+              fill sizes="(max-width: 768px) 50vw, 40vw"
+              style={{ objectFit: "cover", objectPosition: "30% 40%", transition: "transform 0.6s ease" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(40,37,45,0.55) 0%, transparent 52%)" }} />
@@ -313,8 +314,9 @@ export default function Home() {
 
           {/* 5 — Expressionist golden face */}
           <div style={{ position: "relative", overflow: "hidden" }}>
-            <img src={art7} alt="Expressionist golden face emerging from deep indigo"
-              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 38%", display: "block", transition: "transform 0.6s ease" }}
+            <Image src={art7} alt="Expressionist golden face emerging from deep indigo"
+              fill sizes="(max-width: 768px) 50vw, 40vw"
+              style={{ objectFit: "cover", objectPosition: "center 38%", transition: "transform 0.6s ease" }}
               onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.05)")}
               onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(40,37,45,0.55) 0%, transparent 52%)" }} />
@@ -343,8 +345,9 @@ export default function Home() {
           <div style={{ position: "relative" }}>
             <LavenderWaveAccent style={{ position: "absolute", top: "-2rem", left: "-2rem", width: "140%", opacity: 0.5 }} />
             <div style={{ position: "relative", overflow: "hidden", borderRadius: "50% 50% 12px 12px", aspectRatio: "3/4" }}>
-              <img src={art4} alt="Portrait of a woman with pink poppy — by Daw Mi 2023"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 12%", display: "block" }} />
+              <Image src={art4} alt="Portrait of a woman with pink poppy — by Daw Mi 2023"
+                fill sizes="(max-width: 768px) 100vw, 45vw"
+                style={{ objectFit: "cover", objectPosition: "center 12%" }} />
             </div>
             {/* Petal shape accent */}
             <PetalOutline color={C.rose} size={70}
@@ -434,8 +437,9 @@ export default function Home() {
                 boxShadow: "0 2px 16px rgba(73,76,109,0.07)",
               }}>
                 <div style={{ position: "relative", aspectRatio: "16/9", overflow: "hidden" }}>
-                  <img src={art} alt={artAlt}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%", display: "block" }} />
+                  <Image src={art} alt={artAlt}
+                    fill sizes="(max-width: 768px) 100vw, 33vw"
+                    style={{ objectFit: "cover", objectPosition: "center 25%" }} />
                   <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(40,37,45,0.38) 0%, transparent 65%)" }} />
                   <div style={{ position: "absolute", top: "1rem", left: "1rem" }}>
                     <Symbol color={symbolColor} size={44} />
@@ -473,8 +477,9 @@ export default function Home() {
 
             {/* Image */}
             <div style={{ position: "relative", aspectRatio: "4/3", overflow: "hidden", borderRadius: "4px" }}>
-              <img src={art7} alt="Expressionist golden face on deep indigo — Art of Wellness"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 35%", display: "block" }} />
+              <Image src={art7} alt="Expressionist golden face on deep indigo — Art of Wellness"
+                fill sizes="(max-width: 768px) 100vw, 50vw"
+                style={{ objectFit: "cover", objectPosition: "center 35%" }} />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(73,76,109,0.3) 0%, transparent 60%)" }} />
               {/* aqua line accent */}
               <AquaRibbon style={{ position: "absolute", bottom: 0, left: 0, right: 0, opacity: 0.55 }} />
@@ -576,11 +581,10 @@ export default function Home() {
       ══════════════════════════════════════ */}
       <WaveDivider from="#F0EEF5" to={C.paper} variant="gentle" />
       <section style={{ background: C.paper, padding: "5rem 1.5rem", position: "relative", overflow: "hidden" }}>
-        <img src={art3} alt="" aria-hidden
-          style={{
-            position: "absolute", right: 0, top: 0, width: "35%", height: "100%",
-            objectFit: "cover", objectPosition: "center 20%", opacity: 0.06,
-          }} />
+        <div aria-hidden style={{ position: "absolute", right: 0, top: 0, width: "35%", height: "100%", opacity: 0.06 }}>
+          <Image src={art3} alt="" fill sizes="35vw" quality={40}
+            style={{ objectFit: "cover", objectPosition: "center 20%" }} />
+        </div>
         <div style={{ maxWidth: "1240px", margin: "0 auto", position: "relative", zIndex: 1 }}>
           <div style={{ textAlign: "center", marginBottom: "3.5rem" }}>
             <div style={{ fontFamily: "var(--hand)", color: C.rose, fontSize: "1rem", marginBottom: "0.4rem" }}>True stories</div>
@@ -622,9 +626,10 @@ export default function Home() {
               backgroundColor: C.paper, borderRadius: "34% 34% 22px 22px",
               boxShadow: "0 18px 42px rgba(73,76,109,0.12)",
             }}>
-              <div style={{ aspectRatio: "4/3", overflow: "hidden", borderRadius: "32% 32% 14px 14px" }}>
-              <img src={art5} alt="Pink peonies — art created in therapy sessions"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "72% 42%", display: "block" }} />
+              <div style={{ position: "relative", aspectRatio: "4/3", overflow: "hidden", borderRadius: "32% 32% 14px 14px" }}>
+              <Image src={art5} alt="Pink peonies — art created in therapy sessions"
+                fill sizes="(max-width: 768px) 100vw, 45vw"
+                style={{ objectFit: "cover", objectPosition: "72% 42%" }} />
               </div>
               <div style={{
                 position: "absolute", bottom: "1.5rem", left: "1.5rem", right: "1.5rem",

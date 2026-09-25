@@ -1,15 +1,25 @@
-"use client";
-
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { MissingEntry, StoryCard } from "@/components/Editorial"
+import { notFound } from "next/navigation";
+import { StoryCard } from "@/components/Editorial"
 import { STORIES } from "@/lib/data"
 import Image from "next/image";
 
-export default function StoryDetail() {
-  const{ slug } = useParams<{ slug: string }>();
+// Prerender one static page per entry at build time;
+// any other slug is a 404 without rendering anything.
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return STORIES.map((item) => ({ slug: item.slug }))
+}
+
+export default async function StoryDetail({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
   const story = STORIES.find((item) => item.slug === slug)
-  if (!story) return <MissingEntry kind="story" href="/stories" />
+  if (!story) notFound()
   const paragraphs = (story.body || "")
     .split("\n\n")
     .filter(

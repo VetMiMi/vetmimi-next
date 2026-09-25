@@ -6,7 +6,7 @@ import { Btn } from "@/components/ui/Button"
 
 type BookingState = null | "success" | "failed" | "no-times" | "time-lost" | "unavailable"
 
-interface FormData {
+interface BookingFormData {
   name: string
   email: string
   phone: string
@@ -558,14 +558,14 @@ function Step3({
   onBack,
 }: {
   selectedService: string
-  formData: FormData
-  setFormData: (f: FormData) => void
+  formData: BookingFormData
+  setFormData: (f: BookingFormData) => void
   onNext: () => void
   onBack: () => void
 }) {
   const isIndividual = selectedService === "Individual Art Therapy"
 
-  const update = (key: keyof FormData, value: string | boolean) => {
+  const update = (key: keyof BookingFormData, value: string | boolean) => {
     setFormData({ ...formData, [key]: value })
   }
 
@@ -746,7 +746,7 @@ function Step4({
   selectedService: string
   selectedDate: string
   selectedTime: string
-  formData: FormData
+  formData: BookingFormData
   bookingState: BookingState
   isSubmitting: boolean
   onSubmit: () => void
@@ -932,7 +932,7 @@ function SuccessState() {
     <div
       style={{
         backgroundColor: C.canvas,
-        minHeight: "100vh",
+        minHeight: "100dvh",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -1071,7 +1071,7 @@ export default function BookAppointment() {
   const [selectedService, setSelectedService] = useState("")
   const [selectedDate, setSelectedDate] = useState("")
   const [selectedTime, setSelectedTime] = useState("")
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<BookingFormData>({
     name: "",
     email: "",
     phone: "",
@@ -1083,6 +1083,8 @@ export default function BookAppointment() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = () => {
+    // TODO: nothing is sent yet. This timeout fakes a booking and the request
+    // is discarded, so Daw Mi never hears about it. Wire up a real backend.
     setIsSubmitting(true)
     setTimeout(() => {
       setIsSubmitting(false)
@@ -1093,7 +1095,7 @@ export default function BookAppointment() {
   if (bookingState === "success") return <SuccessState />
 
   return (
-    <div style={{ backgroundColor: C.canvas, minHeight: "100vh" }}>
+    <div style={{ backgroundColor: C.canvas, minHeight: "100dvh" }}>
       {/* Hero / Page header */}
       <div
         style={{

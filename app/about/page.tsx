@@ -1,8 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PageEnd } from "@/components/Editorial"
+import { PageEnd } from "@/components/Editorial";
 import artImage from "@/assets/image-4.webp";
-
 
 export default function About() {
   return (
@@ -28,10 +27,10 @@ export default function About() {
         </div>
         <figure className="ed-portrait">
           <Image
-  src={artImage}
-  alt="The ULX & Eddington Limit, a colourful mixed-media portrait"
-  sizes="(max-width: 768px) 100vw, 50vw"
-/>
+            src={artImage}
+            alt="The ULX & Eddington Limit, a colourful mixed-media portrait"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
         </figure>
       </section>
       <section className="ed-paper">
@@ -108,5 +107,5 @@ export default function About() {
         label="View services"
       />
     </div>
-  )
+  );
 }

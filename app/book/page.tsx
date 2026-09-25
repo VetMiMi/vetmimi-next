@@ -1,23 +1,23 @@
 "use client";
-import { useState } from "react"
+import { useState } from "react";
 import Link from "next/link";
-import { C } from "@/lib/tokens"
-import { ProgressIndicator } from "./_components/ProgressIndicator"
-import { Step1 } from "./_components/Step1"
-import { Step2 } from "./_components/Step2"
-import { Step3 } from "./_components/Step3"
-import { Step4 } from "./_components/Step4"
-import { SuccessState } from "./_components/SuccessState"
-import type { BookingState, BookingFormData } from "./_components/booking"
+import { C } from "@/lib/tokens";
+import { ProgressIndicator } from "./_components/ProgressIndicator";
+import { Step1 } from "./_components/Step1";
+import { Step2 } from "./_components/Step2";
+import { Step3 } from "./_components/Step3";
+import { Step4 } from "./_components/Step4";
+import { SuccessState } from "./_components/SuccessState";
+import type { BookingState, BookingFormData } from "./_components/booking";
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function BookAppointment() {
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
-  const [bookingState, setBookingState] = useState<BookingState>(null)
-  const [selectedService, setSelectedService] = useState("")
-  const [selectedDate, setSelectedDate] = useState("")
-  const [selectedTime, setSelectedTime] = useState("")
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [bookingState, setBookingState] = useState<BookingState>(null);
+  const [selectedService, setSelectedService] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const [formData, setFormData] = useState<BookingFormData>({
     name: "",
     email: "",
@@ -26,20 +26,20 @@ export default function BookAppointment() {
     note: "",
     privacyAck: false,
     policyAck: false,
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = () => {
     // TODO: nothing is sent yet. This timeout fakes a booking and the request
     // is discarded, so Daw Mi never hears about it. Wire up a real backend.
-    setIsSubmitting(true)
+    setIsSubmitting(true);
     setTimeout(() => {
-      setIsSubmitting(false)
-      setBookingState("success")
-    }, 1500)
-  }
+      setIsSubmitting(false);
+      setBookingState("success");
+    }, 1500);
+  };
 
-  if (bookingState === "success") return <SuccessState />
+  if (bookingState === "success") return <SuccessState />;
 
   return (
     <div style={{ backgroundColor: C.canvas, minHeight: "100dvh" }}>
@@ -80,7 +80,14 @@ export default function BookAppointment() {
       </div>
 
       <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 2rem" }}>
-        <div style={{ maxWidth: 660, margin: "0 auto", paddingTop: "3rem", paddingBottom: "6rem" }}>
+        <div
+          style={{
+            maxWidth: 660,
+            margin: "0 auto",
+            paddingTop: "3rem",
+            paddingBottom: "6rem",
+          }}
+        >
           <ProgressIndicator step={step} />
 
           {step === 1 && (
@@ -128,5 +135,5 @@ export default function BookAppointment() {
         </div>
       </div>
     </div>
-  )
+  );
 }

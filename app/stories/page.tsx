@@ -1,18 +1,18 @@
 "use client";
-import { useState } from "react"
+import { useState } from "react";
 import Link from "next/link";
-import { StoryCard } from "@/components/Editorial"
-import { FilterBar } from "@/components/FilterBar"
-import { STORIES } from "@/lib/data"
+import { StoryCard } from "@/components/Editorial";
+import { FilterBar } from "@/components/FilterBar";
+import { STORIES } from "@/lib/data";
 import Image from "next/image";
 
-const categories = ["All", ...new Set(STORIES.map((story) => story.category))]
+const categories = ["All", ...new Set(STORIES.map((story) => story.category))];
 export default function Stories() {
-  const [category, setCategory] = useState("All")
+  const [category, setCategory] = useState("All");
   const stories = STORIES.filter(
     (story) => category === "All" || story.category === category,
-  )
-  const [featured, ...rest] = stories
+  );
+  const [featured, ...rest] = stories;
   return (
     <div className="ed-page">
       <header className="ed-container ed-header">
@@ -35,10 +35,10 @@ export default function Stories() {
         {featured && (
           <article className="ed-feature">
             <Image
-  src={featured.img}
-  alt=""
-  sizes="(max-width: 768px) 100vw, 50vw"
-/>
+              src={featured.img}
+              alt=""
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
             <div>
               <p className="ed-label">{featured.category}</p>
               <h2>
@@ -58,5 +58,5 @@ export default function Stories() {
         </div>
       </section>
     </div>
-  )
+  );
 }

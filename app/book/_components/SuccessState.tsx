@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { C } from "@/lib/tokens"
-import { Btn } from "@/components/ui/Button"
+import Link from "next/link";
+import { C } from "@/lib/tokens";
+import { Btn } from "@/components/ui/Button";
 
 // ── Success State ────────────────────────────────────────────────────────────
 
@@ -56,7 +56,9 @@ export function SuccessState() {
             marginBottom: "2.5rem",
           }}
         >
-          Thank you for reaching out. Your request has been received and is not yet confirmed. Daw Mi will be in touch within [To confirm] business days to confirm your appointment.
+          Thank you for reaching out. Your request has been received and is not
+          yet confirmed. Daw Mi will be in touch within [To confirm] business
+          days to confirm your appointment.
         </p>
 
         <div
@@ -111,14 +113,28 @@ export function SuccessState() {
               >
                 {i + 1}
               </div>
-              <span style={{ fontFamily: "var(--sans)", color: `${C.ink}CC`, lineHeight: 1.6, paddingTop: "0.15rem" }}>
+              <span
+                style={{
+                  fontFamily: "var(--sans)",
+                  color: `${C.ink}CC`,
+                  lineHeight: 1.6,
+                  paddingTop: "0.15rem",
+                }}
+              >
                 {step}
               </span>
             </div>
           ))}
         </div>
 
-        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "1rem",
+            justifyContent: "center",
+            flexWrap: "wrap",
+          }}
+        >
           <Btn href="/">Return to home</Btn>
           <Link
             href="/contact"
@@ -137,5 +153,5 @@ export function SuccessState() {
         </div>
       </div>
     </div>
-  )
+  );
 }

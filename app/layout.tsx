@@ -9,11 +9,7 @@ export const metadata: Metadata = {
   description: "Art, reflection and wellbeing with Daw Mi.",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"

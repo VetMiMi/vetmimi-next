@@ -1,6 +1,6 @@
 import Link from "next/link";
-import type { PortfolioItem, Story } from "@/lib/data"
-import "@/styles/editorial.css"
+import type { PortfolioItem, Story } from "@/lib/data";
+import "@/styles/editorial.css";
 import Image from "next/image";
 
 export function WorkCard({ item }: { item: PortfolioItem }) {
@@ -8,10 +8,10 @@ export function WorkCard({ item }: { item: PortfolioItem }) {
     <Link className="ed-work" href={`/portfolio/${item.slug}`}>
       <div className="ed-work-image">
         <Image
-  src={item.img}
-  alt={item.title}
-  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-/>
+          src={item.img}
+          alt={item.title}
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
       </div>
       <div className="ed-work-caption">
         <div>
@@ -21,17 +21,17 @@ export function WorkCard({ item }: { item: PortfolioItem }) {
         <span aria-hidden="true">↗</span>
       </div>
     </Link>
-  )
+  );
 }
 
 export function StoryCard({ story }: { story: Story }) {
   return (
     <article className="ed-story">
       <Image
-  src={story.img}
-  alt=""
-  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-/>
+        src={story.img}
+        alt=""
+        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+      />
       <div>
         <p className="ed-label">{story.category}</p>
         <h3>
@@ -47,7 +47,7 @@ export function StoryCard({ story }: { story: Story }) {
         </Link>
       </div>
     </article>
-  )
+  );
 }
 
 export function PageEnd({
@@ -71,5 +71,5 @@ export function PageEnd({
         {label} <span aria-hidden="true">↗</span>
       </Link>
     </section>
-  )
+  );
 }

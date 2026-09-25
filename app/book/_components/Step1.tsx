@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { C } from "@/lib/tokens"
-import { Btn } from "@/components/ui/Button"
-import type { BookingState } from "./booking"
+import Link from "next/link";
+import { C } from "@/lib/tokens";
+import { Btn } from "@/components/ui/Button";
+import type { BookingState } from "./booking";
 
 // ── Step 1: Service Selection ────────────────────────────────────────────────
 
@@ -11,15 +11,22 @@ export function Step1({
   bookingState,
   onNext,
 }: {
-  selectedService: string
-  setSelectedService: (s: string) => void
-  bookingState: BookingState
-  onNext: () => void
+  selectedService: string;
+  setSelectedService: (s: string) => void;
+  bookingState: BookingState;
+  onNext: () => void;
 }) {
   if (bookingState === "unavailable") {
     return (
       <div>
-        <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(1.6rem,3vw,2.2rem)", color: C.ink, marginBottom: "1.5rem" }}>
+        <h2
+          style={{
+            fontFamily: "var(--serif)",
+            fontSize: "clamp(1.6rem,3vw,2.2rem)",
+            color: C.ink,
+            marginBottom: "1.5rem",
+          }}
+        >
           Service unavailable
         </h2>
         <div
@@ -32,24 +39,32 @@ export function Step1({
             color: C.ink,
           }}
         >
-          <p style={{ margin: 0 }}>Booking is not currently available. Please <Link href="/contact" style={{ color: C.rose }}>contact us</Link> to discuss your options.</p>
+          <p style={{ margin: 0 }}>
+            Booking is not currently available. Please{" "}
+            <Link href="/contact" style={{ color: C.rose }}>
+              contact us
+            </Link>{" "}
+            to discuss your options.
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
   const services = [
     {
       id: "Individual Art Therapy",
       title: "Individual Art Therapy",
-      description: "One-to-one sessions tailored to your needs. Work at your own pace in a private, supportive space.",
+      description:
+        "One-to-one sessions tailored to your needs. Work at your own pace in a private, supportive space.",
     },
     {
       id: "Group Art & Wellbeing",
       title: "Group Art & Wellbeing",
-      description: "Small group creative sessions. Connect with others through shared creative experience.",
+      description:
+        "Small group creative sessions. Connect with others through shared creative experience.",
     },
-  ]
+  ];
 
   return (
     <div>
@@ -63,11 +78,20 @@ export function Step1({
       >
         Choose a service
       </h2>
-      <p style={{ fontFamily: "var(--sans)", color: `${C.ink}BB`, marginBottom: "2rem" }}>
+      <p
+        style={{
+          fontFamily: "var(--sans)",
+          color: `${C.ink}BB`,
+          marginBottom: "2rem",
+        }}
+      >
         Select the type of session you would like to book.
       </p>
 
-      <div className="grid-cols-1 md:grid-cols-2" style={{ display: "grid", gap: "1.25rem", marginBottom: "2rem" }}>
+      <div
+        className="grid-cols-1 md:grid-cols-2"
+        style={{ display: "grid", gap: "1.25rem", marginBottom: "2rem" }}
+      >
         {services.map((svc) => (
           <button
             key={svc.id}
@@ -77,7 +101,8 @@ export function Step1({
               borderRadius: 8,
               padding: "2rem",
               cursor: "pointer",
-              backgroundColor: selectedService === svc.id ? `${C.indigo}08` : "#fff",
+              backgroundColor:
+                selectedService === svc.id ? `${C.indigo}08` : "#fff",
               textAlign: "left",
               transition: "border-color 0.18s, background-color 0.18s",
             }}
@@ -93,7 +118,14 @@ export function Step1({
             >
               {svc.title}
             </div>
-            <div style={{ fontFamily: "var(--sans)", color: `${C.ink}BB`, fontSize: "0.9rem", lineHeight: 1.6 }}>
+            <div
+              style={{
+                fontFamily: "var(--sans)",
+                color: `${C.ink}BB`,
+                fontSize: "0.9rem",
+                lineHeight: 1.6,
+              }}
+            >
               {svc.description}
             </div>
             {selectedService === svc.id && (
@@ -128,7 +160,8 @@ export function Step1({
           lineHeight: 1.6,
         }}
       >
-        <strong style={{ color: C.ink }}>Workshops & Programs</strong> are arranged by enquiry.{" "}
+        <strong style={{ color: C.ink }}>Workshops & Programs</strong> are
+        arranged by enquiry.{" "}
         <Link href="/contact" style={{ color: C.rose, textDecoration: "none" }}>
           Contact us
         </Link>{" "}
@@ -139,5 +172,5 @@ export function Step1({
         Continue to Date &amp; Time →
       </Btn>
     </div>
-  )
+  );
 }

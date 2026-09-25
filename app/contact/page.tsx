@@ -63,11 +63,15 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const target = e.target;
     const value =
-      target.type === "checkbox" ? (target as HTMLInputElement).checked : target.value;
+      target.type === "checkbox"
+        ? (target as HTMLInputElement).checked
+        : target.value;
     setFormData((prev) => ({ ...prev, [target.name]: value }));
   };
 
@@ -116,7 +120,11 @@ export default function Contact() {
       <section style={{ padding: "0 0 8rem", backgroundColor: C.canvas }}>
         <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 2rem" }}>
           <div
-            style={{ display: "grid", gap: "clamp(2rem, 5vw, 5rem)", alignItems: "start" }}
+            style={{
+              display: "grid",
+              gap: "clamp(2rem, 5vw, 5rem)",
+              alignItems: "start",
+            }}
             className="grid-cols-1 md:grid-cols-2"
           >
             {/* ── Left: Form ───────────────────────────────── */}
@@ -139,10 +147,15 @@ export default function Contact() {
                     lineHeight: 1.6,
                   }}
                 >
-                  To book an individual appointment, please use the booking page.{" "}
+                  To book an individual appointment, please use the booking
+                  page.{" "}
                   <Link
                     href="/book"
-                    style={{ color: C.rose, textDecoration: "underline", textUnderlineOffset: 2 }}
+                    style={{
+                      color: C.rose,
+                      textDecoration: "underline",
+                      textUnderlineOffset: 2,
+                    }}
                   >
                     Go to booking →
                   </Link>
@@ -218,8 +231,9 @@ export default function Contact() {
                           marginBottom: "0.75rem",
                         }}
                       >
-                        Something did not go through. Your message has not been sent yet.
-                        Your information is still here, so you can try again.
+                        Something did not go through. Your message has not been
+                        sent yet. Your information is still here, so you can try
+                        again.
                       </p>
                       <button
                         onClick={() => setSubmitState(null)}
@@ -239,7 +253,14 @@ export default function Contact() {
                     </div>
                   )}
 
-                  <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column" as const, gap: "1.5rem" }}>
+                  <form
+                    onSubmit={handleSubmit}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column" as const,
+                      gap: "1.5rem",
+                    }}
+                  >
                     {/* Name */}
                     <div>
                       <label htmlFor="name" style={labelStyle}>
@@ -278,7 +299,9 @@ export default function Contact() {
                     <div>
                       <label htmlFor="organisation" style={labelStyle}>
                         Organisation{" "}
-                        <span style={{ color: `${C.ink}55`, fontWeight: 400 }}>(optional)</span>
+                        <span style={{ color: `${C.ink}55`, fontWeight: 400 }}>
+                          (optional)
+                        </span>
                       </label>
                       <input
                         id="organisation"
@@ -341,13 +364,23 @@ export default function Contact() {
                         rows={7}
                         value={formData.message}
                         onChange={handleChange}
-                        style={{ ...inputStyle, resize: "vertical" as const, lineHeight: 1.65 }}
+                        style={{
+                          ...inputStyle,
+                          resize: "vertical" as const,
+                          lineHeight: 1.65,
+                        }}
                         placeholder="Tell Daw Mi what you have in mind..."
                       />
                     </div>
 
                     {/* Privacy checkbox */}
-                    <div style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.75rem",
+                        alignItems: "flex-start",
+                      }}
+                    >
                       <input
                         id="privacy"
                         name="privacy"
@@ -355,13 +388,29 @@ export default function Contact() {
                         required
                         checked={formData.privacy}
                         onChange={handleChange}
-                        style={{ marginTop: "0.2rem", accentColor: C.rose, flexShrink: 0 }}
+                        style={{
+                          marginTop: "0.2rem",
+                          accentColor: C.rose,
+                          flexShrink: 0,
+                        }}
                       />
-                      <label htmlFor="privacy" style={{ ...labelStyle, marginBottom: 0, fontWeight: 400, cursor: "pointer" }}>
+                      <label
+                        htmlFor="privacy"
+                        style={{
+                          ...labelStyle,
+                          marginBottom: 0,
+                          fontWeight: 400,
+                          cursor: "pointer",
+                        }}
+                      >
                         I have read and agree to the{" "}
                         <Link
                           href="/privacy"
-                          style={{ color: C.rose, textDecoration: "underline", textUnderlineOffset: 2 }}
+                          style={{
+                            color: C.rose,
+                            textDecoration: "underline",
+                            textUnderlineOffset: 2,
+                          }}
                         >
                           privacy policy
                         </Link>
@@ -381,8 +430,8 @@ export default function Contact() {
                         borderRadius: 4,
                       }}
                     >
-                      Please do not include private medical or detailed health information
-                      in this form.
+                      Please do not include private medical or detailed health
+                      information in this form.
                     </p>
 
                     <div>
@@ -415,7 +464,13 @@ export default function Contact() {
                   Contact details
                 </p>
 
-                <div style={{ display: "flex", flexDirection: "column" as const, gap: "1.5rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column" as const,
+                    gap: "1.5rem",
+                  }}
+                >
                   <div>
                     <p
                       style={{
@@ -525,8 +580,9 @@ export default function Contact() {
                     marginBottom: "1rem",
                   }}
                 >
-                  This contact form is for professional enquiries: collaborations,
-                  workshops, speaking, and project conversations.
+                  This contact form is for professional enquiries:
+                  collaborations, workshops, speaking, and project
+                  conversations.
                 </p>
                 <p
                   style={{
@@ -539,7 +595,11 @@ export default function Contact() {
                   To book an individual appointment, please use the{" "}
                   <Link
                     href="/book"
-                    style={{ color: C.rose, textDecoration: "underline", textUnderlineOffset: 2 }}
+                    style={{
+                      color: C.rose,
+                      textDecoration: "underline",
+                      textUnderlineOffset: 2,
+                    }}
                   >
                     booking page
                   </Link>

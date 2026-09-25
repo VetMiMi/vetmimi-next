@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PageEnd, WorkCard } from "@/components/Editorial"
-import { PORTFOLIO } from "@/lib/data"
+import { PageEnd, WorkCard } from "@/components/Editorial";
+import { PORTFOLIO } from "@/lib/data";
 import artImage from "@/assets/image-7.webp";
-
 
 export default function ArtOfWellness() {
   return (
@@ -28,10 +27,10 @@ export default function ArtOfWellness() {
           </div>
           <figure className="ed-wellness-art">
             <Image
-  src={artImage}
-  alt="Expressive artwork with a golden face against deep indigo"
-  sizes="(max-width: 768px) 100vw, 50vw"
-/>
+              src={artImage}
+              alt="Expressive artwork with a golden face against deep indigo"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
           </figure>
         </div>
       </section>
@@ -113,5 +112,5 @@ export default function ArtOfWellness() {
         label="Start a conversation"
       />
     </div>
-  )
+  );
 }

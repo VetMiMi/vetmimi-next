@@ -1,7 +1,7 @@
-import { C } from "@/lib/tokens"
-import { Btn } from "@/components/ui/Button"
-import { formatDate } from "./booking"
-import type { BookingState, BookingFormData } from "./booking"
+import { C } from "@/lib/tokens";
+import { Btn } from "@/components/ui/Button";
+import { formatDate } from "./booking";
+import type { BookingState, BookingFormData } from "./booking";
 
 // ── Step 4: Review & Submit ──────────────────────────────────────────────────
 
@@ -16,15 +16,15 @@ export function Step4({
   onBack,
   goToStep,
 }: {
-  selectedService: string
-  selectedDate: string
-  selectedTime: string
-  formData: BookingFormData
-  bookingState: BookingState
-  isSubmitting: boolean
-  onSubmit: () => void
-  onBack: () => void
-  goToStep: (n: number) => void
+  selectedService: string;
+  selectedDate: string;
+  selectedTime: string;
+  formData: BookingFormData;
+  bookingState: BookingState;
+  isSubmitting: boolean;
+  onSubmit: () => void;
+  onBack: () => void;
+  goToStep: (n: number) => void;
 }) {
   const rowStyle: React.CSSProperties = {
     display: "flex",
@@ -32,7 +32,7 @@ export function Step4({
     alignItems: "flex-start",
     padding: "0.875rem 0",
     borderBottom: `1px solid ${C.ink}11`,
-  }
+  };
 
   const labelCol: React.CSSProperties = {
     fontFamily: "var(--sans)",
@@ -43,14 +43,14 @@ export function Step4({
     minWidth: 100,
     marginRight: "1rem",
     paddingTop: "0.1rem",
-  }
+  };
 
   const valueCol: React.CSSProperties = {
     fontFamily: "var(--sans)",
     fontSize: "0.95rem",
     color: C.ink,
     flex: 1,
-  }
+  };
 
   const editBtn: React.CSSProperties = {
     background: "none",
@@ -63,7 +63,7 @@ export function Step4({
     textDecoration: "underline",
     flexShrink: 0,
     marginLeft: "1rem",
-  }
+  };
 
   return (
     <div>
@@ -77,7 +77,13 @@ export function Step4({
       >
         Review your request
       </h2>
-      <p style={{ fontFamily: "var(--sans)", color: `${C.ink}BB`, marginBottom: "2rem" }}>
+      <p
+        style={{
+          fontFamily: "var(--sans)",
+          color: `${C.ink}BB`,
+          marginBottom: "2rem",
+        }}
+      >
         Please check your details before submitting.
       </p>
 
@@ -95,7 +101,8 @@ export function Step4({
             lineHeight: 1.6,
           }}
         >
-          Something did not go through. Your message has not been sent yet. Your information is still here, so you can try again.
+          Something did not go through. Your message has not been sent yet. Your
+          information is still here, so you can try again.
         </div>
       )}
 
@@ -112,42 +119,63 @@ export function Step4({
         <div style={rowStyle}>
           <span style={labelCol}>Service</span>
           <span style={valueCol}>{selectedService}</span>
-          <button style={editBtn} onClick={() => goToStep(1)}>Edit</button>
+          <button style={editBtn} onClick={() => goToStep(1)}>
+            Edit
+          </button>
         </div>
         <div style={rowStyle}>
           <span style={labelCol}>Date &amp; Time</span>
-          <span style={valueCol}>{formatDate(selectedDate)}{selectedTime ? ` at ${selectedTime}` : ""}</span>
-          <button style={editBtn} onClick={() => goToStep(2)}>Edit</button>
+          <span style={valueCol}>
+            {formatDate(selectedDate)}
+            {selectedTime ? ` at ${selectedTime}` : ""}
+          </span>
+          <button style={editBtn} onClick={() => goToStep(2)}>
+            Edit
+          </button>
         </div>
         <div style={rowStyle}>
           <span style={labelCol}>Name</span>
           <span style={valueCol}>{formData.name}</span>
-          <button style={editBtn} onClick={() => goToStep(3)}>Edit</button>
+          <button style={editBtn} onClick={() => goToStep(3)}>
+            Edit
+          </button>
         </div>
         <div style={rowStyle}>
           <span style={labelCol}>Email</span>
           <span style={valueCol}>{formData.email}</span>
-          <button style={editBtn} onClick={() => goToStep(3)}>Edit</button>
+          <button style={editBtn} onClick={() => goToStep(3)}>
+            Edit
+          </button>
         </div>
         {formData.phone && (
           <div style={rowStyle}>
             <span style={labelCol}>Phone</span>
             <span style={valueCol}>{formData.phone}</span>
-            <button style={editBtn} onClick={() => goToStep(3)}>Edit</button>
+            <button style={editBtn} onClick={() => goToStep(3)}>
+              Edit
+            </button>
           </div>
         )}
         {formData.format && (
           <div style={rowStyle}>
             <span style={labelCol}>Format</span>
             <span style={valueCol}>{formData.format}</span>
-            <button style={editBtn} onClick={() => goToStep(3)}>Edit</button>
+            <button style={editBtn} onClick={() => goToStep(3)}>
+              Edit
+            </button>
           </div>
         )}
         {formData.note && (
           <div style={rowStyle}>
             <span style={labelCol}>Note</span>
-            <span style={{ ...valueCol, fontStyle: "italic", color: `${C.ink}BB` }}>{formData.note}</span>
-            <button style={editBtn} onClick={() => goToStep(3)}>Edit</button>
+            <span
+              style={{ ...valueCol, fontStyle: "italic", color: `${C.ink}BB` }}
+            >
+              {formData.note}
+            </span>
+            <button style={editBtn} onClick={() => goToStep(3)}>
+              Edit
+            </button>
           </div>
         )}
       </div>
@@ -171,7 +199,8 @@ export function Step4({
             lineHeight: 1.7,
           }}
         >
-          <strong>Please note:</strong> This is a request, not a confirmed booking. Daw Mi will be in touch to confirm your appointment.
+          <strong>Please note:</strong> This is a request, not a confirmed
+          booking. Daw Mi will be in touch to confirm your appointment.
         </p>
       </div>
 
@@ -195,5 +224,5 @@ export function Step4({
         </Btn>
       </div>
     </div>
-  )
+  );
 }

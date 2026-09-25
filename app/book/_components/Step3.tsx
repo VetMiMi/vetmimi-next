@@ -1,8 +1,8 @@
-import Link from "next/link"
-import { C } from "@/lib/tokens"
-import { Btn } from "@/components/ui/Button"
-import { inputStyle } from "./booking"
-import type { BookingFormData } from "./booking"
+import Link from "next/link";
+import { C } from "@/lib/tokens";
+import { Btn } from "@/components/ui/Button";
+import { inputStyle } from "./booking";
+import type { BookingFormData } from "./booking";
 
 // ── Step 3: Your Details ─────────────────────────────────────────────────────
 
@@ -13,19 +13,23 @@ export function Step3({
   onNext,
   onBack,
 }: {
-  selectedService: string
-  formData: BookingFormData
-  setFormData: (f: BookingFormData) => void
-  onNext: () => void
-  onBack: () => void
+  selectedService: string;
+  formData: BookingFormData;
+  setFormData: (f: BookingFormData) => void;
+  onNext: () => void;
+  onBack: () => void;
 }) {
-  const isIndividual = selectedService === "Individual Art Therapy"
+  const isIndividual = selectedService === "Individual Art Therapy";
 
   const update = (key: keyof BookingFormData, value: string | boolean) => {
-    setFormData({ ...formData, [key]: value })
-  }
+    setFormData({ ...formData, [key]: value });
+  };
 
-  const canProceed = formData.name.trim() !== "" && formData.email.trim() !== "" && formData.privacyAck && formData.policyAck
+  const canProceed =
+    formData.name.trim() !== "" &&
+    formData.email.trim() !== "" &&
+    formData.privacyAck &&
+    formData.policyAck;
 
   const labelStyle: React.CSSProperties = {
     display: "block",
@@ -34,7 +38,7 @@ export function Step3({
     color: C.ink,
     fontWeight: 600,
     marginBottom: "0.3rem",
-  }
+  };
 
   return (
     <div>
@@ -48,13 +52,21 @@ export function Step3({
       >
         Your details
       </h2>
-      <p style={{ fontFamily: "var(--sans)", color: `${C.ink}BB`, marginBottom: "2rem" }}>
+      <p
+        style={{
+          fontFamily: "var(--sans)",
+          color: `${C.ink}BB`,
+          marginBottom: "2rem",
+        }}
+      >
         Please provide your contact information.
       </p>
 
       <div style={{ maxWidth: 520 }}>
         <label>
-          <span style={labelStyle}>Full name <span style={{ color: C.coral }}>*</span></span>
+          <span style={labelStyle}>
+            Full name <span style={{ color: C.coral }}>*</span>
+          </span>
           <input
             type="text"
             value={formData.name}
@@ -65,7 +77,9 @@ export function Step3({
         </label>
 
         <label>
-          <span style={labelStyle}>Email address <span style={{ color: C.coral }}>*</span></span>
+          <span style={labelStyle}>
+            Email address <span style={{ color: C.coral }}>*</span>
+          </span>
           <input
             type="email"
             value={formData.email}
@@ -76,7 +90,12 @@ export function Step3({
         </label>
 
         <label>
-          <span style={labelStyle}>Phone number <span style={{ color: `${C.ink}66`, fontWeight: 400 }}>(optional)</span></span>
+          <span style={labelStyle}>
+            Phone number{" "}
+            <span style={{ color: `${C.ink}66`, fontWeight: 400 }}>
+              (optional)
+            </span>
+          </span>
           <input
             type="tel"
             value={formData.phone}
@@ -103,7 +122,10 @@ export function Step3({
 
         <label>
           <span style={labelStyle}>
-            Short note <span style={{ color: `${C.ink}66`, fontWeight: 400 }}>(optional)</span>
+            Short note{" "}
+            <span style={{ color: `${C.ink}66`, fontWeight: 400 }}>
+              (optional)
+            </span>
           </span>
           <p
             style={{
@@ -115,7 +137,9 @@ export function Step3({
               lineHeight: 1.6,
             }}
           >
-            You are welcome to share anything that would help Daw Mi prepare. Please do not include private medical or detailed health information here.
+            You are welcome to share anything that would help Daw Mi prepare.
+            Please do not include private medical or detailed health information
+            here.
           </p>
           <textarea
             value={formData.note}
@@ -127,16 +151,37 @@ export function Step3({
         </label>
 
         <div style={{ marginBottom: "1rem" }}>
-          <label style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem", cursor: "pointer" }}>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "0.75rem",
+              cursor: "pointer",
+            }}
+          >
             <input
               type="checkbox"
               checked={formData.privacyAck}
               onChange={(e) => update("privacyAck", e.target.checked)}
-              style={{ marginTop: "0.2rem", accentColor: C.indigo, flexShrink: 0 }}
+              style={{
+                marginTop: "0.2rem",
+                accentColor: C.indigo,
+                flexShrink: 0,
+              }}
             />
-            <span style={{ fontFamily: "var(--sans)", fontSize: "0.875rem", color: C.ink, lineHeight: 1.6 }}>
+            <span
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: "0.875rem",
+                color: C.ink,
+                lineHeight: 1.6,
+              }}
+            >
               I have read and agree to the{" "}
-              <Link href="/privacy" style={{ color: C.rose, textDecoration: "none" }}>
+              <Link
+                href="/privacy"
+                style={{ color: C.rose, textDecoration: "none" }}
+              >
                 Privacy Policy
               </Link>{" "}
               <span style={{ color: C.coral }}>*</span>
@@ -145,16 +190,37 @@ export function Step3({
         </div>
 
         <div style={{ marginBottom: "2rem" }}>
-          <label style={{ display: "flex", alignItems: "flex-start", gap: "0.75rem", cursor: "pointer" }}>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "0.75rem",
+              cursor: "pointer",
+            }}
+          >
             <input
               type="checkbox"
               checked={formData.policyAck}
               onChange={(e) => update("policyAck", e.target.checked)}
-              style={{ marginTop: "0.2rem", accentColor: C.indigo, flexShrink: 0 }}
+              style={{
+                marginTop: "0.2rem",
+                accentColor: C.indigo,
+                flexShrink: 0,
+              }}
             />
-            <span style={{ fontFamily: "var(--sans)", fontSize: "0.875rem", color: C.ink, lineHeight: 1.6 }}>
+            <span
+              style={{
+                fontFamily: "var(--sans)",
+                fontSize: "0.875rem",
+                color: C.ink,
+                lineHeight: 1.6,
+              }}
+            >
               I have read and agree to the{" "}
-              <Link href="/booking-policy" style={{ color: C.rose, textDecoration: "none" }}>
+              <Link
+                href="/booking-policy"
+                style={{ color: C.rose, textDecoration: "none" }}
+              >
                 Booking &amp; Cancellation Policy
               </Link>{" "}
               <span style={{ color: C.coral }}>*</span>
@@ -183,5 +249,5 @@ export function Step3({
         </div>
       </div>
     </div>
-  )
+  );
 }

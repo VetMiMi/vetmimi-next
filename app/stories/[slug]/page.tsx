@@ -1,31 +1,31 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { StoryCard } from "@/components/Editorial"
-import { STORIES } from "@/lib/data"
+import { StoryCard } from "@/components/Editorial";
+import { STORIES } from "@/lib/data";
 import Image from "next/image";
 
 // Prerender one static page per entry at build time;
 // any other slug is a 404 without rendering anything.
-export const dynamicParams = false
+export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return STORIES.map((item) => ({ slug: item.slug }))
+  return STORIES.map((item) => ({ slug: item.slug }));
 }
 
 export default async function StoryDetail({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params
-  const story = STORIES.find((item) => item.slug === slug)
-  if (!story) notFound()
+  const { slug } = await params;
+  const story = STORIES.find((item) => item.slug === slug);
+  if (!story) notFound();
   const paragraphs = (story.body || "")
     .split("\n\n")
     .filter(
       (text) =>
         text.trim() && !text.includes("[") && !text.includes("Reading width"),
-    )
+    );
   return (
     <div className="ed-page">
       <nav className="ed-container ed-breadcrumb" aria-label="Breadcrumb">
@@ -43,11 +43,11 @@ export default async function StoryDetail({
           </p>
         </header>
         <Image
-  className="ed-article-image"
-  src={story.img}
-  alt="Artwork accompanying this reflection"
-  sizes="(max-width: 768px) 100vw, 760px"
-/>
+          className="ed-article-image"
+          src={story.img}
+          alt="Artwork accompanying this reflection"
+          sizes="(max-width: 768px) 100vw, 760px"
+        />
         <div className="ed-article-body">
           {(paragraphs.length ? paragraphs : [story.excerpt]).map(
             (text, index) => (
@@ -72,5 +72,5 @@ export default async function StoryDetail({
         </div>
       </section>
     </div>
-  )
+  );
 }

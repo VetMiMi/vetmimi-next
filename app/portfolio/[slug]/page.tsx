@@ -1,32 +1,32 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PageEnd, WorkCard } from "@/components/Editorial"
-import { PORTFOLIO } from "@/lib/data"
+import { PageEnd, WorkCard } from "@/components/Editorial";
+import { PORTFOLIO } from "@/lib/data";
 import Image from "next/image";
 
 // Prerender one static page per entry at build time;
 // any other slug is a 404 without rendering anything.
-export const dynamicParams = false
+export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return PORTFOLIO.map((item) => ({ slug: item.slug }))
+  return PORTFOLIO.map((item) => ({ slug: item.slug }));
 }
 
 export default async function PortfolioDetail({
   params,
 }: {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params
-  const item = PORTFOLIO.find((work) => work.slug === slug)
-  if (!item) notFound()
+  const { slug } = await params;
+  const item = PORTFOLIO.find((work) => work.slug === slug);
+  if (!item) notFound();
   const details = [
     ["Year", item.year],
     ["Medium", item.medium],
     ["Context", item.context],
     ["Role", item.role],
-  ].filter(([, value]) => value && !value.includes("["))
-  const related = PORTFOLIO.filter((work) => work.slug !== slug).slice(0, 3)
+  ].filter(([, value]) => value && !value.includes("["));
+  const related = PORTFOLIO.filter((work) => work.slug !== slug).slice(0, 3);
   return (
     <div className="ed-page">
       <div className="ed-container">
@@ -38,10 +38,10 @@ export default async function PortfolioDetail({
         <section className="ed-piece">
           <figure className="ed-piece-art">
             <Image
-  src={item.img}
-  alt={item.title}
-  sizes="(max-width: 768px) 100vw, 50vw"
-/>
+              src={item.img}
+              alt={item.title}
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
           </figure>
           <div>
             <p className="ed-label">{item.category}</p>
@@ -81,5 +81,5 @@ export default async function PortfolioDetail({
         label="Explore services"
       />
     </div>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { C } from "@/lib/tokens"
-import { WaveDivider } from "@/components/art/Shapes"
+import { C } from "@/lib/tokens";
+import { WaveDivider } from "@/components/art/Shapes";
 
 const sections = [
   {
@@ -35,7 +35,7 @@ const sections = [
     heading: "Contact",
     body: "If you have a question about your booking, please contact Daw Mi using the contact form or at [To confirm — email].",
   },
-]
+];
 
 export default function BookingPolicy() {
   return (
@@ -94,7 +94,8 @@ export default function BookingPolicy() {
             borderLeft: `3px solid ${C.ochre}`,
           }}
         >
-          This booking and cancellation policy is a placeholder pending formal review. All content is subject to change. Last updated [Date].
+          This booking and cancellation policy is a placeholder pending formal
+          review. All content is subject to change. Last updated [Date].
         </div>
 
         {sections.map((section) => (
@@ -160,5 +161,5 @@ export default function BookingPolicy() {
         </div>
       </div>
     </div>
-  )
+  );
 }

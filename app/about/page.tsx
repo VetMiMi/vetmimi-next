@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PageEnd } from "@/components/Editorial"
-import artImage from "@/imports/image-4.png";
+import artImage from "@/assets/image-4.webp";
 
 
 export default function About() {

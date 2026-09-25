@@ -10,11 +10,11 @@ import {
 import { C } from "@/lib/tokens";
 import { STORIES } from "@/lib/data";
 
-import art3 from "@/imports/image-3.png";
-import art4 from "@/imports/image-4.png";
-import art5 from "@/imports/image-5.png";
-import art6 from "@/imports/image-6.png";
-import art7 from "@/imports/image-7.png";
+import art3 from "@/assets/image-3.webp";
+import art4 from "@/assets/image-4.webp";
+import art5 from "@/assets/image-5.webp";
+import art6 from "@/assets/image-6.webp";
+import art7 from "@/assets/image-7.webp";
 
 /* ── Floating CTA ── */
 function FloatingCTA() {

@@ -1,6 +1,6 @@
-import art3 from "@/imports/image-3.png";
-import art5 from "@/imports/image-5.png";
-import art7 from "@/imports/image-7.png";
+import art3 from "@/assets/image-3.webp";
+import art5 from "@/assets/image-5.webp";
+import art7 from "@/assets/image-7.webp";
 import type { StaticImageData } from "next/image";
 
 type Service = {

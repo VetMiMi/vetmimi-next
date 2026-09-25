@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { PageEnd, WorkCard } from "@/components/Editorial"
 import { PORTFOLIO } from "@/lib/data"
-import artImage from "@/imports/image-7.png";
+import artImage from "@/assets/image-7.webp";
 
 
 export default function ArtOfWellness() {

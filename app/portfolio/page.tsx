@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react"
-import { FilterBar, PageEnd, WorkCard } from "@/components/Editorial"
+import { PageEnd, WorkCard } from "@/components/Editorial"
+import { FilterBar } from "@/components/FilterBar"
 import { PORTFOLIO } from "@/lib/data"
 
 const categories = ["All", ...new Set(PORTFOLIO.map((item) => item.category))]

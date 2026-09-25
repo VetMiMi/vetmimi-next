@@ -1,7 +1,8 @@
 "use client";
 import { useState } from "react"
 import Link from "next/link";
-import { FilterBar, StoryCard } from "@/components/Editorial"
+import { StoryCard } from "@/components/Editorial"
+import { FilterBar } from "@/components/FilterBar"
 import { STORIES } from "@/lib/data"
 import Image from "next/image";
 

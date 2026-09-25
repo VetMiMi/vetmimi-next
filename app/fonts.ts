@@ -16,8 +16,11 @@ export const manrope = Manrope({
   variable: "--font-sans",
 });
 
+// Decorative handwriting for small labels: not preloaded, so it never
+// competes with the hero image for bandwidth.
 export const caveat = Caveat({
   subsets: ["latin"],
   display: "swap",
+  preload: false,
   variable: "--font-hand",
 });

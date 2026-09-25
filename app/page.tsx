@@ -207,6 +207,8 @@ export default function Home() {
           alt=""
           fill
           preload
+          fetchPriority="high"
+          quality={60}
           sizes="100vw"
           placeholder="blur"
           style={{

@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { services } from "@/lib/services";
 import "@/styles/services.css";
 import Image from "next/image";
 
 export default function ServiceDetail({ slug }: { slug: string }) {
-  const service = services.find((item) => item.slug === slug)!;
+  const service = services.find((item) => item.slug === slug);
+  if (!service) notFound();
   const isIndividual = slug === "individual-art-therapy";
   const isWorkshop = slug === "workshops-programs";
 

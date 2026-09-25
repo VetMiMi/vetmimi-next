@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { C } from "@/lib/tokens"
-import { Btn } from "@/components/ui/Button"
-import { AlmondEye, PetalOutline, GoldMark } from "@/components/art/Shapes"
+import { C } from "@/lib/tokens";
+import { Btn } from "@/components/ui/Button";
+import { AlmondEye, PetalOutline, GoldMark } from "@/components/art/Shapes";
 
 export default function NotFound() {
   return (
@@ -100,17 +100,34 @@ export default function NotFound() {
             margin: "0 auto 2.5rem",
           }}
         >
-          We could not find what you were looking for. Try one of these places instead.
+          We could not find what you were looking for. Try one of these places
+          instead.
         </p>
 
         {/* Primary actions */}
-        <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "2rem" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "1rem",
+            justifyContent: "center",
+            flexWrap: "wrap",
+            marginBottom: "2rem",
+          }}
+        >
           <Btn href="/">Go Home</Btn>
-          <Btn href="/services" variant="secondary">Explore Services</Btn>
+          <Btn href="/services" variant="secondary">
+            Explore Services
+          </Btn>
         </div>
 
         {/* Secondary links */}
-        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexWrap: "wrap",
+          }}
+        >
           <Link
             href="/portfolio"
             style={{
@@ -150,5 +167,5 @@ export default function NotFound() {
         </div>
       </div>
     </div>
-  )
+  );
 }

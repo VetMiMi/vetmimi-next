@@ -1,4 +1,4 @@
-import "@/styles/editorial.css"
+import "@/styles/editorial.css";
 
 // Rendered by the portfolio and stories pages, which own the filter state.
 export function FilterBar({
@@ -7,10 +7,10 @@ export function FilterBar({
   onChange,
   count,
 }: {
-  categories: string[]
-  active: string
-  onChange: (value: string) => void
-  count: number
+  categories: string[];
+  active: string;
+  onChange: (value: string) => void;
+  count: number;
 }) {
   return (
     <div className="ed-filter-bar">
@@ -30,5 +30,5 @@ export function FilterBar({
         {count} {count === 1 ? "item" : "items"}
       </p>
     </div>
-  )
+  );
 }

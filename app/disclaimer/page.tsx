@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { C } from "@/lib/tokens"
-import { WaveDivider } from "@/components/art/Shapes"
+import { C } from "@/lib/tokens";
+import { WaveDivider } from "@/components/art/Shapes";
 
 const sections = [
   {
@@ -35,7 +35,7 @@ const sections = [
     heading: "Contact",
     body: "If you have questions about the information on this website, please use the contact form.",
   },
-]
+];
 
 export default function Disclaimer() {
   return (
@@ -94,7 +94,8 @@ export default function Disclaimer() {
             borderLeft: `3px solid ${C.ochre}`,
           }}
         >
-          This disclaimer is a placeholder pending formal legal review. All content is subject to change. Last updated [Date].
+          This disclaimer is a placeholder pending formal legal review. All
+          content is subject to change. Last updated [Date].
         </div>
 
         {/* Emergency callout — always prominent */}
@@ -111,7 +112,10 @@ export default function Disclaimer() {
             lineHeight: 1.7,
           }}
         >
-          <strong>If you are in crisis:</strong> Contact emergency services on <strong>000</strong>, Lifeline on <strong>13 11 14</strong>, or go to your nearest emergency department. This website is not a crisis service.
+          <strong>If you are in crisis:</strong> Contact emergency services on{" "}
+          <strong>000</strong>, Lifeline on <strong>13 11 14</strong>, or go to
+          your nearest emergency department. This website is not a crisis
+          service.
         </div>
 
         {sections.map((section) => (
@@ -177,5 +181,5 @@ export default function Disclaimer() {
         </div>
       </div>
     </div>
-  )
+  );
 }

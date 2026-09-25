@@ -1,8 +1,16 @@
-import { useState } from "react"
-import { C } from "@/lib/tokens"
-import { Btn } from "@/components/ui/Button"
-import { getDaysInMonth, getFirstDayOfMonth, MONTH_NAMES, DAY_LABELS, TIME_SLOTS, isAvailableDate, formatDate } from "./booking"
-import type { BookingState } from "./booking"
+import { useState } from "react";
+import { C } from "@/lib/tokens";
+import { Btn } from "@/components/ui/Button";
+import {
+  getDaysInMonth,
+  getFirstDayOfMonth,
+  MONTH_NAMES,
+  DAY_LABELS,
+  TIME_SLOTS,
+  isAvailableDate,
+  formatDate,
+} from "./booking";
+import type { BookingState } from "./booking";
 
 // ── Step 2: Date & Time ──────────────────────────────────────────────────────
 
@@ -16,40 +24,45 @@ export function Step2({
   onNext,
   onBack,
 }: {
-  selectedService: string
-  selectedDate: string
-  setSelectedDate: (d: string) => void
-  selectedTime: string
-  setSelectedTime: (t: string) => void
-  bookingState: BookingState
-  onNext: () => void
-  onBack: () => void
+  selectedService: string;
+  selectedDate: string;
+  setSelectedDate: (d: string) => void;
+  selectedTime: string;
+  setSelectedTime: (t: string) => void;
+  bookingState: BookingState;
+  onNext: () => void;
+  onBack: () => void;
 }) {
-  const now = new Date()
-  const [calYear, setCalYear] = useState(now.getFullYear())
-  const [calMonth, setCalMonth] = useState(now.getMonth())
+  const now = new Date();
+  const [calYear, setCalYear] = useState(now.getFullYear());
+  const [calMonth, setCalMonth] = useState(now.getMonth());
 
-  const daysInMonth = getDaysInMonth(calYear, calMonth)
-  const firstDay = getFirstDayOfMonth(calYear, calMonth)
+  const daysInMonth = getDaysInMonth(calYear, calMonth);
+  const firstDay = getFirstDayOfMonth(calYear, calMonth);
 
-  const cells: (Date | null)[] = []
-  for (let i = 0; i < firstDay; i++) cells.push(null)
-  for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(calYear, calMonth, d))
+  const cells: (Date | null)[] = [];
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++)
+    cells.push(new Date(calYear, calMonth, d));
 
   const prevMonth = () => {
-    if (calMonth === 0) { setCalMonth(11); setCalYear(y => y - 1) }
-    else setCalMonth(m => m - 1)
-  }
+    if (calMonth === 0) {
+      setCalMonth(11);
+      setCalYear((y) => y - 1);
+    } else setCalMonth((m) => m - 1);
+  };
   const nextMonth = () => {
-    if (calMonth === 11) { setCalMonth(0); setCalYear(y => y + 1) }
-    else setCalMonth(m => m + 1)
-  }
+    if (calMonth === 11) {
+      setCalMonth(0);
+      setCalYear((y) => y + 1);
+    } else setCalMonth((m) => m + 1);
+  };
 
   const handleDateClick = (date: Date) => {
-    const iso = date.toISOString().slice(0, 10)
-    setSelectedDate(iso)
-    setSelectedTime("")
-  }
+    const iso = date.toISOString().slice(0, 10);
+    setSelectedDate(iso);
+    setSelectedTime("");
+  };
 
   return (
     <div>
@@ -92,7 +105,8 @@ export function Step2({
             marginBottom: "1.5rem",
           }}
         >
-          There are no available times for this period. Please try a different date.
+          There are no available times for this period. Please try a different
+          date.
         </div>
       )}
 
@@ -125,26 +139,56 @@ export function Step2({
         }}
       >
         {/* Month nav */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "1.25rem",
+          }}
+        >
           <button
             onClick={prevMonth}
-            style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.1rem", color: C.ink, padding: "0.25rem 0.5rem" }}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "1.1rem",
+              color: C.ink,
+              padding: "0.25rem 0.5rem",
+            }}
           >
             ‹
           </button>
-          <span style={{ fontFamily: "var(--sans)", fontWeight: 600, color: C.ink }}>
+          <span
+            style={{ fontFamily: "var(--sans)", fontWeight: 600, color: C.ink }}
+          >
             {MONTH_NAMES[calMonth]} {calYear}
           </span>
           <button
             onClick={nextMonth}
-            style={{ background: "none", border: "none", cursor: "pointer", fontSize: "1.1rem", color: C.ink, padding: "0.25rem 0.5rem" }}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "1.1rem",
+              color: C.ink,
+              padding: "0.25rem 0.5rem",
+            }}
           >
             ›
           </button>
         </div>
 
         {/* Day headers */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: "2px", marginBottom: "0.5rem" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(7,1fr)",
+            gap: "2px",
+            marginBottom: "0.5rem",
+          }}
+        >
           {DAY_LABELS.map((d) => (
             <div
               key={d}
@@ -163,13 +207,19 @@ export function Step2({
         </div>
 
         {/* Day cells */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(7,1fr)", gap: "2px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(7,1fr)",
+            gap: "2px",
+          }}
+        >
           {cells.map((date, i) => {
-            if (!date) return <div key={`empty-${i}`} />
-            const available = isAvailableDate(date)
-            const iso = date.toISOString().slice(0, 10)
-            const isSelected = iso === selectedDate
-            const isToday = new Date().toDateString() === date.toDateString()
+            if (!date) return <div key={`empty-${i}`} />;
+            const available = isAvailableDate(date);
+            const iso = date.toISOString().slice(0, 10);
+            const isSelected = iso === selectedDate;
+            const isToday = new Date().toDateString() === date.toDateString();
 
             return (
               <button
@@ -179,15 +229,21 @@ export function Step2({
                 style={{
                   width: "100%",
                   aspectRatio: "1",
-                  border: isSelected ? `2px solid ${C.indigo}` : "2px solid transparent",
+                  border: isSelected
+                    ? `2px solid ${C.indigo}`
+                    : "2px solid transparent",
                   borderRadius: 6,
                   cursor: available ? "pointer" : "default",
                   backgroundColor: isSelected
                     ? C.indigo
                     : available
-                    ? `${C.coral}18`
-                    : "transparent",
-                  color: isSelected ? "#fff" : available ? C.coral : `${C.ink}33`,
+                      ? `${C.coral}18`
+                      : "transparent",
+                  color: isSelected
+                    ? "#fff"
+                    : available
+                      ? C.coral
+                      : `${C.ink}33`,
                   fontFamily: "var(--sans)",
                   fontSize: "0.82rem",
                   fontWeight: available || isToday ? 600 : 400,
@@ -199,7 +255,7 @@ export function Step2({
               >
                 {date.getDate()}
               </button>
-            )
+            );
           })}
         </div>
       </div>
@@ -218,7 +274,14 @@ export function Step2({
           >
             Available times for {formatDate(selectedDate)}
           </div>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", marginBottom: "0.5rem" }}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "0.6rem",
+              marginBottom: "0.5rem",
+            }}
+          >
             {TIME_SLOTS.map((t) => (
               <button
                 key={t}
@@ -264,9 +327,21 @@ export function Step2({
             fontSize: "0.9rem",
           }}
         >
-          <div style={{ color: `${C.ink}88`, marginBottom: "0.3rem", fontSize: "0.8rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>Your selection</div>
+          <div
+            style={{
+              color: `${C.ink}88`,
+              marginBottom: "0.3rem",
+              fontSize: "0.8rem",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+            }}
+          >
+            Your selection
+          </div>
           <div style={{ color: C.ink, fontWeight: 600 }}>{selectedService}</div>
-          <div style={{ color: `${C.ink}BB` }}>{formatDate(selectedDate)} at {selectedTime}</div>
+          <div style={{ color: `${C.ink}BB` }}>
+            {formatDate(selectedDate)} at {selectedTime}
+          </div>
         </div>
       )}
 
@@ -290,5 +365,5 @@ export function Step2({
         </Btn>
       </div>
     </div>
-  )
+  );
 }

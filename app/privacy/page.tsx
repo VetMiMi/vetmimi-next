@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { C } from "@/lib/tokens"
-import { WaveDivider } from "@/components/art/Shapes"
+import { C } from "@/lib/tokens";
+import { WaveDivider } from "@/components/art/Shapes";
 
 const sections = [
   {
@@ -39,7 +39,7 @@ const sections = [
     heading: "Privacy contact",
     body: "For privacy-related enquiries, please contact us at [To confirm — email address]. Alternatively, use the contact form on this website.",
   },
-]
+];
 
 export default function Privacy() {
   return (
@@ -98,7 +98,8 @@ export default function Privacy() {
             borderLeft: `3px solid ${C.ochre}`,
           }}
         >
-          This privacy policy is a placeholder pending formal legal review. All content is subject to change. Last updated [Date].
+          This privacy policy is a placeholder pending formal legal review. All
+          content is subject to change. Last updated [Date].
         </div>
 
         {sections.map((section) => (
@@ -164,5 +165,5 @@ export default function Privacy() {
         </div>
       </div>
     </div>
-  )
+  );
 }

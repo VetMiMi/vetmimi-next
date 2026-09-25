@@ -1,4 +1,4 @@
-import { C } from "@/lib/tokens"
+import { C } from "@/lib/tokens";
 
 // ── Progress indicator ──────────────────────────────────────────────────────
 
@@ -8,13 +8,20 @@ export function ProgressIndicator({ step }: { step: number }) {
     { n: 2, label: "Date & Time" },
     { n: 3, label: "Your Details" },
     { n: 4, label: "Review" },
-  ]
+  ];
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: "0.5rem", marginBottom: "3rem" }}>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+        gap: "0.5rem",
+        marginBottom: "3rem",
+      }}
+    >
       {steps.map((s) => {
-        const isActive = s.n === step
-        const isComplete = s.n < step
+        const isActive = s.n === step;
+        const isComplete = s.n < step;
 
         const circleStyle: React.CSSProperties = {
           width: 36,
@@ -31,17 +38,31 @@ export function ProgressIndicator({ step }: { step: number }) {
           color: isActive || isComplete ? "#fff" : C.ink,
           border: isActive || isComplete ? "none" : `1px solid ${C.ink}33`,
           transition: "background-color 0.2s",
-        }
+        };
 
         return (
-          <div key={s.n} style={{ display: "flex", justifyContent: "center", minWidth: 0 }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem" }}>
+          <div
+            key={s.n}
+            style={{ display: "flex", justifyContent: "center", minWidth: 0 }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "0.4rem",
+              }}
+            >
               <div style={circleStyle}>{isComplete ? "✓" : s.n}</div>
               <span
                 style={{
                   fontSize: "0.72rem",
                   fontFamily: "var(--sans)",
-                  color: isActive ? C.indigo : isComplete ? C.rose : `${C.ink}66`,
+                  color: isActive
+                    ? C.indigo
+                    : isComplete
+                      ? C.rose
+                      : `${C.ink}66`,
                   fontWeight: isActive ? 600 : 400,
                   textAlign: "center",
                 }}
@@ -50,8 +71,8 @@ export function ProgressIndicator({ step }: { step: number }) {
               </span>
             </div>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

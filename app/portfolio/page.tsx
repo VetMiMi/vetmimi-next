@@ -1,15 +1,15 @@
 "use client";
-import { useState } from "react"
-import { PageEnd, WorkCard } from "@/components/Editorial"
-import { FilterBar } from "@/components/FilterBar"
-import { PORTFOLIO } from "@/lib/data"
+import { useState } from "react";
+import { PageEnd, WorkCard } from "@/components/Editorial";
+import { FilterBar } from "@/components/FilterBar";
+import { PORTFOLIO } from "@/lib/data";
 
-const categories = ["All", ...new Set(PORTFOLIO.map((item) => item.category))]
+const categories = ["All", ...new Set(PORTFOLIO.map((item) => item.category))];
 export default function Portfolio() {
-  const [category, setCategory] = useState("All")
+  const [category, setCategory] = useState("All");
   const items = PORTFOLIO.filter(
     (item) => category === "All" || item.category === category,
-  )
+  );
   return (
     <div className="ed-page">
       <header className="ed-container ed-header">
@@ -40,5 +40,5 @@ export default function Portfolio() {
         label="Get in touch"
       />
     </div>
-  )
+  );
 }

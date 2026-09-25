@@ -3,26 +3,29 @@
 @import "tailwindcss";
 
 :root {
-  --canvas:  #FFF7EF;
-  --paper:   #F8F1E8;
-  --ink:     #28252D;
-  --rose:    #B2667B;
-  --coral:   #DB5F59;
-  --red:     #C04D46;
-  --indigo:  #494C6D;
-  --violet:  #6B6396;
-  --blue:    #7A8FAA;
-  --aqua:    #91C0D3;
-  --ochre:   #CDAA73;
-  --butter:  #E2CA85;
-  --olive:   #6F7144;
+  --canvas: #fff7ef;
+  --paper: #f8f1e8;
+  --ink: #28252d;
+  --rose: #b2667b;
+  --coral: #db5f59;
+  --red: #c04d46;
+  --indigo: #494c6d;
+  --violet: #6b6396;
+  --blue: #7a8faa;
+  --aqua: #91c0d3;
+  --ochre: #cdaa73;
+  --butter: #e2ca85;
+  --olive: #6f7144;
 
   --serif: var(--font-serif), Georgia, serif;
-  --sans:  var(--font-sans), system-ui, sans-serif;
-  --hand:  var(--font-hand), cursive;
+  --sans: var(--font-sans), system-ui, sans-serif;
+  --hand: var(--font-hand), cursive;
 }
 
-html, body { height: 100%; }
+html,
+body {
+  height: 100%;
+}
 
 body {
   background: var(--canvas);
@@ -33,20 +36,42 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--serif);
   line-height: 1.1;
   font-weight: 400;
 }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #D4C8B8; border-radius: 3px; }
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4c8b8;
+  border-radius: 3px;
+}
 
-:focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
+:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
 
-.prose { max-width: 720px; }
-.prose p { margin-bottom: 1.4rem; }
-.prose h2 { margin: 2.5rem 0 1rem; font-size: clamp(1.5rem, 2.5vw, 2rem); }
+.prose {
+  max-width: 720px;
+}
+.prose p {
+  margin-bottom: 1.4rem;
+}
+.prose h2 {
+  margin: 2.5rem 0 1rem;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+}

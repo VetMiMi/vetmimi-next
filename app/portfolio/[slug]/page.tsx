@@ -1,15 +1,25 @@
-"use client";
-
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { MissingEntry, PageEnd, WorkCard } from "@/components/Editorial"
+import { notFound } from "next/navigation";
+import { PageEnd, WorkCard } from "@/components/Editorial"
 import { PORTFOLIO } from "@/lib/data"
 import Image from "next/image";
 
-export default function PortfolioDetail() {
-  const { slug } = useParams<{ slug: string }>();
+// Prerender one static page per entry at build time;
+// any other slug is a 404 without rendering anything.
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return PORTFOLIO.map((item) => ({ slug: item.slug }))
+}
+
+export default async function PortfolioDetail({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
   const item = PORTFOLIO.find((work) => work.slug === slug)
-  if (!item) return <MissingEntry kind="artwork" href="/portfolio" />
+  if (!item) notFound()
   const details = [
     ["Year", item.year],
     ["Medium", item.medium],

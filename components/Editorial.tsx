@@ -73,23 +73,3 @@ export function PageEnd({
     </section>
   )
 }
-
-export function MissingEntry({
-  kind,
-  href,
-}: {
-  kind: string;
-  href: string;
-}) {
-  return (
-    <div className="ed-page">
-      <section className="ed-container ed-section">
-        <p className="ed-label">Not found</p>
-        <h1>We couldn’t find this {kind}.</h1>
-        <Link className="ed-link" href={href}>
-          Back to {kind === "story" ? "stories" : "portfolio"} →
-        </Link>
-      </section>
-    </div>
-  )
-}

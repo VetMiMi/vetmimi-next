@@ -1,8 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
+import {
+  ChatsCircle,
+  PaintBrush,
+  Question,
+} from "@phosphor-icons/react/dist/ssr";
 import { PageEnd } from "@/components/Editorial";
 import dawMiPortrait from "@/assets/daw-mi-portrait.webp";
 import artImage from "@/assets/image-4.webp";
+import hewPhoto from "@/assets/human-experience-week/daw-mi-with-artwork-3.webp";
 import { VideoIntro } from "./_components/VideoIntro";
 
 export default function About() {
@@ -47,60 +53,74 @@ export default function About() {
           <figcaption className="ed-signature">Daw Mi</figcaption>
         </figure>
       </section>
-      <VideoIntro />
       <section className="ed-paper">
-        <div className="ed-container ed-section ed-split ed-split-wide">
-          <div>
-            <p className="ed-label">Her background</p>
-            <h2>
-              Different experiences.
-              <br />
-              One connected practice.
-            </h2>
-            <p>
-              Working with people and making art have both shaped Daw Mi’s
-              approach.
-            </p>
+        <div className="ed-container ed-section">
+          <p className="ed-label">Her background</p>
+          <h2>
+            Different experiences.
+            <br />
+            One connected practice.
+          </h2>
+          <p>
+            Working with people and making art have both shaped Daw Mi’s
+            approach.
+          </p>
+          <div className="ed-split ed-split-wide ed-background-body">
+            <figure className="ed-photo-frame">
+              <Image
+                src={hewPhoto}
+                alt="Daw Mi kneeling beside a large group artwork at Royal North Shore Hospital"
+                sizes="(max-width: 767px) 100vw, 460px"
+                placeholder="blur"
+              />
+            </figure>
+            <ul className="ed-timeline">
+              <li>
+                <h3>Healthcare and mental health</h3>
+                <p>
+                  A background in care informs the attention she brings to each
+                  person and their experience.
+                </p>
+              </li>
+              <li>
+                <h3>Art and creative practice</h3>
+                <p>
+                  As a transformative artist, Daw Mi works with colour,
+                  materials, and ideas. You can explore a selection of this work
+                  in her portfolio.
+                </p>
+              </li>
+              <li>
+                <h3>The Art of Wellness</h3>
+                <p>
+                  Daw Mi is a co-founder of The Art of Wellness at Royal North
+                  Shore Hospital in Sydney, bringing creativity into a
+                  healthcare setting.
+                </p>
+                <Link className="ed-link" href="/art-of-wellness">
+                  Learn about The Art of Wellness →
+                </Link>
+              </li>
+            </ul>
           </div>
-          <ul className="ed-timeline">
-            <li>
-              <h3>Healthcare and mental health</h3>
-              <p>
-                A background in care informs the attention she brings to each
-                person and their experience.
-              </p>
-            </li>
-            <li>
-              <h3>Art and creative practice</h3>
-              <p>
-                As a transformative artist, Daw Mi works with colour, materials,
-                and ideas. You can explore a selection of this work in her
-                portfolio.
-              </p>
-            </li>
-            <li>
-              <h3>The Art of Wellness</h3>
-              <p>
-                Daw Mi is a co-founder of The Art of Wellness at Royal North
-                Shore Hospital in Sydney, bringing creativity into a healthcare
-                setting.
-              </p>
-              <Link className="ed-link" href="/art-of-wellness">
-                Learn about The Art of Wellness →
-              </Link>
-            </li>
-          </ul>
         </div>
       </section>
+      <VideoIntro />
       <section className="ed-container ed-section">
         <p className="ed-label">Working together</p>
         <h2>Room to take things at your own pace.</h2>
         <div className="ed-principles">
           <div>
+            <span className="ed-principle-icon" aria-hidden>
+              <PaintBrush size={30} weight="duotone" />
+            </span>
             <h3>No art skills needed</h3>
             <p>You do not need to know how to draw or arrive with an idea.</p>
           </div>
           <div>
+            <span className="ed-principle-icon" aria-hidden>
+              <ChatsCircle size={30} weight="duotone" />
+            </span>
             <h3>Your experience matters</h3>
             <p>
               The focus is on what making and talking mean to you, not on a
@@ -108,6 +128,9 @@ export default function About() {
             </p>
           </div>
           <div>
+            <span className="ed-principle-icon" aria-hidden>
+              <Question size={30} weight="duotone" />
+            </span>
             <h3>Start with a question</h3>
             <p>
               If you are unsure which service fits, you can ask before deciding.

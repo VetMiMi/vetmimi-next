@@ -1,24 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { C } from "@/lib/tokens";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const NAV_LINKS = [
-  { label: "About", to: "/about" },
-  { label: "Services", to: "/services" },
-  { label: "Art of Wellness", to: "/art-of-wellness" },
-  { label: "Portfolio", to: "/portfolio" },
-  { label: "Stories & Insights", to: "/stories" },
-  { label: "Contact", to: "/contact" },
-];
+  { key: "about", to: "/about" },
+  { key: "services", to: "/services" },
+  { key: "artOfWellness", to: "/art-of-wellness" },
+  { key: "portfolio", to: "/portfolio" },
+  { key: "stories", to: "/stories" },
+  { key: "contact", to: "/contact" },
+] as const;
 
 // The only interactive part of the layout: scroll border + mobile menu.
 export default function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("common");
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 24);
@@ -80,16 +82,16 @@ export default function SiteHeader() {
               marginTop: "2px",
             }}
           >
-            Daw Mi · Art Therapist
+            {t("brand.tagline")}
           </span>
         </Link>
 
         <nav
-          aria-label="Main navigation"
+          aria-label={t("nav.label")}
           style={{ alignItems: "center", gap: "1.75rem" }}
           className="hidden lg:flex"
         >
-          {NAV_LINKS.map(({ label, to }) => (
+          {NAV_LINKS.map(({ key, to }) => (
             <Link
               key={to}
               href={to}
@@ -108,9 +110,10 @@ export default function SiteHeader() {
                 transition: "opacity 0.2s, color 0.2s",
               }}
             >
-              {label}
+              {t(`nav.${key}`)}
             </Link>
           ))}
+          <LanguageSwitcher />
         </nav>
 
         <div
@@ -131,13 +134,13 @@ export default function SiteHeader() {
               textDecoration: "none",
             }}
           >
-            Book
+            {t("nav.book")}
           </Link>
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={t(menuOpen ? "nav.closeMenu" : "nav.openMenu")}
             style={{
               background: "none",
               border: "none",
@@ -167,7 +170,7 @@ export default function SiteHeader() {
           className="lg:hidden"
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
-            {NAV_LINKS.map(({ label, to }) => (
+            {NAV_LINKS.map(({ key, to }) => (
               <Link
                 key={to}
                 href={to}
@@ -185,9 +188,12 @@ export default function SiteHeader() {
                   borderBottom: "1px solid rgba(40,37,45,0.06)",
                 }}
               >
-                {label}
+                {t(`nav.${key}`)}
               </Link>
             ))}
+            <div style={{ padding: "1rem 0 0" }}>
+              <LanguageSwitcher />
+            </div>
             <Link
               href="/book"
               onClick={() => setMenuOpen(false)}
@@ -205,7 +211,7 @@ export default function SiteHeader() {
                 display: "block",
               }}
             >
-              Book Appointment
+              {t("nav.bookAppointment")}
             </Link>
           </div>
         </div>

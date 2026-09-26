@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "title": "VetMiMi",
+    "description": "Art, reflection and wellbeing with Daw Mi."
+  },
+  "nav": {
+    "label": "Main navigation",
+    "about": "About",
+    "services": "Services",
+    "artOfWellness": "Art of Wellness",
+    "portfolio": "Portfolio",
+    "stories": "Stories & Insights",
+    "contact": "Contact",
+    "book": "Book",
+    "bookAppointment": "Book Appointment",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "brand": {
+    "tagline": "Daw Mi · Art Therapist"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "my": "မြန်မာ"
+  },
+  "footer": {
+    "tagline": "Daw Mi · Art Therapist & Wellbeing Practitioner",
+    "blurb": "A space for creativity, reflection and meaningful connection. Through art and thoughtful conversation, another way to explore what may be difficult to put into words.",
+    "explore": "Explore",
+    "connect": "Connect",
+    "information": "Information",
+    "facebook": "Facebook [To confirm]",
+    "email": "Email [To confirm]",
+    "privacy": "Privacy Policy",
+    "bookingPolicy": "Booking & Cancellation",
+    "disclaimer": "Disclaimer",
+    "copyright": "© {year} VetMiMi. All rights reserved.",
+    "location": "Sydney, Australia · [Location to confirm]"
+  },
+  "notFound": {
+    "heading": "This page wandered somewhere else.",
+    "text": "We could not find what you were looking for. Try one of these places instead.",
+    "home": "Go Home",
+    "services": "Explore Services"
+  }
+}

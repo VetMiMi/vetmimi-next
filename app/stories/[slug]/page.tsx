@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { StoryCard } from "@/components/Editorial";
-import { STORIES } from "@/lib/data";
+import { STORIES, STORY_TYPE_LABEL } from "@/lib/data";
 import Image from "next/image";
 
 // Prerender one static page per entry at build time;
@@ -31,11 +31,11 @@ export default async function StoryDetail({
       <nav className="ed-container ed-breadcrumb" aria-label="Breadcrumb">
         <Link href="/stories">Stories & insights</Link>
         <span aria-hidden="true">/</span>
-        <span>{story.category}</span>
+        <span>{STORY_TYPE_LABEL[story.type]}</span>
       </nav>
       <article className="ed-reading">
         <header className="ed-article-header">
-          <p className="ed-label">{story.category}</p>
+          <p className="ed-label">{STORY_TYPE_LABEL[story.type]}</p>
           <h1>{story.title}</h1>
           <p className="ed-lead">{story.subtitle || story.excerpt}</p>
           <p className="ed-preview-label">
@@ -46,7 +46,7 @@ export default async function StoryDetail({
           className="ed-article-image"
           src={story.img}
           alt="Artwork accompanying this reflection"
-          sizes="(max-width: 768px) 100vw, 760px"
+          sizes="(max-width: 1168px) 100vw, 1120px"
         />
         <div className="ed-article-body">
           {(paragraphs.length ? paragraphs : [story.excerpt]).map(

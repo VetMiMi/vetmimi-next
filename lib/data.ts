@@ -18,8 +18,13 @@ export type PortfolioItem = {
   featured?: boolean;
 };
 
+export type StoryType = "story" | "insight";
+
 export type Story = {
   slug: string;
+  /** "story" = a real person's lived experience; "insight" = Daw Mi's writing. */
+  type: StoryType;
+  /** Finer topic, kept for later if the collection grows. */
   category: string;
   title: string;
   subtitle?: string;
@@ -93,6 +98,7 @@ export const PORTFOLIO: PortfolioItem[] = [
 export const STORIES: Story[] = [
   {
     slug: "stop-trying-make-perfect",
+    type: "insight",
     category: "Reflections",
     title: "What happens when we stop trying to make it perfect?",
     subtitle: "A reflection on making space for curiosity before answers",
@@ -114,6 +120,7 @@ There did not have to be a perfect answer. There only had to be a place to start
   },
   {
     slug: "art-and-words",
+    type: "insight",
     category: "Art & Wellbeing",
     title: "When art holds what words cannot carry",
     excerpt:
@@ -125,6 +132,7 @@ There did not have to be a perfect answer. There only had to be a place to start
   },
   {
     slug: "creativity-in-healthcare",
+    type: "insight",
     category: "Art of Wellness & Project Updates",
     title: "What creativity can bring into a healthcare space",
     excerpt:
@@ -143,11 +151,7 @@ export const PORTFOLIO_CATEGORIES = [
   "Exhibitions & Events",
   "Projects & Collaborations",
 ];
-export const STORY_CATEGORIES = [
-  "All",
-  "True Stories",
-  "Reflections",
-  "Art & Wellbeing",
-  "Art Psychotherapy",
-  "Art of Wellness & Project Updates",
-];
+export const STORY_TYPE_LABEL: Record<StoryType, string> = {
+  story: "Story",
+  insight: "Insight",
+};

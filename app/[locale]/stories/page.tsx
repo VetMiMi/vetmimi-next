@@ -1,43 +1,47 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { StoryCard } from "@/components/Editorial";
 import { FilterBar } from "@/components/FilterBar";
-import { STORIES, STORY_TYPE_LABEL, type StoryType } from "@/lib/data";
+import { STORIES, type StoryType } from "@/lib/data";
 import Image from "next/image";
 
 // Two kinds of post: Stories (real people's lived experience) and Insights
 // (Daw Mi's writing on art psychotherapy).
-const FILTERS: Record<string, StoryType | null> = {
-  All: null,
-  Stories: "story",
-  Insights: "insight",
-};
+const FILTERS = {
+  all: null,
+  story: "story",
+  insight: "insight",
+} as const satisfies Record<string, StoryType | null>;
+
+type Filter = keyof typeof FILTERS;
 
 export default function Stories() {
-  const [filter, setFilter] = useState("All");
+  const t = useTranslations("stories");
+  const [filter, setFilter] = useState<Filter>("all");
   const type = FILTERS[filter];
   const stories = STORIES.filter((story) => !type || story.type === type);
   // The big card is the one post Daw Mi chooses to feature, shown only under All.
   const featured = type ? undefined : stories.find((story) => story.featured);
   const rest = stories.filter((story) => story !== featured);
+  const categories = (Object.keys(FILTERS) as Filter[]).map((value) => ({
+    value,
+    label: t(`filters.${value}`),
+  }));
   return (
     <div className="ed-page">
       <header className="ed-container ed-header">
-        <p className="ed-label">Stories & insights</p>
-        <h1>A little time to read and reflect.</h1>
-        <p className="ed-lead">
-          Thoughts on art, wellbeing, and creative practice.
-        </p>
-        <p className="ed-preview-label">
-          Preview collection · Final stories are being prepared.
-        </p>
+        <p className="ed-label">{t("index.label")}</p>
+        <h1>{t("index.title")}</h1>
+        <p className="ed-lead">{t("index.lead")}</p>
+        <p className="ed-preview-label">{t("index.preview")}</p>
       </header>
-      <section className="ed-container" aria-label="Stories">
+      <section className="ed-container" aria-label={t("index.sectionLabel")}>
         <FilterBar
-          categories={Object.keys(FILTERS)}
+          categories={categories}
           active={filter}
-          onChange={setFilter}
+          onChange={(value) => setFilter(value as Filter)}
           count={stories.length}
         />
         {featured && (
@@ -49,24 +53,21 @@ export default function Stories() {
             />
             <div>
               <p className="ed-label">
-                Featured · {STORY_TYPE_LABEL[featured.type]}
+                {t("index.featured", { type: t(`types.${featured.type}`) })}
               </p>
               <h2>
-                <Link href={`/stories/${featured.slug}`}>{featured.title}</Link>
+                <Link href={`/stories/${featured.slug}`}>
+                  {t(`items.${featured.slug}.title`)}
+                </Link>
               </h2>
-              <p>{featured.excerpt}</p>
+              <p>{t(`items.${featured.slug}.excerpt`)}</p>
               <Link className="ed-link" href={`/stories/${featured.slug}`}>
-                Read preview →
+                {t("index.readPreview")}
               </Link>
             </div>
           </article>
         )}
-        {stories.length === 0 && (
-          <p className="ed-empty">
-            Stories from the people Daw Mi works with are being prepared and
-            will appear here soon.
-          </p>
-        )}
+        {stories.length === 0 && <p className="ed-empty">{t("index.empty")}</p>}
         <div className="ed-story-list">
           {rest.map((story) => (
             <StoryCard key={story.slug} story={story} />

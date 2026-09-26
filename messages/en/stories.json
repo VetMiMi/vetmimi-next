@@ -1,1 +1,60 @@
-{}
+{
+  "index": {
+    "label": "Stories & insights",
+    "title": "A little time to read and reflect.",
+    "lead": "Thoughts on art, wellbeing, and creative practice.",
+    "preview": "Preview collection · Final stories are being prepared.",
+    "sectionLabel": "Stories",
+    "featured": "Featured · {type}",
+    "readPreview": "Read preview →",
+    "empty": "Stories from the people Daw Mi works with are being prepared and will appear here soon."
+  },
+  "filters": {
+    "all": "All",
+    "story": "Stories",
+    "insight": "Insights"
+  },
+  "types": {
+    "story": "Story",
+    "insight": "Insight"
+  },
+  "detail": {
+    "breadcrumbLabel": "Breadcrumb",
+    "breadcrumbStories": "Stories & insights",
+    "preview": "Story preview · Not yet a final published article",
+    "imageAlt": "Artwork accompanying this reflection",
+    "moreTitle": "More to explore.",
+    "allStories": "All stories →"
+  },
+  "items": {
+    "stop-trying-make-perfect": {
+      "category": "Reflections",
+      "title": "What happens when we stop trying to make it perfect?",
+      "excerpt": "A reflection on creating without needing an answer first. What opens up when the pressure to get it right is set aside for a while.",
+      "date": "October 2025"
+    },
+    "art-and-words": {
+      "category": "Art & Wellbeing",
+      "title": "When art holds what words cannot carry",
+      "excerpt": "Sometimes the things we most need to say do not arrive as sentences. They arrive as colour, weight, pressure on paper.",
+      "date": "September 2025"
+    },
+    "creativity-in-healthcare": {
+      "category": "Art of Wellness & Project Updates",
+      "title": "What creativity can bring into a healthcare space",
+      "excerpt": "A reflection on what happens when art is offered in places of waiting, uncertainty and care.",
+      "date": "August 2025"
+    }
+  },
+  "subtitles": {
+    "stop-trying-make-perfect": "A reflection on making space for curiosity before answers"
+  },
+  "bodies": {
+    "stop-trying-make-perfect": [
+      "Some experiences arrive before we have the words for them. This reflection begins with noticing what changed when there was permission to make first and explain later.",
+      "In a session, someone once picked up a piece of paper and tore it. Not in frustration — in curiosity. They held the edges and looked at what the tear had made. It had not been planned. It had just happened.",
+      "What followed was a conversation that could not have started any other way.",
+      "There did not have to be a perfect answer. There only had to be a place to start."
+    ]
+  }
+}

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import "@/styles/editorial.css";
 
 // Rendered by the portfolio and stories pages, which own the filter state.
@@ -7,27 +8,29 @@ export function FilterBar({
   onChange,
   count,
 }: {
-  categories: string[];
+  /** value is the filter id; label is the translated text shown. */
+  categories: { value: string; label: string }[];
   active: string;
   onChange: (value: string) => void;
   count: number;
 }) {
+  const t = useTranslations("common.editorial");
   return (
     <div className="ed-filter-bar">
-      <div role="group" aria-label="Filter by category" className="ed-filters">
-        {categories.map((category) => (
+      <div role="group" aria-label={t("filterLabel")} className="ed-filters">
+        {categories.map(({ value, label }) => (
           <button
-            key={category}
+            key={value}
             type="button"
-            aria-pressed={active === category}
-            onClick={() => onChange(category)}
+            aria-pressed={active === value}
+            onClick={() => onChange(value)}
           >
-            {category}
+            {label}
           </button>
         ))}
       </div>
       <p className="ed-count" role="status">
-        {count} {count === 1 ? "item" : "items"}
+        {t("count", { count })}
       </p>
     </div>
   );

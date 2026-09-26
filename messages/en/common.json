@@ -43,5 +43,11 @@
     "text": "We could not find what you were looking for. Try one of these places instead.",
     "home": "Go Home",
     "services": "Explore Services"
+  },
+  "editorial": {
+    "readStory": "Read story →",
+    "readStoryLabel": "Read {title}",
+    "filterLabel": "Filter by category",
+    "count": "{count, plural, one {{count} item} other {{count} items}}"
   }
 }

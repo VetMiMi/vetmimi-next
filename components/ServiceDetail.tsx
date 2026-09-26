@@ -1,45 +1,62 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { services } from "@/lib/services";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import {
+  services,
+  type ServicePractical,
+  type ServiceQuestion,
+  type ServiceStep,
+} from "@/lib/services";
 import "@/styles/services.css";
 import Image from "next/image";
 
 export default function ServiceDetail({ slug }: { slug: string }) {
   const service = services.find((item) => item.slug === slug);
+  const t = useTranslations("services");
   if (!service) notFound();
+  const item = `items.${service.slug}` as const;
+  const highlights: string[] = t.raw(`${item}.highlights`);
+  const steps: ServiceStep[] = t.raw(`${item}.steps`);
+  const practical: ServicePractical[] = t.raw(`${item}.practical`);
+  const questions: ServiceQuestion[] = t.raw(`${item}.questions`);
+  const name = t(`${item}.name`);
+  const action = t(`${item}.action`);
   const isIndividual = slug === "individual-art-therapy";
   const isWorkshop = slug === "workshops-programs";
 
   return (
     <div className={`service-pages service-tone-${service.tone}`}>
       <div className="service-container">
-        <nav className="service-breadcrumb" aria-label="Breadcrumb">
-          <Link href="/services">Services</Link>
+        <nav
+          className="service-breadcrumb"
+          aria-label={t("detail.breadcrumbLabel")}
+        >
+          <Link href="/services">{t("detail.breadcrumbServices")}</Link>
           <span aria-hidden="true">/</span>
-          <span>{service.name}</span>
+          <span>{name}</span>
         </nav>
         <section className="service-hero">
           <div>
-            <p className="service-eyebrow">{service.audience}</p>
-            <h1>{service.name}</h1>
-            <p className="service-intro">{service.intro}</p>
+            <p className="service-eyebrow">{t(`${item}.audience`)}</p>
+            <h1>{name}</h1>
+            <p className="service-intro">{t(`${item}.intro`)}</p>
             <div className="service-actions">
               <Link className="service-button" href={service.href}>
-                {service.action} <span aria-hidden="true">↗</span>
+                {action} <span aria-hidden="true">↗</span>
               </Link>
               <a className="service-text-link" href="#what-to-expect">
-                See how it works ↓
+                {t("detail.seeHowItWorks")}
               </a>
             </div>
-            <p className="service-reassurance">{service.reassurance}</p>
+            <p className="service-reassurance">{t(`${item}.reassurance`)}</p>
           </div>
           <figure className="service-hero-art">
             <Image
               src={service.image}
-              alt={service.imageAlt}
+              alt={t(`${item}.imageAlt`)}
               sizes="(max-width: 768px) 100vw, 50vw"
             />
-            <figcaption>Art, expression & connection</figcaption>
+            <figcaption>{t("detail.figcaption")}</figcaption>
           </figure>
         </section>
       </div>
@@ -47,17 +64,17 @@ export default function ServiceDetail({ slug }: { slug: string }) {
       <section className="service-section service-tinted">
         <div className="service-container service-fit">
           <div>
-            <p className="service-eyebrow">Is this for me?</p>
+            <p className="service-eyebrow">{t("detail.fit.eyebrow")}</p>
             <h2>
               {isWorkshop
-                ? "For people planning something together."
-                : "Find a way that feels right for you."}
+                ? t("detail.fit.titleWorkshop")
+                : t("detail.fit.title")}
             </h2>
           </div>
           <div>
-            <p>{service.fit}</p>
+            <p>{t(`${item}.fit`)}</p>
             <ul className="service-highlights">
-              {service.highlights.map((text) => (
+              {highlights.map((text) => (
                 <li key={text}>{text}</li>
               ))}
             </ul>
@@ -70,11 +87,11 @@ export default function ServiceDetail({ slug }: { slug: string }) {
         className="service-section service-container"
       >
         <div className="service-section-heading">
-          <p className="service-eyebrow">What to expect</p>
-          <h2>{service.stepsTitle}</h2>
+          <p className="service-eyebrow">{t("detail.steps.eyebrow")}</p>
+          <h2>{t(`${item}.stepsTitle`)}</h2>
         </div>
         <ol className="service-steps">
-          {service.steps.map((step, index) => (
+          {steps.map((step, index) => (
             <li key={step.title}>
               <span className="service-step-number">0{index + 1}</span>
               <h3>{step.title}</h3>
@@ -87,20 +104,20 @@ export default function ServiceDetail({ slug }: { slug: string }) {
       <section className="service-section service-paper">
         <div className="service-container service-practical">
           <div>
-            <p className="service-eyebrow">The practical side</p>
+            <p className="service-eyebrow">{t("detail.practical.eyebrow")}</p>
             <h2>
               {isWorkshop
-                ? "What to include in your enquiry"
-                : "Before you get started"}
+                ? t("detail.practical.titleWorkshop")
+                : t("detail.practical.title")}
             </h2>
             <p>
               {isWorkshop
-                ? "These details help us understand your plans. Share what you know so far."
-                : "Get the details you need before making a decision."}
+                ? t("detail.practical.textWorkshop")
+                : t("detail.practical.text")}
             </p>
           </div>
           <dl>
-            {service.practical.map((item) => (
+            {practical.map((item) => (
               <div key={item.title}>
                 <dt>{item.title}</dt>
                 <dd>{item.text}</dd>
@@ -112,14 +129,14 @@ export default function ServiceDetail({ slug }: { slug: string }) {
 
       <section className="service-section service-container service-faq">
         <div>
-          <p className="service-eyebrow">A little more clarity</p>
-          <h2>Common questions</h2>
+          <p className="service-eyebrow">{t("detail.faq.eyebrow")}</p>
+          <h2>{t("detail.faq.title")}</h2>
           <Link className="service-text-link" href="/contact">
-            Ask Daw Mi a question ↗
+            {t("detail.faq.ask")}
           </Link>
         </div>
         <div>
-          {service.questions.map((item) => (
+          {questions.map((item) => (
             <details key={item.question}>
               <summary>
                 {item.question}
@@ -134,29 +151,29 @@ export default function ServiceDetail({ slug }: { slug: string }) {
       <section className="service-container service-closing-wrap">
         <div className="service-closing">
           <div>
-            <p className="service-eyebrow">Your next step</p>
-            <h2>{service.closing}</h2>
-            <p>{service.next}</p>
+            <p className="service-eyebrow">{t("detail.closing.eyebrow")}</p>
+            <h2>{t(`${item}.closing`)}</h2>
+            <p>{t(`${item}.next`)}</p>
           </div>
           <Link className="service-button" href={service.href}>
-            {service.action} <span aria-hidden="true">↗</span>
+            {action} <span aria-hidden="true">↗</span>
           </Link>
         </div>
         <div className="service-footnotes">
-          <Link href="/services">← Compare all services</Link>
-          <Link href="/about">About Daw Mi</Link>
+          <Link href="/services">{t("detail.footnotes.compare")}</Link>
+          <Link href="/about">{t("detail.footnotes.about")}</Link>
           {isIndividual && (
             <>
-              <Link href="/booking-policy">Booking & cancellation</Link>
-              <Link href="/privacy">Privacy</Link>
-              <Link href="/disclaimer">Important information</Link>
+              <Link href="/booking-policy">
+                {t("detail.footnotes.bookingPolicy")}
+              </Link>
+              <Link href="/privacy">{t("detail.footnotes.privacy")}</Link>
+              <Link href="/disclaimer">{t("detail.footnotes.disclaimer")}</Link>
             </>
           )}
         </div>
         {isIndividual && (
-          <p className="service-boundary">
-            Art therapy is not an emergency or crisis service.
-          </p>
+          <p className="service-boundary">{t("detail.boundary")}</p>
         )}
       </section>
     </div>

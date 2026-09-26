@@ -1,1 +1,158 @@
-{}
+{
+  "floatingCta": "Book Free Consultation",
+  "hero": {
+    "eyebrow": "Art · Reflection · Wellbeing",
+    "title": "Where the inner world finds its form.",
+    "subtitle": "Art psychotherapy with Daw Mi — Sydney",
+    "intro": "VetMiMi is a space where creativity and reflection meet. Through art and thoughtful conversation, Daw Mi creates another way to explore what may be difficult to put into words.",
+    "bookCta": "Book Free Consultation",
+    "meetCta": "Meet Daw Mi",
+    "trust": {
+      "certified": "Certified Art Therapist [To confirm]",
+      "hospital": "Royal North Shore Hospital — The Art of Wellness",
+      "location": "Sydney, NSW"
+    }
+  },
+  "pause": {
+    "line1": "You do not need to know how to draw.",
+    "line2": "You do not need to make something beautiful.",
+    "line3": "You only need somewhere to begin.",
+    "link": "Find out how it works →"
+  },
+  "gallery": {
+    "eyebrow": "From the studio",
+    "title": "Made, shared and experienced",
+    "link": "View the Portfolio →",
+    "tiles": {
+      "growth": {
+        "alt": "Tall pastel painting of flowing sage, lavender and peach shapes against red"
+      },
+      "loveHopeFaith": {
+        "alt": "Three winding dragons in white, green and pink beneath the words love, hope and faith"
+      },
+      "driftwood": {
+        "alt": "Driftwood reaching over a calm blue shoreline, painted in thick oil"
+      },
+      "ulx": {
+        "alt": "Portrait of a woman in profile with a pink peony and a blue-and-white vase"
+      },
+      "bloom": {
+        "alt": "Pink peonies in a blue-and-white vase, painted in soft watercolour"
+      },
+      "beGood": {
+        "alt": "A tree with deep roots and a bird, with Burmese and English words: be good, be empty, be equal"
+      }
+    }
+  },
+  "about": {
+    "portraitAlt": "Daw Mi smiling, with her paintings softly blurred behind her",
+    "badge": {
+      "role": "Co-founder"
+    },
+    "eyebrow": "About Daw Mi",
+    "title": "Care and creativity have always met in Daw Mi's work.",
+    "body1": "Her work brings together experience in healthcare, mental health, creative practice and art therapy. VetMiMi grew from a simple idea: creativity can give us another way to notice, express and reflect.",
+    "body2": "Daw Mi is a certified art psychotherapist, transformative artist, and co-founder of The Art of Wellness at Royal North Shore Hospital in Sydney. The artworks on this site were made <em>in</em> these sessions.",
+    "link": "Get to know Daw Mi →"
+  },
+  "services": {
+    "eyebrow": "How we work together",
+    "title": "A different kind of space to explore.",
+    "intro": "Every person and every setting is different. Start by reading what each service is like and choose the place that feels closest to what you are looking for.",
+    "learnMore": "Learn more →",
+    "items": {
+      "individual": {
+        "artAlt": "Organic flowing figure",
+        "label": "ONE-TO-ONE",
+        "title": "Individual Art Therapy",
+        "desc": "A private space for art-making, conversation and reflection. You do not need any art experience."
+      },
+      "group": {
+        "artAlt": "Pink peonies watercolor",
+        "label": "CREATE TOGETHER",
+        "title": "Group Art & Wellbeing",
+        "desc": "A shared creative space for expression, reflection and connection, with room to take part in your own way."
+      },
+      "workshops": {
+        "artAlt": "Expressionist golden painting",
+        "label": "COMMUNITY & ORGANISATIONS",
+        "title": "Workshops & Programs",
+        "desc": "Creative experiences shaped for communities, healthcare settings, organisations and suitable projects."
+      }
+    }
+  },
+  "artOfWellness": {
+    "photoAlt": "Daw Mi at Royal North Shore Hospital beside a painting created with patients, visitors and staff",
+    "title": "Art where care happens.",
+    "body": "The Art of Wellness brings music, art and photography to patients, carers and staff at Royal North Shore Hospital. Discover the program, Daw Mi's involvement and the work connected to it.",
+    "exploreCta": "Explore The Art of Wellness →",
+    "projectsLink": "See related projects →"
+  },
+  "stories": {
+    "eyebrow": "Stories & Insights",
+    "title": "Stories, thoughts and things worth sitting with.",
+    "intro": "Reflections on art, wellbeing, lived experience and the moments that shape our work.",
+    "readStory": "Read story →",
+    "readStoryLabel": "Read story: {title}",
+    "allLink": "All stories & insights →"
+  },
+  "testimonials": {
+    "eyebrow": "True stories",
+    "title": "Voices from the studio",
+    "items": {
+      "sarah": {
+        "quote": "I walked in not knowing what to expect and left feeling like I had finally said something I never found words for.",
+        "tag": "Individual therapy client"
+      },
+      "james": {
+        "quote": "Daw Mi creates the most gentle, unhurried space. The artwork I made in our sessions helped me understand myself more than years of talk therapy.",
+        "tag": "Long-term client"
+      },
+      "priya": {
+        "quote": "The creative process bypassed the part of my brain that was stuck. After struggling with anxiety for years, this genuinely changed things for me.",
+        "tag": "Art therapy client"
+      }
+    }
+  },
+  "faq": {
+    "eyebrow": "Common questions",
+    "title": "What people ask first",
+    "imageAlt": "A shared painting of a garden path, tree and apple, made in The Art of Wellness sessions",
+    "imageCaption": "Art made in session",
+    "items": {
+      "whatIs": {
+        "q": "What is art psychotherapy?",
+        "a": "Art psychotherapy uses the creative process — drawing, painting, collage — as a medium for self-expression and reflection. You do not need any art experience. The artwork you make is not judged; what it evokes and reveals is what matters."
+      },
+      "draw": {
+        "q": "Do I need to know how to draw?",
+        "a": "No. You do not need to know how to draw, or make anything beautiful. Many people who come have never picked up a paintbrush. The process of making is what matters, not the result."
+      },
+      "session": {
+        "q": "What does a session look like?",
+        "a": "Sessions are 50–60 minutes, one-on-one. We begin with a brief conversation, then explore through art materials at your own pace. The way a session unfolds can be different each time."
+      },
+      "medicare": {
+        "q": "Is this covered by Medicare or private health?",
+        "a": "Art psychotherapy may be covered under Mental Health Care Plans with a GP referral, or through private health extras. Contact us to discuss your specific situation."
+      },
+      "howMany": {
+        "q": "How many sessions will I need?",
+        "a": "Some people find real value in a single session; others benefit from ongoing work over weeks or months. There is no pressure to commit beyond what feels right for you."
+      }
+    }
+  },
+  "paths": {
+    "personal": {
+      "title": "Looking for personal support?",
+      "text": "Explore the services and find out what each experience involves.",
+      "servicesCta": "Explore Services",
+      "bookCta": "Book Appointment"
+    },
+    "professional": {
+      "title": "Planning a project or collaboration?",
+      "text": "Tell us what you are thinking about and we can begin from there.",
+      "contactCta": "Contact Daw Mi"
+    }
+  }
+}

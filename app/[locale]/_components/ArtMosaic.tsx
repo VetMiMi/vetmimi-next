@@ -1,4 +1,5 @@
 import Image, { type StaticImageData } from "next/image";
+import { useTranslations } from "next-intl";
 import { C } from "@/lib/tokens";
 import growth from "@/assets/artworks/growth-and-becoming.webp";
 import loveHopeFaith from "@/assets/artworks/love-hope-faith.webp";
@@ -8,8 +9,10 @@ import driftwood from "@/assets/artworks/driftwood-seascape.webp";
 import beGood from "@/assets/artworks/be-good-be-empty-be-equal.webp";
 
 type Tile = {
+  /** Key for the alt text in messages/<locale>/home.json (gallery.tiles). */
+  id: "growth" | "loveHopeFaith" | "driftwood" | "ulx" | "bloom" | "beGood";
+  /** Artwork titles are proper names and stay in English in every language. */
   title: string;
-  alt: string;
   img: StaticImageData;
   /** Which part of the painting stays in frame when the tile crops it. */
   focus: string;
@@ -22,48 +25,48 @@ type Tile = {
 // Growth | Love·Hope·Faith / Growth | Driftwood / ULX | Bloom / ULX | Be good
 const TILES: Tile[] = [
   {
+    id: "growth",
     title: "Growth & Becoming",
-    alt: "Tall pastel painting of flowing sage, lavender and peach shapes against red",
     img: growth,
     focus: "center 40%",
     place: "row-span-2 md:col-start-1 md:row-start-1",
     sizes: "(max-width: 767px) 50vw, 22vw",
   },
   {
+    id: "loveHopeFaith",
     title: "Love · Hope · Faith",
-    alt: "Three winding dragons in white, green and pink beneath the words love, hope and faith",
     img: loveHopeFaith,
     focus: "center 45%",
     place: "md:col-start-2 md:row-start-1",
     sizes: "(max-width: 767px) 50vw, 28vw",
   },
   {
+    id: "driftwood",
     title: "Driftwood",
-    alt: "Driftwood reaching over a calm blue shoreline, painted in thick oil",
     img: driftwood,
     focus: "center 55%",
     place: "md:col-start-3 md:row-start-1",
     sizes: "(max-width: 767px) 50vw, 28vw",
   },
   {
+    id: "ulx",
     title: "The ULX & Eddington Limit",
-    alt: "Portrait of a woman in profile with a pink peony and a blue-and-white vase",
     img: ulx,
     focus: "45% center",
     place: "row-span-2 md:col-start-4 md:row-start-1",
     sizes: "(max-width: 767px) 50vw, 22vw",
   },
   {
+    id: "bloom",
     title: "Bloom",
-    alt: "Pink peonies in a blue-and-white vase, painted in soft watercolour",
     img: bloom,
     focus: "center 35%",
     place: "md:col-start-2 md:row-start-2",
     sizes: "(max-width: 767px) 50vw, 28vw",
   },
   {
+    id: "beGood",
     title: "Be good · Be empty · Be equal",
-    alt: "A tree with deep roots and a bird, with Burmese and English words: be good, be empty, be equal",
     img: beGood,
     focus: "center",
     place: "md:col-start-3 md:row-start-2",
@@ -73,6 +76,7 @@ const TILES: Tile[] = [
 
 /** Homepage mosaic of Daw Mi's own artworks. */
 export function ArtMosaic() {
+  const t = useTranslations("home.gallery.tiles");
   return (
     <div
       className="grid grid-flow-dense auto-rows-[180px] grid-cols-2 gap-[3px] md:grid-cols-[1.1fr_1.4fr_1.4fr_1.1fr] md:grid-rows-[280px_280px]"
@@ -80,12 +84,12 @@ export function ArtMosaic() {
     >
       {TILES.map((tile) => (
         <div
-          key={tile.title}
+          key={tile.id}
           className={`group relative overflow-hidden ${tile.place}`}
         >
           <Image
             src={tile.img}
-            alt={tile.alt}
+            alt={t(`${tile.id}.alt`)}
             fill
             sizes={tile.sizes}
             className="object-cover transition-transform duration-[600ms] ease-out group-hover:scale-105"

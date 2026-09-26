@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   WaveDivider,
   GoldMark,
@@ -25,6 +26,7 @@ import { ArtMosaic } from "./_components/ArtMosaic";
 /* ── Floating CTA ── */
 function FloatingCTA() {
   const [vis, setVis] = useState(false);
+  const t = useTranslations("home");
   useEffect(() => {
     const fn = () => setVis(window.scrollY > 600);
     window.addEventListener("scroll", fn, { passive: true });
@@ -62,35 +64,15 @@ function FloatingCTA() {
           boxShadow: "0 8px 28px rgba(219,95,89,0.38)",
         }}
       >
-        ✦ Book Free Consultation
+        ✦ {t("floatingCta")}
       </Link>
     </div>
   );
 }
 
 /* ── FAQ ── */
-const FAQ_DATA = [
-  {
-    q: "What is art psychotherapy?",
-    a: "Art psychotherapy uses the creative process — drawing, painting, collage — as a medium for self-expression and reflection. You do not need any art experience. The artwork you make is not judged; what it evokes and reveals is what matters.",
-  },
-  {
-    q: "Do I need to know how to draw?",
-    a: "No. You do not need to know how to draw, or make anything beautiful. Many people who come have never picked up a paintbrush. The process of making is what matters, not the result.",
-  },
-  {
-    q: "What does a session look like?",
-    a: "Sessions are 50–60 minutes, one-on-one. We begin with a brief conversation, then explore through art materials at your own pace. The way a session unfolds can be different each time.",
-  },
-  {
-    q: "Is this covered by Medicare or private health?",
-    a: "Art psychotherapy may be covered under Mental Health Care Plans with a GP referral, or through private health extras. Contact us to discuss your specific situation.",
-  },
-  {
-    q: "How many sessions will I need?",
-    a: "Some people find real value in a single session; others benefit from ongoing work over weeks or months. There is no pressure to commit beyond what feels right for you.",
-  },
-];
+// Question and answer text lives in messages/<locale>/home.json under faq.items.
+const FAQ_IDS = ["whatIs", "draw", "session", "medicare", "howMany"] as const;
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
@@ -138,7 +120,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
       </button>
       <div
         style={{
-          maxHeight: open ? "260px" : "0",
+          maxHeight: open ? "600px" : "0",
           overflow: "hidden",
           transition: "max-height 0.35s ease",
         }}
@@ -160,29 +142,20 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
+// Quote and tag text lives in messages/<locale>/home.json under testimonials.items.
 const TESTIMONIALS = [
-  {
-    quote:
-      "I walked in not knowing what to expect and left feeling like I had finally said something I never found words for.",
-    name: "Sarah M.",
-    tag: "Individual therapy client",
-  },
-  {
-    quote:
-      "Daw Mi creates the most gentle, unhurried space. The artwork I made in our sessions helped me understand myself more than years of talk therapy.",
-    name: "James T.",
-    tag: "Long-term client",
-  },
-  {
-    quote:
-      "The creative process bypassed the part of my brain that was stuck. After struggling with anxiety for years, this genuinely changed things for me.",
-    name: "Priya K.",
-    tag: "Art therapy client",
-  },
-];
+  { id: "sarah", name: "Sarah M." },
+  { id: "james", name: "James T." },
+  { id: "priya", name: "Priya K." },
+] as const;
+
+const SERVICE_IDS = ["individual", "group", "workshops"] as const;
 
 /* ────────────────────────────────────── */
 export default function Home() {
+  const t = useTranslations("home");
+  // Story titles and excerpts are shared with the Stories pages.
+  const tStories = useTranslations("stories");
   return (
     <div style={{ background: C.canvas, overflowX: "hidden" }}>
       <FloatingCTA />
@@ -285,7 +258,7 @@ export default function Home() {
               opacity: 0.8,
             }}
           >
-            Art&nbsp;·&nbsp;Reflection&nbsp;·&nbsp;Wellbeing
+            {t("hero.eyebrow")}
           </div>
 
           <h1
@@ -300,7 +273,7 @@ export default function Home() {
               maxWidth: "680px",
             }}
           >
-            Where the inner world finds its form.
+            {t("hero.title")}
           </h1>
 
           <p
@@ -315,7 +288,7 @@ export default function Home() {
               marginBottom: "1.5rem",
             }}
           >
-            Art psychotherapy with Daw Mi — Sydney
+            {t("hero.subtitle")}
           </p>
 
           <p
@@ -328,9 +301,7 @@ export default function Home() {
               marginBottom: "3rem",
             }}
           >
-            VetMiMi is a space where creativity and reflection meet. Through art
-            and thoughtful conversation, Daw Mi creates another way to explore
-            what may be difficult to put into words.
+            {t("hero.intro")}
           </p>
 
           <div
@@ -356,7 +327,7 @@ export default function Home() {
                 boxShadow: "0 8px 28px rgba(219,95,89,0.35)",
               }}
             >
-              Book Free Consultation
+              {t("hero.bookCta")}
             </Link>
             <Link
               href="/about"
@@ -372,7 +343,7 @@ export default function Home() {
                 border: "1.5px solid rgba(254,252,248,0.4)",
               }}
             >
-              Meet Daw Mi
+              {t("hero.meetCta")}
             </Link>
           </div>
 
@@ -387,9 +358,9 @@ export default function Home() {
             }}
           >
             {[
-              "Certified Art Therapist [To confirm]",
-              "Royal North Shore Hospital — The Art of Wellness",
-              "Sydney, NSW",
+              t("hero.trust.certified"),
+              t("hero.trust.hospital"),
+              t("hero.trust.location"),
             ].map((label) => (
               <div
                 key={label}
@@ -490,15 +461,9 @@ export default function Home() {
               margin: "0 0 2rem",
             }}
           >
-            <span style={{ display: "block" }}>
-              You do not need to know how to draw.
-            </span>
-            <span style={{ display: "block" }}>
-              You do not need to make something beautiful.
-            </span>
-            <span style={{ display: "block" }}>
-              You only need somewhere to begin.
-            </span>
+            <span style={{ display: "block" }}>{t("pause.line1")}</span>
+            <span style={{ display: "block" }}>{t("pause.line2")}</span>
+            <span style={{ display: "block" }}>{t("pause.line3")}</span>
           </p>
           <Link
             href="/services"
@@ -511,7 +476,7 @@ export default function Home() {
               paddingBottom: "1px",
             }}
           >
-            Find out how it works →
+            {t("pause.link")}
           </Link>
         </div>
       </section>
@@ -546,7 +511,7 @@ export default function Home() {
                   marginBottom: "0.3rem",
                 }}
               >
-                From the studio
+                {t("gallery.eyebrow")}
               </div>
               <h2
                 style={{
@@ -556,7 +521,7 @@ export default function Home() {
                   margin: 0,
                 }}
               >
-                Made, shared and experienced
+                {t("gallery.title")}
               </h2>
             </div>
             <Link
@@ -569,7 +534,7 @@ export default function Home() {
                 borderBottom: `1px solid ${C.indigo}`,
               }}
             >
-              View the Portfolio →
+              {t("gallery.link")}
             </Link>
           </div>
         </div>
@@ -612,7 +577,7 @@ export default function Home() {
             >
               <Image
                 src={dawMiPortrait}
-                alt="Daw Mi smiling, with her paintings softly blurred behind her"
+                alt={t("about.portraitAlt")}
                 fill
                 sizes="(max-width: 768px) 100vw, 45vw"
                 placeholder="blur"
@@ -641,7 +606,7 @@ export default function Home() {
                   marginBottom: "0.2rem",
                 }}
               >
-                Co-founder
+                {t("about.badge.role")}
               </div>
               <div
                 style={{
@@ -674,7 +639,7 @@ export default function Home() {
                 marginBottom: "0.75rem",
               }}
             >
-              About Daw Mi
+              {t("about.eyebrow")}
             </div>
             <h2
               style={{
@@ -685,7 +650,7 @@ export default function Home() {
                 lineHeight: 1.12,
               }}
             >
-              Care and creativity have always met in Daw Mi&apos;s work.
+              {t("about.title")}
             </h2>
             <p
               style={{
@@ -696,10 +661,7 @@ export default function Home() {
                 marginBottom: "1.25rem",
               }}
             >
-              Her work brings together experience in healthcare, mental health,
-              creative practice and art therapy. VetMiMi grew from a simple
-              idea: creativity can give us another way to notice, express and
-              reflect.
+              {t("about.body1")}
             </p>
             <p
               style={{
@@ -710,10 +672,9 @@ export default function Home() {
                 marginBottom: "2.25rem",
               }}
             >
-              Daw Mi is a certified art psychotherapist, transformative artist,
-              and co-founder of The Art of Wellness at Royal North Shore
-              Hospital in Sydney. The artworks on this site were made{" "}
-              <em>in</em> these sessions.
+              {t.rich("about.body2", {
+                em: (chunks) => <em>{chunks}</em>,
+              })}
             </p>
             <Link
               href="/about"
@@ -727,7 +688,7 @@ export default function Home() {
                 paddingBottom: "2px",
               }}
             >
-              Get to know Daw Mi →
+              {t("about.link")}
             </Link>
           </div>
         </div>
@@ -748,7 +709,7 @@ export default function Home() {
                 marginBottom: "0.5rem",
               }}
             >
-              How we work together
+              {t("services.eyebrow")}
             </div>
             <h2
               style={{
@@ -758,7 +719,7 @@ export default function Home() {
                 margin: "0 0 1rem",
               }}
             >
-              A different kind of space to explore.
+              {t("services.title")}
             </h2>
             <p
               style={{
@@ -768,9 +729,7 @@ export default function Home() {
                 lineHeight: 1.8,
               }}
             >
-              Every person and every setting is different. Start by reading what
-              each service is like and choose the place that feels closest to
-              what you are looking for.
+              {t("services.intro")}
             </p>
           </div>
 
@@ -780,158 +739,137 @@ export default function Home() {
           >
             {[
               {
+                id: SERVICE_IDS[0],
                 Symbol: NestedOval,
                 symbolColor: C.rose,
                 art: art3,
-                artAlt: "Organic flowing figure",
-                label: "ONE-TO-ONE",
-                title: "Individual Art Therapy",
-                desc: "A private space for art-making, conversation and reflection. You do not need any art experience.",
                 link: "/services/individual-art-therapy",
                 accent: C.rose,
               },
               {
+                id: SERVICE_IDS[1],
                 Symbol: OverlappingCircles,
                 symbolColor: C.aqua,
                 art: art5,
-                artAlt: "Pink peonies watercolor",
-                label: "CREATE TOGETHER",
-                title: "Group Art & Wellbeing",
-                desc: "A shared creative space for expression, reflection and connection, with room to take part in your own way.",
                 link: "/services/group-art-wellbeing",
                 accent: C.blue,
               },
               {
+                id: SERVICE_IDS[2],
                 Symbol: FlowingRibbon,
                 symbolColor: C.ochre,
                 art: art7,
-                artAlt: "Expressionist golden painting",
-                label: "COMMUNITY & ORGANISATIONS",
-                title: "Workshops & Programs",
-                desc: "Creative experiences shaped for communities, healthcare settings, organisations and suitable projects.",
                 link: "/services/workshops-programs",
                 accent: C.ochre,
               },
-            ].map(
-              ({
-                Symbol,
-                symbolColor,
-                art,
-                artAlt,
-                label,
-                title,
-                desc,
-                link,
-                accent,
-              }) => (
+            ].map(({ id, Symbol, symbolColor, art, link, accent }) => (
+              <div
+                key={id}
+                style={{
+                  background: C.canvas,
+                  borderRadius: "16px",
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                  boxShadow: "0 2px 16px rgba(73,76,109,0.07)",
+                }}
+              >
                 <div
-                  key={title}
                   style={{
-                    background: C.canvas,
-                    borderRadius: "16px",
+                    position: "relative",
+                    aspectRatio: "16/9",
                     overflow: "hidden",
+                  }}
+                >
+                  <Image
+                    src={art}
+                    alt={t(`services.items.${id}.artAlt`)}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    style={{
+                      objectFit: "cover",
+                      objectPosition: "center 25%",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      background:
+                        "linear-gradient(to top, rgba(40,37,45,0.38) 0%, transparent 65%)",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "1rem",
+                      left: "1rem",
+                    }}
+                  >
+                    <Symbol color={symbolColor} size={44} />
+                  </div>
+                </div>
+                <div
+                  style={{
+                    padding: "1.75rem",
+                    flex: 1,
                     display: "flex",
                     flexDirection: "column",
-                    boxShadow: "0 2px 16px rgba(73,76,109,0.07)",
                   }}
                 >
                   <div
                     style={{
-                      position: "relative",
-                      aspectRatio: "16/9",
-                      overflow: "hidden",
+                      fontFamily: "var(--sans)",
+                      fontSize: "0.65rem",
+                      fontWeight: 600,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.12em",
+                      color: accent,
+                      marginBottom: "0.5rem",
                     }}
                   >
-                    <Image
-                      src={art}
-                      alt={artAlt}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      style={{
-                        objectFit: "cover",
-                        objectPosition: "center 25%",
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        background:
-                          "linear-gradient(to top, rgba(40,37,45,0.38) 0%, transparent 65%)",
-                      }}
-                    />
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "1rem",
-                        left: "1rem",
-                      }}
-                    >
-                      <Symbol color={symbolColor} size={44} />
-                    </div>
+                    {t(`services.items.${id}.label`)}
                   </div>
-                  <div
+                  <h3
                     style={{
-                      padding: "1.75rem",
-                      flex: 1,
-                      display: "flex",
-                      flexDirection: "column",
+                      fontFamily: "var(--serif)",
+                      fontSize: "1.2rem",
+                      color: C.ink,
+                      margin: "0 0 0.75rem",
                     }}
                   >
-                    <div
-                      style={{
-                        fontFamily: "var(--sans)",
-                        fontSize: "0.65rem",
-                        fontWeight: 600,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.12em",
-                        color: accent,
-                        marginBottom: "0.5rem",
-                      }}
-                    >
-                      {label}
-                    </div>
-                    <h3
-                      style={{
-                        fontFamily: "var(--serif)",
-                        fontSize: "1.2rem",
-                        color: C.ink,
-                        margin: "0 0 0.75rem",
-                      }}
-                    >
-                      {title}
-                    </h3>
-                    <p
-                      style={{
-                        fontFamily: "var(--sans)",
-                        fontSize: "0.88rem",
-                        color: "rgba(40,37,45,0.62)",
-                        lineHeight: 1.75,
-                        flex: 1,
-                        margin: "0 0 1.25rem",
-                      }}
-                    >
-                      {desc}
-                    </p>
-                    <Link
-                      href={link}
-                      style={{
-                        fontFamily: "var(--sans)",
-                        fontWeight: 600,
-                        fontSize: "0.84rem",
-                        color: accent,
-                        textDecoration: "none",
-                        borderBottom: `1.5px solid ${accent}`,
-                        paddingBottom: "2px",
-                        width: "fit-content",
-                      }}
-                    >
-                      Learn more →
-                    </Link>
-                  </div>
+                    {t(`services.items.${id}.title`)}
+                  </h3>
+                  <p
+                    style={{
+                      fontFamily: "var(--sans)",
+                      fontSize: "0.88rem",
+                      color: "rgba(40,37,45,0.62)",
+                      lineHeight: 1.75,
+                      flex: 1,
+                      margin: "0 0 1.25rem",
+                    }}
+                  >
+                    {t(`services.items.${id}.desc`)}
+                  </p>
+                  <Link
+                    href={link}
+                    style={{
+                      fontFamily: "var(--sans)",
+                      fontWeight: 600,
+                      fontSize: "0.84rem",
+                      color: accent,
+                      textDecoration: "none",
+                      borderBottom: `1.5px solid ${accent}`,
+                      paddingBottom: "2px",
+                      width: "fit-content",
+                    }}
+                  >
+                    {t("services.learnMore")}
+                  </Link>
                 </div>
-              ),
-            )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -969,7 +907,7 @@ export default function Home() {
             >
               <Image
                 src={hewPhoto}
-                alt="Daw Mi at Royal North Shore Hospital beside a painting created with patients, visitors and staff"
+                alt={t("artOfWellness.photoAlt")}
                 sizes="(max-width: 768px) 100vw, 50vw"
                 placeholder="blur"
                 style={{ display: "block", width: "100%", height: "auto" }}
@@ -997,7 +935,7 @@ export default function Home() {
                   lineHeight: 1.12,
                 }}
               >
-                Art where care happens.
+                {t("artOfWellness.title")}
               </h2>
               <p
                 style={{
@@ -1008,10 +946,7 @@ export default function Home() {
                   marginBottom: "2rem",
                 }}
               >
-                The Art of Wellness brings music, art and photography to
-                patients, carers and staff at Royal North Shore Hospital.
-                Discover the program, Daw Mi&apos;s involvement and the work
-                connected to it.
+                {t("artOfWellness.body")}
               </p>
               <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                 <Link
@@ -1027,7 +962,7 @@ export default function Home() {
                     textDecoration: "none",
                   }}
                 >
-                  Explore The Art of Wellness →
+                  {t("artOfWellness.exploreCta")}
                 </Link>
                 <Link
                   href="/portfolio"
@@ -1042,7 +977,7 @@ export default function Home() {
                     alignSelf: "center",
                   }}
                 >
-                  See related projects →
+                  {t("artOfWellness.projectsLink")}
                 </Link>
               </div>
             </div>
@@ -1082,7 +1017,7 @@ export default function Home() {
                 marginBottom: "0.5rem",
               }}
             >
-              Stories & Insights
+              {t("stories.eyebrow")}
             </div>
             <h2
               style={{
@@ -1092,7 +1027,7 @@ export default function Home() {
                 margin: "0 0 1rem",
               }}
             >
-              Stories, thoughts and things worth sitting with.
+              {t("stories.title")}
             </h2>
             <p
               style={{
@@ -1102,100 +1037,102 @@ export default function Home() {
                 lineHeight: 1.8,
               }}
             >
-              Reflections on art, wellbeing, lived experience and the moments
-              that shape our work.
+              {t("stories.intro")}
             </p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {STORIES.slice(0, 3).map((story) => (
-              <article
-                key={story.slug}
-                style={{
-                  background: C.canvas,
-                  borderRadius: "16px",
-                  overflow: "hidden",
-                  display: "flex",
-                  flexDirection: "column",
-                  minWidth: 0,
-                  boxShadow: "0 2px 16px rgba(107,99,150,0.09)",
-                }}
-              >
-                <Image
-                  src={story.img}
-                  alt=""
-                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            {STORIES.slice(0, 3).map((story) => {
+              const title = tStories(`items.${story.slug}.title`);
+              return (
+                <article
+                  key={story.slug}
                   style={{
-                    width: "100%",
-                    height: "200px",
-                    objectFit: "cover",
-                    objectPosition: "center 30%",
-                    display: "block",
-                  }}
-                />
-                <div
-                  style={{
-                    padding: "1.5rem",
+                    background: C.canvas,
+                    borderRadius: "16px",
+                    overflow: "hidden",
                     display: "flex",
                     flexDirection: "column",
-                    flex: 1,
+                    minWidth: 0,
+                    boxShadow: "0 2px 16px rgba(107,99,150,0.09)",
                   }}
                 >
+                  <Image
+                    src={story.img}
+                    alt=""
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    style={{
+                      width: "100%",
+                      height: "200px",
+                      objectFit: "cover",
+                      objectPosition: "center 30%",
+                      display: "block",
+                    }}
+                  />
                   <div
                     style={{
-                      fontFamily: "var(--sans)",
-                      fontSize: "0.65rem",
-                      fontWeight: 600,
-                      textTransform: "uppercase",
-                      letterSpacing: "0.12em",
-                      color: C.violet,
-                      marginBottom: "0.75rem",
+                      padding: "1.5rem",
+                      display: "flex",
+                      flexDirection: "column",
+                      flex: 1,
                     }}
                   >
-                    {story.category}
+                    <div
+                      style={{
+                        fontFamily: "var(--sans)",
+                        fontSize: "0.65rem",
+                        fontWeight: 600,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.12em",
+                        color: C.violet,
+                        marginBottom: "0.75rem",
+                      }}
+                    >
+                      {tStories(`items.${story.slug}.category`)}
+                    </div>
+                    <h3
+                      style={{
+                        fontFamily: "var(--serif)",
+                        fontSize: "1.35rem",
+                        color: C.ink,
+                        margin: "0 0 0.75rem",
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {title}
+                    </h3>
+                    <p
+                      style={{
+                        fontFamily: "var(--sans)",
+                        fontSize: "0.88rem",
+                        color: "rgba(40,37,45,0.68)",
+                        lineHeight: 1.75,
+                        margin: "0 0 1.25rem",
+                      }}
+                    >
+                      {tStories(`items.${story.slug}.excerpt`)}
+                    </p>
+                    <Link
+                      href={`/stories/${story.slug}`}
+                      aria-label={t("stories.readStoryLabel", { title })}
+                      style={{
+                        fontFamily: "var(--sans)",
+                        fontWeight: 600,
+                        fontSize: "0.84rem",
+                        color: C.violet,
+                        textDecoration: "none",
+                        marginTop: "auto",
+                        alignSelf: "flex-start",
+                        borderBottom: `1px solid ${C.violet}`,
+                        paddingBottom: "1px",
+                      }}
+                    >
+                      {t("stories.readStory")}
+                    </Link>
                   </div>
-                  <h3
-                    style={{
-                      fontFamily: "var(--serif)",
-                      fontSize: "1.35rem",
-                      color: C.ink,
-                      margin: "0 0 0.75rem",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {story.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: "var(--sans)",
-                      fontSize: "0.88rem",
-                      color: "rgba(40,37,45,0.68)",
-                      lineHeight: 1.75,
-                      margin: "0 0 1.25rem",
-                    }}
-                  >
-                    {story.excerpt}
-                  </p>
-                  <Link
-                    href={`/stories/${story.slug}`}
-                    aria-label={`Read story: ${story.title}`}
-                    style={{
-                      fontFamily: "var(--sans)",
-                      fontWeight: 600,
-                      fontSize: "0.84rem",
-                      color: C.violet,
-                      textDecoration: "none",
-                      marginTop: "auto",
-                      alignSelf: "flex-start",
-                      borderBottom: `1px solid ${C.violet}`,
-                      paddingBottom: "1px",
-                    }}
-                  >
-                    Read story →
-                  </Link>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
 
           <div style={{ marginTop: "2.5rem" }}>
@@ -1211,7 +1148,7 @@ export default function Home() {
                 paddingBottom: "1px",
               }}
             >
-              All stories & insights →
+              {t("stories.allLink")}
             </Link>
           </div>
         </div>
@@ -1263,7 +1200,7 @@ export default function Home() {
                 marginBottom: "0.4rem",
               }}
             >
-              True stories
+              {t("testimonials.eyebrow")}
             </div>
             <h2
               style={{
@@ -1273,16 +1210,16 @@ export default function Home() {
                 margin: 0,
               }}
             >
-              Voices from the studio
+              {t("testimonials.title")}
             </h2>
           </div>
           <div
             style={{ display: "grid", gap: "1.5rem" }}
             className="grid-cols-1 md:grid-cols-3"
           >
-            {TESTIMONIALS.map(({ quote, name, tag }) => (
+            {TESTIMONIALS.map(({ id, name }) => (
               <div
-                key={name}
+                key={id}
                 style={{
                   background: C.canvas,
                   borderRadius: "16px",
@@ -1311,7 +1248,7 @@ export default function Home() {
                     margin: "0 0 1.5rem",
                   }}
                 >
-                  {quote}
+                  {t(`testimonials.items.${id}.quote`)}
                 </p>
                 <div
                   style={{
@@ -1332,7 +1269,7 @@ export default function Home() {
                     marginTop: "2px",
                   }}
                 >
-                  {tag}
+                  {t(`testimonials.items.${id}.tag`)}
                 </div>
               </div>
             ))}
@@ -1364,7 +1301,7 @@ export default function Home() {
                 marginBottom: "0.5rem",
               }}
             >
-              Common questions
+              {t("faq.eyebrow")}
             </div>
             <h2
               style={{
@@ -1374,11 +1311,15 @@ export default function Home() {
                 margin: "0 0 2rem",
               }}
             >
-              What people ask first
+              {t("faq.title")}
             </h2>
             <div style={{ borderTop: "1px solid rgba(40,37,45,0.1)" }}>
-              {FAQ_DATA.map(({ q, a }) => (
-                <FAQItem key={q} q={q} a={a} />
+              {FAQ_IDS.map((id) => (
+                <FAQItem
+                  key={id}
+                  q={t(`faq.items.${id}.q`)}
+                  a={t(`faq.items.${id}.a`)}
+                />
               ))}
             </div>
           </div>
@@ -1410,7 +1351,7 @@ export default function Home() {
               >
                 <Image
                   src={gardenEasel}
-                  alt="A shared painting of a garden path, tree and apple, made in The Art of Wellness sessions"
+                  alt={t("faq.imageAlt")}
                   fill
                   sizes="(max-width: 768px) 100vw, 45vw"
                   placeholder="blur"
@@ -1433,7 +1374,7 @@ export default function Home() {
                   color: C.indigo,
                 }}
               >
-                Art made in session
+                {t("faq.imageCaption")}
               </div>
             </div>
           </div>
@@ -1482,7 +1423,7 @@ export default function Home() {
                   margin: "0 0 0.75rem",
                 }}
               >
-                Looking for personal support?
+                {t("paths.personal.title")}
               </h3>
               <p
                 style={{
@@ -1493,7 +1434,7 @@ export default function Home() {
                   margin: "0 0 2rem",
                 }}
               >
-                Explore the services and find out what each experience involves.
+                {t("paths.personal.text")}
               </p>
               <div
                 style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}
@@ -1511,7 +1452,7 @@ export default function Home() {
                     textDecoration: "none",
                   }}
                 >
-                  Explore Services
+                  {t("paths.personal.servicesCta")}
                 </Link>
                 <Link
                   href="/book"
@@ -1527,7 +1468,7 @@ export default function Home() {
                     border: "1.5px solid rgba(255,255,255,0.5)",
                   }}
                 >
-                  Book Appointment
+                  {t("paths.personal.bookCta")}
                 </Link>
               </div>
             </div>
@@ -1561,7 +1502,7 @@ export default function Home() {
                   margin: "0 0 0.75rem",
                 }}
               >
-                Planning a project or collaboration?
+                {t("paths.professional.title")}
               </h3>
               <p
                 style={{
@@ -1572,7 +1513,7 @@ export default function Home() {
                   margin: "0 0 2rem",
                 }}
               >
-                Tell us what you are thinking about and we can begin from there.
+                {t("paths.professional.text")}
               </p>
               <Link
                 href="/contact"
@@ -1587,7 +1528,7 @@ export default function Home() {
                   textDecoration: "none",
                 }}
               >
-                Contact Daw Mi
+                {t("paths.professional.contactCta")}
               </Link>
             </div>
           </div>

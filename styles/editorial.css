@@ -64,6 +64,42 @@
 .ed-paper {
   background: var(--paper);
 }
+/* About: a framed photo filling the space under "Her background". */
+.ed-background-body {
+  margin-top: 40px;
+  align-items: stretch;
+}
+/* A tilted print with a white border and a rose card peeking out behind,
+   like the artwork pinned to the hero portrait. It stretches to the
+   timeline's height so both columns line up. */
+.ed-photo-frame {
+  position: relative;
+  margin: 0;
+  display: flex;
+}
+.ed-photo-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(178, 102, 123, 0.22);
+  border-radius: 6px;
+  transform: rotate(3deg);
+}
+.ed-photo-frame img {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  padding: 10px;
+  background: #fff;
+  object-fit: cover;
+  object-position: left center;
+  border-radius: 6px;
+  box-shadow: 0 14px 30px rgba(40, 37, 45, 0.16);
+  transform: rotate(-2deg);
+}
 .ed-lavender {
   background: #eeeaf2;
 }
@@ -200,6 +236,17 @@
 }
 .ed-principles p {
   margin: 0;
+}
+/* About: a soft duotone icon above each principle. */
+.ed-principle-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: #eee4e2;
+  color: var(--rose);
 }
 .ed-end {
   padding: 36px;
@@ -352,21 +399,30 @@
 .ed-feature {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
-  align-items: center;
+  align-items: stretch;
   background: #eeeaf2;
   border-radius: 20px;
   overflow: hidden;
   margin-bottom: 40px;
 }
+/* Fills the card's height without its own tall shape stretching the card. */
 .ed-feature > img {
   width: 100%;
-  height: 340px;
+  height: auto;
+  min-height: 340px;
+  aspect-ratio: auto;
+  contain: size;
   display: block;
   object-fit: cover;
   object-position: center 30%;
 }
 .ed-feature > div {
+  align-self: center;
   padding: clamp(24px, 4vw, 48px);
+}
+.ed-empty {
+  margin: 8px 0 64px;
+  color: rgba(40, 37, 45, 0.6);
 }
 .ed-story-list {
   display: grid;
@@ -398,23 +454,30 @@
 .ed-story p {
   font-size: 0.92rem;
 }
+/* Story detail: title and picture use the full site width (lined up with the
+   breadcrumb and "More to explore"); only the paragraphs stay at a
+   comfortable reading width. */
 .ed-reading {
-  width: min(700px, calc(100% - 48px));
+  width: min(1120px, calc(100% - 48px));
   margin-inline: auto;
 }
 .ed-article-header {
   padding-block: 44px 32px;
 }
+.ed-article-header h1 {
+  max-width: 26ch;
+}
 .ed-article-image {
   display: block;
   width: 100%;
-  max-height: 400px;
+  max-height: 520px;
   object-fit: cover;
   object-position: center 30%;
   border-radius: 16px;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
 }
 .ed-article-body {
+  max-width: 760px;
   padding-bottom: 48px;
 }
 .ed-article-body p {

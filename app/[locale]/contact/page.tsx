@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { Btn } from "@/components/ui/Button";
 import "@/styles/contact.css";
 
@@ -16,17 +17,19 @@ type ContactFormData = {
 
 type SubmitState = null | "success" | "failed";
 
+// Stable ids are stored in the form; the visible labels come from messages.
 const ENQUIRY_TYPES = [
-  "Collaboration / Project",
-  "Workshop / Program",
-  "Speaking / Event",
-  "Art of Wellness",
-  "Media / Interview",
-  "Organisation / Healthcare",
-  "General",
-];
+  "collaboration",
+  "workshop",
+  "speaking",
+  "artOfWellness",
+  "media",
+  "organisation",
+  "general",
+] as const;
 
 export default function Contact() {
+  const t = useTranslations("contact");
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
@@ -64,21 +67,18 @@ export default function Contact() {
     <div className="contact-page">
       {/* ── Hero: which page do I need? ─────────────────── */}
       <section className="contact-container contact-hero">
-        <p className="contact-eyebrow">Get in touch</p>
-        <h1>Have something in mind?</h1>
+        <p className="contact-eyebrow">{t("hero.eyebrow")}</p>
+        <h1>{t("hero.title")}</h1>
         <div className="contact-choices">
           <Link href="/book" className="contact-choice">
-            <strong>Book a session</strong>
-            <span>For individual art therapy appointments.</span>
-            <em>Go to booking →</em>
+            <strong>{t("hero.book.title")}</strong>
+            <span>{t("hero.book.text")}</span>
+            <em>{t("hero.book.cta")}</em>
           </Link>
           <a href="#enquiry" className="contact-choice">
-            <strong>Send an enquiry</strong>
-            <span>
-              Groups, workshops, collaborations, speaking and project
-              conversations.
-            </span>
-            <em>Use the form below ↓</em>
+            <strong>{t("hero.enquiry.title")}</strong>
+            <span>{t("hero.enquiry.text")}</span>
+            <em>{t("hero.enquiry.cta")}</em>
           </a>
         </div>
       </section>
@@ -88,12 +88,12 @@ export default function Contact() {
         <div className="contact-card">
           {submitState === "success" ? (
             <div className="contact-success" role="status">
-              <h2>Thank you. Your message has been sent.</h2>
-              <p>Daw Mi has received your enquiry.</p>
+              <h2>{t("success.title")}</h2>
+              <p>{t("success.text")}</p>
             </div>
           ) : (
             <>
-              <h2>Send an enquiry</h2>
+              <h2>{t("form.title")}</h2>
 
               {submitState === "failed" && (
                 <div
@@ -101,12 +101,9 @@ export default function Contact() {
                   role="alert"
                   style={{ marginBottom: 24 }}
                 >
-                  <p>
-                    Something did not go through. Your message has not been sent
-                    yet. Your information is still here, so you can try again.
-                  </p>
+                  <p>{t("form.error.text")}</p>
                   <button type="button" onClick={() => setSubmitState(null)}>
-                    Retry
+                    {t("form.error.retry")}
                   </button>
                 </div>
               )}
@@ -115,7 +112,7 @@ export default function Contact() {
                 <div className="contact-row">
                   <div>
                     <label htmlFor="name" className="contact-label">
-                      Name <span className="req">*</span>
+                      {t("form.name.label")} <span className="req">*</span>
                     </label>
                     <input
                       id="name"
@@ -126,12 +123,12 @@ export default function Contact() {
                       value={formData.name}
                       onChange={handleChange}
                       className="contact-input"
-                      placeholder="Your name"
+                      placeholder={t("form.name.placeholder")}
                     />
                   </div>
                   <div>
                     <label htmlFor="email" className="contact-label">
-                      Email <span className="req">*</span>
+                      {t("form.email.label")} <span className="req">*</span>
                     </label>
                     <input
                       id="email"
@@ -149,7 +146,8 @@ export default function Contact() {
 
                 <div>
                   <label htmlFor="organisation" className="contact-label">
-                    Organisation <span className="opt">(optional)</span>
+                    {t("form.organisation.label")}{" "}
+                    <span className="opt">{t("form.optional")}</span>
                   </label>
                   <input
                     id="organisation"
@@ -159,12 +157,14 @@ export default function Contact() {
                     value={formData.organisation}
                     onChange={handleChange}
                     className="contact-input"
-                    placeholder="Organisation or institution"
+                    placeholder={t("form.organisation.placeholder")}
                   />
                 </div>
 
                 <fieldset className="contact-pills">
-                  <legend className="contact-label">Enquiry type</legend>
+                  <legend className="contact-label">
+                    {t("form.enquiryType.label")}
+                  </legend>
                   <div className="contact-pill-list">
                     {ENQUIRY_TYPES.map((type) => (
                       <label key={type} className="contact-pill">
@@ -175,7 +175,7 @@ export default function Contact() {
                           checked={formData.enquiryType === type}
                           onChange={handleChange}
                         />
-                        <span>{type}</span>
+                        <span>{t(`form.enquiryType.options.${type}`)}</span>
                       </label>
                     ))}
                   </div>
@@ -183,7 +183,7 @@ export default function Contact() {
 
                 <div>
                   <label htmlFor="subject" className="contact-label">
-                    Subject <span className="req">*</span>
+                    {t("form.subject.label")} <span className="req">*</span>
                   </label>
                   <input
                     id="subject"
@@ -193,13 +193,13 @@ export default function Contact() {
                     value={formData.subject}
                     onChange={handleChange}
                     className="contact-input"
-                    placeholder="Brief subject line"
+                    placeholder={t("form.subject.placeholder")}
                   />
                 </div>
 
                 <div>
                   <label htmlFor="message" className="contact-label">
-                    Message <span className="req">*</span>
+                    {t("form.message.label")} <span className="req">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -209,7 +209,7 @@ export default function Contact() {
                     value={formData.message}
                     onChange={handleChange}
                     className="contact-input"
-                    placeholder="Tell Daw Mi what you have in mind..."
+                    placeholder={t("form.message.placeholder")}
                   />
                 </div>
 
@@ -223,16 +223,14 @@ export default function Contact() {
                     onChange={handleChange}
                   />
                   <span>
-                    I have read and agree to the{" "}
-                    <Link href="/privacy">privacy policy</Link>
+                    {t.rich("form.privacy", {
+                      link: (chunks) => <Link href="/privacy">{chunks}</Link>,
+                    })}
                     <span className="req"> *</span>
                   </span>
                 </label>
 
-                <p className="contact-note">
-                  Please do not include private medical or detailed health
-                  information in this form.
-                </p>
+                <p className="contact-note">{t("form.note")}</p>
 
                 <div>
                   <Btn
@@ -240,7 +238,7 @@ export default function Contact() {
                     disabled={isSubmitting}
                     style={{ minWidth: 180 }}
                   >
-                    {isSubmitting ? "Sending…" : "Send message"}
+                    {isSubmitting ? t("form.sending") : t("form.submit")}
                   </Btn>
                 </div>
               </form>
@@ -248,26 +246,27 @@ export default function Contact() {
           )}
         </div>
 
-        <aside className="contact-details" aria-label="Contact details">
-          <p className="contact-eyebrow">Contact details</p>
+        <aside className="contact-details" aria-label={t("details.title")}>
+          <p className="contact-eyebrow">{t("details.title")}</p>
           <dl>
             <div>
-              <dt>Email</dt>
-              <dd>[To confirm]</dd>
+              <dt>{t("details.email.label")}</dt>
+              <dd>{t("details.email.value")}</dd>
             </div>
             <div>
-              <dt>Location</dt>
-              <dd>Sydney, NSW, Australia [To confirm]</dd>
+              <dt>{t("details.location.label")}</dt>
+              <dd>{t("details.location.value")}</dd>
             </div>
             <div>
-              <dt>Response time</dt>
-              <dd>[To confirm]</dd>
+              <dt>{t("details.responseTime.label")}</dt>
+              <dd>{t("details.responseTime.value")}</dd>
             </div>
           </dl>
           <hr />
           <p className="contact-details-note">
-            Looking for an individual appointment? Please use the{" "}
-            <Link href="/book">booking page</Link>.
+            {t.rich("details.bookingNote", {
+              link: (chunks) => <Link href="/book">{chunks}</Link>,
+            })}
           </p>
         </aside>
       </section>

@@ -1,1 +1,79 @@
-{}
+{
+  "hero": {
+    "eyebrow": "Get in touch",
+    "title": "Have something in mind?",
+    "book": {
+      "title": "Book a session",
+      "text": "For individual art therapy appointments.",
+      "cta": "Go to booking →"
+    },
+    "enquiry": {
+      "title": "Send an enquiry",
+      "text": "Groups, workshops, collaborations, speaking and project conversations.",
+      "cta": "Use the form below ↓"
+    }
+  },
+  "success": {
+    "title": "Thank you. Your message has been sent.",
+    "text": "Daw Mi has received your enquiry."
+  },
+  "form": {
+    "title": "Send an enquiry",
+    "error": {
+      "text": "Something did not go through. Your message has not been sent yet. Your information is still here, so you can try again.",
+      "retry": "Retry"
+    },
+    "optional": "(optional)",
+    "name": {
+      "label": "Name",
+      "placeholder": "Your name"
+    },
+    "email": {
+      "label": "Email"
+    },
+    "organisation": {
+      "label": "Organisation",
+      "placeholder": "Organisation or institution"
+    },
+    "enquiryType": {
+      "label": "Enquiry type",
+      "options": {
+        "collaboration": "Collaboration / Project",
+        "workshop": "Workshop / Program",
+        "speaking": "Speaking / Event",
+        "artOfWellness": "Art of Wellness",
+        "media": "Media / Interview",
+        "organisation": "Organisation / Healthcare",
+        "general": "General"
+      }
+    },
+    "subject": {
+      "label": "Subject",
+      "placeholder": "Brief subject line"
+    },
+    "message": {
+      "label": "Message",
+      "placeholder": "Tell Daw Mi what you have in mind..."
+    },
+    "privacy": "I have read and agree to the <link>privacy policy</link>",
+    "note": "Please do not include private medical or detailed health information in this form.",
+    "submit": "Send message",
+    "sending": "Sending…"
+  },
+  "details": {
+    "title": "Contact details",
+    "email": {
+      "label": "Email",
+      "value": "[To confirm]"
+    },
+    "location": {
+      "label": "Location",
+      "value": "Sydney, NSW, Australia [To confirm]"
+    },
+    "responseTime": {
+      "label": "Response time",
+      "value": "[To confirm]"
+    },
+    "bookingNote": "Looking for an individual appointment? Please use the <link>booking page</link>."
+  }
+}

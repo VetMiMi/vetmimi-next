@@ -1,8 +1,9 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
-import { inputStyle } from "./booking";
-import type { BookingFormData } from "./booking";
+import { FORMAT_IDS, inputStyle } from "./booking";
+import type { BookingFormData, ServiceId } from "./booking";
 
 // ── Step 3: Your Details ─────────────────────────────────────────────────────
 
@@ -13,13 +14,14 @@ export function Step3({
   onNext,
   onBack,
 }: {
-  selectedService: string;
+  selectedService: ServiceId | "";
   formData: BookingFormData;
   setFormData: (f: BookingFormData) => void;
   onNext: () => void;
   onBack: () => void;
 }) {
-  const isIndividual = selectedService === "Individual Art Therapy";
+  const t = useTranslations("book");
+  const isIndividual = selectedService === "individual";
 
   const update = (key: keyof BookingFormData, value: string | boolean) => {
     setFormData({ ...formData, [key]: value });
@@ -50,7 +52,7 @@ export function Step3({
           marginBottom: "0.5rem",
         }}
       >
-        Your details
+        {t("step3.title")}
       </h2>
       <p
         style={{
@@ -59,26 +61,26 @@ export function Step3({
           marginBottom: "2rem",
         }}
       >
-        Please provide your contact information.
+        {t("step3.intro")}
       </p>
 
       <div style={{ maxWidth: 520 }}>
         <label>
           <span style={labelStyle}>
-            Full name <span style={{ color: C.coral }}>*</span>
+            {t("step3.name.label")} <span style={{ color: C.coral }}>*</span>
           </span>
           <input
             type="text"
             value={formData.name}
             onChange={(e) => update("name", e.target.value)}
-            placeholder="Your name"
+            placeholder={t("step3.name.placeholder")}
             style={inputStyle}
           />
         </label>
 
         <label>
           <span style={labelStyle}>
-            Email address <span style={{ color: C.coral }}>*</span>
+            {t("step3.email.label")} <span style={{ color: C.coral }}>*</span>
           </span>
           <input
             type="email"
@@ -91,9 +93,9 @@ export function Step3({
 
         <label>
           <span style={labelStyle}>
-            Phone number{" "}
+            {t("step3.phone.label")}{" "}
             <span style={{ color: `${C.ink}66`, fontWeight: 400 }}>
-              (optional)
+              {t("shared.optional")}
             </span>
           </span>
           <input
@@ -107,24 +109,27 @@ export function Step3({
 
         {isIndividual && (
           <label>
-            <span style={labelStyle}>Session format</span>
+            <span style={labelStyle}>{t("step3.format.label")}</span>
             <select
               value={formData.format}
               onChange={(e) => update("format", e.target.value)}
               style={inputStyle}
             >
-              <option value="">Select a format</option>
-              <option value="Online">Online</option>
-              <option value="In-person">In-person [To confirm]</option>
+              <option value="">{t("step3.format.placeholder")}</option>
+              {FORMAT_IDS.map((id) => (
+                <option key={id} value={id}>
+                  {t(`step3.format.options.${id}`)}
+                </option>
+              ))}
             </select>
           </label>
         )}
 
         <label>
           <span style={labelStyle}>
-            Short note{" "}
+            {t("step3.note.label")}{" "}
             <span style={{ color: `${C.ink}66`, fontWeight: 400 }}>
-              (optional)
+              {t("shared.optional")}
             </span>
           </span>
           <p
@@ -137,15 +142,13 @@ export function Step3({
               lineHeight: 1.6,
             }}
           >
-            You are welcome to share anything that would help Daw Mi prepare.
-            Please do not include private medical or detailed health information
-            here.
+            {t("step3.note.help")}
           </p>
           <textarea
             value={formData.note}
             onChange={(e) => update("note", e.target.value)}
             rows={4}
-            placeholder="Optional note…"
+            placeholder={t("step3.note.placeholder")}
             style={{ ...inputStyle, resize: "vertical" }}
           />
         </label>
@@ -177,13 +180,16 @@ export function Step3({
                 lineHeight: 1.6,
               }}
             >
-              I have read and agree to the{" "}
-              <Link
-                href="/privacy"
-                style={{ color: C.rose, textDecoration: "none" }}
-              >
-                Privacy Policy
-              </Link>{" "}
+              {t.rich("step3.privacyAck", {
+                link: (chunks) => (
+                  <Link
+                    href="/privacy"
+                    style={{ color: C.rose, textDecoration: "none" }}
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}{" "}
               <span style={{ color: C.coral }}>*</span>
             </span>
           </label>
@@ -216,13 +222,16 @@ export function Step3({
                 lineHeight: 1.6,
               }}
             >
-              I have read and agree to the{" "}
-              <Link
-                href="/booking-policy"
-                style={{ color: C.rose, textDecoration: "none" }}
-              >
-                Booking &amp; Cancellation Policy
-              </Link>{" "}
+              {t.rich("step3.policyAck", {
+                link: (chunks) => (
+                  <Link
+                    href="/booking-policy"
+                    style={{ color: C.rose, textDecoration: "none" }}
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}{" "}
               <span style={{ color: C.coral }}>*</span>
             </span>
           </label>
@@ -241,10 +250,10 @@ export function Step3({
               padding: 0,
             }}
           >
-            ← Back
+            {t("shared.back")}
           </button>
           <Btn onClick={onNext} disabled={!canProceed}>
-            Review your request →
+            {t("step3.continue")}
           </Btn>
         </div>
       </div>

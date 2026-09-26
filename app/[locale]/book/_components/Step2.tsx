@@ -1,16 +1,17 @@
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import {
   getDaysInMonth,
   getFirstDayOfMonth,
-  MONTH_NAMES,
-  DAY_LABELS,
+  MONTH_IDS,
+  DAY_IDS,
   TIME_SLOTS,
   isAvailableDate,
-  formatDate,
+  useFormatDate,
 } from "./booking";
-import type { BookingState } from "./booking";
+import type { BookingState, ServiceId, TimeSlot } from "./booking";
 
 // ── Step 2: Date & Time ──────────────────────────────────────────────────────
 
@@ -24,15 +25,17 @@ export function Step2({
   onNext,
   onBack,
 }: {
-  selectedService: string;
+  selectedService: ServiceId | "";
   selectedDate: string;
   setSelectedDate: (d: string) => void;
-  selectedTime: string;
-  setSelectedTime: (t: string) => void;
+  selectedTime: TimeSlot | "";
+  setSelectedTime: (t: TimeSlot | "") => void;
   bookingState: BookingState;
   onNext: () => void;
   onBack: () => void;
 }) {
+  const t = useTranslations("book");
+  const formatDate = useFormatDate();
   const now = new Date();
   const [calYear, setCalYear] = useState(now.getFullYear());
   const [calMonth, setCalMonth] = useState(now.getMonth());
@@ -74,7 +77,7 @@ export function Step2({
           marginBottom: "0.5rem",
         }}
       >
-        Choose a date and time
+        {t("step2.title")}
       </h2>
 
       <div
@@ -89,7 +92,7 @@ export function Step2({
           marginBottom: "2rem",
         }}
       >
-        {selectedService}
+        {selectedService && t(`services.${selectedService}.title`)}
       </div>
 
       {bookingState === "no-times" && (
@@ -105,8 +108,7 @@ export function Step2({
             marginBottom: "1.5rem",
           }}
         >
-          There are no available times for this period. Please try a different
-          date.
+          {t("step2.noTimes")}
         </div>
       )}
 
@@ -123,7 +125,7 @@ export function Step2({
             marginBottom: "1.5rem",
           }}
         >
-          That time is no longer available. Please choose another.
+          {t("step2.timeLost")}
         </div>
       )}
 
@@ -163,7 +165,10 @@ export function Step2({
           <span
             style={{ fontFamily: "var(--sans)", fontWeight: 600, color: C.ink }}
           >
-            {MONTH_NAMES[calMonth]} {calYear}
+            {t("calendar.monthYear", {
+              month: t(`calendar.months.${MONTH_IDS[calMonth]}`),
+              year: String(calYear),
+            })}
           </span>
           <button
             onClick={nextMonth}
@@ -189,7 +194,7 @@ export function Step2({
             marginBottom: "0.5rem",
           }}
         >
-          {DAY_LABELS.map((d) => (
+          {DAY_IDS.map((d) => (
             <div
               key={d}
               style={{
@@ -201,7 +206,7 @@ export function Step2({
                 padding: "0.25rem 0",
               }}
             >
-              {d}
+              {t(`calendar.weekdaysShort.${d}`)}
             </div>
           ))}
         </div>
@@ -272,7 +277,7 @@ export function Step2({
               fontSize: "0.9rem",
             }}
           >
-            Available times for {formatDate(selectedDate)}
+            {t("step2.availableTimes", { date: formatDate(selectedDate) })}
           </div>
           <div
             style={{
@@ -282,23 +287,23 @@ export function Step2({
               marginBottom: "0.5rem",
             }}
           >
-            {TIME_SLOTS.map((t) => (
+            {TIME_SLOTS.map((slot) => (
               <button
-                key={t}
-                onClick={() => setSelectedTime(t)}
+                key={slot}
+                onClick={() => setSelectedTime(slot)}
                 style={{
                   padding: "0.6rem 1.25rem",
-                  border: `1px solid ${selectedTime === t ? C.indigo : `${C.ink}33`}`,
+                  border: `1px solid ${selectedTime === slot ? C.indigo : `${C.ink}33`}`,
                   borderRadius: 6,
                   cursor: "pointer",
-                  backgroundColor: selectedTime === t ? C.indigo : "#fff",
-                  color: selectedTime === t ? "#fff" : C.ink,
+                  backgroundColor: selectedTime === slot ? C.indigo : "#fff",
+                  color: selectedTime === slot ? "#fff" : C.ink,
                   fontFamily: "var(--sans)",
                   fontSize: "0.9rem",
                   transition: "all 0.15s",
                 }}
               >
-                {t}
+                {t(`calendar.times.${slot}`)}
               </button>
             ))}
           </div>
@@ -310,7 +315,7 @@ export function Step2({
               margin: 0,
             }}
           >
-            Times shown in AEST [To confirm]
+            {t("step2.timezone")}
           </p>
         </div>
       )}
@@ -336,11 +341,16 @@ export function Step2({
               letterSpacing: "0.06em",
             }}
           >
-            Your selection
+            {t("step2.selection")}
           </div>
-          <div style={{ color: C.ink, fontWeight: 600 }}>{selectedService}</div>
+          <div style={{ color: C.ink, fontWeight: 600 }}>
+            {selectedService && t(`services.${selectedService}.title`)}
+          </div>
           <div style={{ color: `${C.ink}BB` }}>
-            {formatDate(selectedDate)} at {selectedTime}
+            {t("calendar.dateAtTime", {
+              date: formatDate(selectedDate),
+              time: t(`calendar.times.${selectedTime}`),
+            })}
           </div>
         </div>
       )}
@@ -358,10 +368,10 @@ export function Step2({
             padding: 0,
           }}
         >
-          ← Back
+          {t("shared.back")}
         </button>
         <Btn onClick={onNext} disabled={!selectedDate || !selectedTime}>
-          Continue to Your Details →
+          {t("step2.continue")}
         </Btn>
       </div>
     </div>

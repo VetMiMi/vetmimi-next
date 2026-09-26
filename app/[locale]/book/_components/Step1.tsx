@@ -1,7 +1,9 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
-import type { BookingState } from "./booking";
+import { SERVICE_IDS } from "./booking";
+import type { BookingState, ServiceId } from "./booking";
 
 // ── Step 1: Service Selection ────────────────────────────────────────────────
 
@@ -11,11 +13,13 @@ export function Step1({
   bookingState,
   onNext,
 }: {
-  selectedService: string;
-  setSelectedService: (s: string) => void;
+  selectedService: ServiceId | "";
+  setSelectedService: (s: ServiceId) => void;
   bookingState: BookingState;
   onNext: () => void;
 }) {
+  const t = useTranslations("book");
+
   if (bookingState === "unavailable") {
     return (
       <div>
@@ -27,7 +31,7 @@ export function Step1({
             marginBottom: "1.5rem",
           }}
         >
-          Service unavailable
+          {t("step1.unavailable.title")}
         </h2>
         <div
           style={{
@@ -40,31 +44,24 @@ export function Step1({
           }}
         >
           <p style={{ margin: 0 }}>
-            Booking is not currently available. Please{" "}
-            <Link href="/contact" style={{ color: C.rose }}>
-              contact us
-            </Link>{" "}
-            to discuss your options.
+            {t.rich("step1.unavailable.text", {
+              link: (chunks) => (
+                <Link href="/contact" style={{ color: C.rose }}>
+                  {chunks}
+                </Link>
+              ),
+            })}
           </p>
         </div>
       </div>
     );
   }
 
-  const services = [
-    {
-      id: "Individual Art Therapy",
-      title: "Individual Art Therapy",
-      description:
-        "One-to-one sessions tailored to your needs. Work at your own pace in a private, supportive space.",
-    },
-    {
-      id: "Group Art & Wellbeing",
-      title: "Group Art & Wellbeing",
-      description:
-        "Small group creative sessions. Connect with others through shared creative experience.",
-    },
-  ];
+  const services = SERVICE_IDS.map((id) => ({
+    id,
+    title: t(`services.${id}.title`),
+    description: t(`services.${id}.description`),
+  }));
 
   return (
     <div>
@@ -76,7 +73,7 @@ export function Step1({
           marginBottom: "0.5rem",
         }}
       >
-        Choose a service
+        {t("step1.title")}
       </h2>
       <p
         style={{
@@ -85,7 +82,7 @@ export function Step1({
           marginBottom: "2rem",
         }}
       >
-        Select the type of session you would like to book.
+        {t("step1.intro")}
       </p>
 
       <div
@@ -141,7 +138,7 @@ export function Step1({
                   fontWeight: 600,
                 }}
               >
-                <span>✓</span> Selected
+                <span>✓</span> {t("step1.selected")}
               </div>
             )}
           </button>
@@ -160,16 +157,23 @@ export function Step1({
           lineHeight: 1.6,
         }}
       >
-        <strong style={{ color: C.ink }}>Workshops & Programs</strong> are
-        arranged by enquiry.{" "}
-        <Link href="/contact" style={{ color: C.rose, textDecoration: "none" }}>
-          Contact us
-        </Link>{" "}
-        to discuss your project.
+        {t.rich("step1.workshops", {
+          strong: (chunks) => (
+            <strong style={{ color: C.ink }}>{chunks}</strong>
+          ),
+          link: (chunks) => (
+            <Link
+              href="/contact"
+              style={{ color: C.rose, textDecoration: "none" }}
+            >
+              {chunks}
+            </Link>
+          ),
+        })}
       </div>
 
       <Btn onClick={onNext} disabled={!selectedService}>
-        Continue to Date &amp; Time →
+        {t("step1.continue")}
       </Btn>
     </div>
   );

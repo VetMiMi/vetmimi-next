@@ -1,7 +1,16 @@
 import Link from "next/link";
 import { services } from "@/lib/services";
 import "@/styles/services.css";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
+import individualArt from "@/assets/services/individual.webp";
+import groupArt from "@/assets/services/group.webp";
+import workshopsArt from "@/assets/services/workshops.webp";
+
+const SERVICE_ART: Record<string, StaticImageData> = {
+  "individual-art-therapy": individualArt,
+  "group-art-wellbeing": groupArt,
+  "workshops-programs": workshopsArt,
+};
 
 export default function Services() {
   return (
@@ -16,21 +25,31 @@ export default function Services() {
             art experience.
           </p>
         </header>
-        <section className="services-grid" aria-label="Explore our services">
+        <section className="services-rows" aria-label="Explore our services">
           {services.map((service) => (
             <article
               key={service.slug}
-              className={`service-card service-tone-${service.tone}`}
+              className={`service-row service-tone-${service.tone}`}
             >
-              <Image
-                src={service.image}
-                alt={service.imageAlt}
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-              <div className="service-card-body">
+              <div className="service-row-media">
+                <Image
+                  src={SERVICE_ART[service.slug]}
+                  alt=""
+                  sizes="(max-width: 767px) 80vw, 36vw"
+                />
+              </div>
+              <div className="service-row-body">
                 <p className="service-eyebrow">{service.audience}</p>
                 <h2>{service.name}</h2>
                 <p>{service.summary}</p>
+                <div className="service-row-steps">
+                  <p className="service-row-steps-label">How it works</p>
+                  <ol>
+                    {service.steps.map((step) => (
+                      <li key={step.title}>{step.title}</li>
+                    ))}
+                  </ol>
+                </div>
                 <Link
                   className="service-text-link"
                   href={`/services/${service.slug}`}

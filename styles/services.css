@@ -268,49 +268,85 @@
 .services-intro h1 {
   max-width: 19ch;
 }
-.services-grid {
+.services-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 88px;
+  padding-block: 20px 96px;
+}
+.service-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 24px;
-  padding-bottom: 64px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(40px, 6vw, 88px);
+  align-items: center;
 }
-.service-card {
-  min-width: 0;
-  border: 1px solid #e2d8d2;
-  background: #fffcf8;
-  border-radius: 18px;
+.service-row:nth-child(even) .service-row-media {
+  order: 2;
+}
+.service-row-media {
+  position: relative;
+  border-radius: 20px;
+  background: var(--service-tint);
+  aspect-ratio: 4 / 3;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
-.service-card img {
+.service-row-media img {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 170px;
-  object-fit: cover;
-  object-position: center 28%;
-  display: block;
+  height: 100%;
+  object-fit: contain;
+  /* the artwork files carry their own empty margin */
+  transform: scale(1.12);
 }
-.service-card-body {
-  padding: 26px;
+.service-row-body h2 {
+  margin-bottom: 18px;
+}
+.service-row-body > p:not(.service-eyebrow) {
+  font-size: 1.04rem;
+  max-width: 44ch;
+}
+.service-row-steps {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid #e2d8d2;
+  max-width: 44ch;
+}
+.service-pages .service-row-steps-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: #8a8389;
+  margin-bottom: 12px;
+}
+.service-row-steps ol {
+  list-style: none;
+  counter-reset: step;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
-  flex: 1;
+  gap: 8px;
 }
-.service-card-body .service-eyebrow {
-  min-height: 34px;
-  margin-bottom: 10px;
+.service-row-steps li {
+  counter-increment: step;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--ink);
+  font-size: 0.96rem;
 }
-.service-card-body h2 {
-  font-size: 1.75rem;
-  min-height: 2.4em;
-  margin-bottom: 16px;
+.service-row-steps li::before {
+  content: counter(step);
+  font-family: var(--serif);
+  color: var(--service-accent);
+  font-size: 0.95rem;
+  min-width: 1ch;
 }
-.service-card-body > p {
-  font-size: 0.94rem;
-}
-.service-card-body .service-text-link {
-  margin-top: auto;
-  padding-top: 26px;
+.service-row-body .service-text-link {
+  display: inline-block;
+  margin-top: 30px;
   font-weight: 600;
 }
 .service-compare {
@@ -346,14 +382,8 @@
   .service-faq {
     gap: 32px;
   }
-  .service-card-body {
-    padding: 20px;
-  }
-  .services-grid {
-    gap: 16px;
-  }
-  .service-card-body h2 {
-    font-size: 1.5rem;
+  .services-rows {
+    gap: 64px;
   }
   .service-closing {
     flex-direction: column;
@@ -368,7 +398,7 @@
   .service-fit,
   .service-practical,
   .service-faq,
-  .services-grid,
+  .service-row,
   .service-steps,
   .service-compare-list {
     grid-template-columns: minmax(0, 1fr);
@@ -386,16 +416,15 @@
   .services-intro {
     padding-top: 40px;
   }
-  .service-card-body h2,
-  .service-card-body .service-eyebrow {
-    min-height: 0;
-  }
-  .service-card img {
-    height: 180px;
-  }
-  .services-grid {
+  .service-row {
     gap: 24px;
-    padding-bottom: 44px;
+  }
+  .service-row:nth-child(even) .service-row-media {
+    order: 0;
+  }
+  .services-rows {
+    gap: 56px;
+    padding-bottom: 56px;
   }
   .service-steps {
     gap: 24px;

@@ -457,6 +457,38 @@
   object-fit: cover;
   border-radius: 48% 48% 6px 6px;
 }
+/* Art of Wellness: co-founder portrait, echoing the outlined hero arch. */
+.ed-founder {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: clamp(36px, 6vw, 80px);
+  align-items: center;
+}
+.ed-founder-photo {
+  position: relative;
+  margin: 0 0 0 14px;
+}
+.ed-founder-photo::before {
+  content: "";
+  position: absolute;
+  inset: -14px 14px 14px -14px;
+  border: 1px solid var(--rose);
+  border-radius: 48% 48% 12px 12px;
+  opacity: 0.55;
+}
+.ed-founder-photo img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  object-position: center 30%;
+  border-radius: 48% 48% 10px 10px;
+}
+.ed-founder h2 {
+  margin-bottom: 0.6rem;
+}
 .ed-section-top {
   display: flex;
   justify-content: space-between;
@@ -528,6 +560,12 @@
   }
   .ed-wellness-art img {
     height: 280px;
+  }
+  .ed-founder {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ed-founder-photo {
+    max-width: 220px;
   }
   .ed-end {
     padding: 24px;

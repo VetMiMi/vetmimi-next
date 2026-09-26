@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { PortfolioItem, Story } from "@/lib/data";
+import { STORY_TYPE_LABEL, type PortfolioItem, type Story } from "@/lib/data";
 import "@/styles/editorial.css";
 import Image from "next/image";
 
@@ -33,7 +33,7 @@ export function StoryCard({ story }: { story: Story }) {
         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
       />
       <div>
-        <p className="ed-label">{story.category}</p>
+        <p className="ed-label">{STORY_TYPE_LABEL[story.type]}</p>
         <h3>
           <Link href={`/stories/${story.slug}`}>{story.title}</Link>
         </h3>

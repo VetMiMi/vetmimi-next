@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageEnd } from "@/components/Editorial";
 import dawMiPortrait from "@/assets/daw-mi-portrait.webp";
 import artImage from "@/assets/image-4.webp";
+import { VideoIntro } from "./_components/VideoIntro";
 
 export default function About() {
   return (
@@ -46,6 +47,7 @@ export default function About() {
           <figcaption className="ed-signature">Daw Mi</figcaption>
         </figure>
       </section>
+      <VideoIntro />
       <section className="ed-paper">
         <div className="ed-container ed-section ed-split ed-split-wide">
           <div>

@@ -1,0 +1,48 @@
+name: Continuous integration
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  web:
+    name: Web checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # Reads the pnpm version from "packageManager" in package.json.
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm typecheck
+      - run: pnpm build
+
+  commits:
+    name: Commit checks
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Check commit messages follow Conventional Commits
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          git fetch --quiet origin "$BASE_REF"
+          pattern='^(feat|fix|perf|refactor|style|docs|chore|test|build|ci|revert)(\([a-z0-9-]+\))?!?: .+'
+          status=0
+          for sha in $(git rev-list --no-merges "origin/$BASE_REF..HEAD"); do
+            subject=$(git log -1 --format=%s "$sha")
+            if ! printf '%s' "$subject" | grep -Eq "$pattern"; then
+              echo "::error::$(git log -1 --format=%h "$sha"): \"$subject\" should look like \"feat(about): add portrait\"."
+              status=1
+            fi
+          done
+          exit $status

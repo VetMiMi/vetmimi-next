@@ -5,21 +5,20 @@ import Image from "next/image";
 import {
   WaveDivider,
   GoldMark,
-  MintOpenCircle,
   PetalOutline,
   NestedOval,
   OverlappingCircles,
   FlowingRibbon,
   AlmondEye,
-  LavenderWaveAccent,
 } from "@/components/art/Shapes";
 import { C } from "@/lib/tokens";
 import { STORIES } from "@/lib/data";
 
 import art3 from "@/assets/image-3.webp";
-import art4 from "@/assets/image-4.webp";
+import dawMiPortrait from "@/assets/daw-mi-portrait.webp";
 import art5 from "@/assets/image-5.webp";
 import art7 from "@/assets/image-7.webp";
+import gardenEasel from "@/assets/artworks/garden-easel.webp";
 import hewPhoto from "@/assets/human-experience-week/daw-mi-with-artwork-3.webp";
 import { ArtMosaic } from "./_components/ArtMosaic";
 
@@ -594,44 +593,32 @@ export default function Home() {
           }}
           className="grid-cols-1 md:grid-cols-[5fr_6fr]"
         >
-          {/* Artwork portrait with halo */}
-          <div style={{ position: "relative" }}>
-            <LavenderWaveAccent
-              style={{
-                position: "absolute",
-                top: "-2rem",
-                left: "-2rem",
-                width: "140%",
-                opacity: 0.5,
-              }}
-            />
+          {/* Daw Mi's portrait in the same framed arch as the About page */}
+          <div
+            style={{
+              position: "relative",
+              padding: "14px",
+              background: "#eee4e2",
+              borderRadius: "48% 48% 20px 20px",
+            }}
+          >
             <div
               style={{
                 position: "relative",
                 overflow: "hidden",
-                borderRadius: "50% 50% 12px 12px",
+                borderRadius: "48% 48% 12px 12px",
                 aspectRatio: "3/4",
               }}
             >
               <Image
-                src={art4}
-                alt="Portrait of a woman with pink poppy — by Daw Mi 2023"
+                src={dawMiPortrait}
+                alt="Daw Mi smiling, with her paintings softly blurred behind her"
                 fill
                 sizes="(max-width: 768px) 100vw, 45vw"
-                style={{ objectFit: "cover", objectPosition: "center 12%" }}
+                placeholder="blur"
+                style={{ objectFit: "cover", objectPosition: "center" }}
               />
             </div>
-            {/* Petal shape accent */}
-            <PetalOutline
-              color={C.rose}
-              size={70}
-              style={{
-                position: "absolute",
-                bottom: "2rem",
-                right: "-1.5rem",
-                opacity: 0.55,
-              }}
-            />
             {/* Credential badge */}
             <div
               style={{
@@ -1246,20 +1233,17 @@ export default function Home() {
           aria-hidden
           style={{
             position: "absolute",
-            right: 0,
-            top: 0,
-            width: "35%",
-            height: "100%",
-            opacity: 0.06,
+            inset: 0,
+            opacity: 0.1,
           }}
         >
           <Image
-            src={art3}
+            src={gardenEasel}
             alt=""
             fill
-            sizes="35vw"
+            sizes="100vw"
             quality={40}
-            style={{ objectFit: "cover", objectPosition: "center 20%" }}
+            style={{ objectFit: "cover", objectPosition: "center" }}
           />
         </div>
         <div
@@ -1407,23 +1391,13 @@ export default function Home() {
               paddingTop: "2rem",
             }}
           >
-            <MintOpenCircle
-              size={340}
-              style={{
-                position: "absolute",
-                top: "7%",
-                right: "-3rem",
-                opacity: 0.38,
-              }}
-            />
             <div
               style={{
                 position: "relative",
                 width: "100%",
-                padding: "0.75rem",
-                backgroundColor: C.paper,
-                borderRadius: "34% 34% 22px 22px",
-                boxShadow: "0 18px 42px rgba(73,76,109,0.12)",
+                padding: "14px",
+                backgroundColor: "#eee4e2",
+                borderRadius: "34% 34% 20px 20px",
               }}
             >
               <div
@@ -1435,11 +1409,12 @@ export default function Home() {
                 }}
               >
                 <Image
-                  src={art5}
-                  alt="Pink peonies — art created in therapy sessions"
+                  src={gardenEasel}
+                  alt="A shared painting of a garden path, tree and apple, made in The Art of Wellness sessions"
                   fill
                   sizes="(max-width: 768px) 100vw, 45vw"
-                  style={{ objectFit: "cover", objectPosition: "72% 42%" }}
+                  placeholder="blur"
+                  style={{ objectFit: "cover", objectPosition: "center" }}
                 />
               </div>
               <div

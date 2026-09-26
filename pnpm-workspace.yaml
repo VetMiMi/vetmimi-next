@@ -1,0 +1,3 @@
+# unrs-resolver ships prebuilt binaries; its postinstall is not needed (lint works without it).
+ignoredBuiltDependencies:
+  - unrs-resolver

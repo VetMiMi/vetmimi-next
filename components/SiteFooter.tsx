@@ -1,4 +1,5 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { C } from "@/lib/tokens";
 import { PetalOutline, WaveDivider } from "@/components/art/Shapes";
 
@@ -44,6 +45,7 @@ function FooterCol({
 }
 
 export default function SiteFooter() {
+  const t = useTranslations("common");
   return (
     <footer>
       <WaveDivider from={C.paper} to={C.indigo} variant="dramatic" />
@@ -112,7 +114,7 @@ export default function SiteFooter() {
                   marginBottom: "1.25rem",
                 }}
               >
-                Daw Mi · Art Therapist & Wellbeing Practitioner
+                {t("footer.tagline")}
               </div>
               <p
                 style={{
@@ -123,36 +125,34 @@ export default function SiteFooter() {
                   maxWidth: "280px",
                 }}
               >
-                A space for creativity, reflection and meaningful connection.
-                Through art and thoughtful conversation, another way to explore
-                what may be difficult to put into words.
+                {t("footer.blurb")}
               </p>
             </div>
             <FooterCol
-              title="Explore"
+              title={t("footer.explore")}
               links={[
-                ["About", "/about"],
-                ["Services", "/services"],
-                ["Art of Wellness", "/art-of-wellness"],
-                ["Portfolio", "/portfolio"],
-                ["Stories & Insights", "/stories"],
+                [t("nav.about"), "/about"],
+                [t("nav.services"), "/services"],
+                [t("nav.artOfWellness"), "/art-of-wellness"],
+                [t("nav.portfolio"), "/portfolio"],
+                [t("nav.stories"), "/stories"],
               ]}
             />
             <FooterCol
-              title="Connect"
+              title={t("footer.connect")}
               links={[
-                ["Book Appointment", "/book"],
-                ["Contact", "/contact"],
-                ["Facebook [To confirm]", "/contact"],
-                ["Email [To confirm]", "/contact"],
+                [t("nav.bookAppointment"), "/book"],
+                [t("nav.contact"), "/contact"],
+                [t("footer.facebook"), "/contact"],
+                [t("footer.email"), "/contact"],
               ]}
             />
             <FooterCol
-              title="Information"
+              title={t("footer.information")}
               links={[
-                ["Privacy Policy", "/privacy"],
-                ["Booking & Cancellation", "/booking-policy"],
-                ["Disclaimer", "/disclaimer"],
+                [t("footer.privacy"), "/privacy"],
+                [t("footer.bookingPolicy"), "/booking-policy"],
+                [t("footer.disclaimer"), "/disclaimer"],
               ]}
             />
           </div>
@@ -175,7 +175,7 @@ export default function SiteFooter() {
                 color: "rgba(255,247,239,0.8)",
               }}
             >
-              © 2025 VetMiMi. All rights reserved.
+              {t("footer.copyright", { year: 2025 })}
             </span>
             <span
               style={{
@@ -184,7 +184,7 @@ export default function SiteFooter() {
                 color: "rgba(255,247,239,0.8)",
               }}
             >
-              Sydney, Australia · [Location to confirm]
+              {t("footer.location")}
             </span>
           </div>
         </div>

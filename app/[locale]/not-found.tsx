@@ -1,9 +1,11 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import { AlmondEye, PetalOutline, GoldMark } from "@/components/art/Shapes";
 
 export default function NotFound() {
+  const t = useTranslations("common");
   return (
     <div
       style={{
@@ -83,7 +85,7 @@ export default function NotFound() {
             lineHeight: 1.15,
           }}
         >
-          This page wandered somewhere else.
+          {t("notFound.heading")}
         </h1>
 
         {/* Negative space */}
@@ -100,8 +102,7 @@ export default function NotFound() {
             margin: "0 auto 2.5rem",
           }}
         >
-          We could not find what you were looking for. Try one of these places
-          instead.
+          {t("notFound.text")}
         </p>
 
         {/* Primary actions */}
@@ -114,9 +115,9 @@ export default function NotFound() {
             marginBottom: "2rem",
           }}
         >
-          <Btn href="/">Go Home</Btn>
+          <Btn href="/">{t("notFound.home")}</Btn>
           <Btn href="/services" variant="secondary">
-            Explore Services
+            {t("notFound.services")}
           </Btn>
         </div>
 
@@ -138,7 +139,7 @@ export default function NotFound() {
               margin: "0 1rem",
             }}
           >
-            Portfolio
+            {t("nav.portfolio")}
           </Link>
           <Link
             href="/stories"
@@ -150,7 +151,7 @@ export default function NotFound() {
               margin: "0 1rem",
             }}
           >
-            Stories &amp; Insights
+            {t("nav.stories")}
           </Link>
           <Link
             href="/contact"
@@ -162,7 +163,7 @@ export default function NotFound() {
               margin: "0 1rem",
             }}
           >
-            Contact
+            {t("nav.contact")}
           </Link>
         </div>
       </div>

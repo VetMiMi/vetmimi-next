@@ -17,9 +17,11 @@
   --butter: #e2ca85;
   --olive: #6f7144;
 
-  --serif: var(--font-serif), Georgia, serif;
-  --sans: var(--font-sans), system-ui, sans-serif;
-  --hand: var(--font-hand), cursive;
+  /* The Myanmar fonts come right after the Latin ones, so Burmese
+     characters fall through to them and English is unchanged. */
+  --serif: var(--font-serif), var(--font-serif-my), Georgia, serif;
+  --sans: var(--font-sans), var(--font-sans-my), system-ui, sans-serif;
+  --hand: var(--font-hand), var(--font-sans-my), cursive;
 }
 
 html,
@@ -74,4 +76,17 @@ h4 {
 .prose h2 {
   margin: 2.5rem 0 1rem;
   font-size: clamp(1.5rem, 2.5vw, 2rem);
+}
+
+/* Burmese: stacked vowel signs and medials need taller lines, and letter
+   spacing splits them apart. Many components set these inline, so the
+   overrides need !important. */
+:lang(my) :is(p, li, dd, dt, label, blockquote, figcaption, td, th) {
+  line-height: 1.9 !important;
+}
+:lang(my) :is(h1, h2, h3, h4, h5, h6) {
+  line-height: 1.5 !important;
+}
+:lang(my) * {
+  letter-spacing: normal !important;
 }

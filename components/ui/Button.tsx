@@ -1,4 +1,5 @@
 import { C } from "@/lib/tokens";
+import { Link } from "@/i18n/navigation";
 
 type Variant = "primary" | "secondary" | "editorial";
 type ButtonProps = {
@@ -57,6 +58,22 @@ const styles: Record<Variant, React.CSSProperties> = {
   },
 };
 
+// Site pages go through the i18n Link so they keep the visitor's language;
+// anything else (mailto:, tel:, other sites, #anchors) stays a plain link.
+function SmartLink({
+  href,
+  ...props
+}: { href: string; children: React.ReactNode } & Omit<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  "href"
+>) {
+  return href.startsWith("/") ? (
+    <Link href={href} {...props} />
+  ) : (
+    <a href={href} {...props} />
+  );
+}
+
 export function Btn({
   children,
   variant = "primary",
@@ -74,9 +91,9 @@ export function Btn({
   };
   if (href) {
     return (
-      <a href={href} style={s} className={className}>
+      <SmartLink href={href} style={s} className={className}>
         {children}
-      </a>
+      </SmartLink>
     );
   }
   return (
@@ -108,9 +125,9 @@ export function EditorialLink({
   };
   if (href)
     return (
-      <a href={href} style={s}>
+      <SmartLink href={href} style={s}>
         {children} →
-      </a>
+      </SmartLink>
     );
   return (
     <button onClick={onClick} style={s}>

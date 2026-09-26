@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { PageEnd } from "@/components/Editorial";
+import dawMiPortrait from "@/assets/daw-mi-portrait.webp";
 import artImage from "@/assets/image-4.webp";
 
 export default function About() {
@@ -25,12 +26,24 @@ export default function About() {
             </Link>
           </div>
         </div>
-        <figure className="ed-portrait">
+        <figure className="ed-portrait ed-portrait-duo">
           <Image
-            src={artImage}
-            alt="The ULX & Eddington Limit, a colourful mixed-media portrait"
-            sizes="(max-width: 768px) 100vw, 50vw"
+            src={dawMiPortrait}
+            alt="Daw Mi smiling, with her paintings softly blurred behind her"
+            sizes="(max-width: 767px) 340px, 410px"
+            preload
+            fetchPriority="high"
+            placeholder="blur"
           />
+          <div className="ed-portrait-art">
+            <Image
+              src={artImage}
+              alt="The ULX & Eddington Limit, one of Daw Mi’s mixed-media portraits"
+              sizes="160px"
+              loading="eager"
+            />
+          </div>
+          <figcaption className="ed-signature">Daw Mi</figcaption>
         </figure>
       </section>
       <section className="ed-paper">

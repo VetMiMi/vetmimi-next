@@ -84,6 +84,44 @@
   object-position: center 25%;
   border-radius: 48% 48% 12px 12px;
 }
+/* About: Daw Mi's photo in the arch, with one of her paintings pinned to
+   the corner like a collage and a handwritten signature. */
+.ed-portrait-duo {
+  margin-bottom: 36px;
+}
+.ed-portrait-duo > img {
+  object-position: center 30%;
+}
+.ed-portrait-art {
+  position: absolute;
+  left: -34px;
+  bottom: -28px;
+  width: 38%;
+  padding: 8px;
+  background: var(--canvas);
+  border-radius: 48% 48% 10px 10px;
+  box-shadow: 0 14px 30px rgba(40, 37, 45, 0.16);
+  transform: rotate(-5deg);
+}
+.ed-portrait-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  object-position: center 20%;
+  border-radius: 48% 48% 6px 6px;
+}
+.ed-signature {
+  position: absolute;
+  right: 18px;
+  bottom: -40px;
+  font-family: var(--hand);
+  font-size: 2.1rem;
+  line-height: 1;
+  color: var(--rose);
+  transform: rotate(-6deg);
+}
 .ed-link {
   color: var(--indigo);
   font-size: 0.9rem;
@@ -456,6 +494,10 @@
   .ed-portrait {
     max-width: 340px;
     justify-self: center;
+  }
+  .ed-portrait-art {
+    left: -6px;
+    width: 34%;
   }
   .ed-piece > div {
     grid-row: 1;

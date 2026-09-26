@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageEnd, WorkCard } from "@/components/Editorial";
 import { PORTFOLIO } from "@/lib/data";
 import artImage from "@/assets/image-7.webp";
+import dawMiPortrait from "@/assets/daw-mi-portrait.webp";
 
 export default function ArtOfWellness() {
   return (
@@ -53,6 +54,29 @@ export default function ArtOfWellness() {
             For information about the initiative, participation, or
             collaboration, get in touch with Daw Mi.
           </p>
+        </div>
+      </section>
+      <section className="ed-paper">
+        <div className="ed-container ed-section ed-founder">
+          <figure className="ed-founder-photo">
+            <Image
+              src={dawMiPortrait}
+              alt="Daw Mi, co-founder of Art of Wellness"
+              sizes="(max-width: 767px) 220px, 260px"
+            />
+          </figure>
+          <div>
+            <p className="ed-label">Co-founder</p>
+            <h2>Daw Mi</h2>
+            <p className="ed-lead">
+              A certified art psychotherapist and transformative artist, Daw Mi
+              co-founded Art of Wellness at Royal North Shore Hospital in
+              Sydney.
+            </p>
+            <Link className="ed-link" href="/about">
+              About Daw Mi →
+            </Link>
+          </div>
         </div>
       </section>
       <section className="ed-lavender">

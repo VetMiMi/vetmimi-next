@@ -77,14 +77,14 @@ export default function About() {
               </p>
             </li>
             <li>
-              <h3>Art of Wellness</h3>
+              <h3>The Art of Wellness</h3>
               <p>
-                Daw Mi is a co-founder of Art of Wellness at Royal North Shore
-                Hospital in Sydney, bringing creativity into a healthcare
+                Daw Mi is a co-founder of The Art of Wellness at Royal North
+                Shore Hospital in Sydney, bringing creativity into a healthcare
                 setting.
               </p>
               <Link className="ed-link" href="/art-of-wellness">
-                Learn about Art of Wellness →
+                Learn about The Art of Wellness →
               </Link>
             </li>
           </ul>

@@ -6,6 +6,16 @@ const nextConfig: NextConfig = {
     // is silently rounded to the nearest one. 75 is the default.
     qualities: [40, 60, 75],
   },
+  async redirects() {
+    return [
+      // Artworks now open in a lightbox on the portfolio page itself.
+      {
+        source: "/portfolio/:slug",
+        destination: "/portfolio",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

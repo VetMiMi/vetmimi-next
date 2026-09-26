@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   WaveDivider,
-  AquaRibbon,
   GoldMark,
   MintOpenCircle,
   PetalOutline,
@@ -13,7 +12,6 @@ import {
   FlowingRibbon,
   AlmondEye,
   LavenderWaveAccent,
-  DarkWaveTop,
 } from "@/components/art/Shapes";
 import { C } from "@/lib/tokens";
 import { STORIES } from "@/lib/data";
@@ -22,7 +20,7 @@ import art3 from "@/assets/image-3.webp";
 import art4 from "@/assets/image-4.webp";
 import art5 from "@/assets/image-5.webp";
 import art7 from "@/assets/image-7.webp";
-import groupArtwork from "@/assets/art-of-wellness/group-artwork.webp";
+import hewPhoto from "@/assets/human-experience-week/daw-mi-with-artwork-3.webp";
 import { ArtMosaic } from "./_components/ArtMosaic";
 
 /* ── Floating CTA ── */
@@ -954,7 +952,7 @@ export default function Home() {
       {/* ══════════════════════════════════════
           ART OF WELLNESS — dark indigo feature
       ══════════════════════════════════════ */}
-      <DarkWaveTop from={C.paper} to={C.indigo} />
+      <WaveDivider from={C.paper} to={C.indigo} variant="gentle" />
       <section
         style={{
           background: C.indigo,
@@ -963,26 +961,6 @@ export default function Home() {
           padding: "5rem 1.5rem 6rem",
         }}
       >
-        <GoldMark
-          size={64}
-          style={{
-            position: "absolute",
-            top: "2rem",
-            right: "3rem",
-            opacity: 0.6,
-          }}
-        />
-        <AlmondEye
-          color={C.aqua}
-          size={80}
-          style={{
-            position: "absolute",
-            bottom: "3rem",
-            left: "2rem",
-            opacity: 0.35,
-          }}
-        />
-
         <div style={{ maxWidth: "1240px", margin: "0 auto" }}>
           <div
             style={{
@@ -992,41 +970,24 @@ export default function Home() {
             }}
             className="grid-cols-1 md:grid-cols-2"
           >
-            {/* Image */}
-            <div
+            {/* Framed photo: cream mat, thin ochre edge, soft shadow */}
+            <figure
               style={{
-                position: "relative",
-                aspectRatio: "4/3",
-                overflow: "hidden",
-                borderRadius: "4px",
+                margin: 0,
+                background: C.canvas,
+                padding: "clamp(10px, 1.4vw, 18px)",
+                border: `1px solid ${C.ochre}`,
+                boxShadow: "0 24px 48px rgba(18,14,26,0.35)",
               }}
             >
               <Image
-                src={groupArtwork}
-                alt="A colourful group drawing of flowers made during an Art of Wellness session"
-                fill
+                src={hewPhoto}
+                alt="Daw Mi at Royal North Shore Hospital beside a painting created with patients, visitors and staff"
                 sizes="(max-width: 768px) 100vw, 50vw"
-                style={{ objectFit: "cover", objectPosition: "center 35%" }}
+                placeholder="blur"
+                style={{ display: "block", width: "100%", height: "auto" }}
               />
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(135deg, rgba(73,76,109,0.3) 0%, transparent 60%)",
-                }}
-              />
-              {/* aqua line accent */}
-              <AquaRibbon
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  opacity: 0.55,
-                }}
-              />
-            </div>
+            </figure>
 
             {/* Text */}
             <div>
@@ -1105,7 +1066,7 @@ export default function Home() {
       {/* ══════════════════════════════════════
           STORIES PREVIEW
       ══════════════════════════════════════ */}
-      <WaveDivider from={C.indigo} to={C.violet} variant="gentle" />
+      <WaveDivider from={C.indigo} to="#F0EEF5" variant="gentle" />
       <section
         style={{
           background: "#F0EEF5",

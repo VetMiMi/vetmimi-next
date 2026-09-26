@@ -1,1 +1,156 @@
-{}
+{
+  "page": {
+    "back": "← Services",
+    "title": "Book an appointment"
+  },
+  "progress": {
+    "service": "Service",
+    "dateTime": "Date & Time",
+    "details": "Your Details",
+    "review": "Review"
+  },
+  "services": {
+    "individual": {
+      "title": "Individual Art Therapy",
+      "description": "One-to-one sessions tailored to your needs. Work at your own pace in a private, supportive space."
+    },
+    "group": {
+      "title": "Group Art & Wellbeing",
+      "description": "Small group creative sessions. Connect with others through shared creative experience."
+    }
+  },
+  "calendar": {
+    "monthYear": "{month} {year}",
+    "fullDate": "{weekday} {day} {month} {year}",
+    "dateAtTime": "{date} at {time}",
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "weekdays": {
+      "mon": "Monday",
+      "tue": "Tuesday",
+      "wed": "Wednesday",
+      "thu": "Thursday",
+      "fri": "Friday",
+      "sat": "Saturday",
+      "sun": "Sunday"
+    },
+    "weekdaysShort": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
+    },
+    "times": {
+      "10am": "10:00 am",
+      "11am": "11:00 am",
+      "2pm": "2:00 pm",
+      "3pm": "3:00 pm"
+    }
+  },
+  "shared": {
+    "back": "← Back",
+    "optional": "(optional)",
+    "failed": "Something did not go through. Your message has not been sent yet. Your information is still here, so you can try again."
+  },
+  "step1": {
+    "unavailable": {
+      "title": "Service unavailable",
+      "text": "Booking is not currently available. Please <link>contact us</link> to discuss your options."
+    },
+    "title": "Choose a service",
+    "intro": "Select the type of session you would like to book.",
+    "selected": "Selected",
+    "workshops": "<strong>Workshops & Programs</strong> are arranged by enquiry. <link>Contact us</link> to discuss your project.",
+    "continue": "Continue to Date & Time →"
+  },
+  "step2": {
+    "title": "Choose a date and time",
+    "noTimes": "There are no available times for this period. Please try a different date.",
+    "timeLost": "That time is no longer available. Please choose another.",
+    "availableTimes": "Available times for {date}",
+    "timezone": "Times shown in AEST [To confirm]",
+    "selection": "Your selection",
+    "continue": "Continue to Your Details →"
+  },
+  "step3": {
+    "title": "Your details",
+    "intro": "Please provide your contact information.",
+    "name": {
+      "label": "Full name",
+      "placeholder": "Your name"
+    },
+    "email": {
+      "label": "Email address"
+    },
+    "phone": {
+      "label": "Phone number"
+    },
+    "format": {
+      "label": "Session format",
+      "placeholder": "Select a format",
+      "options": {
+        "online": "Online",
+        "inPerson": "In-person [To confirm]"
+      }
+    },
+    "note": {
+      "label": "Short note",
+      "help": "You are welcome to share anything that would help Daw Mi prepare. Please do not include private medical or detailed health information here.",
+      "placeholder": "Optional note…"
+    },
+    "privacyAck": "I have read and agree to the <link>Privacy Policy</link>",
+    "policyAck": "I have read and agree to the <link>Booking & Cancellation Policy</link>",
+    "continue": "Review your request →"
+  },
+  "step4": {
+    "title": "Review your request",
+    "intro": "Please check your details before submitting.",
+    "rows": {
+      "service": "Service",
+      "dateTime": "Date & Time",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "format": "Format",
+      "note": "Note"
+    },
+    "formatValues": {
+      "online": "Online",
+      "inPerson": "In-person"
+    },
+    "edit": "Edit",
+    "notice": "<strong>Please note:</strong> This is a request, not a confirmed booking. Daw Mi will be in touch to confirm your appointment.",
+    "submit": "Submit Appointment Request",
+    "submitting": "Submitting…"
+  },
+  "success": {
+    "badge": "Pending",
+    "title": "Appointment request received.",
+    "text": "Thank you for reaching out. Your request has been received and is not yet confirmed. Daw Mi will be in touch within [To confirm] business days to confirm your appointment.",
+    "next": {
+      "title": "What happens next?",
+      "steps": {
+        "review": "Daw Mi reviews your request.",
+        "email": "You receive a confirmation email.",
+        "confirmed": "Your appointment is confirmed."
+      }
+    },
+    "home": "Return to home",
+    "question": "Have a question? →"
+  }
+}

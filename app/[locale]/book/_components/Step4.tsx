@@ -1,7 +1,13 @@
+import { useTranslations } from "next-intl";
 import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
-import { formatDate } from "./booking";
-import type { BookingState, BookingFormData } from "./booking";
+import { useFormatDate } from "./booking";
+import type {
+  BookingState,
+  BookingFormData,
+  ServiceId,
+  TimeSlot,
+} from "./booking";
 
 // ── Step 4: Review & Submit ──────────────────────────────────────────────────
 
@@ -16,9 +22,9 @@ export function Step4({
   onBack,
   goToStep,
 }: {
-  selectedService: string;
+  selectedService: ServiceId | "";
   selectedDate: string;
-  selectedTime: string;
+  selectedTime: TimeSlot | "";
   formData: BookingFormData;
   bookingState: BookingState;
   isSubmitting: boolean;
@@ -26,6 +32,9 @@ export function Step4({
   onBack: () => void;
   goToStep: (n: number) => void;
 }) {
+  const t = useTranslations("book");
+  const formatDate = useFormatDate();
+
   const rowStyle: React.CSSProperties = {
     display: "flex",
     justifyContent: "space-between",
@@ -75,7 +84,7 @@ export function Step4({
           marginBottom: "0.5rem",
         }}
       >
-        Review your request
+        {t("step4.title")}
       </h2>
       <p
         style={{
@@ -84,7 +93,7 @@ export function Step4({
           marginBottom: "2rem",
         }}
       >
-        Please check your details before submitting.
+        {t("step4.intro")}
       </p>
 
       {bookingState === "failed" && (
@@ -101,8 +110,7 @@ export function Step4({
             lineHeight: 1.6,
           }}
         >
-          Something did not go through. Your message has not been sent yet. Your
-          information is still here, so you can try again.
+          {t("shared.failed")}
         </div>
       )}
 
@@ -117,64 +125,72 @@ export function Step4({
         }}
       >
         <div style={rowStyle}>
-          <span style={labelCol}>Service</span>
-          <span style={valueCol}>{selectedService}</span>
+          <span style={labelCol}>{t("step4.rows.service")}</span>
+          <span style={valueCol}>
+            {selectedService && t(`services.${selectedService}.title`)}
+          </span>
           <button style={editBtn} onClick={() => goToStep(1)}>
-            Edit
+            {t("step4.edit")}
           </button>
         </div>
         <div style={rowStyle}>
-          <span style={labelCol}>Date &amp; Time</span>
+          <span style={labelCol}>{t("step4.rows.dateTime")}</span>
           <span style={valueCol}>
-            {formatDate(selectedDate)}
-            {selectedTime ? ` at ${selectedTime}` : ""}
+            {selectedTime
+              ? t("calendar.dateAtTime", {
+                  date: formatDate(selectedDate),
+                  time: t(`calendar.times.${selectedTime}`),
+                })
+              : formatDate(selectedDate)}
           </span>
           <button style={editBtn} onClick={() => goToStep(2)}>
-            Edit
+            {t("step4.edit")}
           </button>
         </div>
         <div style={rowStyle}>
-          <span style={labelCol}>Name</span>
+          <span style={labelCol}>{t("step4.rows.name")}</span>
           <span style={valueCol}>{formData.name}</span>
           <button style={editBtn} onClick={() => goToStep(3)}>
-            Edit
+            {t("step4.edit")}
           </button>
         </div>
         <div style={rowStyle}>
-          <span style={labelCol}>Email</span>
+          <span style={labelCol}>{t("step4.rows.email")}</span>
           <span style={valueCol}>{formData.email}</span>
           <button style={editBtn} onClick={() => goToStep(3)}>
-            Edit
+            {t("step4.edit")}
           </button>
         </div>
         {formData.phone && (
           <div style={rowStyle}>
-            <span style={labelCol}>Phone</span>
+            <span style={labelCol}>{t("step4.rows.phone")}</span>
             <span style={valueCol}>{formData.phone}</span>
             <button style={editBtn} onClick={() => goToStep(3)}>
-              Edit
+              {t("step4.edit")}
             </button>
           </div>
         )}
         {formData.format && (
           <div style={rowStyle}>
-            <span style={labelCol}>Format</span>
-            <span style={valueCol}>{formData.format}</span>
+            <span style={labelCol}>{t("step4.rows.format")}</span>
+            <span style={valueCol}>
+              {t(`step4.formatValues.${formData.format}`)}
+            </span>
             <button style={editBtn} onClick={() => goToStep(3)}>
-              Edit
+              {t("step4.edit")}
             </button>
           </div>
         )}
         {formData.note && (
           <div style={rowStyle}>
-            <span style={labelCol}>Note</span>
+            <span style={labelCol}>{t("step4.rows.note")}</span>
             <span
               style={{ ...valueCol, fontStyle: "italic", color: `${C.ink}BB` }}
             >
               {formData.note}
             </span>
             <button style={editBtn} onClick={() => goToStep(3)}>
-              Edit
+              {t("step4.edit")}
             </button>
           </div>
         )}
@@ -199,8 +215,9 @@ export function Step4({
             lineHeight: 1.7,
           }}
         >
-          <strong>Please note:</strong> This is a request, not a confirmed
-          booking. Daw Mi will be in touch to confirm your appointment.
+          {t.rich("step4.notice", {
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
         </p>
       </div>
 
@@ -217,10 +234,10 @@ export function Step4({
             padding: 0,
           }}
         >
-          ← Back
+          {t("shared.back")}
         </button>
         <Btn onClick={onSubmit} disabled={isSubmitting}>
-          {isSubmitting ? "Submitting…" : "Submit Appointment Request"}
+          {isSubmitting ? t("step4.submitting") : t("step4.submit")}
         </Btn>
       </div>
     </div>

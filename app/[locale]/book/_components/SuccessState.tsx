@@ -1,10 +1,14 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 
 // ── Success State ────────────────────────────────────────────────────────────
 
+const NEXT_STEPS = ["review", "email", "confirmed"] as const;
+
 export function SuccessState() {
+  const t = useTranslations("book.success");
   return (
     <div
       style={{
@@ -32,7 +36,7 @@ export function SuccessState() {
             marginBottom: "2rem",
           }}
         >
-          Pending
+          {t("badge")}
         </div>
 
         <h1
@@ -44,7 +48,7 @@ export function SuccessState() {
             lineHeight: 1.2,
           }}
         >
-          Appointment request received.
+          {t("title")}
         </h1>
 
         <p
@@ -56,9 +60,7 @@ export function SuccessState() {
             marginBottom: "2.5rem",
           }}
         >
-          Thank you for reaching out. Your request has been received and is not
-          yet confirmed. Daw Mi will be in touch within [To confirm] business
-          days to confirm your appointment.
+          {t("text")}
         </p>
 
         <div
@@ -79,15 +81,11 @@ export function SuccessState() {
               fontSize: "0.9rem",
             }}
           >
-            What happens next?
+            {t("next.title")}
           </div>
-          {[
-            "Daw Mi reviews your request.",
-            "You receive a confirmation email.",
-            "Your appointment is confirmed.",
-          ].map((step, i) => (
+          {NEXT_STEPS.map((step, i) => (
             <div
-              key={i}
+              key={step}
               style={{
                 display: "flex",
                 alignItems: "flex-start",
@@ -121,7 +119,7 @@ export function SuccessState() {
                   paddingTop: "0.15rem",
                 }}
               >
-                {step}
+                {t(`next.steps.${step}`)}
               </span>
             </div>
           ))}
@@ -135,7 +133,7 @@ export function SuccessState() {
             flexWrap: "wrap",
           }}
         >
-          <Btn href="/">Return to home</Btn>
+          <Btn href="/">{t("home")}</Btn>
           <Link
             href="/contact"
             style={{
@@ -148,7 +146,7 @@ export function SuccessState() {
               gap: "0.3rem",
             }}
           >
-            Have a question? →
+            {t("question")}
           </Link>
         </div>
       </div>

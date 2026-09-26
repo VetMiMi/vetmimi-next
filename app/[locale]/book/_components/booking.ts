@@ -1,15 +1,26 @@
 // Shared types, helpers and styles for the booking flow.
 import type { CSSProperties } from "react";
+import { useTranslations } from "next-intl";
 import { C } from "@/lib/tokens";
 
 export type BookingState =
   null | "success" | "failed" | "no-times" | "time-lost" | "unavailable";
 
+// Stable ids kept in state; visible labels live in messages/<locale>/book.json.
+export const SERVICE_IDS = ["individual", "group"] as const;
+export type ServiceId = (typeof SERVICE_IDS)[number];
+
+export const FORMAT_IDS = ["online", "inPerson"] as const;
+export type FormatId = (typeof FORMAT_IDS)[number];
+
+export const TIME_SLOTS = ["10am", "11am", "2pm", "3pm"] as const;
+export type TimeSlot = (typeof TIME_SLOTS)[number];
+
 export interface BookingFormData {
   name: string;
   email: string;
   phone: string;
-  format: string;
+  format: FormatId | "";
   note: string;
   privacyAck: boolean;
   policyAck: boolean;
@@ -24,23 +35,35 @@ export function getFirstDayOfMonth(year: number, month: number) {
   return day === 0 ? 6 : day - 1;
 }
 
-export const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+// Indexed by Date.getMonth().
+export const MONTH_IDS = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december",
+] as const;
 
-export const DAY_LABELS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-export const TIME_SLOTS = ["10:00 am", "11:00 am", "2:00 pm", "3:00 pm"];
+// Indexed by Date.getDay() (Sunday first).
+const WEEKDAY_IDS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
+
+// Calendar column order (Monday first).
+export const DAY_IDS = [
+  "mon",
+  "tue",
+  "wed",
+  "thu",
+  "fri",
+  "sat",
+  "sun",
+] as const;
 
 export function isAvailableDate(date: Date): boolean {
   const today = new Date();
@@ -51,15 +74,22 @@ export function isAvailableDate(date: Date): boolean {
   return date >= fiveDaysFromNow && (day === 2 || day === 4);
 }
 
-export function formatDate(dateStr: string): string {
-  if (!dateStr) return "";
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("en-AU", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+// Returns a formatter for a selected date in the visitor's language, e.g.
+// "Tuesday 6 October 2026" or "အင်္ဂါနေ့၊ 2026 အောက်တိုဘာလ 6 ရက်". The word
+// order comes from messages so each language can set its own; digits stay
+// Western in both.
+export function useFormatDate() {
+  const t = useTranslations("book.calendar");
+  return (dateStr: string): string => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    return t("fullDate", {
+      weekday: t(`weekdays.${WEEKDAY_IDS[d.getDay()]}`),
+      day: String(d.getDate()),
+      month: t(`months.${MONTH_IDS[d.getMonth()]}`),
+      year: String(d.getFullYear()),
+    });
+  };
 }
 
 // ── Input styles ─────────────────────────────────────────────────────────────

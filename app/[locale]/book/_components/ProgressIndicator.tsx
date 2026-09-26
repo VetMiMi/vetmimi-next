@@ -1,13 +1,15 @@
+import { useTranslations } from "next-intl";
 import { C } from "@/lib/tokens";
 
 // ── Progress indicator ──────────────────────────────────────────────────────
 
 export function ProgressIndicator({ step }: { step: number }) {
+  const t = useTranslations("book.progress");
   const steps = [
-    { n: 1, label: "Service" },
-    { n: 2, label: "Date & Time" },
-    { n: 3, label: "Your Details" },
-    { n: 4, label: "Review" },
+    { n: 1, label: t("service") },
+    { n: 2, label: t("dateTime") },
+    { n: 3, label: t("details") },
+    { n: 4, label: t("review") },
   ];
 
   return (

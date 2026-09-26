@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { C } from "@/lib/tokens";
 import { ProgressIndicator } from "./_components/ProgressIndicator";
 import { Step1 } from "./_components/Step1";
@@ -8,16 +9,22 @@ import { Step2 } from "./_components/Step2";
 import { Step3 } from "./_components/Step3";
 import { Step4 } from "./_components/Step4";
 import { SuccessState } from "./_components/SuccessState";
-import type { BookingState, BookingFormData } from "./_components/booking";
+import type {
+  BookingState,
+  BookingFormData,
+  ServiceId,
+  TimeSlot,
+} from "./_components/booking";
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function BookAppointment() {
+  const t = useTranslations("book.page");
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [bookingState, setBookingState] = useState<BookingState>(null);
-  const [selectedService, setSelectedService] = useState("");
+  const [selectedService, setSelectedService] = useState<ServiceId | "">("");
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState<TimeSlot | "">("");
   const [formData, setFormData] = useState<BookingFormData>({
     name: "",
     email: "",
@@ -64,7 +71,7 @@ export default function BookAppointment() {
               marginBottom: "1.25rem",
             }}
           >
-            ← Services
+            {t("back")}
           </Link>
           <h1
             style={{
@@ -74,7 +81,7 @@ export default function BookAppointment() {
               margin: 0,
             }}
           >
-            Book an appointment
+            {t("title")}
           </h1>
         </div>
       </div>

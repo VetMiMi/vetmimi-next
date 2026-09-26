@@ -23,6 +23,7 @@ import art4 from "@/assets/image-4.webp";
 import art5 from "@/assets/image-5.webp";
 import art6 from "@/assets/image-6.webp";
 import art7 from "@/assets/image-7.webp";
+import groupArtwork from "@/assets/art-of-wellness/group-artwork.webp";
 
 /* ── Floating CTA ── */
 function FloatingCTA() {
@@ -390,7 +391,7 @@ export default function Home() {
           >
             {[
               "Certified Art Therapist [To confirm]",
-              "Royal North Shore Hospital — Art of Wellness",
+              "Royal North Shore Hospital — The Art of Wellness",
               "Sydney, NSW",
             ].map((label) => (
               <div
@@ -943,7 +944,7 @@ export default function Home() {
                   color: C.ink,
                 }}
               >
-                Art of Wellness
+                The Art of Wellness
               </div>
               <div
                 style={{
@@ -1004,9 +1005,9 @@ export default function Home() {
               }}
             >
               Daw Mi is a certified art psychotherapist, transformative artist,
-              and co-founder of Art of Wellness at Royal North Shore Hospital in
-              Sydney. The artworks on this site were made <em>in</em> these
-              sessions.
+              and co-founder of The Art of Wellness at Royal North Shore
+              Hospital in Sydney. The artworks on this site were made{" "}
+              <em>in</em> these sessions.
             </p>
             <Link
               href="/about"
@@ -1280,8 +1281,8 @@ export default function Home() {
               }}
             >
               <Image
-                src={art7}
-                alt="Expressionist golden face on deep indigo — Art of Wellness"
+                src={groupArtwork}
+                alt="A colourful group drawing of flowers made during an Art of Wellness session"
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 style={{ objectFit: "cover", objectPosition: "center 35%" }}
@@ -1316,7 +1317,7 @@ export default function Home() {
                   marginBottom: "1rem",
                 }}
               >
-                Art of Wellness
+                The Art of Wellness
               </div>
               <h2
                 style={{
@@ -1338,9 +1339,10 @@ export default function Home() {
                   marginBottom: "2rem",
                 }}
               >
-                Art of Wellness brings creativity into healthcare and community
-                spaces.Discover the program, Daw Mi&apos;s involvement and the
-                work connected to it.
+                The Art of Wellness brings music, art and photography to
+                patients, carers and staff at Royal North Shore Hospital.
+                Discover the program, Daw Mi&apos;s involvement and the work
+                connected to it.
               </p>
               <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
                 <Link
@@ -1356,7 +1358,7 @@ export default function Home() {
                     textDecoration: "none",
                   }}
                 >
-                  Explore Art of Wellness →
+                  Explore The Art of Wellness →
                 </Link>
                 <Link
                   href="/portfolio"

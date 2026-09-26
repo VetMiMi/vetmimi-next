@@ -453,8 +453,11 @@ export default function Home() {
       </section>
 
       {/* Aqua ribbon transition */}
-      <AquaRibbon
-        style={{ position: "relative", zIndex: 1, marginTop: "-4px" }}
+      <WaveDivider
+        from={C.canvas}
+        to={C.coral}
+        variant="gentle"
+        flip
       />
 
       {/* ══════════════════════════════════════
@@ -468,19 +471,9 @@ export default function Home() {
           overflow: "hidden",
         }}
       >
-        <MintOpenCircle
-          size={320}
-          style={{
-            position: "absolute",
-            right: "-60px",
-            top: "50%",
-            transform: "translateY(-50%)",
-            opacity: 0.6,
-          }}
-        />
         <WaveDivider
           from={C.canvas}
-          to="rgba(145,192,211,0.06)"
+          to={C.coral}
           variant="gentle"
           style={{ position: "absolute", bottom: 0, left: 0, right: 0 }}
         />
@@ -491,6 +484,7 @@ export default function Home() {
             margin: "0 auto",
             position: "relative",
             zIndex: 1,
+            textAlign: "center",
           }}
         >
           <p
@@ -504,8 +498,15 @@ export default function Home() {
               margin: "0 0 2rem",
             }}
           >
-            You do not need to know how to draw. You do not need to make
-            something beautiful. You only need somewhere to begin.
+            <span style={{ display: "block" }}>
+              You do not need to know how to draw.
+            </span>
+            <span style={{ display: "block" }}>
+              You do not need to make something beautiful.
+            </span>
+            <span style={{ display: "block" }}>
+              You only need somewhere to begin.
+            </span>
           </p>
           <Link
             href="/services"

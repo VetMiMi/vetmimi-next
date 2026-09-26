@@ -457,6 +457,49 @@
   object-fit: cover;
   border-radius: 48% 48% 6px 6px;
 }
+/* Art of Wellness: the three parts of the program, pinned like prints. */
+.ed-program {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 48px);
+}
+.ed-program-card figure {
+  margin: 0 0 1.4rem;
+  padding: 10px;
+  background: #fff;
+  border-radius: 48% 48% 10px 10px;
+  box-shadow: 0 12px 28px rgba(40, 37, 45, 0.1);
+  transform: rotate(-1.5deg);
+}
+.ed-program-card:nth-child(2) figure {
+  transform: rotate(1.2deg);
+}
+.ed-program-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  border-radius: 48% 48% 6px 6px;
+}
+.ed-program-card h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.35rem;
+}
+.ed-program-card p {
+  margin: 0;
+}
+.ed-credit {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+  opacity: 0.65;
+}
+.ed-support {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(40, 37, 45, 0.12);
+}
 /* Art of Wellness: co-founder portrait, echoing the outlined hero arch. */
 .ed-founder {
   display: grid;
@@ -563,6 +606,12 @@
   }
   .ed-founder {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .ed-program {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ed-program-card figure {
+    max-width: 360px;
   }
   .ed-founder-photo {
     max-width: 220px;

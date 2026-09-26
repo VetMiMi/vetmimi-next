@@ -1,0 +1,127 @@
+/* The Art of Wellness page: a showcase of the NORTH Foundation program.
+   Photos sit whole in the same soft mat frame as the About page. */
+.aow-frame {
+  margin: 0;
+  padding: 12px;
+  background: #eee4e2;
+  border-radius: 20px;
+}
+.aow-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.aow-hero-frame {
+  width: 100%;
+  max-width: 520px;
+  justify-self: end;
+  box-shadow: 0 24px 48px rgba(18, 14, 26, 0.35);
+}
+
+/* Why it matters: heading centred against the taller text column,
+   with the program's mission as a quote. */
+.aow-why {
+  align-items: center;
+}
+.aow-quote {
+  margin: 2rem 0 0;
+  padding-left: 1.4rem;
+  border-left: 2px solid var(--rose);
+}
+.aow-quote p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  line-height: 1.45;
+  color: var(--ink);
+  margin: 0 0 0.6rem;
+}
+.aow-quote cite {
+  font-style: normal;
+  font-size: 0.85rem;
+  color: #756b75;
+}
+
+/* Three parts of the program. */
+.aow-parts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 48px);
+}
+.aow-parts .aow-frame {
+  margin-bottom: 1.3rem;
+}
+.aow-parts img {
+  aspect-ratio: 31 / 20;
+  object-fit: cover;
+}
+.aow-parts h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1.35rem;
+}
+.aow-parts p {
+  margin: 0;
+}
+
+/* The team, as shown on the NORTH Foundation page. */
+.aow-team {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 48px);
+}
+.aow-person img {
+  display: block;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  padding: 8px;
+  background: #eee4e2;
+  margin-bottom: 1.2rem;
+}
+.aow-person h3 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+.aow-role {
+  margin: 0.25rem 0 0.8rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rose);
+}
+.aow-person p:not(.aow-role) {
+  margin: 0 0 0.8rem;
+}
+
+/* Support the program. */
+.aow-support {
+  text-align: center;
+  max-width: 640px;
+  margin-inline: auto;
+}
+.aow-support .ed-actions {
+  justify-content: center;
+}
+
+.aow-credit {
+  margin-block: 0;
+  padding-block: 2rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #756b75;
+}
+.aow-credit a {
+  color: inherit;
+}
+
+@media (max-width: 767px) {
+  .aow-hero-frame {
+    justify-self: center;
+  }
+  .aow-parts,
+  .aow-team {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

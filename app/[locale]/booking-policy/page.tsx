@@ -1,43 +1,26 @@
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { C } from "@/lib/tokens";
 import { WaveDivider } from "@/components/art/Shapes";
 
-const sections = [
-  {
-    heading: "Appointment requests and confirmation",
-    body: "Submitting a booking request does not confirm your appointment. You will receive a separate confirmation from Daw Mi once your request has been reviewed. [To confirm — turnaround time]",
-  },
-  {
-    heading: "Rescheduling",
-    body: "If you need to reschedule, please contact Daw Mi as early as possible. [To confirm — process and notice requirements]",
-  },
-  {
-    heading: "Cancellation",
-    body: "Cancellations must be made with sufficient notice. Please refer to the notice periods below. [To confirm]",
-  },
-  {
-    heading: "Notice periods",
-    body: "[To confirm — specific notice periods, e.g. 48 hours for individual sessions]",
-  },
-  {
-    heading: "Late cancellation and fees",
-    body: "[To confirm — late cancellation policy and any applicable fees]",
-  },
-  {
-    heading: "No-shows",
-    body: "If you do not attend a scheduled appointment without prior notice, [To confirm — no-show policy]",
-  },
-  {
-    heading: "Payment",
-    body: "[To confirm — payment methods, timing, and invoicing process]",
-  },
-  {
-    heading: "Contact",
-    body: "If you have a question about your booking, please contact Daw Mi using the contact form or at [To confirm — email].",
-  },
-];
+const SECTIONS = [
+  "requests",
+  "rescheduling",
+  "cancellation",
+  "noticePeriods",
+  "lateCancellation",
+  "noShows",
+  "payment",
+  "contact",
+] as const;
 
-export default function BookingPolicy() {
+export default async function BookingPolicy({
+  params,
+}: PageProps<"/[locale]/booking-policy">) {
+  const { locale } = await params;
+  setRequestLocale(locale as Locale);
+  const t = await getTranslations("legal.bookingPolicy");
   return (
     <div style={{ backgroundColor: C.canvas, minHeight: "100dvh" }}>
       {/* Header */}
@@ -57,7 +40,7 @@ export default function BookingPolicy() {
                 marginBottom: "1.5rem",
               }}
             >
-              ← Home
+              {t("links.home")}
             </Link>
             <h1
               style={{
@@ -68,7 +51,7 @@ export default function BookingPolicy() {
                 lineHeight: 1.15,
               }}
             >
-              Booking &amp; Cancellation Policy
+              {t("title")}
             </h1>
           </div>
         </div>
@@ -94,12 +77,11 @@ export default function BookingPolicy() {
             borderLeft: `3px solid ${C.ochre}`,
           }}
         >
-          This booking and cancellation policy is a placeholder pending formal
-          review. All content is subject to change. Last updated [Date].
+          {t("notice")}
         </div>
 
-        {sections.map((section) => (
-          <div key={section.heading} style={{ marginBottom: "2.5rem" }}>
+        {SECTIONS.map((id) => (
+          <div key={id} style={{ marginBottom: "2.5rem" }}>
             <h2
               style={{
                 fontFamily: "var(--serif)",
@@ -109,7 +91,7 @@ export default function BookingPolicy() {
                 fontWeight: 600,
               }}
             >
-              {section.heading}
+              {t(`sections.${id}.heading`)}
             </h2>
             <p
               style={{
@@ -120,7 +102,7 @@ export default function BookingPolicy() {
                 fontSize: "1rem",
               }}
             >
-              {section.body}
+              {t(`sections.${id}.body`)}
             </p>
           </div>
         ))}
@@ -145,7 +127,7 @@ export default function BookingPolicy() {
               textDecoration: "none",
             }}
           >
-            ← Return to home
+            {t("links.returnHome")}
           </Link>
           <Link
             href="/contact"
@@ -156,7 +138,7 @@ export default function BookingPolicy() {
               textDecoration: "none",
             }}
           >
-            Contact us
+            {t("links.contact")}
           </Link>
         </div>
       </div>

@@ -1,1 +1,136 @@
-{}
+{
+  "privacy": {
+    "title": "Privacy Policy",
+    "notice": "This privacy policy is a placeholder pending formal legal review. All content is subject to change. Last updated [Date].",
+    "links": {
+      "home": "← Home",
+      "returnHome": "← Return to home",
+      "contact": "Contact us"
+    },
+    "sections": {
+      "collect": {
+        "heading": "Information we collect",
+        "body": "When you use this website, we may collect information you provide directly, such as your name, email address, and any other details submitted through our contact or booking forms. We may also collect certain technical information automatically, such as your browser type, pages visited, and approximate location. [To confirm — full data inventory pending]"
+      },
+      "use": {
+        "heading": "How we use your information",
+        "body": "Information you provide is used to respond to your enquiries, process appointment requests, and communicate with you about services. We do not use your information for unsolicited marketing. [To confirm]"
+      },
+      "forms": {
+        "heading": "Contact and booking forms",
+        "body": "When you submit a form on this website, the information is [To confirm — specify form processor/email service]. Please do not include private medical or detailed health information in any form on this website."
+      },
+      "booking": {
+        "heading": "Booking information",
+        "body": "Information provided when making a booking request is used solely to manage and respond to your appointment request. [To confirm — specify retention and handling]"
+      },
+      "thirdParty": {
+        "heading": "Third-party services",
+        "body": "This website may use third-party services for hosting, analytics, or form processing. [To confirm — list specific services and their privacy policies]"
+      },
+      "retention": {
+        "heading": "Data retention",
+        "body": "We retain your information for as long as necessary to fulfil the purpose for which it was collected, unless a longer retention period is required or permitted by law. [To confirm]"
+      },
+      "access": {
+        "heading": "Access, correction and deletion",
+        "body": "You may request access to, correction of, or deletion of personal information we hold about you. To make a request, please contact us. [To confirm — add formal process]"
+      },
+      "security": {
+        "heading": "Security",
+        "body": "We take reasonable steps to protect the information we hold. However, no method of transmission over the internet is completely secure. [To confirm]"
+      },
+      "contact": {
+        "heading": "Privacy contact",
+        "body": "For privacy-related enquiries, please contact us at [To confirm — email address]. Alternatively, use the contact form on this website."
+      }
+    }
+  },
+  "disclaimer": {
+    "title": "Important information about this website",
+    "notice": "This disclaimer is a placeholder pending formal legal review. All content is subject to change. Last updated [Date].",
+    "crisis": "<strong>If you are in crisis:</strong> Contact emergency services on <strong>000</strong>, Lifeline on <strong>13 11 14</strong>, or go to your nearest emergency department. This website is not a crisis service.",
+    "links": {
+      "home": "← Home",
+      "returnHome": "← Return to home",
+      "contact": "Contact us"
+    },
+    "sections": {
+      "general": {
+        "heading": "General information",
+        "body": "This website provides general information about art therapy services offered by Daw Mi and her creative practice, Art of Wellness. It is intended for informational purposes only."
+      },
+      "notAdvice": {
+        "heading": "Not personalised advice",
+        "body": "Nothing on this website constitutes personalised therapeutic, medical, psychological, or clinical advice. Information presented here is general in nature."
+      },
+      "relationship": {
+        "heading": "Browsing does not create a therapeutic relationship",
+        "body": "Reading this website, submitting a contact or booking form, or communicating with Daw Mi through this website does not create a therapeutic relationship. A therapeutic relationship is only established through a formal agreement."
+      },
+      "scope": {
+        "heading": "Scope of professional services",
+        "body": "Daw Mi provides art therapy and creative wellbeing services within the scope of her qualifications and professional registration. [To confirm — registration body and scope details]"
+      },
+      "noGuarantee": {
+        "heading": "No guaranteed outcomes",
+        "body": "Art therapy and creative wellbeing sessions may not be suitable for everyone. Outcomes vary between individuals and cannot be guaranteed."
+      },
+      "emergency": {
+        "heading": "Emergency and crisis situations",
+        "body": "This website is not a crisis service. If you are experiencing a mental health emergency, please contact emergency services (000 in Australia), Lifeline (13 11 14), or your nearest emergency department."
+      },
+      "externalLinks": {
+        "heading": "External links",
+        "body": "This website may contain links to external websites. We are not responsible for the content or privacy practices of those sites."
+      },
+      "contact": {
+        "heading": "Contact",
+        "body": "If you have questions about the information on this website, please use the contact form."
+      }
+    }
+  },
+  "bookingPolicy": {
+    "title": "Booking & Cancellation Policy",
+    "notice": "This booking and cancellation policy is a placeholder pending formal review. All content is subject to change. Last updated [Date].",
+    "links": {
+      "home": "← Home",
+      "returnHome": "← Return to home",
+      "contact": "Contact us"
+    },
+    "sections": {
+      "requests": {
+        "heading": "Appointment requests and confirmation",
+        "body": "Submitting a booking request does not confirm your appointment. You will receive a separate confirmation from Daw Mi once your request has been reviewed. [To confirm — turnaround time]"
+      },
+      "rescheduling": {
+        "heading": "Rescheduling",
+        "body": "If you need to reschedule, please contact Daw Mi as early as possible. [To confirm — process and notice requirements]"
+      },
+      "cancellation": {
+        "heading": "Cancellation",
+        "body": "Cancellations must be made with sufficient notice. Please refer to the notice periods below. [To confirm]"
+      },
+      "noticePeriods": {
+        "heading": "Notice periods",
+        "body": "[To confirm — specific notice periods, e.g. 48 hours for individual sessions]"
+      },
+      "lateCancellation": {
+        "heading": "Late cancellation and fees",
+        "body": "[To confirm — late cancellation policy and any applicable fees]"
+      },
+      "noShows": {
+        "heading": "No-shows",
+        "body": "If you do not attend a scheduled appointment without prior notice, [To confirm — no-show policy]"
+      },
+      "payment": {
+        "heading": "Payment",
+        "body": "[To confirm — payment methods, timing, and invoicing process]"
+      },
+      "contact": {
+        "heading": "Contact",
+        "body": "If you have a question about your booking, please contact Daw Mi using the contact form or at [To confirm — email]."
+      }
+    }
+  }
+}

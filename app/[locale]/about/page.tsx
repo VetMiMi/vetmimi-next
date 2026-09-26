@@ -1,42 +1,41 @@
 import Image from "next/image";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
   ChatsCircle,
   PaintBrush,
   Question,
 } from "@phosphor-icons/react/dist/ssr";
 import { PageEnd } from "@/components/Editorial";
+import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import dawMiPortrait from "@/assets/daw-mi-portrait.webp";
 import artImage from "@/assets/image-4.webp";
 import hewPhoto from "@/assets/human-experience-week/daw-mi-with-artwork-3.webp";
 import { VideoIntro } from "./_components/VideoIntro";
 
-export default function About() {
+export default async function About({ params }: PageProps<"/[locale]/about">) {
+  const { locale } = await params;
+  setRequestLocale(locale as Locale);
+  const t = await getTranslations("about");
+
   return (
     <div className="ed-page">
       <section className="ed-container ed-section ed-split">
         <div>
-          <p className="ed-label">About Daw Mi</p>
-          <h1>Care, creativity, and a place to begin.</h1>
-          <p className="ed-lead">
-            Daw Mi is a certified art psychotherapist and transformative artist.
-            Her work brings together healthcare, mental health, and creative
-            practice.
-          </p>
-          <p>
-            VetMiMi is where these parts of her work come together — through
-            art, conversation, and time to reflect.
-          </p>
+          <p className="ed-label">{t("hero.label")}</p>
+          <h1>{t("hero.title")}</h1>
+          <p className="ed-lead">{t("hero.lead")}</p>
+          <p>{t("hero.text")}</p>
           <div className="ed-actions">
             <Link className="ed-button" href="/services">
-              Explore ways to work together ↗
+              {t("hero.cta")}
             </Link>
           </div>
         </div>
         <figure className="ed-portrait ed-portrait-duo">
           <Image
             src={dawMiPortrait}
-            alt="Daw Mi smiling, with her paintings softly blurred behind her"
+            alt={t("hero.portraitAlt")}
             sizes="(max-width: 767px) 340px, 410px"
             preload
             fetchPriority="high"
@@ -45,60 +44,44 @@ export default function About() {
           <div className="ed-portrait-art">
             <Image
               src={artImage}
-              alt="The ULX & Eddington Limit, one of Daw Mi’s mixed-media portraits"
+              alt={t("hero.artAlt")}
               sizes="160px"
               loading="eager"
             />
           </div>
-          <figcaption className="ed-signature">Daw Mi</figcaption>
+          <figcaption className="ed-signature">
+            {t("hero.signature")}
+          </figcaption>
         </figure>
       </section>
       <section className="ed-paper">
         <div className="ed-container ed-section">
-          <p className="ed-label">Her background</p>
-          <h2>
-            Different experiences.
-            <br />
-            One connected practice.
-          </h2>
-          <p>
-            Working with people and making art have both shaped Daw Mi’s
-            approach.
-          </p>
+          <p className="ed-label">{t("background.label")}</p>
+          <h2>{t.rich("background.title", { br: () => <br /> })}</h2>
+          <p>{t("background.intro")}</p>
           <div className="ed-split ed-split-wide ed-background-body">
             <figure className="ed-photo-frame">
               <Image
                 src={hewPhoto}
-                alt="Daw Mi kneeling beside a large group artwork at Royal North Shore Hospital"
+                alt={t("background.photoAlt")}
                 sizes="(max-width: 767px) 100vw, 460px"
                 placeholder="blur"
               />
             </figure>
             <ul className="ed-timeline">
               <li>
-                <h3>Healthcare and mental health</h3>
-                <p>
-                  A background in care informs the attention she brings to each
-                  person and their experience.
-                </p>
+                <h3>{t("background.healthcare.title")}</h3>
+                <p>{t("background.healthcare.text")}</p>
               </li>
               <li>
-                <h3>Art and creative practice</h3>
-                <p>
-                  As a transformative artist, Daw Mi works with colour,
-                  materials, and ideas. You can explore a selection of this work
-                  in her portfolio.
-                </p>
+                <h3>{t("background.art.title")}</h3>
+                <p>{t("background.art.text")}</p>
               </li>
               <li>
-                <h3>The Art of Wellness</h3>
-                <p>
-                  Daw Mi is a co-founder of The Art of Wellness at Royal North
-                  Shore Hospital in Sydney, bringing creativity into a
-                  healthcare setting.
-                </p>
+                <h3>{t("background.artOfWellness.title")}</h3>
+                <p>{t("background.artOfWellness.text")}</p>
                 <Link className="ed-link" href="/art-of-wellness">
-                  Learn about The Art of Wellness →
+                  {t("background.artOfWellness.link")}
                 </Link>
               </li>
             </ul>
@@ -107,42 +90,37 @@ export default function About() {
       </section>
       <VideoIntro />
       <section className="ed-container ed-section">
-        <p className="ed-label">Working together</p>
-        <h2>Room to take things at your own pace.</h2>
+        <p className="ed-label">{t("workingTogether.label")}</p>
+        <h2>{t("workingTogether.title")}</h2>
         <div className="ed-principles">
           <div>
             <span className="ed-principle-icon" aria-hidden>
               <PaintBrush size={30} weight="duotone" />
             </span>
-            <h3>No art skills needed</h3>
-            <p>You do not need to know how to draw or arrive with an idea.</p>
+            <h3>{t("workingTogether.noSkills.title")}</h3>
+            <p>{t("workingTogether.noSkills.text")}</p>
           </div>
           <div>
             <span className="ed-principle-icon" aria-hidden>
               <ChatsCircle size={30} weight="duotone" />
             </span>
-            <h3>Your experience matters</h3>
-            <p>
-              The focus is on what making and talking mean to you, not on a
-              finished artwork.
-            </p>
+            <h3>{t("workingTogether.experience.title")}</h3>
+            <p>{t("workingTogether.experience.text")}</p>
           </div>
           <div>
             <span className="ed-principle-icon" aria-hidden>
               <Question size={30} weight="duotone" />
             </span>
-            <h3>Start with a question</h3>
-            <p>
-              If you are unsure which service fits, you can ask before deciding.
-            </p>
+            <h3>{t("workingTogether.question.title")}</h3>
+            <p>{t("workingTogether.question.text")}</p>
           </div>
         </div>
       </section>
       <PageEnd
-        title="Find a way to begin."
-        text="Explore individual sessions, group experiences, and workshops."
+        title={t("end.title")}
+        text={t("end.text")}
         href="/services"
-        label="View services"
+        label={t("end.label")}
       />
     </div>
   );

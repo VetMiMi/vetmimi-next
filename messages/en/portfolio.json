@@ -1,1 +1,103 @@
-{}
+{
+  "header": {
+    "label": "Portfolio",
+    "title": "Her work.",
+    "lead": "What Daw Mi has made, and where."
+  },
+  "highlights": {
+    "label": "Highlights",
+    "title": "Where her work has shown up.",
+    "items": {
+      "humanExperienceWeek": {
+        "when": "May 2026",
+        "title": "Human Experience Week, Royal North Shore Hospital",
+        "role": "Art therapist and artist",
+        "text": "Three paintings created with patients, visitors and staff, with Daw Mi painting the backgrounds that connect their stories. Unveiled by the hospital’s General Manager.",
+        "alt": "Daw Mi kneeling beside one of the three paintings at Royal North Shore Hospital"
+      },
+      "artOfWellness": {
+        "when": "Since 2023",
+        "title": "The Art of Wellness",
+        "role": "Co-founder and art therapist",
+        "text": "Participatory art sessions for patients, carers and staff at Royal North Shore Hospital, part of a NORTH Foundation program.",
+        "alt": "A large, colourful group drawing of flowers made during an Art of Wellness session"
+      },
+      "cecat": {
+        "when": "August 2024",
+        "title": "Published by CECAT",
+        "role": "Art Therapy Diploma student",
+        "text": "Her diploma essay, “Overcoming Vicarious Trauma & Discovering Self-compassion”, was shared by CECAT’s director, Robert Gray, with three of her artworks. She is also listed in CECAT’s directory of art therapists.",
+        "alt": "Daw Mi’s painting of a figure in yellow sketching beneath bare trees, from her CECAT essay"
+      }
+    },
+    "links": {
+      "aboutProgram": "About the program →",
+      "northFoundation": "NORTH Foundation ↗",
+      "readEssay": "Read the essay ↗",
+      "cecatDirectory": "CECAT directory ↗"
+    }
+  },
+  "artworks": {
+    "label": "Selected artworks",
+    "title": "From her studio.",
+    "hint": "Tap a piece to see it larger.",
+    "meta": {
+      "cecatEssay": "From her CECAT essay, {year}"
+    },
+    "items": {
+      "loveHopeFaith": {
+        "alt": "Three winding dragons in white, green and pink beneath the words love, hope and faith"
+      },
+      "ulxEddingtonLimit": {
+        "alt": "Portrait of a woman in profile with a pink peony and a blue-and-white vase"
+      },
+      "growthAndBecoming": {
+        "alt": "Tall pastel painting of flowing sage, lavender and peach shapes against red"
+      },
+      "beGood": {
+        "alt": "A tree with deep roots and a bird, with Burmese and English words: be good, be empty, be equal"
+      },
+      "bloom": {
+        "alt": "Pink peonies in a blue-and-white vase, painted in soft watercolour"
+      },
+      "driftwood": {
+        "alt": "Driftwood reaching over a calm blue shoreline, painted in thick oil"
+      },
+      "expression": {
+        "alt": "A golden face emerging from deep indigo, surrounded by expressive marks"
+      },
+      "sketchbookRoses": {
+        "alt": "A sketchbook page of deep red roses with handwritten Burmese notes"
+      },
+      "paintedPot": {
+        "alt": "A painted plant pot with a pale moon, blue leaves and a watchful eye"
+      },
+      "hillside": {
+        "alt": "A figure in yellow sketching beneath bare trees, with golden hills and blue sky"
+      },
+      "gardenPath": {
+        "alt": "A painted garden path winding past a tree, a rabbit, fruit and a potted plant"
+      },
+      "dragonfly": {
+        "alt": "A dragonfly drawn in marker and paint over swirling yellow and blue"
+      },
+      "immaculata": {
+        "alt": "A pencil portrait of the Virgin Mary with a veil, titled Immaculata"
+      },
+      "redCurrent": {
+        "alt": "An abstract painting of red spirals and dark marks over green and blue"
+      }
+    },
+    "lightbox": {
+      "label": "Artwork",
+      "close": "Close",
+      "previous": "Previous artwork",
+      "next": "Next artwork"
+    }
+  },
+  "end": {
+    "title": "Planning something for your team or community?",
+    "text": "Ask Daw Mi about workshops, programs and collaborations.",
+    "label": "Get in touch"
+  }
+}

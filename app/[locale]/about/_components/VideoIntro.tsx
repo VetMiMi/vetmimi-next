@@ -1,12 +1,13 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import poster from "@/assets/artworks/driftwood-seascape.webp";
 
 // PLACEHOLDER: ANZACATA's "What is Creative Arts Therapy?" (1 min).
 // Replace with Daw Mi's own introduction video before launch.
+// Its title lives in messages (about.video.videoTitle).
 const VIDEO_ID = "RHoCwJCJtMI";
-const VIDEO_TITLE = "What is Creative Arts Therapy? (placeholder video)";
 
 /**
  * Click-to-play YouTube embed. Shows a still with a play button and only
@@ -15,13 +16,15 @@ const VIDEO_TITLE = "What is Creative Arts Therapy? (placeholder video)";
  */
 export function VideoIntro() {
   const [playing, setPlaying] = useState(false);
+  const t = useTranslations("about.video");
+  const videoTitle = t("videoTitle");
 
   return (
     <section className="ed-container ed-section" aria-labelledby="video-intro">
-      <p className="ed-label">Meet Daw Mi</p>
-      <h2 id="video-intro">Hear it from Daw Mi.</h2>
+      <p className="ed-label">{t("label")}</p>
+      <h2 id="video-intro">{t("title")}</h2>
       <p className="ed-lead" style={{ marginBottom: "2rem" }}>
-        A short introduction, in her own words.
+        {t("lead")}
       </p>
 
       <div className="relative aspect-video max-w-[960px] overflow-hidden rounded-[6px] bg-[#28252d] shadow-[0_24px_48px_rgba(40,37,45,0.22)]">
@@ -29,7 +32,7 @@ export function VideoIntro() {
           <iframe
             className="absolute inset-0 h-full w-full border-0"
             src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&rel=0&cc_load_policy=1`}
-            title={VIDEO_TITLE}
+            title={videoTitle}
             allow="autoplay; encrypted-media; picture-in-picture"
             allowFullScreen
           />
@@ -38,7 +41,7 @@ export function VideoIntro() {
             type="button"
             onClick={() => setPlaying(true)}
             className="group absolute inset-0 h-full w-full cursor-pointer border-0 p-0"
-            aria-label={`Play video: ${VIDEO_TITLE}`}
+            aria-label={t("play", { title: videoTitle })}
           >
             <Image
               src={poster}
@@ -58,7 +61,7 @@ export function VideoIntro() {
               className="absolute bottom-5 left-6 text-[1.05rem] text-white"
               style={{ fontFamily: "var(--hand)" }}
             >
-              1 minute · with subtitles
+              {t("duration")}
             </span>
           </button>
         )}

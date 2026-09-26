@@ -1,43 +1,26 @@
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 import { C } from "@/lib/tokens";
 import { WaveDivider } from "@/components/art/Shapes";
 
-const sections = [
-  {
-    heading: "General information",
-    body: "This website provides general information about art therapy services offered by Daw Mi and her creative practice, Art of Wellness. It is intended for informational purposes only.",
-  },
-  {
-    heading: "Not personalised advice",
-    body: "Nothing on this website constitutes personalised therapeutic, medical, psychological, or clinical advice. Information presented here is general in nature.",
-  },
-  {
-    heading: "Browsing does not create a therapeutic relationship",
-    body: "Reading this website, submitting a contact or booking form, or communicating with Daw Mi through this website does not create a therapeutic relationship. A therapeutic relationship is only established through a formal agreement.",
-  },
-  {
-    heading: "Scope of professional services",
-    body: "Daw Mi provides art therapy and creative wellbeing services within the scope of her qualifications and professional registration. [To confirm — registration body and scope details]",
-  },
-  {
-    heading: "No guaranteed outcomes",
-    body: "Art therapy and creative wellbeing sessions may not be suitable for everyone. Outcomes vary between individuals and cannot be guaranteed.",
-  },
-  {
-    heading: "Emergency and crisis situations",
-    body: "This website is not a crisis service. If you are experiencing a mental health emergency, please contact emergency services (000 in Australia), Lifeline (13 11 14), or your nearest emergency department.",
-  },
-  {
-    heading: "External links",
-    body: "This website may contain links to external websites. We are not responsible for the content or privacy practices of those sites.",
-  },
-  {
-    heading: "Contact",
-    body: "If you have questions about the information on this website, please use the contact form.",
-  },
-];
+const SECTIONS = [
+  "general",
+  "notAdvice",
+  "relationship",
+  "scope",
+  "noGuarantee",
+  "emergency",
+  "externalLinks",
+  "contact",
+] as const;
 
-export default function Disclaimer() {
+export default async function Disclaimer({
+  params,
+}: PageProps<"/[locale]/disclaimer">) {
+  const { locale } = await params;
+  setRequestLocale(locale as Locale);
+  const t = await getTranslations("legal.disclaimer");
   return (
     <div style={{ backgroundColor: C.canvas, minHeight: "100dvh" }}>
       {/* Header */}
@@ -57,7 +40,7 @@ export default function Disclaimer() {
                 marginBottom: "1.5rem",
               }}
             >
-              ← Home
+              {t("links.home")}
             </Link>
             <h1
               style={{
@@ -68,7 +51,7 @@ export default function Disclaimer() {
                 lineHeight: 1.15,
               }}
             >
-              Important information about this website
+              {t("title")}
             </h1>
           </div>
         </div>
@@ -94,8 +77,7 @@ export default function Disclaimer() {
             borderLeft: `3px solid ${C.ochre}`,
           }}
         >
-          This disclaimer is a placeholder pending formal legal review. All
-          content is subject to change. Last updated [Date].
+          {t("notice")}
         </div>
 
         {/* Emergency callout — always prominent */}
@@ -112,14 +94,13 @@ export default function Disclaimer() {
             lineHeight: 1.7,
           }}
         >
-          <strong>If you are in crisis:</strong> Contact emergency services on{" "}
-          <strong>000</strong>, Lifeline on <strong>13 11 14</strong>, or go to
-          your nearest emergency department. This website is not a crisis
-          service.
+          {t.rich("crisis", {
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
         </div>
 
-        {sections.map((section) => (
-          <div key={section.heading} style={{ marginBottom: "2.5rem" }}>
+        {SECTIONS.map((id) => (
+          <div key={id} style={{ marginBottom: "2.5rem" }}>
             <h2
               style={{
                 fontFamily: "var(--serif)",
@@ -129,7 +110,7 @@ export default function Disclaimer() {
                 fontWeight: 600,
               }}
             >
-              {section.heading}
+              {t(`sections.${id}.heading`)}
             </h2>
             <p
               style={{
@@ -140,7 +121,7 @@ export default function Disclaimer() {
                 fontSize: "1rem",
               }}
             >
-              {section.body}
+              {t(`sections.${id}.body`)}
             </p>
           </div>
         ))}
@@ -165,7 +146,7 @@ export default function Disclaimer() {
               textDecoration: "none",
             }}
           >
-            ← Return to home
+            {t("links.returnHome")}
           </Link>
           <Link
             href="/contact"
@@ -176,7 +157,7 @@ export default function Disclaimer() {
               textDecoration: "none",
             }}
           >
-            Contact us
+            {t("links.contact")}
           </Link>
         </div>
       </div>

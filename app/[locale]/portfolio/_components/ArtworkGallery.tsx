@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import type { Artwork } from "@/lib/portfolio";
 
 /**
@@ -8,6 +9,7 @@ import type { Artwork } from "@/lib/portfolio";
  * dialog on the same page, with arrow keys or buttons to move between pieces.
  */
 export function ArtworkGallery({ artworks }: { artworks: Artwork[] }) {
+  const t = useTranslations("portfolio.artworks");
   const dialog = useRef<HTMLDialogElement>(null);
   const [index, setIndex] = useState<number | null>(null);
 
@@ -35,16 +37,21 @@ export function ArtworkGallery({ artworks }: { artworks: Artwork[] }) {
   }, [step]);
 
   const current = index === null ? null : artworks[index];
+  const alt = (art: Artwork) => t(`items.${art.id}.alt`);
+  const meta = (art: Artwork) =>
+    art.fromCecatEssay && art.year
+      ? t("meta.cecatEssay", { year: art.year })
+      : art.year;
 
   return (
     <>
       <ul className="pf-gallery">
         {artworks.map((art, i) => (
-          <li key={art.title}>
+          <li key={art.id}>
             <button type="button" onClick={() => open(i)}>
               <Image
                 src={art.img}
-                alt={art.alt}
+                alt={alt(art)}
                 sizes="(max-width: 767px) 50vw, 380px"
                 placeholder="blur"
               />
@@ -57,22 +64,22 @@ export function ArtworkGallery({ artworks }: { artworks: Artwork[] }) {
       <dialog
         ref={dialog}
         className="pf-lightbox"
-        aria-label={current ? current.title : "Artwork"}
+        aria-label={current ? current.title : t("lightbox.label")}
         onClose={() => setIndex(null)}
         onClick={(e) => e.target === e.currentTarget && close()}
       >
         {current && (
           <figure>
             <Image
-              key={current.title}
+              key={current.id}
               src={current.img}
-              alt={current.alt}
+              alt={alt(current)}
               sizes="90vw"
               placeholder="blur"
             />
             <figcaption>
               <span className="pf-lightbox-title">{current.title}</span>
-              {current.meta && <span>{current.meta}</span>}
+              {meta(current) && <span>{meta(current)}</span>}
             </figcaption>
           </figure>
         )}
@@ -80,7 +87,7 @@ export function ArtworkGallery({ artworks }: { artworks: Artwork[] }) {
           type="button"
           className="pf-lightbox-close"
           onClick={close}
-          aria-label="Close"
+          aria-label={t("lightbox.close")}
         >
           ×
         </button>
@@ -88,7 +95,7 @@ export function ArtworkGallery({ artworks }: { artworks: Artwork[] }) {
           type="button"
           className="pf-lightbox-prev"
           onClick={() => step(-1)}
-          aria-label="Previous artwork"
+          aria-label={t("lightbox.previous")}
         >
           ←
         </button>
@@ -96,7 +103,7 @@ export function ArtworkGallery({ artworks }: { artworks: Artwork[] }) {
           type="button"
           className="pf-lightbox-next"
           onClick={() => step(1)}
-          aria-label="Next artwork"
+          aria-label={t("lightbox.next")}
         >
           →
         </button>

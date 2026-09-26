@@ -1,1 +1,70 @@
-{}
+{
+  "hero": {
+    "label": "The Art of Wellness",
+    "title": "A place for creativity in healthcare.",
+    "lead": "A NORTH Foundation program at Royal North Shore Hospital in Sydney, bringing comfort, connection and healing to patients, carers and staff through art and music.",
+    "visit": "Visit the program ↗",
+    "support": "Support the program ↗",
+    "imageAlt": "Artworks from a session: a sunflower, a tree and the word Hope, with coloured pencils"
+  },
+  "why": {
+    "label": "Why it matters",
+    "title": "Moments of calm, expression and joy.",
+    "lead": "A hospital can be a confronting place. For patients and families facing illness, treatment or long stays, the arts offer a welcome pause.",
+    "text": "Music can lift spirits. Making art can create connection and a meaningful outlet during difficult times.",
+    "quote": "“To bring support to patients, carers and staff through the inclusion of the arts.”",
+    "cite": "The Art of Wellness mission, NORTH Foundation"
+  },
+  "parts": {
+    "label": "Inside the program",
+    "title": "Three ways the arts show up.",
+    "items": {
+      "participatoryArt": {
+        "title": "Participatory art",
+        "text": "Led by volunteers, including a trained art therapist, these sessions invite patients, carers and staff to pause, create and express themselves.",
+        "alt": "A large, colourful group drawing of flowers made during an Art of Wellness session"
+      },
+      "festivalOfMusic": {
+        "title": "Festival of Music",
+        "text": "Since 2016, five days of live music each December, from staff, schools, choirs and community performers in the hospital’s main atrium.",
+        "alt": "A staff choir in Santa hats performing in the hospital atrium"
+      },
+      "staffPhotography": {
+        "title": "Staff photography",
+        "text": "An annual competition. In 2025, 25 photographs were chosen from 76 entries, framed and hung in Ambulatory Care.",
+        "alt": "A framed staff photograph of a red waratah and a bird, hanging in the hospital"
+      }
+    }
+  },
+  "team": {
+    "label": "The team",
+    "title": "Meet The Art of Wellness team.",
+    "members": {
+      "susanDay": {
+        "role": "Coordinator, Arts & Culture",
+        "bio": "Has led the RNSH Festival of Music since 2016, after 30 years in stroke services. Awarded an OAM in 2022 for service to the community."
+      },
+      "mimiEieyeh": {
+        "role": "Mental Health Nurse (CNS) / Art Therapist · Co-founder",
+        "bio": "Known to VetMiMi visitors as Daw Mi. A mental health nurse for 17 years and an art therapist since 2023.",
+        "link": "About Daw Mi →"
+      },
+      "michelleFawcett": {
+        "role": "Volunteer Coordinator",
+        "bio": "Supports the volunteers at Royal North Shore and Ryde Hospitals, and sits on the RNSH Arts and Culture Committee."
+      }
+    }
+  },
+  "support": {
+    "label": "Support the program",
+    "title": "Help bring the arts into more wards.",
+    "lead": "The Art of Wellness is funded by donations through NORTH Foundation. Your support helps the program reach patients in hospital wards who cannot come to it.",
+    "donate": "Donate to The Art of Wellness ↗"
+  },
+  "credit": "Program information and photos courtesy of <link>NORTH Foundation</link>. The Art of Wellness is a NORTH Foundation program; VetMiMi is Daw Mi’s independent practice.",
+  "end": {
+    "title": "Have a question about Art of Wellness?",
+    "text": "Get in touch to learn more or discuss a possible collaboration.",
+    "label": "Start a conversation"
+  }
+}

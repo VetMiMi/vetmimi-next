@@ -1,1 +1,60 @@
-{}
+{
+  "hero": {
+    "label": "About Daw Mi",
+    "title": "Care, creativity, and a place to begin.",
+    "lead": "Daw Mi is a certified art psychotherapist and transformative artist. Her work brings together healthcare, mental health, and creative practice.",
+    "text": "VetMiMi is where these parts of her work come together — through art, conversation, and time to reflect.",
+    "cta": "Explore ways to work together ↗",
+    "portraitAlt": "Daw Mi smiling, with her paintings softly blurred behind her",
+    "artAlt": "The ULX & Eddington Limit, one of Daw Mi’s mixed-media portraits",
+    "signature": "Daw Mi"
+  },
+  "background": {
+    "label": "Her background",
+    "title": "Different experiences.<br></br>One connected practice.",
+    "intro": "Working with people and making art have both shaped Daw Mi’s approach.",
+    "photoAlt": "Daw Mi kneeling beside a large group artwork at Royal North Shore Hospital",
+    "healthcare": {
+      "title": "Healthcare and mental health",
+      "text": "A background in care informs the attention she brings to each person and their experience."
+    },
+    "art": {
+      "title": "Art and creative practice",
+      "text": "As a transformative artist, Daw Mi works with colour, materials, and ideas. You can explore a selection of this work in her portfolio."
+    },
+    "artOfWellness": {
+      "title": "The Art of Wellness",
+      "text": "Daw Mi is a co-founder of The Art of Wellness at Royal North Shore Hospital in Sydney, bringing creativity into a healthcare setting.",
+      "link": "Learn about The Art of Wellness →"
+    }
+  },
+  "video": {
+    "label": "Meet Daw Mi",
+    "title": "Hear it from Daw Mi.",
+    "lead": "A short introduction, in her own words.",
+    "videoTitle": "What is Creative Arts Therapy? (placeholder video)",
+    "play": "Play video: {title}",
+    "duration": "1 minute · with subtitles"
+  },
+  "workingTogether": {
+    "label": "Working together",
+    "title": "Room to take things at your own pace.",
+    "noSkills": {
+      "title": "No art skills needed",
+      "text": "You do not need to know how to draw or arrive with an idea."
+    },
+    "experience": {
+      "title": "Your experience matters",
+      "text": "The focus is on what making and talking mean to you, not on a finished artwork."
+    },
+    "question": {
+      "title": "Start with a question",
+      "text": "If you are unsure which service fits, you can ask before deciding."
+    }
+  },
+  "end": {
+    "title": "Find a way to begin.",
+    "text": "Explore individual sessions, group experiences, and workshops.",
+    "label": "View services"
+  }
+}

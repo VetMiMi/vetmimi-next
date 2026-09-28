@@ -24,22 +24,33 @@ function FooterCol({
       >
         {title}
       </div>
-      {links.map(([label, to]) => (
-        <Link
-          key={label}
-          href={to}
-          style={{
-            display: "block",
-            fontFamily: "var(--sans)",
-            fontSize: "0.86rem",
-            color: "rgba(255,247,239,0.9)",
-            textDecoration: "none",
-            marginBottom: "0.55rem",
-          }}
-        >
-          {label}
-        </Link>
-      ))}
+      {links.map(([label, to]) => {
+        const style = {
+          display: "block",
+          fontFamily: "var(--sans)",
+          fontSize: "0.86rem",
+          color: "rgba(255,247,239,0.9)",
+          textDecoration: "none",
+          marginBottom: "0.55rem",
+        };
+        // Site pages keep the visitor's language; Facebook and email do not.
+        return to.startsWith("/") ? (
+          <Link key={label} href={to} style={style}>
+            {label}
+          </Link>
+        ) : (
+          <a
+            key={label}
+            href={to}
+            style={style}
+            {...(to.startsWith("http")
+              ? { target: "_blank", rel: "noopener noreferrer" }
+              : {})}
+          >
+            {label}
+          </a>
+        );
+      })}
     </div>
   );
 }
@@ -143,8 +154,8 @@ export default function SiteFooter() {
               links={[
                 [t("nav.bookAppointment"), "/book"],
                 [t("nav.contact"), "/contact"],
-                [t("footer.facebook"), "/contact"],
-                [t("footer.email"), "/contact"],
+                [t("footer.facebook"), "https://www.facebook.com/vet.mimi"],
+                [t("footer.email"), "mailto:meenaerie@gmail.com"],
               ]}
             />
             <FooterCol

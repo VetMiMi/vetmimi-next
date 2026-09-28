@@ -186,7 +186,7 @@ export default function SiteFooter() {
                 color: "rgba(255,247,239,0.8)",
               }}
             >
-              {t("footer.copyright", { year: 2025 })}
+              {t("footer.copyright", { year: new Date().getFullYear() })}
             </span>
             <span
               style={{

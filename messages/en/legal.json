@@ -14,7 +14,7 @@
       },
       "use": {
         "heading": "How we use your information",
-        "body": "Information you provide is used to respond to your enquiries, process appointment requests, and communicate with you about services. We do not use your information for unsolicited marketing. [To confirm]"
+        "body": "Information you provide is used to respond to your enquiries, process appointment requests, and communicate with you about services. We do not use your information for marketing, and we never send marketing emails."
       },
       "forms": {
         "heading": "Contact and booking forms",
@@ -101,7 +101,7 @@
     "sections": {
       "requests": {
         "heading": "Appointment requests and confirmation",
-        "body": "Submitting a booking request does not confirm your appointment. You will receive a separate confirmation from Daw Mi once your request has been reviewed. [To confirm — turnaround time]"
+        "body": "Submitting a booking request does not confirm your appointment. You will receive a separate confirmation from Daw Mi once your request has been reviewed, usually within 2 business days."
       },
       "rescheduling": {
         "heading": "Rescheduling",
@@ -109,11 +109,11 @@
       },
       "cancellation": {
         "heading": "Cancellation",
-        "body": "Cancellations must be made with sufficient notice. Please refer to the notice periods below. [To confirm]"
+        "body": "Cancellations must be made with sufficient notice. Please refer to the notice periods below."
       },
       "noticePeriods": {
         "heading": "Notice periods",
-        "body": "[To confirm — specific notice periods, e.g. 48 hours for individual sessions]"
+        "body": "Please give at least 48 hours’ notice if you need to cancel or reschedule a session."
       },
       "lateCancellation": {
         "heading": "Late cancellation and fees",
@@ -125,7 +125,7 @@
       },
       "payment": {
         "heading": "Payment",
-        "body": "[To confirm — payment methods, timing, and invoicing process]"
+        "body": "Payment is by bank transfer or card. Daw Mi will send you an invoice with the payment details. [To confirm — when payment is due]"
       },
       "contact": {
         "heading": "Contact",

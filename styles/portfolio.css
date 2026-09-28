@@ -2,11 +2,15 @@
 
 /* Highlights: photos in the same soft mat frame as About and Art of
    Wellness. */
+/* The cards follow the page header directly, with no heading of their own. */
+.pf-highlights-section {
+  padding-top: 0;
+}
 .pf-highlights {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(28px, 4vw, 48px);
-  margin-top: 2.5rem;
+  margin-top: 0.5rem;
 }
 .pf-frame {
   margin: 0 0 1.4rem;

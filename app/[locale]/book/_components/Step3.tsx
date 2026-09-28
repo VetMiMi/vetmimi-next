@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
-import { FORMAT_IDS, inputStyle } from "./booking";
+import { inputStyle } from "./booking";
 import type { BookingFormData, ServiceId } from "./booking";
 
 // ── Step 3: Your Details ─────────────────────────────────────────────────────
@@ -108,21 +108,10 @@ export function Step3({
         </label>
 
         {isIndividual && (
-          <label>
+          <div>
             <span style={labelStyle}>{t("step3.format.label")}</span>
-            <select
-              value={formData.format}
-              onChange={(e) => update("format", e.target.value)}
-              style={inputStyle}
-            >
-              <option value="">{t("step3.format.placeholder")}</option>
-              {FORMAT_IDS.map((id) => (
-                <option key={id} value={id}>
-                  {t(`step3.format.options.${id}`)}
-                </option>
-              ))}
-            </select>
-          </label>
+            <p style={{ margin: 0 }}>{t("step3.format.onlineOnly")}</p>
+          </div>
         )}
 
         <label>

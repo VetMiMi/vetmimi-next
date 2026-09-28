@@ -102,11 +102,7 @@
     },
     "format": {
       "label": "Session format",
-      "placeholder": "Select a format",
-      "options": {
-        "online": "Online",
-        "inPerson": "In-person [To confirm]"
-      }
+      "onlineOnly": "Sessions are held online."
     },
     "note": {
       "label": "Short note",
@@ -130,8 +126,7 @@
       "note": "Note"
     },
     "formatValues": {
-      "online": "Online",
-      "inPerson": "In-person"
+      "online": "Online"
     },
     "edit": "Edit",
     "notice": "<strong>Please note:</strong> This is a request, not a confirmed booking. Daw Mi will be in touch to confirm your appointment.",
@@ -141,7 +136,7 @@
   "success": {
     "badge": "Pending",
     "title": "Appointment request received.",
-    "text": "Thank you for reaching out. Your request has been received and is not yet confirmed. Daw Mi will be in touch within [To confirm] business days to confirm your appointment.",
+    "text": "Thank you for reaching out. Your request has been received and is not yet confirmed. Daw Mi will be in touch within 2 business days to confirm your appointment.",
     "next": {
       "title": "What happens next?",
       "steps": {

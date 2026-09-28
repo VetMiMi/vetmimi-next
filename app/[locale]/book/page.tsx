@@ -29,7 +29,7 @@ export default function BookAppointment() {
     name: "",
     email: "",
     phone: "",
-    format: "",
+    format: "online",
     note: "",
     privacyAck: false,
     policyAck: false,

@@ -10,7 +10,9 @@ export type BookingState =
 export const SERVICE_IDS = ["individual", "group"] as const;
 export type ServiceId = (typeof SERVICE_IDS)[number];
 
-export const FORMAT_IDS = ["online", "inPerson"] as const;
+// Online only for now. To offer in-person sessions, add "inPerson" here and
+// its labels in messages/<locale>/book.json.
+export const FORMAT_IDS = ["online"] as const;
 export type FormatId = (typeof FORMAT_IDS)[number];
 
 export const TIME_SLOTS = ["10am", "11am", "2pm", "3pm"] as const;

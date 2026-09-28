@@ -64,11 +64,11 @@
     "title": "Contact details",
     "email": {
       "label": "Email",
-      "value": "[To confirm]"
+      "value": "meenaerie@gmail.com"
     },
     "location": {
       "label": "Location",
-      "value": "Sydney, NSW, Australia [To confirm]"
+      "value": "Sydney, NSW, Australia"
     },
     "responseTime": {
       "label": "Response time",

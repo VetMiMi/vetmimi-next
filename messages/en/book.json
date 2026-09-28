@@ -83,7 +83,7 @@
     "noTimes": "There are no available times for this period. Please try a different date.",
     "timeLost": "That time is no longer available. Please choose another.",
     "availableTimes": "Available times for {date}",
-    "timezone": "Times shown in AEST [To confirm]",
+    "timezone": "Times shown in Sydney time (AEST/AEDT)",
     "selection": "Your selection",
     "continue": "Continue to Your Details →"
   },

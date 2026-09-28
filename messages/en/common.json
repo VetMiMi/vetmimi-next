@@ -30,13 +30,13 @@
     "explore": "Explore",
     "connect": "Connect",
     "information": "Information",
-    "facebook": "Facebook [To confirm]",
-    "email": "Email [To confirm]",
+    "facebook": "Facebook",
+    "email": "Email",
     "privacy": "Privacy Policy",
     "bookingPolicy": "Booking & Cancellation",
     "disclaimer": "Disclaimer",
     "copyright": "© {year} VetMiMi. All rights reserved.",
-    "location": "Sydney, Australia · [Location to confirm]"
+    "location": "Sydney, Australia"
   },
   "notFound": {
     "heading": "This page wandered somewhere else.",

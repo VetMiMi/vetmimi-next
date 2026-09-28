@@ -18,6 +18,10 @@
       "title": "Healthcare and mental health",
       "text": "A background in care informs the attention she brings to each person and their experience."
     },
+    "training": {
+      "title": "Art therapy training",
+      "text": "Daw Mi trained as an art therapist through the College for Educational and Clinical Art Therapy (CECAT), completing their Diploma program in 2023. She is a member of the Australian Community Counselling Association (ACCA), her professional body."
+    },
     "art": {
       "title": "Art and creative practice",
       "text": "As a transformative artist, Daw Mi works with colour, materials, and ideas. You can explore a selection of this work in her portfolio."
@@ -31,8 +35,9 @@
   "video": {
     "label": "Meet Daw Mi",
     "title": "Hear it from Daw Mi.",
-    "lead": "A short introduction, in her own words.",
-    "videoTitle": "What is Creative Arts Therapy? (placeholder video)",
+    "lead": "A short introduction in her own words, coming soon.",
+    "videoTitle": "Daw Mi’s introduction",
+    "comingSoon": "Coming soon",
     "play": "Play video: {title}",
     "duration": "1 minute · with subtitles"
   },

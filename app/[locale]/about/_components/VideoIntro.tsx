@@ -4,10 +4,10 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import poster from "@/assets/artworks/driftwood-seascape.webp";
 
-// PLACEHOLDER: ANZACATA's "What is Creative Arts Therapy?" (1 min).
-// Replace with Daw Mi's own introduction video before launch.
-// Its title lives in messages (about.video.videoTitle).
-const VIDEO_ID = "RHoCwJCJtMI";
+// Daw Mi's own introduction video. Until she records it, the section shows
+// a still with "Coming soon" and loads nothing from YouTube. Paste the
+// YouTube video id here when it is ready.
+const VIDEO_ID: string | null = null;
 
 /**
  * Click-to-play YouTube embed. Shows a still with a play button and only
@@ -28,7 +28,25 @@ export function VideoIntro() {
       </p>
 
       <div className="relative aspect-video max-w-[960px] overflow-hidden rounded-[6px] bg-[#28252d] shadow-[0_24px_48px_rgba(40,37,45,0.22)]">
-        {playing ? (
+        {!VIDEO_ID ? (
+          <>
+            <Image
+              src={poster}
+              alt=""
+              fill
+              sizes="(max-width: 1000px) 100vw, 960px"
+              placeholder="blur"
+              className="object-cover"
+            />
+            <span className="absolute inset-0 bg-[rgba(40,37,45,0.45)]" />
+            <span
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[clamp(1.6rem,4vw,2.4rem)] text-white"
+              style={{ fontFamily: "var(--hand)" }}
+            >
+              {t("comingSoon")}
+            </span>
+          </>
+        ) : playing ? (
           <iframe
             className="absolute inset-0 h-full w-full border-0"
             src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&rel=0&cc_load_policy=1`}

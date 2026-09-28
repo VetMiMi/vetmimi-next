@@ -22,9 +22,10 @@ export default async function Portfolio({
         <p className="ed-lead">{t("header.lead")}</p>
       </header>
 
-      <section className="ed-container ed-section" aria-labelledby="highlights">
-        <p className="ed-label">{t("highlights.label")}</p>
-        <h2 id="highlights">{t("highlights.title")}</h2>
+      <section
+        className="ed-container ed-section pf-highlights-section"
+        aria-label={t("highlights.label")}
+      >
         <div className="pf-highlights">
           {HIGHLIGHTS.map((item) => (
             <article key={item.id} className="pf-highlight">

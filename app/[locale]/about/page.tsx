@@ -74,6 +74,10 @@ export default async function About({ params }: PageProps<"/[locale]/about">) {
                 <p>{t("background.healthcare.text")}</p>
               </li>
               <li>
+                <h3>{t("background.training.title")}</h3>
+                <p>{t("background.training.text")}</p>
+              </li>
+              <li>
                 <h3>{t("background.art.title")}</h3>
                 <p>{t("background.art.text")}</p>
               </li>

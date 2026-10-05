@@ -69,6 +69,8 @@ Other tracks, the API's tests and the owner's dev server share the laptop.
 
 Links and redirects use `Link`, `redirect`, `useRouter` and `usePathname`
 from `@/i18n/navigation`; ESLint bans `next/link` and those
+  Admin is the exception: `app/admin/**` and `components/admin/**` are English
+  only and use `next/link` and `next/navigation`; lint bans next-intl there.
 `next/navigation` imports. Colours come from `lib/tokens.ts` or the CSS
 variables; fonts from `var(--serif)`, `var(--sans)`, `var(--hand)`.
 

@@ -72,6 +72,9 @@ from `@/i18n/navigation`; ESLint bans `next/link` and those
 `next/navigation` imports. Colours come from `lib/tokens.ts` or the CSS
 variables; fonts from `var(--serif)`, `var(--sans)`, `var(--hand)`.
 
+Admin is the exception: `app/admin/**` and `components/admin/**` are English
+only and use `next/link` and `next/navigation`; lint bans next-intl there.
+
 ## Check it in a browser
 
 UI work is not finished until you have looked at it. Use the Vercel preview

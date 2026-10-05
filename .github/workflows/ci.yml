@@ -62,6 +62,68 @@ jobs:
           path: playwright-report/
           retention-days: 14
 
+  lighthouse:
+    name: Lighthouse
+    needs: web
+    runs-on: ubuntu-latest
+    env:
+      # Build and serve the production branches of metadata and robots.
+      SITE_URL: http://localhost:3000
+      VERCEL_ENV: production
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        env:
+          NODE_OPTIONS: --max-old-space-size=2048
+      - name: Start the site
+        id: start
+        run: |
+          pnpm start > next-start.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl --silent --fail --output /dev/null http://localhost:3000/ && exit 0
+            sleep 1
+          done
+          cat next-start.log
+          exit 1
+      # Scores and timings: three mobile runs per page, asserted on the median.
+      - name: Audit on mobile
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+          artifactName: lighthouse-mobile
+      # The same assertions with the desktop preset, for the two pages most
+      # visitors open on a laptop.
+      - name: Audit on desktop
+        # Runs even when an earlier audit failed, so one run reports them all.
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.desktop.json
+          uploadArtifacts: true
+          artifactName: lighthouse-desktop
+      # Lighthouse CI asserts either budgets or assertions in one pass, never
+      # both, so the byte budgets get their own mobile pass. Byte counts do not
+      # vary between runs, so one run per page is enough. Without the opt-out,
+      # Lighthouse CI would also load lighthouserc.json's assertions and refuse.
+      - name: Check resource budgets
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
+        uses: treosh/lighthouse-ci-action@v12
+        env:
+          LHCI_NO_LIGHTHOUSERC: "true"
+        with:
+          configPath: ./lighthouserc.json
+          budgetPath: ./budget.json
+          runs: 1
+          uploadArtifacts: true
+          artifactName: lighthouse-budgets
+
   commits:
     name: Commit checks
     runs-on: ubuntu-latest

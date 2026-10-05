@@ -17,7 +17,7 @@ Closes #
 - [ ] CI passes (lint, format, typecheck, build).
 - [ ] Checked the Vercel Preview on desktop and mobile.
 - [ ] No horizontal scrolling on mobile.
-- [ ] Lighthouse checked, if images, fonts or page structure changed.
+- [ ] Lighthouse budget passes (the `lighthouse` CI job; never run it locally).
 
 ## Screenshots
 

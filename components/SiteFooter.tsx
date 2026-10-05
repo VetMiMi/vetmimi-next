@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { C } from "@/lib/tokens";
 import { PetalOutline, WaveDivider } from "@/components/art/Shapes";
+import { ExternalLink } from "@/components/ExternalLink";
 
 function FooterCol({
   title,
@@ -11,7 +12,7 @@ function FooterCol({
   links: [string, string][];
 }) {
   return (
-    <div>
+    <nav aria-label={title}>
       <div
         style={{
           fontFamily: "var(--sans)",
@@ -19,39 +20,45 @@ function FooterCol({
           letterSpacing: "0.13em",
           textTransform: "uppercase",
           color: "rgba(255,247,239,0.85)",
-          marginBottom: "1.1rem",
+          marginBottom: "0.55rem",
         }}
       >
         {title}
       </div>
       {links.map(([label, to]) => {
+        // A 44px tall row for each link (brief §10); the heading's margin
+        // shrinks by the same amount, so the first link stays in place.
         const style = {
-          display: "block",
+          display: "flex",
+          alignItems: "center",
+          minHeight: "44px",
           fontFamily: "var(--sans)",
           fontSize: "0.86rem",
           color: "rgba(255,247,239,0.9)",
           textDecoration: "none",
-          marginBottom: "0.55rem",
         };
         // Site pages keep the visitor's language; Facebook and email do not.
-        return to.startsWith("/") ? (
-          <Link key={label} href={to} style={style}>
-            {label}
-          </Link>
-        ) : (
-          <a
-            key={label}
-            href={to}
-            style={style}
-            {...(to.startsWith("http")
-              ? { target: "_blank", rel: "noopener noreferrer" }
-              : {})}
-          >
+        if (to.startsWith("/")) {
+          return (
+            <Link key={label} href={to} style={style}>
+              {label}
+            </Link>
+          );
+        }
+        if (to.startsWith("http")) {
+          return (
+            <ExternalLink key={label} href={to} style={style}>
+              {label}
+            </ExternalLink>
+          );
+        }
+        return (
+          <a key={label} href={to} style={style}>
             {label}
           </a>
         );
       })}
-    </div>
+    </nav>
   );
 }
 

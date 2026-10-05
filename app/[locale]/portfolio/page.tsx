@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageEnd } from "@/components/Editorial";
+import { ExternalLink } from "@/components/ExternalLink";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { ARTWORKS, HIGHLIGHTS } from "@/lib/portfolio";
@@ -24,8 +25,12 @@ export default async function Portfolio({
 
       <section
         className="ed-container ed-section pf-highlights-section"
-        aria-label={t("highlights.label")}
+        aria-labelledby="highlights"
       >
+        {/* Keeps the outline h1 → h2 → h3; the cards say what this is. */}
+        <h2 id="highlights" className="sr-only">
+          {t("highlights.label")}
+        </h2>
         <div className="pf-highlights">
           {HIGHLIGHTS.map((item) => (
             <article key={item.id} className="pf-highlight">
@@ -45,15 +50,13 @@ export default async function Portfolio({
                 <p className="pf-links">
                   {item.links.map((link) =>
                     link.external ? (
-                      <a
+                      <ExternalLink
                         key={link.href}
                         className="ed-link"
                         href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
                       >
                         {t(`highlights.links.${link.label}`)}
-                      </a>
+                      </ExternalLink>
                     ) : (
                       <Link
                         key={link.href}

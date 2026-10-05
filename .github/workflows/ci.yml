@@ -18,6 +18,13 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - name: Check lib/api/schema.ts matches the pinned API ref
+        run: |
+          pnpm api:types
+          if ! git diff --exit-code -- lib/api/schema.ts; then
+            echo "::error file=lib/api/schema.ts::Run pnpm api:types and commit lib/api/schema.ts"
+            exit 1
+          fi
       - run: pnpm lint
       - run: pnpm format:check
       - run: pnpm typecheck

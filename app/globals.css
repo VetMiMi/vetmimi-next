@@ -125,6 +125,65 @@ h4 {
   outline: 2px solid var(--coral);
   outline-offset: 3px;
 }
+/* Coral is 2.28:1 on the indigo footer; canvas is 7.80 (brief §2). */
+footer :focus-visible {
+  outline-color: var(--canvas);
+}
+
+/* Hidden until the first Tab on the page reaches it. */
+.skip-link {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  padding: 12px 18px;
+  border-radius: 8px;
+  background: #ab4347;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:not(:focus) {
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+/* The skip link focuses <main> only to move the reading position there. */
+main:focus {
+  outline: none;
+}
+
+/* A tap area of at least 44px (brief §10) around a control drawn smaller;
+   the extra area is invisible, so the design does not move. */
+.touch-target {
+  position: relative;
+}
+.touch-target::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: max(100%, 44px);
+  transform: translateY(-50%);
+}
+
+/* Brief §6: nothing moves for visitors who ask for less motion. Inline
+   transitions lose to !important here, so this one rule covers them too. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 .prose {
   max-width: 720px;

@@ -2,6 +2,9 @@ import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
 
+const noInlineStyle =
+  "Admin uses Tailwind classes; see docs/admin-design-brief.md §2.";
+
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
@@ -48,6 +51,17 @@ const eslintConfig = defineConfig([
             },
           ],
         },
+      ],
+      // Admin is new code, so it starts without inline styles (#9): they
+      // cannot use media queries or :hover. A value known only at run time
+      // gets an eslint-disable-next-line comment saying why.
+      "react/forbid-dom-props": [
+        "error",
+        { forbid: [{ propName: "style", message: noInlineStyle }] },
+      ],
+      "react/forbid-component-props": [
+        "error",
+        { forbid: [{ propName: "style", message: noInlineStyle }] },
       ],
     },
   },

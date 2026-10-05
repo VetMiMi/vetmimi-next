@@ -105,6 +105,37 @@ or ink at 0.72 or more (5.83). Input borders at `rgba(40,37,45,0.16)` are
 and 3.62 on white (passes) but 2.28 on indigo, so never put focusable
 controls on an indigo surface without a canvas-coloured outline there.
 
+### Tailwind names
+
+Admin code styles with Tailwind classes, never `style={…}`: ESLint rejects
+the `style` prop in `app/admin/**` and `components/admin/**` (#9 explains
+why; the public pages keep their inline styles for now). A value that only
+exists at run time gets an `eslint-disable-next-line` comment saying why.
+`app/globals.css` maps every value in this brief to a theme name, so use
+these and nothing else:
+
+| Token or value                                  | Tailwind name                                                                                                                               | Example                    |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| the 13 tokens and `white`                       | the token's name: `canvas`, `paper`, `ink`, `rose`, `coral`, `red`, `indigo`, `violet`, `blue`, `aqua`, `ochre`, `butter`, `olive`, `white` | `bg-canvas`, `text-ink`    |
+| `#ab4347` / `#91373b`                           | `action` / `action-hover`                                                                                                                   | `hover:bg-action-hover`    |
+| `#88435b`                                       | `label`                                                                                                                                     | `text-label`               |
+| `#625d64` / `#756b75`                           | `muted` / `caption`                                                                                                                         | `text-muted`               |
+| `#416879` / `#79602e`                           | `blue-text` / `gold-text`                                                                                                                   | `text-gold-text`           |
+| `#8a8389`                                       | `input-border`                                                                                                                              | `border-input-border`      |
+| `#ded5ce` / `#e9e0da`                           | `divider` / `card-border`                                                                                                                   | `border-divider`           |
+| `#fffcf8` / `#33334d`                           | `raised` / `stage`                                                                                                                          | `bg-raised`                |
+| a token at 12% (status tint, §3)                | the token with `/12`                                                                                                                        | `bg-ochre/12`              |
+| Fraunces `var(--serif)` / Manrope `var(--sans)` | `display` / `body`                                                                                                                          | `font-display`             |
+| radius 6 / 8 / 10 / 12 / 14 / 16 / 20px / 999px | `cell` / `small` / `control` / `inner` / `notice` / `choice` / `card` / `pill`                                                              | `rounded-card`             |
+| card hover / lifted shadow (§5)                 | `card-hover` / `lifted`                                                                                                                     | `shadow-lifted`            |
+| input / pill focus halo (§5)                    | `focus-input` / `focus-pill`                                                                                                                | `focus:shadow-focus-input` |
+
+The fonts are `display` and `body`, not `serif` and `sans`: next/font owns
+`--font-serif` and `--font-sans`, and a theme variable of that name would
+replace Fraunces and Manrope. Radii and shadows also exist as variables for
+arbitrary values, written the Tailwind 4 way: `rounded-(--radius-card)`,
+not `rounded-[--radius-card]`.
+
 ## 3. Status colours
 
 Status is always **icon + text label + tint**, never colour alone (Booking

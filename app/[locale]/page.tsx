@@ -12,7 +12,7 @@ import {
   FlowingRibbon,
   AlmondEye,
 } from "@/components/art/Shapes";
-import { C } from "@/lib/tokens";
+import { AA, C } from "@/lib/tokens";
 import { STORIES } from "@/lib/data";
 
 import art3 from "@/assets/image-3.webp";
@@ -53,7 +53,7 @@ function FloatingCTA() {
           display: "flex",
           alignItems: "center",
           gap: "0.5rem",
-          backgroundColor: C.coral,
+          backgroundColor: AA.action,
           color: "#fff",
           fontFamily: "var(--sans)",
           fontWeight: 700,
@@ -316,7 +316,7 @@ export default function Home() {
             <Link
               href="/book"
               style={{
-                backgroundColor: C.coral,
+                backgroundColor: AA.action,
                 color: "#fff",
                 fontFamily: "var(--sans)",
                 fontWeight: 600,
@@ -470,9 +470,9 @@ export default function Home() {
             style={{
               fontFamily: "var(--sans)",
               fontSize: "0.9rem",
-              color: C.coral,
+              color: AA.action,
               textDecoration: "none",
-              borderBottom: `1px solid ${C.coral}`,
+              borderBottom: `1px solid ${AA.action}`,
               paddingBottom: "1px",
             }}
           >
@@ -506,7 +506,7 @@ export default function Home() {
               <div
                 style={{
                   fontFamily: "var(--hand)",
-                  color: C.rose,
+                  color: AA.label,
                   fontSize: "1rem",
                   marginBottom: "0.3rem",
                 }}
@@ -602,7 +602,7 @@ export default function Home() {
                   fontSize: "0.64rem",
                   textTransform: "uppercase",
                   letterSpacing: "0.1em",
-                  color: C.coral,
+                  color: AA.action,
                   marginBottom: "0.2rem",
                 }}
               >
@@ -621,7 +621,7 @@ export default function Home() {
                 style={{
                   fontFamily: "var(--sans)",
                   fontSize: "0.68rem",
-                  color: "rgba(40,37,45,0.45)",
+                  color: AA.caption,
                 }}
               >
                 Royal North Shore Hospital
@@ -634,7 +634,7 @@ export default function Home() {
             <div
               style={{
                 fontFamily: "var(--hand)",
-                color: C.rose,
+                color: AA.label,
                 fontSize: "1rem",
                 marginBottom: "0.75rem",
               }}
@@ -682,9 +682,9 @@ export default function Home() {
                 fontFamily: "var(--sans)",
                 fontWeight: 600,
                 fontSize: "0.92rem",
-                color: C.coral,
+                color: AA.action,
                 textDecoration: "none",
-                borderBottom: `1.5px solid ${C.coral}`,
+                borderBottom: `1.5px solid ${AA.action}`,
                 paddingBottom: "2px",
               }}
             >
@@ -704,7 +704,7 @@ export default function Home() {
             <div
               style={{
                 fontFamily: "var(--hand)",
-                color: C.rose,
+                color: AA.label,
                 fontSize: "1rem",
                 marginBottom: "0.5rem",
               }}
@@ -725,7 +725,7 @@ export default function Home() {
               style={{
                 fontFamily: "var(--sans)",
                 fontSize: "0.97rem",
-                color: "rgba(40,37,45,0.58)",
+                color: "rgba(40,37,45,0.72)",
                 lineHeight: 1.8,
               }}
             >
@@ -744,7 +744,7 @@ export default function Home() {
                 symbolColor: C.rose,
                 art: art3,
                 link: "/services/individual-art-therapy",
-                accent: C.rose,
+                accent: AA.label,
               },
               {
                 id: SERVICE_IDS[1],
@@ -752,7 +752,7 @@ export default function Home() {
                 symbolColor: C.aqua,
                 art: art5,
                 link: "/services/group-art-wellbeing",
-                accent: C.blue,
+                accent: AA.blueText,
               },
               {
                 id: SERVICE_IDS[2],
@@ -760,7 +760,7 @@ export default function Home() {
                 symbolColor: C.ochre,
                 art: art7,
                 link: "/services/workshops-programs",
-                accent: C.ochre,
+                accent: AA.goldText,
               },
             ].map(({ id, Symbol, symbolColor, art, link, accent }) => (
               <div
@@ -844,7 +844,7 @@ export default function Home() {
                     style={{
                       fontFamily: "var(--sans)",
                       fontSize: "0.88rem",
-                      color: "rgba(40,37,45,0.62)",
+                      color: "rgba(40,37,45,0.72)",
                       lineHeight: 1.75,
                       flex: 1,
                       margin: "0 0 1.25rem",
@@ -919,7 +919,7 @@ export default function Home() {
               <div
                 style={{
                   fontFamily: "var(--hand)",
-                  color: C.ochre,
+                  color: C.butter,
                   fontSize: "1rem",
                   marginBottom: "1rem",
                 }}
@@ -952,7 +952,7 @@ export default function Home() {
                 <Link
                   href="/art-of-wellness"
                   style={{
-                    backgroundColor: C.coral,
+                    backgroundColor: AA.action,
                     color: "#fff",
                     fontFamily: "var(--sans)",
                     fontWeight: 600,
@@ -967,7 +967,7 @@ export default function Home() {
                 <Link
                   href="/portfolio"
                   style={{
-                    color: C.aqua,
+                    color: C.canvas,
                     fontFamily: "var(--sans)",
                     fontWeight: 500,
                     fontSize: "0.88rem",
@@ -1033,7 +1033,7 @@ export default function Home() {
               style={{
                 fontFamily: "var(--sans)",
                 fontSize: "0.95rem",
-                color: "rgba(40,37,45,0.58)",
+                color: "rgba(40,37,45,0.72)",
                 lineHeight: 1.8,
               }}
             >
@@ -1195,7 +1195,7 @@ export default function Home() {
             <div
               style={{
                 fontFamily: "var(--hand)",
-                color: C.rose,
+                color: AA.label,
                 fontSize: "1rem",
                 marginBottom: "0.4rem",
               }}
@@ -1263,7 +1263,7 @@ export default function Home() {
                   style={{
                     fontFamily: "var(--sans)",
                     fontSize: "0.68rem",
-                    color: "rgba(40,37,45,0.4)",
+                    color: AA.caption,
                     textTransform: "uppercase",
                     letterSpacing: "0.1em",
                     marginTop: "2px",
@@ -1296,7 +1296,7 @@ export default function Home() {
             <div
               style={{
                 fontFamily: "var(--hand)",
-                color: C.rose,
+                color: AA.label,
                 fontSize: "1rem",
                 marginBottom: "0.5rem",
               }}
@@ -1397,7 +1397,7 @@ export default function Home() {
           {/* Personal */}
           <div
             style={{
-              background: C.rose,
+              background: AA.label,
               borderRadius: "20px",
               padding: "3rem",
               position: "relative",
@@ -1443,7 +1443,7 @@ export default function Home() {
                   href="/services"
                   style={{
                     backgroundColor: "#fff",
-                    color: C.rose,
+                    color: AA.label,
                     fontFamily: "var(--sans)",
                     fontWeight: 600,
                     fontSize: "0.88rem",
@@ -1518,7 +1518,7 @@ export default function Home() {
               <Link
                 href="/contact"
                 style={{
-                  backgroundColor: C.coral,
+                  backgroundColor: AA.action,
                   color: "#fff",
                   fontFamily: "var(--sans)",
                   fontWeight: 600,

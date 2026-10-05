@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageEnd } from "@/components/Editorial";
+import { ExternalLink } from "@/components/ExternalLink";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import "@/styles/art-of-wellness.css";
@@ -51,22 +52,12 @@ export default async function ArtOfWellness({
             <h1>{t("hero.title")}</h1>
             <p className="ed-lead">{t("hero.lead")}</p>
             <div className="ed-actions">
-              <a
-                className="ed-button"
-                href={PROGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <ExternalLink className="ed-button" href={PROGRAM_URL}>
                 {t("hero.visit")}
-              </a>
-              <a
-                className="ed-link"
-                href={PROGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              </ExternalLink>
+              <ExternalLink className="ed-link" href={PROGRAM_URL}>
                 {t("hero.support")}
-              </a>
+              </ExternalLink>
             </div>
           </div>
           <figure className="aow-frame aow-hero-frame">
@@ -158,14 +149,9 @@ export default async function ArtOfWellness({
           <h2>{t("support.title")}</h2>
           <p className="ed-lead">{t("support.lead")}</p>
           <div className="ed-actions">
-            <a
-              className="ed-button"
-              href={PROGRAM_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <ExternalLink className="ed-button" href={PROGRAM_URL}>
               {t("support.donate")}
-            </a>
+            </ExternalLink>
           </div>
         </div>
       </section>
@@ -174,9 +160,7 @@ export default async function ArtOfWellness({
         <p className="aow-credit">
           {t.rich("credit", {
             link: (chunks) => (
-              <a href={PROGRAM_URL} target="_blank" rel="noopener noreferrer">
-                {chunks}
-              </a>
+              <ExternalLink href={PROGRAM_URL}>{chunks}</ExternalLink>
             ),
           })}
         </p>

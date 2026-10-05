@@ -16,6 +16,20 @@ const toggle = (page: Page) =>
   page.locator('button[aria-controls="mobile-navigation"]');
 const menu = (page: Page) => page.locator("#mobile-navigation");
 
+// Brief §10: the first Tab on any page reaches a visible skip link, which
+// moves focus past the header to the page's own content.
+for (const path of ["/", "/my/contact"]) {
+  test(`skip link is the first stop on ${path}`, async ({ page, visit }) => {
+    await visit(path);
+    await page.keyboard.press("Tab");
+    const skip = page.locator('a[href="#main"]');
+    await expect(skip).toBeFocused();
+    expect((await skip.boundingBox())?.width).toBeGreaterThan(44);
+    await page.keyboard.press("Enter");
+    await expect(page.locator("main#main")).toBeFocused();
+  });
+}
+
 test.describe("mobile menu", () => {
   test.skip(({ isMobile }) => !isMobile, "the menu exists below 1024 px");
 
@@ -25,6 +39,26 @@ test.describe("mobile menu", () => {
     await page.keyboard.press("Enter");
     await expect(menu(page)).toBeVisible();
     await expect(toggle(page)).toHaveAttribute("aria-expanded", "true");
+  });
+
+  test("opening moves focus to the first link", async ({ page, visit }) => {
+    await visit("/");
+    await toggle(page).focus();
+    await page.keyboard.press("Enter");
+    await expect(menu(page).getByRole("link").first()).toBeFocused();
+  });
+
+  test("Tab from the last link returns to the toggle", async ({
+    page,
+    visit,
+  }) => {
+    await visit("/");
+    await toggle(page).focus();
+    await page.keyboard.press("Enter");
+    await menu(page).getByRole("link").last().focus();
+    await page.keyboard.press("Tab");
+    await expect(toggle(page)).toBeFocused();
+    await expect(menu(page)).toBeVisible();
   });
 
   test("closes with Escape and returns focus to the toggle", async ({

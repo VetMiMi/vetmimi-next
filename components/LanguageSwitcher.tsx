@@ -34,6 +34,7 @@ export function LanguageSwitcher() {
             lang={option}
             hrefLang={option}
             aria-current={active ? "true" : undefined}
+            className="touch-target"
             style={{
               fontFamily: "var(--sans)",
               fontSize: "0.78rem",

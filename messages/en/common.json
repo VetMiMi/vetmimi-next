@@ -3,6 +3,8 @@
     "title": "VetMiMi",
     "description": "Art, reflection and wellbeing with Daw Mi."
   },
+  "skipLink": "Skip to main content",
+  "newTab": "(opens in a new tab)",
   "nav": {
     "label": "Main navigation",
     "about": "About",

@@ -1,4 +1,4 @@
-import { C } from "@/lib/tokens";
+import { AA, C } from "@/lib/tokens";
 import { Link } from "@/i18n/navigation";
 
 type Variant = "primary" | "secondary" | "editorial";
@@ -15,9 +15,9 @@ type ButtonProps = {
 
 const styles: Record<Variant, React.CSSProperties> = {
   primary: {
-    backgroundColor: C.coral,
+    backgroundColor: AA.action,
     color: "#fff",
-    border: `2px solid ${C.coral}`,
+    border: `2px solid ${AA.action}`,
     padding: "14px 32px",
     borderRadius: "8px",
     fontFamily: "var(--sans)",

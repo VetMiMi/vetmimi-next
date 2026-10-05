@@ -5,13 +5,15 @@ import baselineFile from "./axe-baseline.json";
 // WCAG 2.2 level AA, the bar brief §10 sets for every public page.
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 
-// Known failures that VetMiMi/vetmimi-next#41 fixes. A check fails both when
-// something new breaks and when a listed failure no longer happens, so every
-// fix must also shrink this file.
+// Known failures, each with a note naming the issue that fixes it. A check
+// fails both when something new breaks and when a listed failure no longer
+// happens, so every fix must also shrink this file.
 type Baseline = {
   /** "<route> <locale>" → axe rule ids, in both projects. A key ending in
    * " desktop" or " mobile" holds rules that occur in that project only. */
   axe: Record<string, string[]>;
+  /** Why each "axe" entry is still allowed, and the issue that removes it. */
+  notes: Record<string, string>;
   /** Titles of keyboard.spec.ts tests that fail today. */
   keyboard: string[];
   /** "<route> <locale>" keys that scroll sideways at 320 px today. */

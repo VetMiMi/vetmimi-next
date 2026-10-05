@@ -2,6 +2,9 @@
 @import "../styles/services.css";
 @import "tailwindcss";
 
+/* The design brief names classes as examples; they are not used markup. */
+@source not "../docs";
+
 :root {
   --canvas: #fff7ef;
   --paper: #f8f1e8;
@@ -22,6 +25,62 @@
   --serif: var(--font-serif), var(--font-serif-my), Georgia, serif;
   --sans: var(--font-sans), var(--font-sans-my), system-ui, sans-serif;
   --hand: var(--font-hand), var(--font-sans-my), cursive;
+}
+
+/* Tailwind names for the tokens above and for the darkened values the
+   admin design brief (§2) allows, so admin code needs no inline styles
+   (#9). Inline, so `bg-canvas` reads `var(--canvas)` itself. The fonts are
+   not called `--font-serif`/`--font-sans`: next/font sets those names on
+   <html>, and a theme variable with the same name would replace them. */
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-rose: var(--rose);
+  --color-coral: var(--coral);
+  --color-red: var(--red);
+  --color-indigo: var(--indigo);
+  --color-violet: var(--violet);
+  --color-blue: var(--blue);
+  --color-aqua: var(--aqua);
+  --color-ochre: var(--ochre);
+  --color-butter: var(--butter);
+  --color-olive: var(--olive);
+  --color-white: #fff;
+
+  --color-action: #ab4347;
+  --color-action-hover: #91373b;
+  --color-label: #88435b;
+  --color-muted: #625d64;
+  --color-caption: #756b75;
+  --color-blue-text: #416879;
+  --color-gold-text: #79602e;
+  --color-input-border: #8a8389;
+  --color-divider: #ded5ce;
+  --color-card-border: #e9e0da;
+  --color-raised: #fffcf8;
+  --color-stage: #33334d;
+
+  --font-display: var(--serif);
+  --font-body: var(--sans);
+}
+
+/* Radii and shadows from the brief (§5). Not inline, so each one used is
+   also a variable, e.g. `rounded-(--radius-card)`. */
+@theme {
+  --radius-cell: 6px;
+  --radius-small: 8px;
+  --radius-control: 10px;
+  --radius-inner: 12px;
+  --radius-notice: 14px;
+  --radius-choice: 16px;
+  --radius-card: 20px;
+  --radius-pill: 999px;
+
+  --shadow-card-hover: 0 8px 24px rgba(73, 76, 109, 0.08);
+  --shadow-lifted: 0 14px 30px rgba(40, 37, 45, 0.16);
+  --shadow-focus-input: 0 0 0 3px rgba(178, 102, 123, 0.16);
+  --shadow-focus-pill: 0 0 0 3px rgba(178, 102, 123, 0.3);
 }
 
 html,

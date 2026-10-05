@@ -145,6 +145,7 @@ dev server. So:
   a test runner or type-checker in watch mode.
 - The dev server (`pnpm dev`) is the owner's. Do not start, stop or restart
   it; if you need one for browser checks, ask, or use a Vercel preview.
+- Playwright and Lighthouse run in CI only; never run `pnpm e2e` on the laptop.
 
 ## Local gate — before every push
 

@@ -12,6 +12,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "i18n:check": "node scripts/check-messages.mjs",
     "test:unit": "node --test --experimental-strip-types lib/*.test.ts",
+    "e2e": "playwright test",
     "gate": "scripts/gate.sh sh -c 'pnpm lint && pnpm format:check && pnpm typecheck && pnpm i18n:check && pnpm test:unit && NODE_OPTIONS=--max-old-space-size=2048 pnpm build'"
   },
   "dependencies": {
@@ -22,6 +23,8 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

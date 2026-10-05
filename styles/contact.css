@@ -11,7 +11,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--rose);
+  color: #88435b;
   margin: 0 0 16px;
 }
 
@@ -107,10 +107,10 @@
   margin-bottom: 8px;
 }
 .contact-page .req {
-  color: var(--rose);
+  color: #88435b;
 }
 .contact-label .opt {
-  color: rgba(40, 37, 45, 0.45);
+  color: #756b75;
   font-weight: 400;
 }
 .contact-input {
@@ -129,7 +129,7 @@
     box-shadow 0.15s ease;
 }
 .contact-input::placeholder {
-  color: rgba(40, 37, 45, 0.38);
+  color: #756b75;
 }
 .contact-input:hover {
   border-color: rgba(40, 37, 45, 0.28);
@@ -183,8 +183,8 @@ textarea.contact-input {
   border-color: var(--rose);
 }
 .contact-pill input:checked + span {
-  background: var(--rose);
-  border-color: var(--rose);
+  background: #88435b;
+  border-color: #88435b;
   color: #fff;
 }
 .contact-pill input:focus-visible + span {
@@ -207,14 +207,14 @@ textarea.contact-input {
 }
 .contact-privacy a,
 .contact-details a {
-  color: var(--rose);
+  color: #88435b;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
 .contact-note {
   font-size: 0.8rem;
   line-height: 1.65;
-  color: rgba(40, 37, 45, 0.55);
+  color: rgba(40, 37, 45, 0.72);
   padding: 12px 16px;
   background: var(--canvas);
   border-radius: 10px;

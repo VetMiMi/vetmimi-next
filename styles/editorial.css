@@ -384,7 +384,7 @@
 }
 .ed-empty {
   margin: 8px 0 64px;
-  color: rgba(40, 37, 45, 0.6);
+  color: #625d64;
 }
 .ed-story-list {
   display: grid;

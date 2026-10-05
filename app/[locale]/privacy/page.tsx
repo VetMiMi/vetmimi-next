@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { C } from "@/lib/tokens";
+import { AA, C } from "@/lib/tokens";
 import { WaveDivider } from "@/components/art/Shapes";
 
 const SECTIONS = [
@@ -33,7 +33,7 @@ export default async function Privacy({
               style={{
                 fontFamily: "var(--sans)",
                 fontSize: "0.78rem",
-                color: `${C.ink}66`,
+                color: AA.muted,
                 textDecoration: "none",
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",
@@ -124,7 +124,7 @@ export default async function Privacy({
             style={{
               fontFamily: "var(--sans)",
               fontSize: "0.9rem",
-              color: C.rose,
+              color: AA.label,
               textDecoration: "none",
             }}
           >
@@ -135,7 +135,7 @@ export default async function Privacy({
             style={{
               fontFamily: "var(--sans)",
               fontSize: "0.9rem",
-              color: C.rose,
+              color: AA.label,
               textDecoration: "none",
             }}
           >

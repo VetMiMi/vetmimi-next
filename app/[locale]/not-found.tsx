@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { C } from "@/lib/tokens";
+import { AA, C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import { AlmondEye, PetalOutline, GoldMark } from "@/components/art/Shapes";
 
@@ -64,7 +64,7 @@ export default function NotFound() {
           style={{
             fontFamily: "var(--sans)",
             fontSize: "0.72rem",
-            color: C.rose,
+            color: AA.label,
             textTransform: "uppercase",
             letterSpacing: "0.14em",
             fontWeight: 700,
@@ -134,7 +134,7 @@ export default function NotFound() {
             style={{
               fontFamily: "var(--sans)",
               fontSize: "0.9rem",
-              color: C.rose,
+              color: AA.label,
               textDecoration: "none",
               margin: "0 1rem",
             }}
@@ -146,7 +146,7 @@ export default function NotFound() {
             style={{
               fontFamily: "var(--sans)",
               fontSize: "0.9rem",
-              color: C.rose,
+              color: AA.label,
               textDecoration: "none",
               margin: "0 1rem",
             }}
@@ -158,7 +158,7 @@ export default function NotFound() {
             style={{
               fontFamily: "var(--sans)",
               fontSize: "0.9rem",
-              color: C.rose,
+              color: AA.label,
               textDecoration: "none",
               margin: "0 1rem",
             }}

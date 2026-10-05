@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
+import { toLocalDateKey } from "@/lib/localDate";
 import {
   getDaysInMonth,
   getFirstDayOfMonth,
@@ -62,8 +63,7 @@ export function Step2({
   };
 
   const handleDateClick = (date: Date) => {
-    const iso = date.toISOString().slice(0, 10);
-    setSelectedDate(iso);
+    setSelectedDate(toLocalDateKey(date));
     setSelectedTime("");
   };
 
@@ -222,13 +222,13 @@ export function Step2({
           {cells.map((date, i) => {
             if (!date) return <div key={`empty-${i}`} />;
             const available = isAvailableDate(date);
-            const iso = date.toISOString().slice(0, 10);
-            const isSelected = iso === selectedDate;
+            const key = toLocalDateKey(date);
+            const isSelected = key === selectedDate;
             const isToday = new Date().toDateString() === date.toDateString();
 
             return (
               <button
-                key={iso}
+                key={key}
                 disabled={!available}
                 onClick={() => handleDateClick(date)}
                 style={{

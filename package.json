@@ -11,9 +11,13 @@
     "format:check": "prettier --check .",
     "typecheck": "next typegen && tsc --noEmit",
     "i18n:check": "node scripts/check-messages.mjs",
+    "api:types": "node scripts/api-types.mjs",
     "test:unit": "node --test --experimental-strip-types lib/*.test.ts",
     "e2e": "playwright test",
     "gate": "scripts/gate.sh sh -c 'pnpm lint && pnpm format:check && pnpm typecheck && pnpm i18n:check && pnpm test:unit && NODE_OPTIONS=--max-old-space-size=2048 pnpm build'"
+  },
+  "vetmimiApi": {
+    "ref": "v0.1.0"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
@@ -31,6 +35,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.5",
+    "openapi-typescript": "7.13.0",
     "prettier": "3.9.9",
     "tailwindcss": "^4",
     "typescript": "^5"

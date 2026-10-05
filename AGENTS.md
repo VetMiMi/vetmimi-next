@@ -86,11 +86,15 @@ docs/                  project status, admin design brief
   uses it.
 - **Admin and session pages sit outside `app/[locale]`.** They need their own
   root layout (there is no `app/layout.tsx`; `app/[locale]/layout.tsx` renders
-  `<html>`), and `proxy.ts`'s matcher must skip `/admin` and `/session` so
-  next-intl does not rewrite them. The ESLint ban on `next/link` applies
-  there too; the admin shell issue decides between an English-only
-  `NextIntlClientProvider` (so `@/i18n/navigation` works) and a scoped lint
-  override, and records the choice here.
+  `<html>`), and `/admin` and `/session` must never reach next-intl, or it
+  rewrites them to `/en/…`, sets its locale cookie and adds hreflang
+  headers. `proxy.ts` branches on `/admin` before calling next-intl and
+  passes the path and query on in the `x-admin-path` request header, which
+  the admin uses to return Daw Mi to the page she asked for.
+- **Admin links use Next's own `Link` and navigation.** Admin has no locale
+  provider, so a scoped ESLint override for `app/admin/**` and
+  `components/admin/**` allows `next/link` and `next/navigation` and rejects
+  `@/i18n/navigation` and `next-intl` there.
 
 ## Language (i18n)
 
@@ -110,7 +114,7 @@ Summarised from `messages/README.md`, which is the authority.
   request.
 - Links and redirects use `Link`, `redirect`, `useRouter` and `usePathname`
   from `@/i18n/navigation`; ESLint rejects `next/link` and those
-  `next/navigation` imports.
+  `next/navigation` imports everywhere except admin (see Layout).
 - Burmese needs taller lines and no letter spacing; `app/globals.css` handles
   it with `:lang(my)` rules. Do not fight them with inline `line-height`.
 - **Admin is English only** and has no message files. The `/session` page is

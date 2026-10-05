@@ -9,6 +9,19 @@ const nextConfig: NextConfig = {
     // is silently rounded to the nearest one. 75 is the default.
     qualities: [40, 60, 75],
   },
+  async headers() {
+    return [
+      {
+        // Admin must stay out of search results and can never be framed,
+        // so no other site can trick a click on an admin action.
+        source: "/admin/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "X-Frame-Options", value: "DENY" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return [
       // Artworks now open in a lightbox on the portfolio page itself.

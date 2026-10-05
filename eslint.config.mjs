@@ -26,6 +26,31 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  {
+    // Admin is English only and has no locale provider, so it uses Next's
+    // own Link and navigation, and must not use the locale-aware versions.
+    files: ["app/admin/**", "components/admin/**"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@/i18n/navigation",
+              message:
+                "Admin is English only: use next/link and next/navigation.",
+            },
+          ],
+          patterns: [
+            {
+              group: ["next-intl", "next-intl/*"],
+              message: "Admin is English only and has no locale provider.",
+            },
+          ],
+        },
+      ],
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

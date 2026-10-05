@@ -92,6 +92,11 @@ jobs:
           cat next-start.log
           exit 1
       # Scores and timings: three mobile runs per page, asserted on the median.
+      # Known gaps warn instead of failing, on the pages they affect only,
+      # until their follow-ups land (listed in pull request #148): mobile LCP,
+      # performance on /, /my, /about, /my/about, /art-of-wellness and
+      # /portfolio, blocking time on / and /my, fonts on /my/about, and
+      # accessibility on /book (#56).
       - name: Audit on mobile
         uses: treosh/lighthouse-ci-action@v12
         with:

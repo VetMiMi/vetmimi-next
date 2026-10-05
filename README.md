@@ -1,36 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# vetmimi-next
 
-## Getting Started
+The public website and admin for [VetMiMi](https://vetmimi-next.vercel.app),
+Daw Mi's art therapy practice in Sydney: the public site in English and
+Burmese, `/admin` for Daw Mi, and `/session/<token>` for online sessions.
+It is a Next.js App Router app; the Go API in
+[VetMiMi/vetmimi-api](https://github.com/VetMiMi/vetmimi-api) owns the data.
 
-First, run the development server:
+## Getting started
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```sh
+pnpm install
+pnpm gate   # lint, format, types, messages, unit tests and build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`pnpm dev` is the owner's dev server; agents do not start or stop it.
+`pnpm gate` runs heavy work behind a machine-wide lock, so wait if it says
+it is waiting.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Read next
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [`AGENTS.md`](AGENTS.md): the working agreement, layout and rules.
+- [`docs/`](docs/): project status and the admin design brief.
+- [`messages/README.md`](messages/README.md): how public text and Burmese
+  translations work.

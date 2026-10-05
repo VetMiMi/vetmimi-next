@@ -2,6 +2,7 @@
 import type { CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { C } from "@/lib/tokens";
+import { fromLocalDateKey } from "@/lib/localDate";
 
 export type BookingState =
   null | "success" | "failed" | "no-times" | "time-lost" | "unavailable";
@@ -84,7 +85,7 @@ export function useFormatDate() {
   const t = useTranslations("book.calendar");
   return (dateStr: string): string => {
     if (!dateStr) return "";
-    const d = new Date(dateStr);
+    const d = fromLocalDateKey(dateStr);
     return t("fullDate", {
       weekday: t(`weekdays.${WEEKDAY_IDS[d.getDay()]}`),
       day: String(d.getDate()),

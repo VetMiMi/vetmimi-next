@@ -11,7 +11,8 @@
     "format:check": "prettier --check .",
     "typecheck": "next typegen && tsc --noEmit",
     "i18n:check": "node scripts/check-messages.mjs",
-    "gate": "scripts/gate.sh sh -c 'pnpm lint && pnpm format:check && pnpm typecheck && pnpm i18n:check && NODE_OPTIONS=--max-old-space-size=2048 pnpm build'"
+    "test:unit": "node --test --experimental-strip-types lib/*.test.ts",
+    "gate": "scripts/gate.sh sh -c 'pnpm lint && pnpm format:check && pnpm typecheck && pnpm i18n:check && pnpm test:unit && NODE_OPTIONS=--max-old-space-size=2048 pnpm build'"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

@@ -31,7 +31,7 @@ export default async function Services({
           <p className="service-intro">{t("index.intro")}</p>
         </header>
         <section className="services-rows" aria-label={t("index.listLabel")}>
-          {services.map((service) => {
+          {services.map((service, index) => {
             const name = t(`items.${service.slug}.name`);
             const steps: ServiceStep[] = t.raw(`items.${service.slug}.steps`);
             return (
@@ -44,6 +44,8 @@ export default async function Services({
                     src={SERVICE_ART[service.slug]}
                     alt=""
                     sizes="(max-width: 767px) 80vw, 36vw"
+                    // The first artwork is the largest thing on screen at load.
+                    preload={index === 0}
                   />
                 </div>
                 <div className="service-row-body">

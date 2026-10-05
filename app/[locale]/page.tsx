@@ -1,7 +1,5 @@
-"use client";
-import { useState, useEffect } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import {
   WaveDivider,
@@ -21,126 +19,14 @@ import art5 from "@/assets/image-5.webp";
 import art7 from "@/assets/image-7.webp";
 import gardenEasel from "@/assets/artworks/garden-easel.webp";
 import hewPhoto from "@/assets/human-experience-week/daw-mi-with-artwork-3.webp";
+import type { Locale } from "@/i18n/routing";
 import { ArtMosaic } from "./_components/ArtMosaic";
-
-/* ── Floating CTA ── */
-function FloatingCTA() {
-  const [vis, setVis] = useState(false);
-  const t = useTranslations("home");
-  useEffect(() => {
-    const fn = () => setVis(window.scrollY > 600);
-    window.addEventListener("scroll", fn, { passive: true });
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-  return (
-    <div
-      style={{
-        position: "fixed",
-        bottom: "1.75rem",
-        right: "1.75rem",
-        zIndex: 300,
-        transform: vis
-          ? "translateY(0) scale(1)"
-          : "translateY(100px) scale(0.9)",
-        opacity: vis ? 1 : 0,
-        transition: "all 0.45s cubic-bezier(.22,.68,0,1.2)",
-        pointerEvents: vis ? "auto" : "none",
-      }}
-    >
-      <Link
-        href="/book"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          backgroundColor: AA.action,
-          color: "#fff",
-          fontFamily: "var(--sans)",
-          fontWeight: 700,
-          fontSize: "0.84rem",
-          padding: "12px 22px",
-          borderRadius: "50px",
-          textDecoration: "none",
-          boxShadow: "0 8px 28px rgba(219,95,89,0.38)",
-        }}
-      >
-        ✦ {t("floatingCta")}
-      </Link>
-    </div>
-  );
-}
+import { FAQItem } from "./_components/FAQItem";
+import { FloatingCTA } from "./_components/FloatingCTA";
 
 /* ── FAQ ── */
 // Question and answer text lives in messages/<locale>/home.json under faq.items.
 const FAQ_IDS = ["whatIs", "draw", "session", "medicare", "howMany"] as const;
-
-function FAQItem({ q, a }: { q: string; a: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div style={{ borderBottom: "1px solid rgba(40,37,45,0.1)" }}>
-      <button
-        onClick={() => setOpen((v) => !v)}
-        style={{
-          width: "100%",
-          textAlign: "left",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: "1.35rem 0",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: "1rem",
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--serif)",
-            fontSize: "1.05rem",
-            color: C.ink,
-            lineHeight: 1.4,
-          }}
-        >
-          {q}
-        </span>
-        <span
-          style={{
-            color: C.coral,
-            fontSize: "1.4rem",
-            lineHeight: 1,
-            flexShrink: 0,
-            marginTop: "2px",
-            transform: open ? "rotate(45deg)" : "rotate(0deg)",
-            transition: "transform 0.25s ease",
-            display: "block",
-          }}
-        >
-          +
-        </span>
-      </button>
-      <div
-        style={{
-          maxHeight: open ? "600px" : "0",
-          overflow: "hidden",
-          transition: "max-height 0.35s ease",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: "0.93rem",
-            color: "rgba(40,37,45,0.65)",
-            lineHeight: 1.8,
-            paddingBottom: "1.35rem",
-            margin: 0,
-          }}
-        >
-          {a}
-        </p>
-      </div>
-    </div>
-  );
-}
 
 // Quote and tag text lives in messages/<locale>/home.json under testimonials.items.
 const TESTIMONIALS = [
@@ -152,10 +38,12 @@ const TESTIMONIALS = [
 const SERVICE_IDS = ["individual", "group", "workshops"] as const;
 
 /* ────────────────────────────────────── */
-export default function Home() {
-  const t = useTranslations("home");
+export default async function Home({ params }: PageProps<"/[locale]">) {
+  const { locale } = await params;
+  setRequestLocale(locale as Locale);
+  const t = await getTranslations("home");
   // Story titles and excerpts are shared with the Stories pages.
-  const tStories = useTranslations("stories");
+  const tStories = await getTranslations("stories");
   return (
     <div style={{ background: C.canvas, overflowX: "hidden" }}>
       <FloatingCTA />

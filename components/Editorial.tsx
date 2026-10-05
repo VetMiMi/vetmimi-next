@@ -13,7 +13,9 @@ export function StoryCard({ story }: { story: Story }) {
       <Image
         src={story.img}
         alt=""
-        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        // A fixed thumbnail: 80px wide on phones, 110px above
+        // (.ed-story > img in styles/editorial.css).
+        sizes="(max-width: 767px) 80px, 110px"
       />
       <div>
         <p className="ed-label">{t(`types.${story.type}`)}</p>

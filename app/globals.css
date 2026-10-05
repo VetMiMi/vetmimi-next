@@ -2,6 +2,9 @@
 @import "../styles/services.css";
 @import "tailwindcss";
 
+/* The design brief names classes as examples; they are not used markup. */
+@source not "../docs";
+
 :root {
   --canvas: #fff7ef;
   --paper: #f8f1e8;

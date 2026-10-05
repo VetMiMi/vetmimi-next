@@ -271,44 +271,6 @@
   gap: 40px 28px;
   padding-bottom: 64px;
 }
-.ed-work {
-  min-width: 0;
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-.ed-work-image {
-  background: #ede7df;
-  border-radius: 10px;
-  padding: 16px;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.ed-work-image img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: transform 0.25s;
-}
-.ed-work:hover img {
-  transform: scale(1.025);
-}
-.ed-work-caption {
-  padding-top: 20px;
-  display: flex;
-  gap: 12px;
-  justify-content: space-between;
-}
-.ed-work-caption .ed-label {
-  margin-bottom: 6px;
-}
-.ed-work-caption h3 {
-  margin: 0;
-}
 .ed-filter-bar {
   display: flex;
   justify-content: space-between;
@@ -506,95 +468,6 @@
 .ed-wellness-hero {
   padding-block: 64px;
 }
-.ed-wellness-art {
-  margin: 0;
-  position: relative;
-  border: 1px solid #898494;
-  padding: 14px;
-  border-radius: 48% 48% 12px 12px;
-}
-.ed-wellness-art img {
-  display: block;
-  width: 100%;
-  height: 380px;
-  object-fit: cover;
-  border-radius: 48% 48% 6px 6px;
-}
-/* Art of Wellness: the three parts of the program, pinned like prints. */
-.ed-program {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(28px, 4vw, 48px);
-}
-.ed-program-card figure {
-  margin: 0 0 1.4rem;
-  padding: 10px;
-  background: #fff;
-  border-radius: 48% 48% 10px 10px;
-  box-shadow: 0 12px 28px rgba(40, 37, 45, 0.1);
-  transform: rotate(-1.5deg);
-}
-.ed-program-card:nth-child(2) figure {
-  transform: rotate(1.2deg);
-}
-.ed-program-card img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4/5;
-  object-fit: cover;
-  border-radius: 48% 48% 6px 6px;
-}
-.ed-program-card h3 {
-  margin: 0 0 0.4rem;
-  font-size: 1.35rem;
-}
-.ed-program-card p {
-  margin: 0;
-}
-.ed-credit {
-  margin-top: 2.5rem;
-  text-align: center;
-  font-size: 0.8rem;
-  opacity: 0.65;
-}
-.ed-support {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(40, 37, 45, 0.12);
-}
-/* Art of Wellness: co-founder portrait, echoing the outlined hero arch. */
-.ed-founder {
-  display: grid;
-  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
-  gap: clamp(36px, 6vw, 80px);
-  align-items: center;
-}
-.ed-founder-photo {
-  position: relative;
-  margin: 0 0 0 14px;
-}
-.ed-founder-photo::before {
-  content: "";
-  position: absolute;
-  inset: -14px 14px 14px -14px;
-  border: 1px solid var(--rose);
-  border-radius: 48% 48% 12px 12px;
-  opacity: 0.55;
-}
-.ed-founder-photo img {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4/5;
-  object-fit: cover;
-  object-position: center 30%;
-  border-radius: 48% 48% 10px 10px;
-}
-.ed-founder h2 {
-  margin-bottom: 0.6rem;
-}
 .ed-section-top {
   display: flex;
   justify-content: space-between;
@@ -640,9 +513,6 @@
   .ed-piece > div {
     grid-row: 1;
   }
-  .ed-work-image {
-    height: 220px;
-  }
   .ed-gallery {
     gap: 28px 16px;
   }
@@ -664,21 +534,6 @@
     width: 80px;
     height: 110px;
   }
-  .ed-wellness-art img {
-    height: 280px;
-  }
-  .ed-founder {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .ed-program {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .ed-program-card figure {
-    max-width: 360px;
-  }
-  .ed-founder-photo {
-    max-width: 220px;
-  }
   .ed-end {
     padding: 24px;
   }
@@ -689,13 +544,5 @@
 @media (max-width: 479px) {
   .ed-gallery {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .ed-work-image {
-    height: 330px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ed-work-image img {
-    transition: none;
   }
 }

@@ -280,13 +280,12 @@ What the pages do now:
   (buttons, nav opacity/colour). Header border fades in at 0.3s after 24px
   of scroll.
 - Lifts: `.contact-choice` rises `translateY(-2px)` with a border and
-  shadow change at 0.2s; gallery images rise 3px at 0.4s; portfolio images
-  scale to 1.025 at 0.25s.
+  shadow change at 0.2s; gallery images rise 3px at 0.4s.
 - Disclosure: FAQ `+` rotates 45° at 0.25s; answer height at 0.35s.
 - The home floating CTA uses `cubic-bezier(.22,.68,0,1.2)` at 0.45s; the
   mosaic scales to 1.05 over 600ms.
-- Reduced motion: only `.ed-work-image img` honours
-  `prefers-reduced-motion`. That is a gap; do not copy it.
+- Reduced motion: no public page honours `prefers-reduced-motion` yet.
+  That is a gap; do not copy it.
 
 The specification adds: "Buttons: arrow moves 3px right on hover/focus"
 and "Respect reduced-motion preference; all important content must be

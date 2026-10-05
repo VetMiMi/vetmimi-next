@@ -55,6 +55,7 @@ export default async function StoryDetail({
           src={story.img}
           alt={t("detail.imageAlt")}
           sizes="(max-width: 1168px) 100vw, 1120px"
+          preload
         />
         <div className="ed-article-body">
           {paragraphs.map((text, index) => (

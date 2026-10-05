@@ -32,7 +32,7 @@ export default async function Portfolio({
           {t("highlights.label")}
         </h2>
         <div className="pf-highlights">
-          {HIGHLIGHTS.map((item) => (
+          {HIGHLIGHTS.map((item, index) => (
             <article key={item.id} className="pf-highlight">
               <figure className="pf-frame">
                 <Image
@@ -40,6 +40,8 @@ export default async function Portfolio({
                   alt={t(`highlights.items.${item.id}.alt`)}
                   sizes="(max-width: 767px) 100vw, 380px"
                   placeholder="blur"
+                  // The first card is the largest thing on screen on phones.
+                  preload={index === 0}
                 />
               </figure>
               <p className="pf-when">{t(`highlights.items.${item.id}.when`)}</p>

@@ -50,6 +50,7 @@ export default function Stories() {
               src={featured.img}
               alt=""
               sizes="(max-width: 768px) 100vw, 50vw"
+              preload
             />
             <div>
               <p className="ed-label">

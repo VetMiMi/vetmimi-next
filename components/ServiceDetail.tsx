@@ -54,7 +54,10 @@ export default function ServiceDetail({ slug }: { slug: string }) {
             <Image
               src={service.image}
               alt={t(`${item}.imageAlt`)}
-              sizes="(max-width: 768px) 100vw, 50vw"
+              // At most 416px wide on phones (the frame caps at 440px) and
+              // about 400px beside the text on wider screens.
+              sizes="(max-width: 767px) calc(100vw - 64px), 400px"
+              preload
             />
             <figcaption>{t("detail.figcaption")}</figcaption>
           </figure>

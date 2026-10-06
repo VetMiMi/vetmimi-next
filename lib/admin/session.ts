@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { adminApi, type AdminApi } from "@/lib/api/client";
 import { ApiError, unwrap } from "@/lib/api/problem";
 import type { components } from "@/lib/api/schema";
+import { canUse, type Role } from "./roles";
 import { safeNext } from "./safe-next";
 
 export type CurrentUser = components["schemas"]["CurrentUser"];
@@ -61,6 +62,15 @@ async function redirectToSignIn(): Promise<never> {
 
 export async function requireUser(): Promise<CurrentUser> {
   return (await getCurrentUser()) ?? redirectToSignIn();
+}
+
+// For a page open to some roles only: null means the page renders
+// <NoAccess /> and loads no data (Booking UX §29).
+export async function requireRole(
+  ...allowed: Role[]
+): Promise<CurrentUser | null> {
+  const user = await requireUser();
+  return canUse(user.roles, allowed) ? user : null;
 }
 
 // Every admin API call goes through here, not only the page's first check:

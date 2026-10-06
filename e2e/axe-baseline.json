@@ -1,10 +1,10 @@
 {
   "axe": {
-    "/book en": ["color-contrast", "link-in-text-block"],
-    "/book my": ["color-contrast", "link-in-text-block"]
+    "/book en": ["color-contrast"],
+    "/book my": ["color-contrast"]
   },
   "notes": {
-    "/book en": "Step 1 on load: ink at 40% on the back link and progress labels, rose on the contact link, which is also told apart by colour only. VetMiMi/vetmimi-next#56 (key: web-booking-service-step) rebuilds the step and the progress; #57, #58 and #63 rebuild the later steps, which axe does not reach on load.",
+    "/book en": "With no API in CI the page shows its 'booking unavailable' state; the remaining contrast finding is the brief §2 colour pass on the booking flow, parked for consolidation. The link-in-text-block finding was fixed by the API-backed rebuild (#158).",
     "/book my": "As /book en."
   },
   "keyboard": [],

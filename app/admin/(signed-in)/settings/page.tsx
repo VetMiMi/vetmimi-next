@@ -33,7 +33,9 @@ export default async function SettingsPage() {
         description="Booking rules and wording. Each section saves on its own."
       />
       <div className="flex flex-col gap-8">
-        <PublicBookingSwitch enabled={settings.publicBookingEnabled} />
+        {/* Optional in the schema only because content editors get the site
+            group; a booking admin always receives it. */}
+        <PublicBookingSwitch enabled={settings.publicBookingEnabled ?? true} />
         <SettingsSection id="rules" values={settings} />
         <SettingsSection id="cancellation" values={settings} />
         <SettingsSection id="sessions" values={settings} />

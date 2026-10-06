@@ -1,146 +1,42 @@
-"use client";
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { C } from "@/lib/tokens";
-import { ProgressIndicator } from "./_components/ProgressIndicator";
-import { Step1 } from "./_components/Step1";
-import { Step2 } from "./_components/Step2";
-import { Step3 } from "./_components/Step3";
-import { Step4 } from "./_components/Step4";
-import { SuccessState } from "./_components/SuccessState";
-import type {
-  BookingState,
-  BookingFormData,
-  ServiceId,
-  TimeSlot,
-} from "./_components/booking";
+import { setRequestLocale } from "next-intl/server";
+import type { Locale } from "@/i18n/routing";
+import { publicApi } from "@/lib/api/client";
+import { ApiError, unwrap } from "@/lib/api/problem";
+import { issueFormToken } from "@/lib/spam";
+import { BookingFlow } from "./_components/BookingFlow";
+import "@/styles/booking.css";
 
-// ── Page ─────────────────────────────────────────────────────────────────────
-
-export default function BookAppointment() {
-  const t = useTranslations("book.page");
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-  const [bookingState, setBookingState] = useState<BookingState>(null);
-  const [selectedService, setSelectedService] = useState<ServiceId | "">("");
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState<TimeSlot | "">("");
-  const [formData, setFormData] = useState<BookingFormData>({
-    name: "",
-    email: "",
-    phone: "",
-    format: "online",
-    note: "",
-    privacyAck: false,
-    policyAck: false,
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = () => {
-    // TODO: nothing is sent yet. This timeout fakes a booking and the request
-    // is discarded, so Daw Mi never hears about it. Wire up a real backend.
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setBookingState("success");
-    }, 1500);
-  };
-
-  if (bookingState === "success") return <SuccessState />;
+// The bookable services are read fresh on every visit: Daw Mi can pause
+// booking or a service at any moment.
+export default async function BookPage({
+  params,
+  searchParams,
+}: PageProps<"/[locale]/book">) {
+  const { locale } = await params;
+  const { service } = await searchParams;
+  setRequestLocale(locale as Locale);
 
   return (
-    <div style={{ backgroundColor: C.canvas, minHeight: "100dvh" }}>
-      {/* Hero / Page header */}
-      <div
-        style={{
-          borderBottom: `1px solid ${C.ink}0F`,
-          padding: "3rem 2rem 2rem",
-        }}
-      >
-        <div style={{ maxWidth: 1240, margin: "0 auto" }}>
-          <Link
-            href="/services"
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: "0.82rem",
-              color: `${C.ink}66`,
-              textDecoration: "none",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.3rem",
-              marginBottom: "1.25rem",
-            }}
-          >
-            {t("back")}
-          </Link>
-          <h1
-            style={{
-              fontFamily: "var(--serif)",
-              fontSize: "clamp(1.75rem,3.5vw,2.5rem)",
-              color: C.ink,
-              margin: 0,
-            }}
-          >
-            {t("title")}
-          </h1>
-        </div>
-      </div>
-
-      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 2rem" }}>
-        <div
-          style={{
-            maxWidth: 660,
-            margin: "0 auto",
-            paddingTop: "3rem",
-            paddingBottom: "6rem",
-          }}
-        >
-          <ProgressIndicator step={step} />
-
-          {step === 1 && (
-            <Step1
-              selectedService={selectedService}
-              setSelectedService={setSelectedService}
-              bookingState={bookingState}
-              onNext={() => setStep(2)}
-            />
-          )}
-          {step === 2 && (
-            <Step2
-              selectedService={selectedService}
-              selectedDate={selectedDate}
-              setSelectedDate={setSelectedDate}
-              selectedTime={selectedTime}
-              setSelectedTime={setSelectedTime}
-              bookingState={bookingState}
-              onNext={() => setStep(3)}
-              onBack={() => setStep(1)}
-            />
-          )}
-          {step === 3 && (
-            <Step3
-              selectedService={selectedService}
-              formData={formData}
-              setFormData={setFormData}
-              onNext={() => setStep(4)}
-              onBack={() => setStep(2)}
-            />
-          )}
-          {step === 4 && (
-            <Step4
-              selectedService={selectedService}
-              selectedDate={selectedDate}
-              selectedTime={selectedTime}
-              formData={formData}
-              bookingState={bookingState}
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-              onBack={() => setStep(3)}
-              goToStep={(n) => setStep(n as 1 | 2 | 3 | 4)}
-            />
-          )}
-        </div>
-      </div>
-    </div>
+    <BookingFlow
+      list={await bookableServices(locale as Locale)}
+      requested={typeof service === "string" ? service : ""}
+      formToken={issueFormToken("booking")}
+    />
   );
+}
+
+// Null when the API cannot answer, so the flow shows its own retry state
+// rather than an error page.
+async function bookableServices(locale: Locale) {
+  try {
+    return unwrap(
+      await publicApi().GET("/public/booking/services", {
+        params: { query: { locale } },
+      }),
+    );
+  } catch (error) {
+    const code = error instanceof ApiError ? error.code : "unavailable";
+    console.error(`bookable services: ${code}`);
+    return null;
+  }
 }

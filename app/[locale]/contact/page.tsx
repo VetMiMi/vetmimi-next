@@ -1,67 +1,36 @@
-"use client";
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { Btn } from "@/components/ui/Button";
+import type { Locale } from "@/i18n/routing";
+import { issueFormToken } from "@/lib/spam";
+import type { ServiceSlug } from "@/lib/services";
+import { ContactForm } from "./_components/ContactForm";
+import type { EnquiryId } from "./_components/enquiry";
 import "@/styles/contact.css";
 
-type ContactFormData = {
-  name: string;
-  email: string;
-  organisation: string;
-  enquiryType: string;
-  subject: string;
-  message: string;
-  privacy: boolean;
+// Enquiry-only services link here as /contact?service=<slug>; the form then
+// names the service and starts on the matching enquiry type.
+const SERVICE_ENQUIRY: Partial<Record<ServiceSlug, EnquiryId>> = {
+  "group-art-wellbeing": "workshop",
+  "workshops-programs": "workshop",
 };
 
-type SubmitState = null | "success" | "failed";
-
-// Stable ids are stored in the form; the visible labels come from messages.
-const ENQUIRY_TYPES = [
-  "collaboration",
-  "workshop",
-  "speaking",
-  "artOfWellness",
-  "media",
-  "organisation",
-  "general",
-] as const;
-
-export default function Contact() {
-  const t = useTranslations("contact");
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: "",
-    email: "",
-    organisation: "",
-    enquiryType: "",
-    subject: "",
-    message: "",
-    privacy: false,
-  });
-  const [submitState, setSubmitState] = useState<SubmitState>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const target = e.target;
-    const value =
-      target.type === "checkbox"
-        ? (target as HTMLInputElement).checked
-        : target.value;
-    setFormData((prev) => ({ ...prev, [target.name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // TODO: nothing is sent yet. This delay fakes a submission and the
-    // message is discarded. Wire up a Server Action or form service.
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setIsSubmitting(false);
-    setSubmitState("success");
-  };
+export default async function Contact({
+  params,
+  searchParams,
+}: PageProps<"/[locale]/contact">) {
+  const { locale } = await params;
+  const { service: slug } = await searchParams;
+  setRequestLocale(locale as Locale);
+  const t = await getTranslations("contact");
+  const tServices = await getTranslations("services");
+  const known = typeof slug === "string" && slug in SERVICE_ENQUIRY;
+  const service = known
+    ? {
+        slug: slug as ServiceSlug,
+        name: tServices(`items.${slug as ServiceSlug}.name`),
+        type: SERVICE_ENQUIRY[slug as ServiceSlug]!,
+      }
+    : null;
 
   return (
     <div className="contact-page">
@@ -86,164 +55,10 @@ export default function Contact() {
       {/* ── Form + details ──────────────────────────────── */}
       <section id="enquiry" className="contact-container contact-main">
         <div className="contact-card">
-          {submitState === "success" ? (
-            <div className="contact-success" role="status">
-              <h2>{t("success.title")}</h2>
-              <p>{t("success.text")}</p>
-            </div>
-          ) : (
-            <>
-              <h2>{t("form.title")}</h2>
-
-              {submitState === "failed" && (
-                <div
-                  className="contact-status contact-status--error"
-                  role="alert"
-                  style={{ marginBottom: 24 }}
-                >
-                  <p>{t("form.error.text")}</p>
-                  <button type="button" onClick={() => setSubmitState(null)}>
-                    {t("form.error.retry")}
-                  </button>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="contact-form">
-                <div className="contact-row">
-                  <div>
-                    <label htmlFor="name" className="contact-label">
-                      {t("form.name.label")} <span className="req">*</span>
-                    </label>
-                    <input
-                      id="name"
-                      name="name"
-                      type="text"
-                      required
-                      autoComplete="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className="contact-input"
-                      placeholder={t("form.name.placeholder")}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="contact-label">
-                      {t("form.email.label")} <span className="req">*</span>
-                    </label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      autoComplete="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      className="contact-input"
-                      placeholder="your@email.com"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="organisation" className="contact-label">
-                    {t("form.organisation.label")}{" "}
-                    <span className="opt">{t("form.optional")}</span>
-                  </label>
-                  <input
-                    id="organisation"
-                    name="organisation"
-                    type="text"
-                    autoComplete="organization"
-                    value={formData.organisation}
-                    onChange={handleChange}
-                    className="contact-input"
-                    placeholder={t("form.organisation.placeholder")}
-                  />
-                </div>
-
-                <fieldset className="contact-pills">
-                  <legend className="contact-label">
-                    {t("form.enquiryType.label")}
-                  </legend>
-                  <div className="contact-pill-list">
-                    {ENQUIRY_TYPES.map((type) => (
-                      <label key={type} className="contact-pill">
-                        <input
-                          type="radio"
-                          name="enquiryType"
-                          value={type}
-                          checked={formData.enquiryType === type}
-                          onChange={handleChange}
-                        />
-                        <span>{t(`form.enquiryType.options.${type}`)}</span>
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
-
-                <div>
-                  <label htmlFor="subject" className="contact-label">
-                    {t("form.subject.label")} <span className="req">*</span>
-                  </label>
-                  <input
-                    id="subject"
-                    name="subject"
-                    type="text"
-                    required
-                    value={formData.subject}
-                    onChange={handleChange}
-                    className="contact-input"
-                    placeholder={t("form.subject.placeholder")}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="contact-label">
-                    {t("form.message.label")} <span className="req">*</span>
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={7}
-                    value={formData.message}
-                    onChange={handleChange}
-                    className="contact-input"
-                    placeholder={t("form.message.placeholder")}
-                  />
-                </div>
-
-                <label htmlFor="privacy" className="contact-privacy">
-                  <input
-                    id="privacy"
-                    name="privacy"
-                    type="checkbox"
-                    required
-                    checked={formData.privacy}
-                    onChange={handleChange}
-                  />
-                  <span>
-                    {t.rich("form.privacy", {
-                      link: (chunks) => <Link href="/privacy">{chunks}</Link>,
-                    })}
-                    <span className="req"> *</span>
-                  </span>
-                </label>
-
-                <p className="contact-note">{t("form.note")}</p>
-
-                <div>
-                  <Btn
-                    type="submit"
-                    disabled={isSubmitting}
-                    style={{ minWidth: 180 }}
-                  >
-                    {isSubmitting ? t("form.sending") : t("form.submit")}
-                  </Btn>
-                </div>
-              </form>
-            </>
-          )}
+          <ContactForm
+            formToken={issueFormToken("contact")}
+            service={service}
+          />
         </div>
 
         <aside className="contact-details" aria-label={t("details.title")}>

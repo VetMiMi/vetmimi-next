@@ -1,45 +1,24 @@
-// Shared types, helpers and styles for the booking flow.
+// Shared types and formatters for the booking flow.
 import type { CSSProperties } from "react";
 import { useTranslations } from "next-intl";
+import type { components } from "@/lib/api/schema";
 import { C } from "@/lib/tokens";
-import { fromLocalDateKey } from "@/lib/localDate";
+import {
+  clockParts,
+  localDateKey,
+  weekdayIndex,
+  zoneAbbreviation,
+} from "@/lib/time";
 
-export type BookingState =
-  null | "success" | "failed" | "no-times" | "time-lost" | "unavailable";
+type Schemas = components["schemas"];
+export type BookableService = Schemas["PublicBookableService"];
+export type ServiceList = Schemas["PublicBookableServiceList"];
+export type Availability = Schemas["PublicAvailability"];
+export type Slot = Schemas["Slot"];
+export type Format = Schemas["Format"];
+export type Receipt = Schemas["AppointmentRequestReceipt"];
 
-// Stable ids kept in state; visible labels live in messages/<locale>/book.json.
-export const SERVICE_IDS = ["individual", "group"] as const;
-export type ServiceId = (typeof SERVICE_IDS)[number];
-
-// Online only for now. To offer in-person sessions, add "inPerson" here and
-// its labels in messages/<locale>/book.json.
-export const FORMAT_IDS = ["online"] as const;
-export type FormatId = (typeof FORMAT_IDS)[number];
-
-export const TIME_SLOTS = ["10am", "11am", "2pm", "3pm"] as const;
-export type TimeSlot = (typeof TIME_SLOTS)[number];
-
-export interface BookingFormData {
-  name: string;
-  email: string;
-  phone: string;
-  format: FormatId | "";
-  note: string;
-  privacyAck: boolean;
-  policyAck: boolean;
-}
-
-export function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate();
-}
-
-export function getFirstDayOfMonth(year: number, month: number) {
-  const day = new Date(year, month, 1).getDay();
-  return day === 0 ? 6 : day - 1;
-}
-
-// Indexed by Date.getMonth().
-export const MONTH_IDS = [
+const MONTH_IDS = [
   "january",
   "february",
   "march",
@@ -54,10 +33,7 @@ export const MONTH_IDS = [
   "december",
 ] as const;
 
-// Indexed by Date.getDay() (Sunday first).
-const WEEKDAY_IDS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"] as const;
-
-// Calendar column order (Monday first).
+// Calendar column order: Monday first, as lib/time.ts weekdayIndex.
 export const DAY_IDS = [
   "mon",
   "tue",
@@ -68,45 +44,60 @@ export const DAY_IDS = [
   "sun",
 ] as const;
 
-export function isAvailableDate(date: Date): boolean {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const fiveDaysFromNow = new Date(today);
-  fiveDaysFromNow.setDate(today.getDate() + 5);
-  const day = date.getDay();
-  return date >= fiveDaysFromNow && (day === 2 || day === 4);
-}
-
-// Returns a formatter for a selected date in the visitor's language, e.g.
-// "Tuesday 6 October 2026" or "အင်္ဂါနေ့၊ 2026 အောက်တိုဘာလ 6 ရက်". The word
-// order comes from messages so each language can set its own; digits stay
-// Western in both.
-export function useFormatDate() {
+// Words for practice dates and times in the visitor's language: "Tuesday 6
+// October 2026", "10:00 am", "AEDT". Names and word order come from
+// messages (Intl's Burmese uses Burmese digits and other month names);
+// the clock and zone always come from the practice timezone.
+export function usePracticeFormat(timeZone: string) {
   const t = useTranslations("book.calendar");
-  return (dateStr: string): string => {
-    if (!dateStr) return "";
-    const d = fromLocalDateKey(dateStr);
+  const date = (key: string) => {
+    const [year, month, day] = key.split("-").map(Number);
     return t("fullDate", {
-      weekday: t(`weekdays.${WEEKDAY_IDS[d.getDay()]}`),
-      day: String(d.getDate()),
-      month: t(`months.${MONTH_IDS[d.getMonth()]}`),
-      year: String(d.getFullYear()),
+      weekday: t(`weekdays.${DAY_IDS[weekdayIndex(key)]}`),
+      day: String(day),
+      month: t(`months.${MONTH_IDS[month - 1]}`),
+      year: String(year),
     });
+  };
+  const time = (instant: string) => t("clock", clockParts(instant, timeZone));
+  const zone = (instant: string) => zoneAbbreviation(instant, timeZone);
+  return {
+    date,
+    time,
+    zone,
+    month: (month: string) =>
+      t("monthYear", {
+        month: t(`months.${MONTH_IDS[Number(month.slice(5)) - 1]}`),
+        year: month.slice(0, 4),
+      }),
+    dateTime: (instant: string) =>
+      t("dateAtTime", {
+        date: date(localDateKey(instant, timeZone)),
+        time: time(instant),
+      }),
   };
 }
 
-// ── Input styles ─────────────────────────────────────────────────────────────
-
-export const inputStyle: CSSProperties = {
-  width: "100%",
-  padding: "0.75rem 1rem",
-  border: `1px solid ${C.ink}33`,
-  borderRadius: 4,
+// The quiet text button used for Back and Edit.
+export const textButton: CSSProperties = {
+  background: "none",
+  border: "none",
+  cursor: "pointer",
   fontFamily: "var(--sans)",
-  fontSize: "1rem",
-  marginBottom: "1rem",
-  backgroundColor: "#fff",
+  color: `${C.ink}88`,
+  fontSize: "0.9rem",
+  padding: 0,
+};
+
+export const stepTitle: CSSProperties = {
+  fontFamily: "var(--serif)",
+  fontSize: "clamp(1.6rem,3vw,2.2rem)",
   color: C.ink,
-  outline: "none",
-  boxSizing: "border-box",
+  marginBottom: "0.5rem",
+};
+
+export const stepIntro: CSSProperties = {
+  fontFamily: "var(--sans)",
+  color: `${C.ink}BB`,
+  marginBottom: "2rem",
 };

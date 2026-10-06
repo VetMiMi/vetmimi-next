@@ -1,5 +1,5 @@
 import type { components } from "@/lib/api/schema";
-import { addDays } from "@/lib/localDate";
+import { addDays } from "@/lib/time";
 import {
   formatClock,
   formatDay,

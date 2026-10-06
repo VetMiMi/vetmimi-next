@@ -17,7 +17,7 @@
     "gate": "scripts/gate.sh sh -c 'pnpm lint && pnpm format:check && pnpm typecheck && pnpm i18n:check && pnpm test:unit && NODE_OPTIONS=--max-old-space-size=2048 pnpm build'"
   },
   "vetmimiApi": {
-    "ref": "v0.1.0"
+    "ref": "v0.2.1"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

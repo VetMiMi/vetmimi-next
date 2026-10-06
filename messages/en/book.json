@@ -9,20 +9,18 @@
     "details": "Your Details",
     "review": "Review"
   },
-  "services": {
-    "individual": {
-      "title": "Individual Art Therapy",
-      "description": "One-to-one sessions tailored to your needs. Work at your own pace in a private, supportive space."
-    },
-    "group": {
-      "title": "Group Art & Wellbeing",
-      "description": "Small group creative sessions. Connect with others through shared creative experience."
-    }
-  },
   "calendar": {
     "monthYear": "{month} {year}",
     "fullDate": "{weekday} {day} {month} {year}",
     "dateAtTime": "{date} at {time}",
+    "clock": "{hour}:{minute} {period, select, am {am} other {pm}}",
+    "slot": "{time} {zone}",
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "outsideWindow": "{label}, outside the booking window",
+    "dayAvailable": "{date}, {count, plural, one {# time available} other {# times available}}",
+    "dayUnavailable": "{date}, unavailable",
+    "timezoneNote": "Times shown in Sydney time (AEST/AEDT)",
     "months": {
       "january": "January",
       "february": "February",
@@ -54,37 +52,54 @@
       "fri": "Fri",
       "sat": "Sat",
       "sun": "Sun"
-    },
-    "times": {
-      "10am": "10:00 am",
-      "11am": "11:00 am",
-      "2pm": "2:00 pm",
-      "3pm": "3:00 pm"
     }
   },
   "shared": {
     "back": "← Back",
     "optional": "(optional)",
-    "failed": "Something did not go through. Your message has not been sent yet. Your information is still here, so you can try again."
+    "retry": "Try again",
+    "contact": "Contact Daw Mi",
+    "services": "Explore services",
+    "minutes": "{count} minutes",
+    "honeypot": "Leave this field empty"
   },
+  "formats": {
+    "online": "Online",
+    "in_person": "In person"
+  },
+  "actions": {
+    "request": "Request appointment",
+    "book": "Book appointment"
+  },
+  "boundary": "<strong>This is not a crisis service.</strong> If you are in crisis, call <strong>000</strong> or Lifeline on <strong>13 11 14</strong>, or go to your nearest emergency department.",
   "step1": {
-    "unavailable": {
-      "title": "Service unavailable",
-      "text": "Booking is not currently available. Please <link>contact us</link> to discuss your options."
-    },
     "title": "Choose a service",
     "intro": "Select the type of session you would like to book.",
     "selected": "Selected",
-    "workshops": "<strong>Workshops & Programs</strong> are arranged by enquiry. <link>Contact us</link> to discuss your project.",
-    "continue": "Continue to Date & Time →"
+    "workshops": "<strong>Group Art & Wellbeing</strong> and <strong>Workshops & Programs</strong> are arranged by enquiry. <link>Contact us</link> to discuss your project.",
+    "continue": "Continue to Date & Time →",
+    "loadFailed": "We could not load the services right now.",
+    "unavailable": {
+      "badge": "Currently unavailable",
+      "title": "Service unavailable",
+      "service": "This service is not taking appointment requests at the moment.",
+      "paused": "Booking is not currently available. Please <link>contact us</link> to discuss your options."
+    }
   },
   "step2": {
     "title": "Choose a date and time",
-    "noTimes": "There are no available times for this period. Please try a different date.",
-    "timeLost": "That time is no longer available. Please choose another.",
+    "loading": "Loading available times…",
+    "loadFailed": "We could not load available times.",
+    "noTimes": "There are no available times showing right now.",
+    "nextMonth": "See next month",
+    "timeLost": "That time is no longer available. Please choose another time.",
+    "outsideWindow": "That time can no longer be booked online. Please choose another time.",
+    "alternatives": "Next available times",
+    "serviceChanged": "You changed the service, so please choose a time again.",
     "availableTimes": "Available times for {date}",
-    "timezone": "Times shown in Sydney time (AEST/AEDT)",
     "selection": "Your selection",
+    "selected": "You selected {date} at {time} ({zone}).",
+    "change": "Change date or time",
     "continue": "Continue to Your Details →"
   },
   "step3": {
@@ -107,42 +122,78 @@
     "note": {
       "label": "Short note",
       "help": "You are welcome to share anything that would help Daw Mi prepare. Please do not include private medical or detailed health information here.",
-      "placeholder": "Optional note…"
+      "placeholder": "Optional note…",
+      "count": "{count} of {max} characters"
     },
     "privacyAck": "I have read and agree to the <link>Privacy Policy</link>",
     "policyAck": "I have read and agree to the <link>Booking & Cancellation Policy</link>",
-    "continue": "Review your request →"
+    "continue": "Review your request →",
+    "errors": {
+      "summary": "Please check the highlighted fields.",
+      "name": "Please enter your name.",
+      "nameLong": "Please shorten your name to 120 characters or fewer.",
+      "email": "Please enter an email address like name@example.com.",
+      "phone": "Please use digits, spaces and + ( ) - only, 6 to 32 characters.",
+      "note": "Please shorten the note to 500 characters or fewer.",
+      "ack": "Please tick this box to continue.",
+      "privacyAck": "Please tick the Privacy Policy box to continue.",
+      "policyAck": "Please tick the Booking & Cancellation Policy box to continue."
+    }
   },
   "step4": {
     "title": "Review your request",
-    "intro": "Please check your details before submitting.",
+    "intro": "Please check the details before sending your request.",
     "rows": {
       "service": "Service",
       "dateTime": "Date & Time",
+      "fee": "Fee",
       "name": "Name",
       "email": "Email",
       "phone": "Phone",
       "format": "Format",
-      "note": "Note"
+      "note": "Note",
+      "acknowledgements": "Agreed"
     },
-    "formatValues": {
-      "online": "Online"
-    },
+    "serviceValue": "{name} · {duration}",
+    "dateTimeValue": "{dateTime}, Sydney time ({zone})",
+    "acknowledgements": "<privacy>Privacy Policy</privacy> and <policy>Booking & Cancellation Policy</policy>",
     "edit": "Edit",
     "notice": "<strong>Please note:</strong> This is a request, not a confirmed booking. Daw Mi will be in touch to confirm your appointment.",
+    "noticeInstant": "<strong>Please note:</strong> Your appointment is booked as soon as you send this. You will receive a confirmation email.",
     "submit": "Submit Appointment Request",
-    "submitting": "Submitting…"
+    "submitInstant": "Book appointment",
+    "submitting": "Sending your appointment request…",
+    "failed": {
+      "title": "Your request was not sent.",
+      "text": "No appointment request was created. Your details are still here, so you can try again.",
+      "changeTime": "Change time"
+    },
+    "rateLimited": "Too many attempts. Please wait a few minutes and try again.",
+    "rateLimitedFor": "Too many attempts. Please wait {minutes, plural, one {# minute} other {# minutes}} and try again."
   },
-  "success": {
-    "badge": "Pending",
-    "title": "Appointment request received.",
-    "text": "Thank you for reaching out. Your request has been received and is not yet confirmed. Daw Mi will be in touch within 2 business days to confirm your appointment.",
+  "result": {
+    "pending": {
+      "badge": "Pending",
+      "title": "Appointment request received",
+      "text": "Daw Mi will review your request and you will receive an email when it is confirmed."
+    },
+    "confirmed": {
+      "badge": "Confirmed",
+      "title": "Your appointment is confirmed.",
+      "text": "A confirmation email is on its way with the details and how to join."
+    },
+    "reference": "Your reference: {reference}",
     "next": {
       "title": "What happens next?",
-      "steps": {
+      "pending": {
         "review": "Daw Mi reviews your request.",
-        "email": "You receive a confirmation email.",
-        "confirmed": "Your appointment is confirmed."
+        "email": "You receive an email when it is confirmed.",
+        "join": "The email explains how to join your online session."
+      },
+      "confirmed": {
+        "email": "Check your email for the confirmation.",
+        "manage": "Use the link in the email if you need to change or cancel.",
+        "join": "Join your online session from the link at the appointment time."
       }
     },
     "home": "Return to home",

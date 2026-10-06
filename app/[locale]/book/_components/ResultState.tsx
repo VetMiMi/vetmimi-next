@@ -1,14 +1,38 @@
+import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { CheckCircle, HourglassMedium } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
-import { C } from "@/lib/tokens";
+import { AA, C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
+import { PetalOutline } from "@/components/art/Shapes";
+import { usePracticeFormat } from "./booking";
+import type { Receipt } from "./booking";
 
-// ── Success State ────────────────────────────────────────────────────────────
+const PENDING_STEPS = ["review", "email", "join"] as const;
+const CONFIRMED_STEPS = ["email", "manage", "join"] as const;
 
-const NEXT_STEPS = ["review", "email", "confirmed"] as const;
+// S01 Pending and S02 Confirmed: shown only after the API stored the
+// request, with the reference it returned (Requirements §4).
+export function ResultState({ receipt }: { receipt: Receipt }) {
+  const t = useTranslations("book");
+  const format = usePracticeFormat(receipt.timezone);
+  const status = receipt.status;
+  const Icon = status === "pending" ? HourglassMedium : CheckCircle;
+  const nextSteps =
+    status === "pending"
+      ? PENDING_STEPS.map((step) => t(`result.next.pending.${step}`))
+      : CONFIRMED_STEPS.map((step) => t(`result.next.confirmed.${step}`));
+  const heading = useRef<HTMLHeadingElement>(null);
+  useEffect(() => heading.current?.focus(), []);
+  const summary = [
+    receipt.service.name,
+    t("step4.dateTimeValue", {
+      dateTime: format.dateTime(receipt.startsAt),
+      zone: format.zone(receipt.startsAt),
+    }),
+    `${t("shared.minutes", { count: receipt.durationMinutes })} · ${t(`formats.${receipt.format}`)}`,
+  ];
 
-export function SuccessState() {
-  const t = useTranslations("book.success");
   return (
     <div
       style={{
@@ -21,12 +45,16 @@ export function SuccessState() {
       }}
     >
       <div style={{ maxWidth: 560, textAlign: "center" }}>
+        <PetalOutline size={56} style={{ margin: "0 auto 1.5rem" }} />
         <div
           style={{
-            display: "inline-block",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.4rem",
             padding: "0.4rem 1.25rem",
-            backgroundColor: `${C.ochre}30`,
-            color: C.ochre,
+            backgroundColor:
+              status === "pending" ? `${C.ochre}30` : `${C.indigo}1F`,
+            color: status === "pending" ? AA.goldText : C.indigo,
             borderRadius: 20,
             fontFamily: "var(--sans)",
             fontSize: "0.82rem",
@@ -36,11 +64,15 @@ export function SuccessState() {
             marginBottom: "2rem",
           }}
         >
-          {t("badge")}
+          <Icon size={16} weight="bold" aria-hidden />
+          {t(`result.${status}.badge`)}
         </div>
 
         <h1
+          ref={heading}
+          tabIndex={-1}
           style={{
+            outline: "none",
             fontFamily: "var(--serif)",
             fontSize: "clamp(2rem,4vw,2.8rem)",
             color: C.ink,
@@ -48,7 +80,7 @@ export function SuccessState() {
             lineHeight: 1.2,
           }}
         >
-          {t("title")}
+          {t(`result.${status}.title`)}
         </h1>
 
         <p
@@ -57,11 +89,36 @@ export function SuccessState() {
             color: `${C.ink}BB`,
             lineHeight: 1.78,
             fontSize: "1rem",
-            marginBottom: "2.5rem",
+            marginBottom: "2rem",
           }}
         >
-          {t("text")}
+          {t(`result.${status}.text`)}
         </p>
+
+        <div
+          style={{
+            backgroundColor: "#fff",
+            border: `1px solid ${C.ink}18`,
+            borderRadius: 10,
+            padding: "1.25rem 1.5rem",
+            textAlign: "left",
+            marginBottom: "1.5rem",
+            fontFamily: "var(--sans)",
+            lineHeight: 1.7,
+            overflowWrap: "anywhere",
+          }}
+        >
+          <div
+            style={{ fontWeight: 700, color: C.ink, marginBottom: "0.4rem" }}
+          >
+            {t("result.reference", { reference: receipt.reference })}
+          </div>
+          {summary.map((line) => (
+            <div key={line} style={{ color: `${C.ink}CC` }}>
+              {line}
+            </div>
+          ))}
+        </div>
 
         <div
           style={{
@@ -69,7 +126,7 @@ export function SuccessState() {
             borderRadius: 10,
             padding: "1.75rem 2rem",
             textAlign: "left",
-            marginBottom: "3rem",
+            marginBottom: "1.5rem",
           }}
         >
           <div
@@ -81,9 +138,9 @@ export function SuccessState() {
               fontSize: "0.9rem",
             }}
           >
-            {t("next.title")}
+            {t("result.next.title")}
           </div>
-          {NEXT_STEPS.map((step, i) => (
+          {nextSteps.map((step, i) => (
             <div
               key={step}
               style={{
@@ -119,11 +176,26 @@ export function SuccessState() {
                   paddingTop: "0.15rem",
                 }}
               >
-                {t(`next.steps.${step}`)}
+                {step}
               </span>
             </div>
           ))}
         </div>
+
+        <p
+          style={{
+            fontFamily: "var(--sans)",
+            fontSize: "0.82rem",
+            color: AA.muted,
+            lineHeight: 1.6,
+            textAlign: "left",
+            marginBottom: "2.5rem",
+          }}
+        >
+          {t.rich("boundary", {
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
+        </p>
 
         <div
           style={{
@@ -133,7 +205,7 @@ export function SuccessState() {
             flexWrap: "wrap",
           }}
         >
-          <Btn href="/">{t("home")}</Btn>
+          <Btn href="/">{t("result.home")}</Btn>
           <Link
             href="/contact"
             style={{
@@ -146,7 +218,7 @@ export function SuccessState() {
               gap: "0.3rem",
             }}
           >
-            {t("question")}
+            {t("result.question")}
           </Link>
         </div>
       </div>

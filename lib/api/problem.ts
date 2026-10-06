@@ -72,3 +72,29 @@ export function unwrap<T>(result: {
   }
   return result.data as T;
 }
+
+// The Problem a route handler sends the browser: status, code and field
+// errors, never the API's `detail`. A 5xx becomes 503 `unavailable`, so the
+// page shows its own "try again" state, never a Next error page.
+export function problemResponse(error: ApiError): Response {
+  const status = error.status >= 500 ? 503 : error.status;
+  const code = error.status >= 500 ? "unavailable" : error.code;
+  const headers = new Headers({
+    "Content-Type": "application/problem+json",
+    "Cache-Control": "no-store",
+  });
+  if (error.retryAfterSeconds !== undefined) {
+    headers.set("Retry-After", String(error.retryAfterSeconds));
+  }
+  const body = {
+    type: `urn:vetmimi:problem:${code}`,
+    title: code,
+    status,
+    code,
+    errors: Object.entries(error.fieldErrors).map(([field, message]) => ({
+      field,
+      message,
+    })),
+  };
+  return new Response(JSON.stringify(body), { status, headers });
+}

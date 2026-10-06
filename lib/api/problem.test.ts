@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { ApiError, unwrap } from "./problem.ts";
+import { ApiError, problemResponse, unwrap } from "./problem.ts";
 
 const problem = (status: number, body: object, headers?: HeadersInit) =>
   new Response(JSON.stringify(body), { status, headers });
@@ -58,5 +58,28 @@ describe("unwrap", () => {
         error.status === 401 &&
         error.code === "unauthenticated",
     );
+  });
+});
+
+describe("problemResponse", () => {
+  it("passes the code, fields and Retry-After on, never the detail", async () => {
+    const error = ApiError.fromResponse(
+      problem(429, {}, { "Retry-After": "60" }),
+      { code: "rate_limited", detail: "secret internals" },
+    );
+    const response = problemResponse(error);
+    assert.equal(response.status, 429);
+    assert.equal(response.headers.get("Retry-After"), "60");
+    const text = await response.text();
+    assert.ok(!text.includes("secret"));
+    assert.equal(JSON.parse(text).code, "rate_limited");
+  });
+
+  it("turns any server failure into 503 unavailable", async () => {
+    const response = problemResponse(
+      ApiError.fromResponse(problem(500, {}), { code: "internal_error" }),
+    );
+    assert.equal(response.status, 503);
+    assert.equal((await response.json()).code, "unavailable");
   });
 });

@@ -9,7 +9,7 @@ import { EmptyState } from "@/components/admin/EmptyState";
 import { NoAccess } from "@/components/admin/NoAccess";
 import { adminCall, requireRole } from "@/lib/admin/session";
 import { unwrap } from "@/lib/api/problem";
-import { addDays } from "@/lib/localDate";
+import { addDays } from "@/lib/time";
 import { todayIn } from "@/lib/zonedTime";
 import { deleteBlock } from "../actions";
 import { AvailabilityHeader } from "../AvailabilityHeader";

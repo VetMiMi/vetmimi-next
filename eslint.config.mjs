@@ -32,7 +32,7 @@ const eslintConfig = defineConfig([
   {
     // Admin is English only and has no locale provider, so it uses Next's
     // own Link and navigation, and must not use the locale-aware versions.
-    files: ["app/admin/**", "components/admin/**"],
+    files: ["app/admin/**", "components/admin/**", "lib/admin/**"],
     rules: {
       "no-restricted-imports": [
         "error",

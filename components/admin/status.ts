@@ -1,6 +1,5 @@
 import {
   Archive,
-  ArrowUUpLeft,
   CalendarCheck,
   CalendarDots,
   CalendarX,
@@ -8,11 +7,11 @@ import {
   Clock,
   EnvelopeSimple,
   Eye,
-  EyeSlash,
-  FileDashed,
   Globe,
+  HandPointing,
   HourglassLow,
   HourglassMedium,
+  Lightbulb,
   NotePencil,
   PaperPlaneTilt,
   PauseCircle,
@@ -34,8 +33,8 @@ type Statuses = {
   appointment: Schemas["AppointmentStatus"];
   communication: Schemas["CommunicationStatus"];
   room: Schemas["VideoRoomSummary"]["state"];
+  post: Schemas["PostStatus"];
   publication: Schemas["PublicationStatus"];
-  approval: Schemas["ApprovalStatus"];
   service: Schemas["ServiceState"];
   enquiry: Schemas["ContactEnquiry"]["status"];
 };
@@ -57,6 +56,7 @@ const olive = { tint: "bg-olive/12", text: "text-ink" };
 const paper = { tint: "bg-paper", text: "text-muted" };
 const red = { tint: "bg-red/12", text: "text-action" };
 const butter = { tint: "bg-butter/12", text: "text-gold-text" };
+const blue = { tint: "bg-blue/12", text: "text-blue-text" };
 
 // Brief §3, as data: the admin badge and the public booking pages read the
 // same rows, so the two can never disagree.
@@ -97,30 +97,25 @@ export const statuses: {
     in_session: { label: "In session", ...indigo, icon: VideoCamera },
     ended: { label: "Ended", ...paper, icon: PhoneDisconnect },
   },
-  publication: {
+  // Posts (ADR-009): the workflow, then each channel's publishing.
+  post: {
+    idea: { label: "Idea", ...paper, icon: Lightbulb },
     draft: { label: "Draft", ...paper, icon: NotePencil },
-    review: { label: "In review", ...butter, icon: Eye },
-    scheduled: {
-      label: "Scheduled",
-      tint: "bg-blue/12",
-      text: "text-blue-text",
-      icon: CalendarDots,
-    },
+    in_review: { label: "In review", ...butter, icon: Eye },
+    approved: { label: "Approved", ...indigo, icon: CheckCircle },
+    scheduled: { label: "Scheduled", ...blue, icon: CalendarDots },
+    publishing: { label: "Publishing", ...ochre, icon: HourglassMedium },
     published: { label: "Published", ...olive, icon: Globe },
-    unpublished: { label: "Unpublished", ...paper, icon: EyeSlash },
     archived: { label: "Archived", ...paper, icon: Archive },
   },
-  approval: {
-    not_reviewed: { label: "Not reviewed", ...paper, icon: FileDashed },
-    needs_review: { label: "Needs review", ...butter, icon: WarningCircle },
-    changes_requested: {
-      label: "Changes requested",
-      ...red,
-      icon: ArrowUUpLeft,
-    },
-    approved: { label: "Approved", ...indigo, icon: CheckCircle },
+  publication: {
+    pending: { label: "Waiting", ...paper, icon: Clock },
+    publishing: { label: "Publishing", ...ochre, icon: HourglassMedium },
+    published: { label: "Published", ...olive, icon: Globe },
+    failed: { label: "Failed", ...red, icon: WarningCircle },
+    manual: { label: "Posted by hand", ...olive, icon: HandPointing },
   },
-  // Booking state of a service (#75), in the publication tints.
+  // Booking state of a service (#75), in the post tints.
   service: {
     active: { label: "Active", ...indigo, icon: CheckCircle },
     paused: { label: "Paused", ...ochre, icon: PauseCircle },

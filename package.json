@@ -17,7 +17,7 @@
     "gate": "scripts/gate.sh sh -c 'pnpm lint && pnpm format:check && pnpm typecheck && pnpm i18n:check && pnpm test:unit && NODE_OPTIONS=--max-old-space-size=2048 pnpm build'"
   },
   "vetmimiApi": {
-    "ref": "v0.2.2"
+    "ref": "v0.3.0"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
@@ -25,7 +25,8 @@
     "next-intl": "^4.14.7",
     "openapi-fetch": "0.17.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",

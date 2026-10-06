@@ -186,22 +186,26 @@ will no longer take place." Rescheduled is a history event, not a badge.
 "Delivered should only be used if the chosen provider can genuinely confirm
 delivery." Do not add a Delivered badge until it can.
 
-### Publication and approval (ADR-008)
+### Posts and channel publishing (ADR-009)
 
-| Status                       | Label             | Tint     | Text      | Icon            |
-| ---------------------------- | ----------------- | -------- | --------- | --------------- |
-| draft                        | Draft             | `paper`  | `#625d64` | `NotePencil`    |
-| review                       | In review         | `butter` | `#79602e` | `Eye`           |
-| scheduled                    | Scheduled         | `blue`   | `#416879` | `CalendarDots`  |
-| published                    | Published         | `olive`  | `ink`     | `Globe`         |
-| unpublished                  | Unpublished       | `paper`  | `#625d64` | `EyeSlash`      |
-| archived                     | Archived          | `paper`  | `#625d64` | `Archive`       |
-| approval `not_reviewed`      | Not reviewed      | `paper`  | `#625d64` | `FileDashed`    |
-| approval `needs_review`      | Needs review      | `butter` | `#79602e` | `WarningCircle` |
-| approval `changes_requested` | Changes requested | `red`    | `#ab4347` | `ArrowUUpLeft`  |
-| approval `approved`          | Approved          | `indigo` | `indigo`  | `CheckCircle`   |
+| Status                   | Label          | Tint     | Text      | Icon              |
+| ------------------------ | -------------- | -------- | --------- | ----------------- |
+| post `idea`              | Idea           | `paper`  | `#625d64` | `Lightbulb`       |
+| post `draft`             | Draft          | `paper`  | `#625d64` | `NotePencil`      |
+| post `in_review`         | In review      | `butter` | `#79602e` | `Eye`             |
+| post `approved`          | Approved       | `indigo` | `indigo`  | `CheckCircle`     |
+| post `scheduled`         | Scheduled      | `blue`   | `#416879` | `CalendarDots`    |
+| post `publishing`        | Publishing     | `ochre`  | `#79602e` | `HourglassMedium` |
+| post `published`         | Published      | `olive`  | `ink`     | `Globe`           |
+| post `archived`          | Archived       | `paper`  | `#625d64` | `Archive`         |
+| publication `pending`    | Waiting        | `paper`  | `#625d64` | `Clock`           |
+| publication `publishing` | Publishing     | `ochre`  | `#79602e` | `HourglassMedium` |
+| publication `published`  | Published      | `olive`  | `ink`     | `Globe`           |
+| publication `failed`     | Failed         | `red`    | `#ab4347` | `WarningCircle`   |
+| publication `manual`     | Posted by hand | `olive`  | `ink`     | `HandPointing`    |
 
-Scheduled badges carry the time ("Scheduled · 12 Oct, 9:00 am").
+Scheduled badges carry the time ("Scheduled · 12 Oct, 9:00 am"). A
+channel's badge names the channel first ("Instagram · Failed").
 
 ### Service booking state (#75)
 
@@ -418,7 +422,7 @@ Props are sketches; match the patterns in `components/ui/Button.tsx`.
 | `DateField`                 | `label; value: string /* YYYY-MM-DD */; min?; max?`                                               | Native `type="date"`; dates are Sydney calendar dates, never `toISOString()`.                                                                                                                                                                                                                                                                                                                          |
 | `TimeRangeField`            | `label; start; end; onChange; error?`                                                             | Two `type="time"` inputs with "to" between; rejects end ≤ start inline. Used for weekly periods ("Tuesday 10:00 AM–1:00 PM, 2:00 PM–5:00 PM"). Side by side in a column 320px or wider, stacked in a narrower one.                                                                                                                                                                                     |
 | `ErrorSummary`              | `title; errors: {name, message}[]`                                                                | The summary in §7 Forms: the `.contact-status--error` box (`bg-red/7`, `border-red/27`, radius 14px, padding 20px 24px, 0.92rem) with `#ab4347` text and `role="alert"`. Focus moves to it when it appears (a new `key` per submit); each message links to its field and focuses it. A client component only for the focus.                                                                            |
-| `StatusBadge`               | `kind: "appointment" \| "communication" \| "room" \| "publication" \| "approval"; status`         | Tables in §3 are its source; label and icon always rendered.                                                                                                                                                                                                                                                                                                                                           |
+| `StatusBadge`               | `kind: "appointment" \| "communication" \| "room" \| "post" \| "publication"; status`             | Tables in §3 are its source; label and icon always rendered.                                                                                                                                                                                                                                                                                                                                           |
 | `Card`                      | `as?; children; padding?`                                                                         | `#fffcf8` or white, `#e9e0da` border, radius 20px, padding `clamp(24px, 4vw, 44px)`.                                                                                                                                                                                                                                                                                                                   |
 | `DataTable` / `StackedList` | `columns: {key, label, render}[]; rows; rowHref`                                                  | One component that renders a table ≥768px and cards below; same column config.                                                                                                                                                                                                                                                                                                                         |
 | `Tabs`                      | `items: {id, label, count?}[]; active`                                                            | Link-based (URL holds the state) using the `.ed-filters` pill style, `aria-current`. Border `#8a8389` (the public `#c6bec6` is under 3:1).                                                                                                                                                                                                                                                             |

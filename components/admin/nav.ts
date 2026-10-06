@@ -22,7 +22,7 @@ export type NavItem = {
 
 // The one navigation config (brief §7 Shell). Booking items are for
 // booking_admin only, so a content editor never sees appointment data
-// (Booking UX §8). Pages not built yet show a "coming soon" state.
+// (Booking UX §8).
 export const nav: NavItem[] = [
   { href: "/admin", label: "Dashboard", icon: SquaresFour, roles: [] },
   {

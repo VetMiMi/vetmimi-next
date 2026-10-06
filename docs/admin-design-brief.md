@@ -203,6 +203,14 @@ delivery." Do not add a Delivered badge until it can.
 
 Scheduled badges carry the time ("Scheduled · 12 Oct, 9:00 am").
 
+### Service booking state (#75)
+
+| Status     | Label    | Tint     | Text      | Icon          |
+| ---------- | -------- | -------- | --------- | ------------- |
+| `active`   | Active   | `indigo` | `indigo`  | `CheckCircle` |
+| `paused`   | Paused   | `ochre`  | `#79602e` | `PauseCircle` |
+| `archived` | Archived | `paper`  | `#625d64` | `Archive`     |
+
 ## 4. Typography
 
 Three families from `app/fonts.ts`, self-hosted by `next/font`, exposed as

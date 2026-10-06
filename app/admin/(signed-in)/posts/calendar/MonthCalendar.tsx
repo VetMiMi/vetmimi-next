@@ -46,7 +46,7 @@ export function MonthCalendar({
               {week.map((date, i) => (
                 <td
                   key={date ?? `pad-${i}`}
-                  className="h-28 border border-divider p-2 align-top data-[pad]:bg-paper/60"
+                  className="h-28 border border-divider p-2 bg-raised align-top data-[pad]:bg-paper/60"
                   data-pad={date ? undefined : ""}
                 >
                   {date && (
@@ -69,7 +69,7 @@ export function MonthCalendar({
       >
         {[...days].map(([date, posts]) => (
           <li key={date}>
-            <h3 className="mb-3 font-body text-[0.75rem] font-semibold tracking-[0.1em] text-muted uppercase">
+            <h3 className="mb-3 font-body! text-[0.75rem] leading-normal! font-semibold! tracking-[0.1em] text-muted uppercase">
               {longDay(date)}
               {date === today && " · Today"}
             </h3>

@@ -66,6 +66,7 @@ export function PostFields({
           <Select
             label="Stage"
             name="status"
+            required
             options={[
               { value: "idea", label: "Idea" },
               { value: "draft", label: "Draft" },

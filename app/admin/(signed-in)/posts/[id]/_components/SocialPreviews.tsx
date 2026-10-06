@@ -104,7 +104,7 @@ function Actions({ items }: { items: [typeof Heart, string][] }) {
 }
 
 const frame =
-  "max-w-[500px] overflow-hidden rounded-inner border border-card-border bg-white text-[0.9rem] leading-[1.5] text-ink";
+  "max-w-[440px] overflow-hidden rounded-inner border border-card-border bg-white text-[0.9rem] leading-[1.5] text-ink";
 
 function FacebookPreview({ text, link, images }: PreviewProps) {
   return (

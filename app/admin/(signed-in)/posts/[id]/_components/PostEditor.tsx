@@ -157,12 +157,27 @@ export function PostEditor({ post: loaded }: { post: Post }) {
         </Card>
       </div>
 
+      {/* On a phone the Save card sits below the whole form, so unsaved
+          changes also get a save button above the tab bar. */}
+      {dirty && editable && (
+        <div className="fixed inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 px-5 min-[900px]:hidden">
+          <Button
+            type="submit"
+            size="page"
+            busy={pending}
+            className="w-full shadow-lifted"
+          >
+            {pending ? "Saving…" : "Save changes"}
+          </Button>
+        </div>
+      )}
+
       <aside
         aria-label="Saving and workflow"
         className="flex flex-col gap-6 min-[900px]:sticky min-[900px]:top-[104px]"
       >
         <Card as="section">
-          <h2 className={sectionTitle}>Save</h2>
+          <h2 className={sectionTitle}>{editable ? "Save" : "Status"}</h2>
           <div className="flex flex-col items-start gap-4">
             <StatusBadge
               kind="post"
@@ -186,40 +201,46 @@ export function PostEditor({ post: loaded }: { post: Post }) {
                 )}
               </div>
             )}
-            <p className="text-[0.88rem] text-muted" aria-live="polite">
-              {dirty ? "You have unsaved changes." : "All changes saved."}
-            </p>
-            <Button
-              type="submit"
-              size="page"
-              busy={pending}
-              disabled={!editable || !dirty}
-              className="w-full"
-            >
-              {pending ? "Saving…" : "Save changes"}
-            </Button>
+            {editable && (
+              <>
+                <p className="text-[0.88rem] text-muted" aria-live="polite">
+                  {dirty ? "You have unsaved changes." : "All changes saved."}
+                </p>
+                <Button
+                  type="submit"
+                  size="page"
+                  busy={pending}
+                  disabled={!dirty}
+                  className="w-full"
+                >
+                  {pending ? "Saving…" : "Save changes"}
+                </Button>
+              </>
+            )}
           </div>
         </Card>
 
-        <Card as="section">
-          <h2 className={sectionTitle}>Before approval</h2>
-          {problems.length === 0 ? (
-            <p className="flex items-start gap-2 text-[0.92rem] text-ink">
-              <CheckCircle
-                aria-hidden="true"
-                size={20}
-                className="mt-0.5 shrink-0 text-olive"
-              />
-              Every channel that is on is ready for review.
-            </p>
-          ) : (
-            <ul className="flex list-disc flex-col gap-2 pl-5 text-[0.92rem] leading-[1.6] text-muted">
-              {problems.map((problem) => (
-                <li key={problem}>{problem}</li>
-              ))}
-            </ul>
-          )}
-        </Card>
+        {editable && (
+          <Card as="section">
+            <h2 className={sectionTitle}>Before approval</h2>
+            {problems.length === 0 ? (
+              <p className="flex items-start gap-2 text-[0.92rem] text-ink">
+                <CheckCircle
+                  aria-hidden="true"
+                  size={20}
+                  className="mt-0.5 shrink-0 text-olive"
+                />
+                Every channel that is on is ready for review.
+              </p>
+            ) : (
+              <ul className="flex list-disc flex-col gap-2 pl-5 text-[0.92rem] leading-[1.6] text-muted">
+                {problems.map((problem) => (
+                  <li key={problem}>{problem}</li>
+                ))}
+              </ul>
+            )}
+          </Card>
+        )}
 
         {post.publications.length > 0 && (
           <Card as="section">

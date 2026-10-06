@@ -124,11 +124,11 @@ export function SocialTabs({
               aria-controls={`panel-${channel}`}
               tabIndex={channel === active ? 0 : -1}
               onClick={() => setActive(channel)}
-              className="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-pill border border-input-border px-4 py-2.5 text-[0.82rem] leading-tight text-indigo transition-colors duration-150 hover:bg-indigo/12 motion-reduce:transition-none aria-selected:border-indigo aria-selected:bg-indigo aria-selected:text-white"
+              className="inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-pill border border-input-border px-3.5 py-2.5 text-[0.82rem] leading-tight text-indigo transition-colors duration-150 hover:bg-indigo/12 motion-reduce:transition-none aria-selected:border-indigo aria-selected:bg-indigo aria-selected:text-white"
             >
               <Icon aria-hidden="true" size={18} />
               {channelNames[channel]}
-              <span className="text-[0.75rem] font-semibold opacity-80">
+              <span className="text-[0.75rem] font-semibold opacity-80 max-sm:sr-only">
                 {draft[channel].enabled ? "On" : "Off"}
               </span>
             </button>
@@ -188,7 +188,7 @@ export function SocialTabs({
           rule={imageRules[active]}
         />
         <div>
-          <h3 className="mb-3 font-body text-[0.75rem] font-semibold tracking-[0.1em] text-muted uppercase">
+          <h3 className="mb-3 font-body! text-[0.75rem] leading-normal! font-semibold! tracking-[0.1em] text-muted uppercase">
             Preview
           </h3>
           <Preview

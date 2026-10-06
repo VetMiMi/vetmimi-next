@@ -115,6 +115,7 @@ export default async function PostsPage({
         <Button
           href="/admin/posts/calendar"
           variant="quiet"
+          className="self-start md:self-auto"
           icon={<CalendarBlank aria-hidden="true" size={18} />}
         >
           Calendar

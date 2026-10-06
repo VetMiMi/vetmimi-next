@@ -1,6 +1,7 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { apiConfigured } from "@/lib/api/client";
 import { issueFormToken } from "@/lib/spam";
 import type { ServiceSlug } from "@/lib/services";
 import { ContactForm } from "./_components/ContactForm";
@@ -55,10 +56,20 @@ export default async function Contact({
       {/* ── Form + details ──────────────────────────────── */}
       <section id="enquiry" className="contact-container contact-main">
         <div className="contact-card">
-          <ContactForm
-            formToken={issueFormToken("contact")}
-            service={service}
-          />
+          {apiConfigured() ? (
+            <ContactForm
+              formToken={issueFormToken("contact")}
+              service={service}
+            />
+          ) : (
+            <p className="contact-not-connected">
+              {t.rich("form.notConnected", {
+                email: (chunks) => (
+                  <a href={`mailto:${t("details.email.value")}`}>{chunks}</a>
+                ),
+              })}
+            </p>
+          )}
         </div>
 
         <aside className="contact-details" aria-label={t("details.title")}>

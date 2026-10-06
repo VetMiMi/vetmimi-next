@@ -20,6 +20,12 @@ function requireEnv(name: "API_URL" | "API_SERVICE_KEY"): string {
   return value;
 }
 
+// False until the Go API is deployed and its address and key are set. Pages
+// that depend on it show a "not available yet" state instead of an error.
+export function apiConfigured(): boolean {
+  return Boolean(process.env.API_URL && process.env.API_SERVICE_KEY);
+}
+
 function apiClient(auth: Record<string, string>, { tags }: CallOptions) {
   const cache: RequestInit = tags ? { next: { tags } } : { cache: "no-store" };
   return createClient<paths>({

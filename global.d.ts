@@ -8,6 +8,7 @@ import type services from "./messages/en/services.json";
 import type stories from "./messages/en/stories.json";
 import type contact from "./messages/en/contact.json";
 import type book from "./messages/en/book.json";
+import type manage from "./messages/en/manage.json";
 import type legal from "./messages/en/legal.json";
 
 // English is the source of truth: a key used in code but missing from the
@@ -25,6 +26,7 @@ declare module "next-intl" {
       stories: typeof stories;
       contact: typeof contact;
       book: typeof book;
+      manage: typeof manage;
       legal: typeof legal;
     };
   }

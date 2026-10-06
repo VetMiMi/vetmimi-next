@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { AA, C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import { PetalOutline } from "@/components/art/Shapes";
-import { usePracticeFormat } from "./booking";
+import { usePracticeFormat } from "@/components/booking/practiceFormat";
 import type { Receipt } from "./booking";
 
 const PENDING_STEPS = ["review", "email", "join"] as const;

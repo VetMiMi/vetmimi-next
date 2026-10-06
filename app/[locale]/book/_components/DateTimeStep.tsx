@@ -8,8 +8,12 @@ import { SlotPicker } from "@/components/booking/SlotPicker";
 import { addMonths, lastDayOfMonth, localDateKey } from "@/lib/time";
 import { todayIn } from "@/lib/zonedTime";
 import { Notice, NoticeActions, noticeLink } from "./Notice";
-import { useAvailability } from "./useAvailability";
-import { DAY_IDS, stepTitle, textButton, usePracticeFormat } from "./booking";
+import {
+  DAY_IDS,
+  usePracticeFormat,
+} from "@/components/booking/practiceFormat";
+import { useAvailability } from "@/components/booking/useAvailability";
+import { stepTitle, textButton } from "./booking";
 import type { BookableService, Slot } from "./booking";
 
 // Why the visitor is back on this step: the chosen time was taken (S05) or

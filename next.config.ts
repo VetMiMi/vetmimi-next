@@ -20,6 +20,15 @@ const nextConfig: NextConfig = {
           { key: "X-Frame-Options", value: "DENY" },
         ],
       },
+      // Management links carry a token as good as a password: never
+      // indexed, and never passed on to another page as a Referer.
+      ...["/manage/:path*", "/my/manage/:path*"].map((source) => ({
+        source,
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+        ],
+      })),
     ];
   },
   async redirects() {

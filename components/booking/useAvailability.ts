@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { lastDayOfMonth } from "@/lib/time";
-import type { Availability } from "./booking";
+import type { components } from "@/lib/api/schema";
+
+type Availability = components["schemas"]["PublicAvailability"];
 
 type Result = { data: Availability } | { error: true };
 

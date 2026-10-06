@@ -51,9 +51,7 @@ export function WeeklySchedule({ rules }: { rules: Rule[] }) {
               key={day}
               className="grid gap-4 border-b border-divider py-6 md:grid-cols-[160px_minmax(0,1fr)] md:gap-8"
             >
-              <h2 className="font-body text-[1rem] font-semibold md:pt-9">
-                {day}
-              </h2>
+              <h2 className="text-[1.2rem]">{day}</h2>
               <div className="flex flex-col gap-5">
                 {saved.length + dayDrafts.length === 0 && (
                   <p className="text-[0.95rem] text-muted">Closed</p>

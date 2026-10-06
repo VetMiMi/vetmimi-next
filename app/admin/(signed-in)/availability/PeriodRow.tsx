@@ -92,6 +92,7 @@ export function PeriodRow({
           <TimeRangeField
             label={`${day} period ${number}`}
             name={name}
+            required
             start={times.start}
             end={times.end}
             error={error}

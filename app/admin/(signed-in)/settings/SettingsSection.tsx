@@ -10,6 +10,7 @@ import { Notice } from "@/components/admin/Notice";
 import { RadioCards } from "@/components/admin/RadioCards";
 import { Select } from "@/components/admin/Select";
 import { useToast } from "@/components/admin/Toast";
+import { fieldId } from "@/lib/fieldIds";
 import { updateSettings } from "./actions";
 import {
   impactOf,
@@ -105,7 +106,11 @@ export function SettingsSection({
     ) as SettingsPatch;
     setErrors(found);
     setFailure(undefined);
-    if (Object.keys(found).length > 0) return;
+    const firstInvalid = Object.keys(found)[0];
+    if (firstInvalid) {
+      document.getElementById(fieldId(firstInvalid))?.focus();
+      return;
+    }
     const impact = fields
       .map((field) =>
         impactOf(

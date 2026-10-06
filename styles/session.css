@@ -1,0 +1,10 @@
+/* The video stage (brief §9). Coral is 3.37:1 on #33334d, so focus rings
+   on the stage are canvas; unlayered, like the global ring it replaces. */
+.session-stage :focus-visible {
+  outline: 2px solid var(--canvas);
+  outline-offset: 3px;
+}
+/* The leave dialog sits on the stage but is a white card again. */
+.session-stage dialog :focus-visible {
+  outline-color: var(--coral);
+}

@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "title": "Your session | VetMiMi"
+  },
+  "eyebrow": "Your online session",
+  "contact": "Contact Daw Mi",
+  "privacy": "The session is private between you and Daw Mi. Nothing is recorded.",
+  "load": {
+    "title": "We could not load your session.",
+    "text": "Please try again.",
+    "retry": "Try again",
+    "rateLimited": "Too many attempts. Please wait a minute, then try again.",
+    "notConnected": "Online sessions open here soon. In the meantime, please use the joining details in your email or contact Daw Mi."
+  },
+  "tooEarly": {
+    "title": "Your session opens soon",
+    "text": "Your session starts at {time} (Sydney time). This page opens 15 minutes before.",
+    "when": "{date} · {zone}",
+    "opensInMinutes": "Opens in {minutes, plural, one {# min} other {# min}}",
+    "opensInSeconds": "Opens in {seconds} s",
+    "opening": "Opening…"
+  },
+  "expired": {
+    "title": "This session has ended.",
+    "text": "The time for this session has passed. If you would like to talk with Daw Mi, you are welcome to get in touch."
+  },
+  "ended": {
+    "title": "The session has ended.",
+    "text": "Thank you for joining. Take a moment for yourself before you go back to your day."
+  },
+  "left": {
+    "title": "You have left the session.",
+    "text": "You can rejoin from this page while the session is open.",
+    "rejoin": "Rejoin"
+  },
+  "replaced": {
+    "title": "This tab has been disconnected.",
+    "text": "You joined this session from another tab or device. This one has been disconnected.",
+    "rejoin": "Use this tab instead"
+  },
+  "failed": {
+    "connectTitle": "We could not connect you.",
+    "reconnectTitle": "We could not reconnect.",
+    "text": "Please check your internet connection and try again. If it keeps happening, contact Daw Mi.",
+    "retry": "Try again"
+  },
+  "check": {
+    "title": "Check your camera and microphone",
+    "when": "{service} · {dateTime} {zone}",
+    "intro": "Make sure you can see yourself and that the bar moves when you speak. Then join; Daw Mi will be with you shortly.",
+    "preview": "Your camera preview",
+    "requesting": "Waiting for permission…",
+    "join": "Join session",
+    "noCamera": "No camera found",
+    "camera": "Camera",
+    "microphone": "Microphone",
+    "level": "Microphone level",
+    "tryAgain": "Try again",
+    "problems": {
+      "denied": "We need your camera and microphone. Allow them in your browser's address bar, then choose Try again.",
+      "deniedHelp": "On an iPhone or iPad, go to Settings › Safari › Camera and Microphone. In Chrome, select the camera icon in the address bar.",
+      "inUse": "Another app is using your camera. Close it and try again.",
+      "insecure": "Video sessions need a secure (https) connection.",
+      "noDevice": "We could not find a microphone. Connect one, then try again.",
+      "unknown": "We could not start your camera or microphone. Please try again."
+    }
+  },
+  "stage": {
+    "connecting": "Connecting…",
+    "reconnecting": "Reconnecting…",
+    "waiting": "Waiting for Daw Mi to join.",
+    "otherLeft": "Daw Mi has left. Waiting for her to rejoin.",
+    "inSession": "In session",
+    "pillWaiting": "Waiting",
+    "pillInSession": "In session",
+    "weak": "Your connection is weak. Video may pause; audio will try to continue.",
+    "remote": "Daw Mi's video",
+    "self": "Your video",
+    "tapAudio": "Tap to start audio",
+    "controls": "Call controls",
+    "mute": "Mute",
+    "cameraOff": "Stop video",
+    "leave": "Leave"
+  },
+  "leave": {
+    "title": "Leave the session?",
+    "text": "You can rejoin from the same link while the session is open.",
+    "stay": "Stay",
+    "confirm": "Leave"
+  }
+}

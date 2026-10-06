@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Button } from "@/components/admin/Button";
 import { Card } from "@/components/admin/Card";
 import { NoAccess } from "@/components/admin/NoAccess";
 import { PageHeader } from "@/components/admin/PageHeader";
@@ -24,7 +25,7 @@ const when = (instant: string) =>
   `${whenLong(instant, PRACTICE_TIMEZONE)} ${zoneAbbreviation(instant, PRACTICE_TIMEZONE)}`;
 
 const linkClass =
-  "underline underline-offset-4 break-all transition-colors duration-150 hover:text-indigo motion-reduce:transition-none";
+  "underline underline-offset-4 break-words transition-colors duration-150 hover:text-indigo motion-reduce:transition-none";
 
 // One enquiry (#77), the page Daw Mi's "new enquiry" email links to: who
 // wrote, about what, the message as written, and Mark as handled.
@@ -91,20 +92,25 @@ export default async function EnquiryPage({
         <StatusBadge kind="enquiry" status={e.status} />
       </div>
 
-      <div className="flex max-w-[760px] flex-col gap-6">
+      {/* The contact layout: the message, then who sent it beside it from
+          900px. */}
+      <div className="grid items-start gap-[clamp(28px,4vw,56px)] min-[900px]:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <Card as="section">
           <h2 className="mb-4 text-[1.35rem]">Message</h2>
           <blockquote className="rounded-notice bg-paper px-6 py-5 text-[0.98rem] leading-[1.7] break-words whitespace-pre-line">
             {e.message}
           </blockquote>
-          <div className="mt-6">
+          <div className="mt-6 flex flex-wrap items-start gap-x-5 gap-y-3">
             {e.status === "handled" ? (
-              <p className="text-[0.95rem] text-muted">
+              <p className="py-2.5 text-[0.95rem] text-muted">
                 Handled on {when(e.handledAt ?? e.createdAt)}.
               </p>
             ) : (
               <MarkHandledButton id={e.id} />
             )}
+            <Button href={replyHref(e)} variant="secondary">
+              Reply by email
+            </Button>
           </div>
         </Card>
 
@@ -114,9 +120,9 @@ export default async function EnquiryPage({
             {facts.map((fact) => (
               <div
                 key={fact.label}
-                className="grid grid-cols-[120px_minmax(0,1fr)] gap-4 border-b border-divider py-3 last:border-b-0 last:pb-0"
+                className="flex flex-col gap-0.5 border-b border-divider py-3 last:border-b-0 last:pb-0"
               >
-                <dt className="text-muted">{fact.label}</dt>
+                <dt className="text-[0.82rem] text-muted">{fact.label}</dt>
                 <dd className="break-words">{fact.value}</dd>
               </div>
             ))}

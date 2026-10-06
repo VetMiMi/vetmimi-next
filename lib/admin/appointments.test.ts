@@ -121,7 +121,11 @@ describe("times and history in words", () => {
       "Rescheduled from Tue 6 Oct 10:00 am to Thu 8 Oct 2:00 pm by Daw Mi",
     );
     assert.equal(
-      line({ kind: "cancelled", actor: "visitor", detail: { late: true } }),
+      line({
+        kind: "cancelled",
+        actor: "visitor",
+        detail: { by: "client", late_cancellation: true },
+      }),
       "Cancelled by visitor (late)",
     );
     assert.equal(line({ kind: "expired", actor: "system" }), "Expired");
@@ -133,7 +137,7 @@ describe("times and history in words", () => {
       kind: "reschedule_requested",
       actor: "visitor",
       createdAt: "2026-10-02T00:00:00Z",
-      detail: { preferredTimes: ["2026-10-08T03:00:00Z", "junk"] },
+      detail: { preferred: ["2026-10-08T03:00:00Z", "junk"] },
     });
     assert.deepEqual(requestedTimes([event({}), asked]), [
       "2026-10-08T03:00:00Z",

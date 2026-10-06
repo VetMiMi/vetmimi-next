@@ -20,7 +20,10 @@ export const isManagementToken = (token: string) => TOKEN.test(token);
 
 // The words a screen needs for a failed management-link call. The token is
 // as good as a password, so logs carry the status and code only.
-export function manageProblem(error: unknown, what: string): ManageProblem {
+export function manageProblem(
+  error: unknown,
+  what: string,
+): Exclude<ManageProblem, "not_connected"> {
   const failure = error instanceof ApiError ? error : ApiError.unavailable();
   if (failure.status === 404) return "not_found";
   if (failure.status === 429) return "rate_limited";

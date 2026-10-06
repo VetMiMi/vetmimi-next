@@ -1,9 +1,7 @@
 "use client";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { CheckCircle, X } from "@phosphor-icons/react";
 import { Link, useRouter } from "@/i18n/navigation";
-import { Btn } from "@/components/ui/Button";
 import { Button } from "@/components/admin/Button";
 import { controlClass, FieldError } from "@/components/admin/Field";
 import { Notice } from "@/components/admin/Notice";
@@ -18,6 +16,8 @@ import type { ManagedAppointment } from "@/lib/api/manage";
 import { addMonths, lastDayOfMonth, localDateKey } from "@/lib/time";
 import { requestReschedule } from "../../actions";
 import { linkClass } from "../../_components/manageClasses";
+import { ChosenTimes } from "./ChosenTimes";
+import { RequestSent } from "./RequestSent";
 
 const MAX_TIMES = 3;
 const MAX_MESSAGE = 500;
@@ -48,13 +48,10 @@ export function RescheduleRequestForm({
   const [problem, setProblem] = useState<Problem>();
   const [sent, setSent] = useState<string[]>();
   const [pending, startTransition] = useTransition();
-  const sentTitle = useRef<HTMLHeadingElement>(null);
   const { loading, error, data, retry } = useAvailability(
     a.service.slug,
     month,
   );
-
-  useEffect(() => sentTitle.current?.focus(), [sent]);
 
   const counts = new Map(data?.days.map((d) => [d.date, d.slots.length]));
   const daySlots = data?.days.find((d) => d.date === day)?.slots ?? [];
@@ -96,34 +93,7 @@ export function RescheduleRequestForm({
   }
 
   if (sent) {
-    return (
-      <section className="flex flex-col gap-4 rounded-card bg-paper px-[clamp(20px,4vw,36px)] py-[clamp(20px,4vw,32px)]">
-        <h2
-          ref={sentTitle}
-          tabIndex={-1}
-          className="flex items-center gap-2 text-[1.5rem] outline-none"
-        >
-          <CheckCircle aria-hidden="true" size={26} className="text-indigo" />
-          {t("reschedule.sent.title")}
-        </h2>
-        {sent.length > 0 && (
-          <div>
-            <p className="mb-1 text-[0.88rem] font-semibold">
-              {t("reschedule.sent.times")}
-            </p>
-            <ul className="list-disc pl-5 text-[0.95rem]">
-              {sent.map((s) => (
-                <li key={s}>{label(s)}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-        <p className="text-[0.95rem]">{t("reschedule.sent.text")}</p>
-        <div>
-          <Btn href={`/manage/${token}`}>{t("reschedule.sent.back")}</Btn>
-        </div>
-      </section>
-    );
+    return <RequestSent token={token} times={sent.map(label)} />;
   }
 
   return (
@@ -218,39 +188,11 @@ export function RescheduleRequestForm({
         )}
       </section>
 
-      <section aria-labelledby="chosen-title" aria-live="polite">
-        <h3 id="chosen-title" className="mb-2 text-[1.1rem]">
-          {t("reschedule.chosen")}{" "}
-          <span className="font-body text-[0.85rem] text-muted">
-            {t("reschedule.chosenCount", { count: chosen.length })}
-          </span>
-        </h3>
-        {chosen.length > 0 && (
-          <ul className="flex flex-wrap gap-2">
-            {chosen.map((s) => (
-              <li
-                key={s}
-                className="inline-flex items-center gap-1 rounded-pill bg-paper py-1 pr-1 pl-4 text-[0.88rem]"
-              >
-                {label(s)}
-                <button
-                  type="button"
-                  aria-label={t("reschedule.remove", { time: label(s) })}
-                  onClick={() => toggle(s)}
-                  className="inline-flex size-11 cursor-pointer items-center justify-center rounded-full text-muted hover:bg-ink/8 hover:text-ink"
-                >
-                  <X aria-hidden="true" size={16} />
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-        {chosen.length >= MAX_TIMES && (
-          <p className="mt-2 text-[0.85rem] text-muted">
-            {t("reschedule.full")}
-          </p>
-        )}
-      </section>
+      <ChosenTimes
+        times={chosen.map((s) => ({ startsAt: s, label: label(s) }))}
+        full={chosen.length >= MAX_TIMES}
+        onRemove={toggle}
+      />
 
       <div>
         <label

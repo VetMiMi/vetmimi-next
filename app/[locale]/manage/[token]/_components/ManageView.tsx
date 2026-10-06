@@ -77,9 +77,13 @@ export function ManageView({
       )}
 
       {canAct && (
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="grid gap-3 sm:flex sm:flex-wrap sm:items-center">
           {a.canRequestReschedule && (
-            <Btn href={`/manage/${token}/reschedule`} variant="secondary">
+            <Btn
+              href={`/manage/${token}/reschedule`}
+              variant="secondary"
+              className="text-center"
+            >
               {t("actions.reschedule")}
             </Btn>
           )}

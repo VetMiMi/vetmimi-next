@@ -17,6 +17,21 @@ pnpm gate   # lint, format, types, messages, unit tests and build
 `pnpm gate` runs heavy work behind a machine-wide lock, so wait if it says
 it is waiting.
 
+## The API and its secrets
+
+Next calls the Go API server-side only (ADR-002), with two variables listed
+in [`.env.example`](.env.example). For local work copy it to `.env.local`:
+
+- `API_URL`: where the API answers. Locally `http://localhost:8080` from
+  `make dev` in `../vetmimi-api`; in production the API host's own address
+  (the hostname behind the API's `PUBLIC_API_URL`).
+- `API_SERVICE_KEY`: the API's `SERVICE_KEY`, sent as `X-Service-Key` on
+  public routes and sign-in.
+
+Production and preview values live in the Vercel project's environment
+variables, set by the owner; agents do not change Vercel settings. A build
+needs neither value: a call fails with a clear error when one is missing.
+
 ## Tests
 
 `pnpm gate` runs the unit tests in `lib/*.test.ts`. The end-to-end checks in

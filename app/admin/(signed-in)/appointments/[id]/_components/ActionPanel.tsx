@@ -184,6 +184,11 @@ export function ActionPanel({
           Completed and no-show can be marked once the session has started.
         </p>
       )}
+      {allowed.length === 0 && !a.allowedActions.includes("reschedule") && (
+        <p className="text-[0.95rem] text-muted">
+          No status changes are possible now. The appointment stays in history.
+        </p>
+      )}
       <Button
         href={`mailto:${a.visitorEmail}`}
         variant="quiet"

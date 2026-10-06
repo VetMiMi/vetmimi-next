@@ -67,7 +67,7 @@ export function PrivateNote({
         </div>
       )}
       <Textarea
-        label="Private note"
+        label="Note for yourself"
         name="adminNote"
         help="Private — never sent to the visitor."
         maxLength={MAX}

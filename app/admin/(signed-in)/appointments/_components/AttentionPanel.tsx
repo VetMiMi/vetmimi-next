@@ -44,11 +44,13 @@ export function AttentionPanel({
           <li key={`${item.kind}-${item.appointmentId}`}>
             <Link
               href={`/admin/appointments/${item.appointmentId}`}
-              className="inline-flex min-h-11 flex-wrap items-center gap-x-2 py-1 text-[0.92rem] text-ink underline underline-offset-4 transition-colors duration-150 hover:text-indigo motion-reduce:transition-none"
+              className="group flex min-h-11 flex-col justify-center py-1.5 text-[0.92rem] text-ink no-underline"
             >
-              <span className="font-semibold">{reasons[item.kind]}</span>
-              <span>
-                · {item.reference}
+              <span className="font-semibold underline underline-offset-4 transition-colors duration-150 group-hover:text-indigo motion-reduce:transition-none">
+                {reasons[item.kind]}
+              </span>
+              <span className="text-[0.88rem] text-muted">
+                {item.reference}
                 {item.startsAt && ` · ${whenShort(item.startsAt, timezone)}`}
               </span>
             </Link>

@@ -82,6 +82,7 @@ export default async function AppointmentPage({
             />
           </Card>
           <Card as="section">
+            <h2 className={cardTitle}>Private note</h2>
             <PrivateNote id={a.id} version={a.version} note={a.adminNote} />
           </Card>
           <Card as="section">

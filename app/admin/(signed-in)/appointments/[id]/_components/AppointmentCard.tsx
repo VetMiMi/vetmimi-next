@@ -6,7 +6,7 @@ import {
   whenShort,
 } from "@/lib/admin/appointments";
 import type { components } from "@/lib/api/schema";
-import { zoneAbbreviation, zonedParts } from "@/lib/zonedTime";
+import { formatClock, zoneAbbreviation, zonedParts } from "@/lib/zonedTime";
 import { Facts, cardTitle } from "./Facts";
 
 type Detail = components["schemas"]["AppointmentDetail"];
@@ -21,7 +21,7 @@ export function AppointmentCard({ appointment: a }: { appointment: Detail }) {
     ["Date", longDay(zonedParts(a.startsAt, tz).date)],
     [
       "Time",
-      `${clockWithZone(a.startsAt, tz)} to ${clockWithZone(a.endsAt, tz)}`,
+      `${formatClock(zonedParts(a.startsAt, tz).time)} to ${clockWithZone(a.endsAt, tz)}`,
     ],
     ["Duration", `${a.durationMinutes} minutes`],
     ["Format", formatNames[a.format]],

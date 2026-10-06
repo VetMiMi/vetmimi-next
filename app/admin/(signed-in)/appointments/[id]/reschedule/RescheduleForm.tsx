@@ -86,14 +86,18 @@ export function RescheduleForm({
       )}
       {asked.length > 0 && (
         <div className="rounded-notice bg-paper px-6 py-5 text-[0.92rem]">
-          <p className="font-semibold">The visitor asked to move to:</p>
-          <ul className="mt-1 list-disc pl-5">
-            {asked.map((t) => (
-              <li key={t}>{full(t)}</li>
-            ))}
-          </ul>
+          <p className="mb-3 font-semibold">The visitor asked to move to</p>
+          <SlotPicker
+            slots={asked.map((t) => ({ startsAt: t, endsAt: t }))}
+            selected={slot?.startsAt}
+            label="Times the visitor asked for"
+            time={(t) => whenLong(t, tz)}
+            name={full}
+            onSelect={setSlot}
+          />
           <p className="mt-2 text-muted">
-            Pick one of these below if it is still free.
+            If one of these is no longer free, the move is refused and nothing
+            changes.
           </p>
         </div>
       )}
@@ -166,9 +170,11 @@ export function RescheduleForm({
       >
         {slot && (
           <div className="mb-4 flex flex-col gap-2">
-            <p className="text-muted line-through">{current}</p>
+            <p>
+              From <span className="line-through">{current}</span>
+            </p>
             <p className="text-[1.2rem] leading-snug font-semibold text-ink">
-              {full(slot.startsAt)}
+              To {full(slot.startsAt)}
             </p>
           </div>
         )}

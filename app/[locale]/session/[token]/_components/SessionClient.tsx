@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useCallback, useEffect, useState } from "react";
+import { useMessages, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/admin/Button";
+import { Dialog } from "@/components/admin/Dialog";
 import { usePracticeFormat } from "@/components/booking/practiceFormat";
 import { Btn } from "@/components/ui/Button";
+import { DeviceCheck } from "@/components/session/DeviceCheck";
 import { CardActions, SessionCard } from "@/components/session/SessionCard";
 import { SessionStage } from "@/components/session/SessionStage";
 import {
@@ -12,9 +14,9 @@ import {
   useTrackToggle,
 } from "@/components/session/useLocalMedia";
 import type { PublicSession } from "@/lib/api/session";
+import { fetchTicket } from "@/lib/session/call";
 import { isTerminal } from "@/lib/session/machine";
 import { useSession } from "@/lib/session/useSession";
-import { DeviceCheck } from "./DeviceCheck";
 
 const isLive = (stream: MediaStream) =>
   stream.getTracks().every((track) => track.readyState === "live");
@@ -30,14 +32,18 @@ export function SessionClient({
   session: PublicSession;
 }) {
   const t = useTranslations("session");
+  // The shared call components take their words as props (#83).
+  const words = useMessages().session;
   const format = usePracticeFormat(s.timezone);
   const router = useRouter();
   const { local, request, stop } = useLocalMedia();
   const stream = local.status === "ready" ? local.stream : null;
   const mic = useTrackToggle(stream, "audio");
   const camera = useTrackToggle(stream, "video");
-  const call = useSession(token);
+  const getTicket = useCallback(() => fetchTicket(token), [token]);
+  const call = useSession(getTicket);
   const [onStage, setOnStage] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const { phase, refresh } = call.state;
 
   // The room ended or the link stopped working: read the state again, so
@@ -65,6 +71,7 @@ export function SessionClient({
   if (onStage && stream && !isTerminal(phase)) {
     return (
       <SessionStage
+        text={words.stage}
         phase={phase}
         otherLeft={call.state.otherLeft}
         weak={call.state.weak}
@@ -72,8 +79,22 @@ export function SessionClient({
         remote={call.remote}
         mic={mic}
         camera={camera}
-        onLeave={call.leave}
-      />
+        onLeave={() => setLeaving(true)}
+      >
+        <Dialog
+          open={leaving}
+          onClose={() => setLeaving(false)}
+          title={t("leave.title")}
+          cancelLabel={t("leave.stay")}
+          confirmLabel={t("leave.confirm")}
+          onConfirm={() => {
+            setLeaving(false);
+            call.leave();
+          }}
+        >
+          <p>{t("leave.text")}</p>
+        </Dialog>
+      </SessionStage>
     );
   }
 
@@ -126,6 +147,7 @@ export function SessionClient({
       </p>
       <p>{t("check.intro")}</p>
       <DeviceCheck
+        text={words.check}
         local={local}
         request={request}
         mic={mic}

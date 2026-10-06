@@ -15,17 +15,21 @@ import {
 
 type RoomTicket = components["schemas"]["RoomTicket"];
 
-type TicketResult =
+export type TicketResult =
   { ok: true; ticket: RoomTicket } | { ok: false; code: string };
+
+// Refusals that end the attempt for good: the link or room is gone, the
+// session is not open, or this account may not join (lib/session/ticket.ts).
+const FINAL_REFUSALS = new Set(["not_found", "not_ready", "forbidden"]);
 
 const WEAK_VIDEO_BPS = 300_000;
 // A "disconnected" peer connection often recovers by itself; restart ICE
 // only if it has not after this long.
 const ICE_GRACE_MS = 4_000;
 
-// A fresh ticket from this app's route handler (tickets live 5 minutes, so
-// every connection attempt asks for a new one).
-async function fetchTicket(token: string): Promise<TicketResult> {
+// The visitor's fresh ticket from this app's route handler (tickets live 5
+// minutes, so every connection attempt asks for a new one).
+export async function fetchTicket(token: string): Promise<TicketResult> {
   try {
     const response = await fetch(`/api/session/${token}/ticket`, {
       method: "POST",
@@ -40,7 +44,7 @@ async function fetchTicket(token: string): Promise<TicketResult> {
   }
 }
 
-// One person's side of a video session (#81, #82): the ticket, the
+// One person's side of a video session (#81, #82, #83): the ticket, the
 // signalling socket, the peer connection, reconnecting with backoff and the
 // weak-link check. It reports facts as CallEvents; lib/session/machine.ts
 // turns them into what the stage shows. Nothing here writes to the console:
@@ -59,18 +63,18 @@ export class SessionCall {
   private weak: WeakState = { weak: false, calmSince: null };
   private stopped = false;
 
-  private readonly token: string;
+  private readonly getTicket: () => Promise<TicketResult>;
   private readonly stream: MediaStream;
   private readonly dispatch: (event: CallEvent) => void;
   private readonly onRemote: (stream: MediaStream | null) => void;
 
   constructor(options: {
-    token: string;
+    getTicket: () => Promise<TicketResult>;
     stream: MediaStream;
     dispatch: (event: CallEvent) => void;
     onRemote: (stream: MediaStream | null) => void;
   }) {
-    this.token = options.token;
+    this.getTicket = options.getTicket;
     this.stream = options.stream;
     this.dispatch = options.dispatch;
     this.onRemote = options.onRemote;
@@ -103,12 +107,11 @@ export class SessionCall {
 
   private async connect() {
     if (this.stopped) return;
-    const result = await fetchTicket(this.token);
+    const result = await this.getTicket();
     if (this.stopped) return;
     if (!result.ok) {
-      // The link is gone or the session is no longer open: no retry; the
-      // page reads the state again to say which.
-      if (result.code === "not_found" || result.code === "not_ready") {
+      // No retry; the page reads the state again to say why.
+      if (FINAL_REFUSALS.has(result.code)) {
         this.dispatch({ type: "ticket-refused" });
         this.stop();
       } else {

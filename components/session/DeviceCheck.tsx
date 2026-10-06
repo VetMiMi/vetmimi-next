@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useId, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
 import {
   Microphone,
   MicrophoneSlash,
@@ -9,16 +8,14 @@ import {
 } from "@phosphor-icons/react";
 import { Button } from "@/components/admin/Button";
 import { Select } from "@/components/admin/Select";
-import type {
-  LocalMedia,
-  TrackToggle,
-} from "@/components/session/useLocalMedia";
 import {
   listDevices,
   type DeviceChoice,
   type Devices,
 } from "@/lib/session/media";
 import { MicLevel } from "./MicLevel";
+import type { CheckText } from "./text";
+import type { LocalMedia, TrackToggle } from "./useLocalMedia";
 
 const PROBLEM_KEYS = {
   denied: "denied",
@@ -31,20 +28,22 @@ const PROBLEM_KEYS = {
 // Brief §9 Check devices (#80): a mirrored camera preview (muted, so no
 // sound plays by itself), a microphone level, the two switches, device
 // pickers when there is a choice, and Join. Every failure says what to do.
+// The visitor and Daw Mi (#83) both use it, each with their own words.
 export function DeviceCheck({
+  text,
   local,
   request,
   mic,
   camera,
   onJoin,
 }: {
+  text: CheckText;
   local: LocalMedia;
   request: (choice?: DeviceChoice) => Promise<void>;
   mic: TrackToggle;
   camera: TrackToggle;
   onJoin: (stream: MediaStream) => void;
 }) {
-  const t = useTranslations("session.check");
   const video = useRef<HTMLVideoElement>(null);
   const noCameraId = useId();
   const [devices, setDevices] = useState<Devices>({ cameras: [], mics: [] });
@@ -82,7 +81,7 @@ export function DeviceCheck({
           muted
           autoPlay
           playsInline
-          aria-label={t("preview")}
+          aria-label={text.preview}
           className={`h-full w-full -scale-x-100 object-cover ${showVideo ? "" : "invisible"}`}
         />
         {!showVideo && (
@@ -97,9 +96,9 @@ export function DeviceCheck({
           role="alert"
           className="flex flex-col gap-3 rounded-notice border border-red/27 bg-red/7 px-5 py-4 text-[0.95rem] leading-[1.65] text-action"
         >
-          <p>{t(`problems.${PROBLEM_KEYS[local.problem]}`)}</p>
+          <p>{text.problems[PROBLEM_KEYS[local.problem]]}</p>
           {local.problem === "denied" && (
-            <p className="text-ink/80">{t("problems.deniedHelp")}</p>
+            <p className="text-ink/80">{text.problems.deniedHelp}</p>
           )}
           {local.problem !== "insecure" && (
             <Button
@@ -107,7 +106,7 @@ export function DeviceCheck({
               className="self-start"
               onClick={() => void request()}
             >
-              {t("tryAgain")}
+              {text.tryAgain}
             </Button>
           )}
         </div>
@@ -115,7 +114,7 @@ export function DeviceCheck({
 
       {stream && (
         <div className="flex flex-col gap-4">
-          <MicLevel stream={stream} on={mic.on} label={t("level")} />
+          <MicLevel stream={stream} on={mic.on} label={text.level} />
           <div className="flex flex-wrap gap-3">
             <button
               type="button"
@@ -128,7 +127,7 @@ export function DeviceCheck({
               ) : (
                 <MicrophoneSlash aria-hidden="true" size={20} />
               )}
-              {t("microphone")}
+              {text.microphone}
             </button>
             <div>
               <button
@@ -144,11 +143,11 @@ export function DeviceCheck({
                 ) : (
                   <VideoCameraSlash aria-hidden="true" size={20} />
                 )}
-                {t("camera")}
+                {text.camera}
               </button>
               {!camera.available && (
                 <p id={noCameraId} className="mt-1 text-[0.85rem] text-muted">
-                  {t("noCamera")}
+                  {text.noCamera}
                 </p>
               )}
             </div>
@@ -157,25 +156,25 @@ export function DeviceCheck({
             <div className="grid gap-4 sm:grid-cols-2">
               {devices.cameras.length > 1 && (
                 <Select
-                  label={t("camera")}
+                  label={text.camera}
                   name="camera"
                   value={current("video")}
                   onChange={(e) => choose({ cameraId: e.target.value })}
                   options={devices.cameras.map((d, i) => ({
                     value: d.deviceId,
-                    label: d.label || `${t("camera")} ${i + 1}`,
+                    label: d.label || `${text.camera} ${i + 1}`,
                   }))}
                 />
               )}
               {devices.mics.length > 1 && (
                 <Select
-                  label={t("microphone")}
+                  label={text.microphone}
                   name="microphone"
                   value={current("audio")}
                   onChange={(e) => choose({ micId: e.target.value })}
                   options={devices.mics.map((d, i) => ({
                     value: d.deviceId,
-                    label: d.label || `${t("microphone")} ${i + 1}`,
+                    label: d.label || `${text.microphone} ${i + 1}`,
                   }))}
                 />
               )}
@@ -191,7 +190,7 @@ export function DeviceCheck({
         busy={local.status === "requesting"}
         onClick={() => stream && onJoin(stream)}
       >
-        {local.status === "requesting" ? t("requesting") : t("join")}
+        {local.status === "requesting" ? text.requesting : text.join}
       </Button>
     </>
   );

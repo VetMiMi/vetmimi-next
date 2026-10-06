@@ -4,14 +4,14 @@ import { NoAccess } from "@/components/admin/NoAccess";
 import { Notice } from "@/components/admin/Notice";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import { failedNotifications, whenShort } from "@/lib/admin/appointments";
+import { failedNotifications } from "@/lib/admin/appointments";
 import { requireRole } from "@/lib/admin/session";
-import { zoneAbbreviation } from "@/lib/zonedTime";
 import { ActionPanel } from "./_components/ActionPanel";
 import { AppointmentCard } from "./_components/AppointmentCard";
 import { cardTitle } from "./_components/Facts";
 import { CommunicationsList, HistoryList } from "./_components/HistoryList";
 import { PrivateNote } from "./_components/PrivateNote";
+import { VideoSessionPanel } from "./_components/VideoSessionPanel";
 import { VisitorCard } from "./_components/VisitorCard";
 import { loadAppointment } from "./loadAppointment";
 
@@ -31,7 +31,7 @@ export default async function AppointmentPage({
 
   const serviceName = a.service.name.en ?? a.service.slug;
   const failures = failedNotifications(a.communications);
-  const room = a.videoRoom;
+  const now = new Date().toISOString();
 
   return (
     <>
@@ -73,43 +73,44 @@ export default async function AppointmentPage({
           aria-label="Actions"
           className="contents min-[900px]:sticky min-[900px]:top-[104px] min-[900px]:col-start-2 min-[900px]:row-span-2 min-[900px]:row-start-1 min-[900px]:flex min-[900px]:flex-col min-[900px]:gap-6"
         >
+          {/* A VetMiMi room comes first: Start session is then the page's
+              primary action (#83). */}
+          {a.videoRoom && (
+            <Card as="section" className="order-1">
+              <h2 className={cardTitle}>Video session</h2>
+              <VideoSessionPanel
+                appointment={{ ...a, videoRoom: a.videoRoom }}
+                now={now}
+              />
+            </Card>
+          )}
           <Card as="section" className="order-1">
             <h2 className={cardTitle}>Actions</h2>
-            <ActionPanel
-              appointment={a}
-              serviceName={serviceName}
-              now={new Date().toISOString()}
-            />
+            <ActionPanel appointment={a} serviceName={serviceName} now={now} />
           </Card>
           <Card as="section" className="order-3">
             <h2 className={cardTitle}>Private note</h2>
             <PrivateNote id={a.id} version={a.version} note={a.adminNote} />
           </Card>
-          <Card as="section" className="order-3">
-            <h2 className={cardTitle}>Video session</h2>
-            {room ? (
-              <div className="flex flex-col items-start gap-2 text-[0.95rem]">
-                <StatusBadge kind="room" status={room.state} />
-                <p className="text-muted">
-                  Opens {whenShort(room.opensAt, a.timezone)}{" "}
-                  {zoneAbbreviation(room.opensAt, a.timezone)}
+          {!a.videoRoom && (
+            <Card as="section" className="order-3">
+              <h2 className={cardTitle}>Video session</h2>
+              {a.meetingLink ? (
+                <a
+                  href={a.meetingLink}
+                  className="text-[0.95rem] break-all underline underline-offset-4 hover:text-indigo"
+                >
+                  {a.meetingLink}
+                </a>
+              ) : (
+                <p className="text-[0.95rem] text-muted">
+                  {a.format === "online"
+                    ? "The video room is set up when the appointment is confirmed."
+                    : "In person: no video session."}
                 </p>
-              </div>
-            ) : a.meetingLink ? (
-              <a
-                href={a.meetingLink}
-                className="text-[0.95rem] break-all underline underline-offset-4 hover:text-indigo"
-              >
-                {a.meetingLink}
-              </a>
-            ) : (
-              <p className="text-[0.95rem] text-muted">
-                {a.format === "online"
-                  ? "The video room is set up when the appointment is confirmed."
-                  : "In person: no video session."}
-              </p>
-            )}
-          </Card>
+              )}
+            </Card>
+          )}
         </aside>
 
         <div className="order-2 flex flex-col gap-6 min-[900px]:col-start-1 min-[900px]:row-start-2">

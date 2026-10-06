@@ -1,13 +1,15 @@
 "use client";
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
-import { SessionCall } from "./call";
+import { SessionCall, type TicketResult } from "./call";
 import { callReducer, initialCall, isTerminal } from "./machine";
 import { RECONNECT_LIMIT_MS } from "./reconnect";
 
-// The call as React state for the stage (#81, #82). `join` starts a call
-// with the given tracks; `leave` ends it on purpose. A call that has been
-// connecting or reconnecting for 90 s in a row gives up as `failed`.
-export function useSession(token: string) {
+// The call as React state for the stage (#81, #82, #83). `getTicket` asks
+// for a fresh room ticket (the visitor's or Daw Mi's) and must be stable;
+// `join` starts a call with the given tracks; `leave` ends it on purpose. A
+// call that has been connecting or reconnecting for 90 s in a row gives up
+// as `failed`.
+export function useSession(getTicket: () => Promise<TicketResult>) {
   const [state, dispatch] = useReducer(callReducer, initialCall);
   const [remote, setRemote] = useState<MediaStream | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -16,7 +18,7 @@ export function useSession(token: string) {
   useEffect(() => {
     if (!stream) return;
     const current = new SessionCall({
-      token,
+      getTicket,
       stream,
       dispatch,
       onRemote: setRemote,
@@ -32,7 +34,7 @@ export function useSession(token: string) {
       current.leave();
       call.current = null;
     };
-  }, [token, stream]);
+  }, [getTicket, stream]);
 
   const struggling =
     state.phase === "connecting" || state.phase === "reconnecting";

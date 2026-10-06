@@ -149,15 +149,23 @@ on the tint over canvas / over white.
 
 ### Appointments (Booking UX §11)
 
-| Status              | Label               | Tint     | Text      | Ratio       | Icon              |
-| ------------------- | ------------------- | -------- | --------- | ----------- | ----------------- |
-| pending             | Pending             | `ochre`  | `#79602e` | 5.20 / 5.48 | `HourglassMedium` |
-| confirmed           | Confirmed           | `indigo` | `indigo`  | 6.47 / 6.88 | `CheckCircle`     |
-| completed           | Completed           | `olive`  | `ink`     | 12.3 / 13.0 | `CalendarCheck`   |
-| declined            | Declined            | `paper`  | `#625d64` | 5.73        | `XCircle`         |
-| cancelled_by_client | Cancelled by client | `red`    | `#ab4347` | 4.68 / 4.94 | `CalendarX`       |
-| cancelled_by_admin  | Cancelled by Daw Mi | `red`    | `#ab4347` | 4.68 / 4.94 | `CalendarX`       |
-| no_show             | No-show             | `violet` | `ink`     | 12.2 / 12.8 | `UserMinus`       |
+| Status                    | Label               | Tint     | Text      | Ratio       | Icon              |
+| ------------------------- | ------------------- | -------- | --------- | ----------- | ----------------- |
+| pending                   | Pending             | `ochre`  | `#79602e` | 5.20 / 5.48 | `HourglassMedium` |
+| confirmed                 | Confirmed           | `indigo` | `indigo`  | 6.47 / 6.88 | `CheckCircle`     |
+| completed                 | Completed           | `olive`  | `ink`     | 12.3 / 13.0 | `CalendarCheck`   |
+| declined                  | Declined            | `paper`  | `#625d64` | 5.73        | `XCircle`         |
+| cancelled_by_client       | Cancelled by client | `red`    | `#ab4347` | 4.68 / 4.94 | `CalendarX`       |
+| cancelled_by_practitioner | Cancelled by Daw Mi | `red`    | `#ab4347` | 4.68 / 4.94 | `CalendarX`       |
+| no_show                   | No-show             | `violet` | `ink`     | 12.2 / 12.8 | `UserMinus`       |
+| expired                   | Expired             | `paper`  | `#625d64` | 5.73        | `HourglassLow`    |
+
+The statuses are the contract's `AppointmentStatus`: the practitioner's
+cancellation is `cancelled_by_practitioner`, and `expired` (a request
+nobody answered in time) takes the Declined treatment. These tables live as
+data in `components/admin/status.ts`, typed from `lib/api/schema.ts`, so a
+status the API adds fails `pnpm typecheck` until it has a row; the admin
+`StatusBadge` and the public booking pages both read it.
 
 Keep the UX document's distinction in the wording: "Declined = appointment
 request was never confirmed. Cancelled = previously confirmed appointment
@@ -307,7 +315,11 @@ a top border `rgba(40,37,45,0.09)`, icon above label, each tab at least
 44px tall plus `env(safe-area-inset-bottom)`. Items per Booking UX §8:
 Dashboard, Appointments, Availability, Settings, plus Content (ADR-008).
 Roles decide the list: `content_editor` sees no booking items. More than
-five items → the fifth tab is "More".
+five items → the fifth tab is "More", a page listing the rest. Below 1024px
+a slim top bar on canvas holds the wordmark and a quiet "Sign out"; from
+1024px the sidebar ends with the user's name and "Sign out". The one nav
+config is `components/admin/nav.ts`; a section not built yet links to a
+"coming soon" empty state, never a 404.
 
 **Page header.** Optional breadcrumb (`.ed-breadcrumb`: 0.82rem, `#625d64`,
 underlined links, offset 4px), title, one-line description in `#625d64`,
@@ -356,7 +368,8 @@ visitor will be notified. The appointment stays in history."); buttons:
 
 **Toasts.** For completed, non-blocking outcomes only ("Availability saved").
 `role="status"`, bottom-right on desktop, above the tab bar on mobile,
-paper background, the lifted shadow, radius 14px. A partial failure is
+paper background, the lifted shadow, radius 14px. A toast leaves after 5
+seconds, waits while hovered or focused, and has a dismiss button. A partial failure is
 never a toast that fades: it stays on the page until dealt with.
 
 **Empty states.** One sentence that says what is empty, one that says why
@@ -400,9 +413,10 @@ Props are sketches; match the patterns in `components/ui/Button.tsx`.
 | `StatusBadge`               | `kind: "appointment" \| "communication" \| "room" \| "publication" \| "approval"; status`         | Tables in §3 are its source; label and icon always rendered.                                                                                                                                                                                                                                                                                                                                           |
 | `Card`                      | `as?; children; padding?`                                                                         | `#fffcf8` or white, `#e9e0da` border, radius 20px, padding `clamp(24px, 4vw, 44px)`.                                                                                                                                                                                                                                                                                                                   |
 | `DataTable` / `StackedList` | `columns: {key, label, render}[]; rows; rowHref`                                                  | One component that renders a table ≥768px and cards below; same column config.                                                                                                                                                                                                                                                                                                                         |
-| `Tabs`                      | `items: {id, label, count?}[]; active`                                                            | Link-based (URL holds the state) using the `.ed-filters` pill style, `aria-current`.                                                                                                                                                                                                                                                                                                                   |
+| `Tabs`                      | `items: {id, label, count?}[]; active`                                                            | Link-based (URL holds the state) using the `.ed-filters` pill style, `aria-current`. Border `#8a8389` (the public `#c6bec6` is under 3:1).                                                                                                                                                                                                                                                             |
 | `Dialog`                    | `title; open; onClose; children; actions`                                                         | Native `<dialog>`; see §7.                                                                                                                                                                                                                                                                                                                                                                             |
 | `Toast`                     | `message; tone: "success" \| "info"`                                                              | `role="status"`; see §7.                                                                                                                                                                                                                                                                                                                                                                               |
+| `Notice`                    | `tone: "error" \| "info" \| "success"; children`                                                  | An outcome that must stay on the page: what state remains active, partial failures, stale data. The `.contact-status` box; error `role="alert"` in `#ab4347`, info indigo, success olive tint with ink text, both `role="status"`.                                                                                                                                                                     |
 | `EmptyState`                | `title; text?; action?: {label, href}`                                                            | Optional small `Shapes` accent, `aria-hidden`.                                                                                                                                                                                                                                                                                                                                                         |
 | `Skeleton`                  | `variant: "row" \| "card" \| "text"; count?`                                                      | `paper`, final radii, reduced-motion safe.                                                                                                                                                                                                                                                                                                                                                             |
 | `PageHeader`                | `title; description?; breadcrumb?; action?`                                                       | See §7.                                                                                                                                                                                                                                                                                                                                                                                                |

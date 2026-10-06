@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { DataSection } from "./DataSection";
+import { FeedbackSection } from "./FeedbackSection";
 import { FormSection } from "./FormSection";
 
 export const metadata: Metadata = { title: "Primitives" };
@@ -18,9 +20,12 @@ export default function PrimitivesPage() {
       <h1 className="mb-4 text-[clamp(1.6rem,3vw,2.2rem)]">Admin primitives</h1>
       <p className="mb-12 max-w-[56ch] text-[0.95rem] text-muted">
         Every admin component in every state. Hover, tab through and leave
-        fields to see the rest. In production this address is a 404.
+        fields to see the rest; narrow the window below 768px for the stacked
+        cards. In production this address is a 404.
       </p>
       <FormSection />
+      <FeedbackSection />
+      <DataSection />
     </main>
   );
 }

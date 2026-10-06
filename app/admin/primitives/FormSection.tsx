@@ -22,7 +22,7 @@ const lengths = [
   { value: "90", label: "90 minutes" },
 ];
 
-function Group({
+export function Group({
   id,
   title,
   children,
@@ -41,7 +41,7 @@ function Group({
   );
 }
 
-function State({
+export function State({
   name,
   children,
 }: {

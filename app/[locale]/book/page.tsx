@@ -1,6 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
-import { publicApi } from "@/lib/api/client";
+import { apiConfigured, publicApi } from "@/lib/api/client";
 import { ApiError, unwrap } from "@/lib/api/problem";
 import { issueFormToken } from "@/lib/spam";
 import { BookingFlow } from "./_components/BookingFlow";
@@ -28,6 +28,16 @@ export default async function BookPage({
 // Null when the API cannot answer, so the flow shows its own retry state
 // rather than an error page.
 async function bookableServices(locale: Locale) {
+  // Before the API is live, show the "booking is not available" notice with
+  // the contact link rather than a load error.
+  if (!apiConfigured()) {
+    return {
+      bookingEnabled: false,
+      bookingMode: "request_approval" as const,
+      timezone: "Australia/Sydney",
+      items: [],
+    };
+  }
   try {
     return unwrap(
       await publicApi().GET("/public/booking/services", {

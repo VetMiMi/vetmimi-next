@@ -76,7 +76,8 @@
       "message": "Please write your message.",
       "messageLong": "Please shorten your message to 5,000 characters or fewer.",
       "privacy": "Please tick this box to continue."
-    }
+    },
+    "notConnected": "Online enquiries open soon. In the meantime, please email Daw Mi at <email>meenaerie@gmail.com</email> and she will reply as soon as she can."
   },
   "details": {
     "title": "Contact details",

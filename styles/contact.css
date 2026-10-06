@@ -356,3 +356,14 @@ textarea.contact-input {
   font-weight: 600;
   color: var(--ink);
 }
+
+/* Shown instead of the form until the API is live. */
+.contact-not-connected {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.contact-not-connected a {
+  color: #88435b;
+  text-decoration: underline;
+}

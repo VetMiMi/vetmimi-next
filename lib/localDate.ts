@@ -13,3 +13,11 @@ export function fromLocalDateKey(key: string): Date {
   const [y, m, d] = key.split("-").map(Number);
   return new Date(y, m - 1, d);
 }
+
+// The key `days` calendar days later (or earlier). Whole days, not 24-hour
+// steps, so a daylight-saving change cannot land on the wrong date.
+export function addDays(key: string, days: number): string {
+  const date = fromLocalDateKey(key);
+  date.setDate(date.getDate() + days);
+  return toLocalDateKey(date);
+}

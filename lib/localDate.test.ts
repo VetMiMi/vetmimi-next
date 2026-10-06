@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { fromLocalDateKey, toLocalDateKey } from "./localDate.ts";
+import { addDays, fromLocalDateKey, toLocalDateKey } from "./localDate.ts";
 
 const TUESDAY = 2;
 const SUNDAY = 0;
@@ -36,3 +36,15 @@ for (const tz of ["Australia/Sydney", "America/Los_Angeles"]) {
     });
   });
 }
+
+describe("adding days to a key", () => {
+  it("crosses the start of daylight saving in Sydney as one day", () => {
+    process.env.TZ = "Australia/Sydney";
+    assert.equal(addDays("2026-10-03", 1), "2026-10-04");
+    assert.equal(addDays("2026-10-04", 1), "2026-10-05");
+  });
+
+  it("crosses a month end backwards", () => {
+    assert.equal(addDays("2026-11-01", -1), "2026-10-31");
+  });
+});

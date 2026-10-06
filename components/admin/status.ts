@@ -14,6 +14,7 @@ import {
   HourglassMedium,
   NotePencil,
   PaperPlaneTilt,
+  PauseCircle,
   PhoneDisconnect,
   Prohibit,
   UserMinus,
@@ -34,6 +35,7 @@ type Statuses = {
   room: Schemas["VideoRoomSummary"]["state"];
   publication: Schemas["PublicationStatus"];
   approval: Schemas["ApprovalStatus"];
+  service: Schemas["ServiceState"];
 };
 
 export type StatusKind = keyof Statuses;
@@ -115,5 +117,11 @@ export const statuses: {
       icon: ArrowUUpLeft,
     },
     approved: { label: "Approved", ...indigo, icon: CheckCircle },
+  },
+  // Booking state of a service (#75), in the publication tints.
+  service: {
+    active: { label: "Active", ...indigo, icon: CheckCircle },
+    paused: { label: "Paused", ...ochre, icon: PauseCircle },
+    archived: { label: "Archived", ...paper, icon: Archive },
   },
 };

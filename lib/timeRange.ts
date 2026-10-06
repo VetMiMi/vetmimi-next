@@ -8,3 +8,17 @@
 export function endsTooEarly(start: string, end: string): boolean {
   return end !== "" && end <= start;
 }
+
+export type Period = { startTime: string; endTime: string };
+
+// The first period in `others` that shares any time with `period`. Touching
+// ends (10:00–13:00 and 13:00–17:00) do not overlap, as in the API.
+export function findOverlap<P extends Period>(
+  period: Period,
+  others: readonly P[],
+): P | undefined {
+  return others.find(
+    (other) =>
+      period.startTime < other.endTime && other.startTime < period.endTime,
+  );
+}

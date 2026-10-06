@@ -4,7 +4,7 @@ type SelectProps = FieldProps &
   Omit<
     React.ComponentProps<"select">,
     keyof FieldProps | "id" | "className" | "children"
-  > & { options: { value: string; label: string }[] };
+  > & { options: { value: string; label: string; disabled?: boolean }[] };
 
 // A native <select>, so the phone's own picker opens on touch.
 export function Select({
@@ -27,7 +27,11 @@ export function Select({
       {(control) => (
         <select className={controlClass} {...rest} {...control}>
           {options.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option
+              key={option.value}
+              value={option.value}
+              disabled={option.disabled}
+            >
               {option.label}
             </option>
           ))}

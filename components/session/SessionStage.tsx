@@ -1,6 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   CircleNotch,
   HourglassMedium,
@@ -9,9 +8,9 @@ import {
   VideoCameraSlash,
   WifiLow,
 } from "@phosphor-icons/react";
-import { Dialog } from "@/components/admin/Dialog";
 import type { Phase } from "@/lib/session/machine";
 import { ControlBar } from "./ControlBar";
+import type { StageText } from "./text";
 import type { TrackToggle } from "./useLocalMedia";
 import "@/styles/session.css";
 
@@ -35,8 +34,15 @@ function useWakeLock() {
   }, []);
 }
 
-function Status({ phase, otherLeft }: { phase: Phase; otherLeft: boolean }) {
-  const t = useTranslations("session.stage");
+function Status({
+  text,
+  phase,
+  otherLeft,
+}: {
+  text: StageText;
+  phase: Phase;
+  otherLeft: boolean;
+}) {
   const pill =
     "inline-flex items-center gap-1.5 rounded-pill bg-canvas/12 px-3 py-1 text-[0.82rem] font-semibold";
   const spinner = (
@@ -50,7 +56,7 @@ function Status({ phase, otherLeft }: { phase: Phase; otherLeft: boolean }) {
     return (
       <span className={pill}>
         <VideoCamera aria-hidden="true" size={16} />
-        {t("pillInSession")}
+        {text.pillInSession}
       </span>
     );
   }
@@ -59,10 +65,10 @@ function Status({ phase, otherLeft }: { phase: Phase; otherLeft: boolean }) {
       <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <span className={pill}>
           <HourglassMedium aria-hidden="true" size={16} />
-          {t("pillWaiting")}
+          {text.pillWaiting}
         </span>
         <span className="text-[0.92rem]">
-          {otherLeft ? t("otherLeft") : t("waiting")}
+          {otherLeft ? text.otherLeft : text.waiting}
         </span>
       </span>
     );
@@ -70,7 +76,7 @@ function Status({ phase, otherLeft }: { phase: Phase; otherLeft: boolean }) {
   return (
     <span className={pill}>
       {spinner}
-      {phase === "reconnecting" ? t("reconnecting") : t("connecting")}
+      {phase === "reconnecting" ? text.reconnecting : text.connecting}
     </span>
   );
 }
@@ -79,8 +85,14 @@ function Status({ phase, otherLeft }: { phase: Phase; otherLeft: boolean }) {
 // Daw Mi's video large, this person's small and mirrored in the corner,
 // the state at the top (a live region), the weak-link banner, and the
 // controls above the phone's home bar. The remote video is not muted: her
-// voice must play. If the browser blocks that, one tap starts it.
+// voice must play. If the browser blocks that, one tap starts it. The
+// visitor's page and Daw Mi's call view in /admin (#83) both use it: the
+// words come in as props, `corner` sits before the state (Daw Mi's way back
+// to the appointment), and `children` holds the page's own dialogs.
 export function SessionStage({
+  text,
+  corner,
+  children,
   phase,
   otherLeft,
   weak,
@@ -90,6 +102,9 @@ export function SessionStage({
   camera,
   onLeave,
 }: {
+  text: StageText;
+  corner?: ReactNode;
+  children?: ReactNode;
   phase: Phase;
   otherLeft: boolean;
   weak: boolean;
@@ -99,18 +114,28 @@ export function SessionStage({
   camera: TrackToggle;
   onLeave: () => void;
 }) {
-  const t = useTranslations("session");
+  const stage = useRef<HTMLDivElement>(null);
   const remoteVideo = useRef<HTMLVideoElement>(null);
   const selfVideo = useRef<HTMLVideoElement>(null);
   const [blocked, setBlocked] = useState(false);
-  const [confirming, setConfirming] = useState(false);
   useWakeLock();
 
-  // The stage covers the page: the site header and footer behind it must
-  // neither scroll under it nor take keyboard focus.
+  // The stage covers the page: whatever is behind it (the site header and
+  // footer, or the admin shell) must neither scroll under it nor take
+  // keyboard focus. That is every sibling of the stage and its ancestors.
   useEffect(() => {
     const root = document.documentElement;
-    const behind = [...document.querySelectorAll("body > div > :not(main)")];
+    const behind: Element[] = [];
+    let node: HTMLElement | null = stage.current;
+    while (node && node !== document.body) {
+      const parent: HTMLElement | null = node.parentElement;
+      for (const sibling of parent?.children ?? []) {
+        if (sibling !== node && !sibling.hasAttribute("inert")) {
+          behind.push(sibling);
+        }
+      }
+      node = parent;
+    }
     root.classList.add("overflow-hidden");
     behind.forEach((element) => element.setAttribute("inert", ""));
     return () => {
@@ -138,12 +163,15 @@ export function SessionStage({
   const showSelf = camera.available && camera.on;
 
   return (
-    <div className="session-stage fixed inset-0 z-[200] flex h-dvh flex-col bg-stage text-canvas">
-      <div
-        role="status"
-        className="flex min-h-14 items-center px-4 pt-[max(12px,env(safe-area-inset-top))] md:px-6"
-      >
-        <Status phase={phase} otherLeft={otherLeft} />
+    <div
+      ref={stage}
+      className="session-stage fixed inset-0 z-[200] flex h-dvh flex-col bg-stage text-canvas"
+    >
+      <div className="flex min-h-14 flex-wrap items-center gap-x-5 gap-y-2 px-4 pt-[max(12px,env(safe-area-inset-top))] md:px-6">
+        {corner}
+        <div role="status">
+          <Status text={text} phase={phase} otherLeft={otherLeft} />
+        </div>
       </div>
 
       <div className="relative min-h-0 flex-1">
@@ -151,7 +179,7 @@ export function SessionStage({
           ref={remoteVideo}
           autoPlay
           playsInline
-          aria-label={t("stage.remote")}
+          aria-label={text.remote}
           className={`absolute inset-0 h-full w-full object-contain portrait:object-cover ${remote ? "" : "invisible"}`}
         />
         {!remote && (
@@ -176,7 +204,7 @@ export function SessionStage({
             className="absolute inset-x-3 top-2 mx-auto flex max-w-[520px] items-start gap-2 rounded-notice bg-canvas px-4 py-3 text-[0.9rem] leading-[1.5] text-ink shadow-lifted"
           >
             <WifiLow aria-hidden="true" size={20} className="mt-px shrink-0" />
-            <p>{t("stage.weak")}</p>
+            <p>{text.weak}</p>
           </div>
         )}
 
@@ -189,7 +217,7 @@ export function SessionStage({
             className="absolute top-1/2 left-1/2 inline-flex min-h-12 -translate-1/2 cursor-pointer items-center gap-2 rounded-pill bg-canvas px-6 font-semibold text-ink shadow-lifted"
           >
             <SpeakerHigh aria-hidden="true" size={20} />
-            {t("stage.tapAudio")}
+            {text.tapAudio}
           </button>
         )}
 
@@ -199,7 +227,7 @@ export function SessionStage({
             muted
             autoPlay
             playsInline
-            aria-label={t("stage.self")}
+            aria-label={text.self}
             className={`h-full w-full -scale-x-100 object-cover ${showSelf ? "" : "invisible"}`}
           />
           {!showSelf && (
@@ -213,26 +241,9 @@ export function SessionStage({
       </div>
 
       <div className="px-4 pt-4 pb-[max(16px,env(safe-area-inset-bottom))]">
-        <ControlBar
-          mic={mic}
-          camera={camera}
-          onLeave={() => setConfirming(true)}
-        />
+        <ControlBar text={text} mic={mic} camera={camera} onLeave={onLeave} />
       </div>
-
-      <Dialog
-        open={confirming}
-        onClose={() => setConfirming(false)}
-        title={t("leave.title")}
-        cancelLabel={t("leave.stay")}
-        confirmLabel={t("leave.confirm")}
-        onConfirm={() => {
-          setConfirming(false);
-          onLeave();
-        }}
-      >
-        <p>{t("leave.text")}</p>
-      </Dialog>
+      {children}
     </div>
   );
 }

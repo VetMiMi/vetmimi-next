@@ -1,6 +1,5 @@
 "use client";
 import type { KeyboardEvent, ReactNode } from "react";
-import { useTranslations } from "next-intl";
 import {
   Microphone,
   MicrophoneSlash,
@@ -8,6 +7,7 @@ import {
   VideoCamera,
   VideoCameraSlash,
 } from "@phosphor-icons/react";
+import type { StageText } from "./text";
 import type { TrackToggle } from "./useLocalMedia";
 
 // Arrow keys move between the buttons of the one toolbar; Tab still
@@ -62,26 +62,28 @@ function ControlButton({
 }
 
 // Brief §9 In session: 48px round buttons (the lightbox's tint) for the
-// microphone, the camera and Leave, which is #ab4347. A pressed switch is
-// filled canvas and shows the crossed-out icon, never colour alone.
+// microphone, the camera and Leave (Daw Mi's End session), which is
+// #ab4347. A pressed switch is filled canvas and shows the crossed-out
+// icon, never colour alone.
 export function ControlBar({
+  text,
   mic,
   camera,
   onLeave,
 }: {
+  text: StageText;
   mic: TrackToggle;
   camera: TrackToggle;
   onLeave: () => void;
 }) {
-  const t = useTranslations("session.stage");
   return (
     <div
       role="toolbar"
-      aria-label={t("controls")}
+      aria-label={text.controls}
       onKeyDown={moveFocus}
       className="flex items-start justify-center gap-5 md:gap-8"
     >
-      <ControlButton label={t("mute")} pressed={!mic.on} onClick={mic.toggle}>
+      <ControlButton label={text.mute} pressed={!mic.on} onClick={mic.toggle}>
         {mic.on ? (
           <Microphone aria-hidden="true" size={22} />
         ) : (
@@ -89,7 +91,7 @@ export function ControlBar({
         )}
       </ControlButton>
       <ControlButton
-        label={t("cameraOff")}
+        label={text.cameraOff}
         pressed={camera.available ? !camera.on : undefined}
         disabled={!camera.available}
         onClick={camera.toggle}
@@ -100,7 +102,7 @@ export function ControlBar({
           <VideoCameraSlash aria-hidden="true" size={22} />
         )}
       </ControlButton>
-      <ControlButton label={t("leave")} danger onClick={onLeave}>
+      <ControlButton label={text.leave} danger onClick={onLeave}>
         <PhoneDisconnect aria-hidden="true" size={22} />
       </ControlButton>
     </div>

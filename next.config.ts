@@ -29,6 +29,16 @@ const nextConfig: NextConfig = {
           { key: "Referrer-Policy", value: "no-referrer" },
         ],
       })),
+      // Join links too, and the session state is never kept by a shared
+      // cache: it changes from "too early" to "ready" to "ended".
+      ...["/session/:path*", "/my/session/:path*"].map((source) => ({
+        source,
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "Cache-Control", value: "no-store" },
+        ],
+      })),
     ];
   },
   async redirects() {

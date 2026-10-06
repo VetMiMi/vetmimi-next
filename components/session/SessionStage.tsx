@@ -106,11 +106,17 @@ export function SessionStage({
   const [confirming, setConfirming] = useState(false);
   useWakeLock();
 
-  // The stage covers the page; the page behind must not scroll under it.
+  // The stage covers the page: the site header and footer behind it must
+  // neither scroll under it nor take keyboard focus.
   useEffect(() => {
     const root = document.documentElement;
+    const behind = [...document.querySelectorAll("body > div > :not(main)")];
     root.classList.add("overflow-hidden");
-    return () => root.classList.remove("overflow-hidden");
+    behind.forEach((element) => element.setAttribute("inert", ""));
+    return () => {
+      root.classList.remove("overflow-hidden");
+      behind.forEach((element) => element.removeAttribute("inert"));
+    };
   }, []);
 
   useEffect(() => {
@@ -132,7 +138,7 @@ export function SessionStage({
   const showSelf = camera.available && camera.on;
 
   return (
-    <div className="session-stage fixed inset-0 z-50 flex h-dvh flex-col bg-stage text-canvas">
+    <div className="session-stage fixed inset-0 z-[200] flex h-dvh flex-col bg-stage text-canvas">
       <div
         role="status"
         className="flex min-h-14 items-center px-4 pt-[max(12px,env(safe-area-inset-top))] md:px-6"

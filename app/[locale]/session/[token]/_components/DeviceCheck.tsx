@@ -86,11 +86,8 @@ export function DeviceCheck({
           className={`h-full w-full -scale-x-100 object-cover ${showVideo ? "" : "invisible"}`}
         />
         {!showVideo && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-6 text-center text-canvas">
+          <div className="absolute inset-0 flex items-center justify-center text-canvas">
             <VideoCameraSlash aria-hidden="true" size={40} />
-            {local.status === "requesting" && (
-              <p className="text-[0.95rem]">{t("requesting")}</p>
-            )}
           </div>
         )}
       </div>

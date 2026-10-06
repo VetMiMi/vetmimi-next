@@ -24,7 +24,7 @@ export default async function ShellLayout({ children }: LayoutProps<"/admin">) {
           <main
             id="main"
             tabIndex={-1}
-            className="mx-auto w-[min(1120px,calc(100%-40px))] pt-[clamp(28px,5vw,56px)] pb-[calc(112px+env(safe-area-inset-bottom))] md:w-[min(1120px,calc(100%-48px))] lg:pb-[clamp(44px,6vw,80px)]"
+            className="mx-auto w-[min(1120px,calc(100%-40px))] pt-[clamp(28px,5vw,56px)] pb-[calc(112px+env(safe-area-inset-bottom))] md:w-[min(1120px,calc(100%-48px))] lg:w-[min(1120px,calc(100%-96px))] lg:pb-[clamp(44px,6vw,80px)]"
           >
             {children}
           </main>

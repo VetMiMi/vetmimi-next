@@ -30,9 +30,9 @@ export function FeedbackSection() {
               </div>
             </State>
           ))}
-          <State name="publication scheduled, with its time">
+          <State name="post scheduled, with its time">
             <StatusBadge
-              kind="publication"
+              kind="post"
               status="scheduled"
               detail="12 Oct, 9:00 am"
             />

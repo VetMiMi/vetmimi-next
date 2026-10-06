@@ -171,8 +171,10 @@ const actorFallback: Record<Event["actor"], string> = {
   system: "VetMiMi",
 };
 
-const late = (event: Event) =>
-  event.detail.late === true || event.detail.lateCancellation === true;
+// Detail keys are the API's snake_case EventDetail JSON names
+// (internal/booking/events.go): late_cancellation, by, source, length,
+// preferred.
+const late = (event: Event) => event.detail.late_cancellation === true;
 
 // One history line (Booking UX §17), e.g. "Confirmed by Daw Mi".
 export function eventSentence(event: Event, timeZone: string): string {
@@ -217,7 +219,7 @@ export function requestedTimes(events: readonly Event[]): string[] {
     b.createdAt.localeCompare(a.createdAt),
   )[0];
   if (latest?.kind !== "reschedule_requested") return [];
-  const times = latest.detail.preferredTimes;
+  const times = latest.detail.preferred;
   return Array.isArray(times)
     ? times.filter(
         (t): t is string =>

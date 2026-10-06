@@ -6,6 +6,7 @@ import {
   CalendarX,
   CheckCircle,
   Clock,
+  EnvelopeSimple,
   Eye,
   EyeSlash,
   FileDashed,
@@ -36,6 +37,7 @@ type Statuses = {
   publication: Schemas["PublicationStatus"];
   approval: Schemas["ApprovalStatus"];
   service: Schemas["ServiceState"];
+  enquiry: Schemas["ContactEnquiry"]["status"];
 };
 
 export type StatusKind = keyof Statuses;
@@ -123,5 +125,10 @@ export const statuses: {
     active: { label: "Active", ...indigo, icon: CheckCircle },
     paused: { label: "Paused", ...ochre, icon: PauseCircle },
     archived: { label: "Archived", ...paper, icon: Archive },
+  },
+  // Contact enquiries (#77): New indigo, Handled paper.
+  enquiry: {
+    new: { label: "New", ...indigo, icon: EnvelopeSimple },
+    handled: { label: "Handled", ...paper, icon: CheckCircle },
   },
 };

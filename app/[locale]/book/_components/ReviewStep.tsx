@@ -6,7 +6,8 @@ import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import { FormTrap } from "@/components/ui/FormTrap";
 import { Notice, NoticeActions, noticeLink } from "./Notice";
-import { stepIntro, stepTitle, textButton, usePracticeFormat } from "./booking";
+import { usePracticeFormat } from "@/components/booking/practiceFormat";
+import { stepIntro, stepTitle, textButton } from "./booking";
 import type { BookableService, ServiceList } from "./booking";
 import type { Draft } from "./bookingDraft";
 

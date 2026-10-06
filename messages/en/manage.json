@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "title": "Your appointment | VetMiMi",
+    "rescheduleTitle": "Ask to reschedule | VetMiMi"
+  },
+  "page": {
+    "eyebrow": "Your appointment",
+    "title": "Your appointment",
+    "rescheduleTitle": "Ask to reschedule",
+    "back": "← Back to appointment"
+  },
+  "status": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "completed": "Completed",
+    "declined": "Declined",
+    "cancelled_by_client": "Cancelled by client",
+    "cancelled_by_practitioner": "Cancelled by Daw Mi",
+    "no_show": "No-show",
+    "expired": "Expired"
+  },
+  "card": {
+    "reference": "Reference {reference}",
+    "service": "Service",
+    "date": "Date",
+    "time": "Time",
+    "length": "Length",
+    "timeValue": "{start} – {end} {zone}",
+    "zoneNote": "Sydney time (AEST/AEDT)"
+  },
+  "notes": {
+    "pending": "Status: Pending — not yet confirmed. Daw Mi will email you once she has looked at your request.",
+    "joinLink": "Your join link is in your confirmation email.",
+    "rescheduleRequested": "You have asked to reschedule. Daw Mi will be in touch.",
+    "finished": "This appointment can no longer be changed here. You are welcome to book a new appointment or contact Daw Mi."
+  },
+  "actions": {
+    "cancel": "Cancel appointment",
+    "reschedule": "Ask to reschedule",
+    "book": "Book a new appointment",
+    "contact": "Contact Daw Mi",
+    "question": "Questions about your appointment? Contact Daw Mi"
+  },
+  "problems": {
+    "rateLimited": "Too many attempts. Please try again later.",
+    "unavailable": "We could not load this appointment right now.",
+    "retry": "Retry",
+    "notConnected": "Managing appointments online opens soon. In the meantime, please contact Daw Mi about your appointment."
+  },
+  "badLink": {
+    "title": "This link is not available.",
+    "text": "The link may have expired or been used already. You can book a new appointment or contact Daw Mi."
+  },
+  "cancel": {
+    "title": "Cancel this appointment?",
+    "consequence": "Daw Mi will be notified. This cannot be undone from this page.",
+    "late": "This appointment starts in less than {hours} hours. Under the <link>Booking & Cancellation Policy</link> this counts as a late cancellation.",
+    "message": "Message to Daw Mi",
+    "keep": "Keep appointment",
+    "confirm": "Cancel appointment",
+    "busy": "Cancelling…",
+    "done": "Your appointment on {date} at {time} has been cancelled. You will receive an email shortly.",
+    "notAllowed": "This appointment can no longer be cancelled from this page. Please contact Daw Mi.",
+    "changed": "This appointment has changed. Here is its current status.",
+    "failed": "The appointment was not cancelled. It is still {status}."
+  },
+  "reschedule": {
+    "intro": "Your current time stays booked until Daw Mi confirms a new one.",
+    "pickTitle": "Times that would suit you",
+    "pickHelp": "Choose up to three times. Daw Mi will try to fit one of them, or suggest another.",
+    "chosen": "Your preferred times",
+    "chosenCount": "{count} of 3 chosen",
+    "chip": "{date}, {time} {zone}",
+    "remove": "Remove {time}",
+    "full": "You have chosen three times. Remove one to choose another.",
+    "noTimes": "There are no available times showing right now. You can still send a message.",
+    "message": "Message to Daw Mi",
+    "messageHelp": "For example, the days or times of day that suit you.",
+    "needOne": "Please choose a time or write a message.",
+    "send": "Send request",
+    "sending": "Sending…",
+    "notAllowed": "This appointment can no longer be rescheduled from this page.",
+    "failed": "Your request was not sent. Your appointment is unchanged.",
+    "sent": {
+      "title": "Reschedule request sent",
+      "times": "Times you suggested",
+      "text": "Daw Mi will be in touch to confirm a new time or suggest another.",
+      "back": "Back to appointment"
+    }
+  }
+}

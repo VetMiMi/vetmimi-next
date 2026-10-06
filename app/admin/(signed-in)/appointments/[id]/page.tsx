@@ -61,19 +61,19 @@ export default async function AppointmentPage({
         </div>
       )}
 
-      <div className="grid items-start gap-[clamp(28px,4vw,56px)] min-[900px]:grid-cols-[minmax(0,7fr)_minmax(0,4fr)]">
-        <div className="flex flex-col gap-6">
+      {/* Below 900px one column, with the actions straight after the facts
+          so Daw Mi need not scroll past the history to act; the aside is
+          display:contents there and its cards are ordered among the rest. */}
+      <div className="flex flex-col gap-6 min-[900px]:grid min-[900px]:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] min-[900px]:grid-rows-[auto_1fr] min-[900px]:items-start min-[900px]:gap-x-[clamp(28px,4vw,56px)]">
+        <div className="min-[900px]:col-start-1 min-[900px]:row-start-1">
           <AppointmentCard appointment={a} />
-          <VisitorCard appointment={a} />
-          <HistoryList appointment={a} />
-          <CommunicationsList appointment={a} />
         </div>
 
         <aside
           aria-label="Actions"
-          className="flex flex-col gap-6 min-[900px]:sticky min-[900px]:top-[104px]"
+          className="contents min-[900px]:sticky min-[900px]:top-[104px] min-[900px]:col-start-2 min-[900px]:row-span-2 min-[900px]:row-start-1 min-[900px]:flex min-[900px]:flex-col min-[900px]:gap-6"
         >
-          <Card as="section">
+          <Card as="section" className="order-1">
             <h2 className={cardTitle}>Actions</h2>
             <ActionPanel
               appointment={a}
@@ -81,11 +81,11 @@ export default async function AppointmentPage({
               now={new Date().toISOString()}
             />
           </Card>
-          <Card as="section">
+          <Card as="section" className="order-3">
             <h2 className={cardTitle}>Private note</h2>
             <PrivateNote id={a.id} version={a.version} note={a.adminNote} />
           </Card>
-          <Card as="section">
+          <Card as="section" className="order-3">
             <h2 className={cardTitle}>Video session</h2>
             {room ? (
               <div className="flex flex-col items-start gap-2 text-[0.95rem]">
@@ -111,6 +111,12 @@ export default async function AppointmentPage({
             )}
           </Card>
         </aside>
+
+        <div className="order-2 flex flex-col gap-6 min-[900px]:col-start-1 min-[900px]:row-start-2">
+          <VisitorCard appointment={a} />
+          <HistoryList appointment={a} />
+          <CommunicationsList appointment={a} />
+        </div>
       </div>
     </>
   );

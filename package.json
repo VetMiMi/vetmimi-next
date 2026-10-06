@@ -12,7 +12,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "i18n:check": "node scripts/check-messages.mjs",
     "api:types": "node scripts/api-types.mjs",
-    "test:unit": "node --test --experimental-strip-types lib/*.test.ts",
+    "test:unit": "node --test --experimental-strip-types 'lib/**/*.test.ts'",
     "e2e": "playwright test",
     "gate": "scripts/gate.sh sh -c 'pnpm lint && pnpm format:check && pnpm typecheck && pnpm i18n:check && pnpm test:unit && NODE_OPTIONS=--max-old-space-size=2048 pnpm build'"
   },
@@ -23,6 +23,7 @@
     "@phosphor-icons/react": "^2.1.10",
     "next": "16.3.5",
     "next-intl": "^4.14.7",
+    "openapi-fetch": "0.17.0",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },

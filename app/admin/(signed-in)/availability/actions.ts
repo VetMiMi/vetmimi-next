@@ -2,7 +2,7 @@
 
 import { mutate, type Outcome } from "@/lib/admin/mutation";
 import type { components } from "@/lib/api/schema";
-import { addDays } from "@/lib/localDate";
+import { addDays } from "@/lib/time";
 import { endsTooEarly } from "@/lib/timeRange";
 import { todayIn, zonedDayStart, zonedInstant } from "@/lib/zonedTime";
 

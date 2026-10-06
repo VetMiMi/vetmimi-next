@@ -10,7 +10,7 @@ import { NoAccess } from "@/components/admin/NoAccess";
 import { adminCall, requireRole } from "@/lib/admin/session";
 import { unwrap } from "@/lib/api/problem";
 import type { components } from "@/lib/api/schema";
-import { addDays } from "@/lib/localDate";
+import { addDays } from "@/lib/time";
 import {
   formatClock,
   formatDay,

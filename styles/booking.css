@@ -1,0 +1,10 @@
+/* Booking flow: what inline styles cannot say (motion preferences). */
+@media (prefers-reduced-motion: no-preference) {
+  .booking-day,
+  .booking-slot {
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+}

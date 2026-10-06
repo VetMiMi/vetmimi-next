@@ -12,7 +12,8 @@ type Service = {
   slug: ServiceSlug;
   image: StaticImageData;
   tone: "rose" | "blue" | "gold";
-  /** Where the main call-to-action button goes. */
+  /** Where the main call-to-action button goes; the slug travels along so
+   * booking or the enquiry form starts on this service. */
   href: string;
 };
 
@@ -25,18 +26,18 @@ export const services: Service[] = [
     slug: "individual-art-therapy",
     image: art3,
     tone: "rose",
-    href: "/book",
+    href: "/book?service=individual-art-therapy",
   },
   {
     slug: "group-art-wellbeing",
     image: art5,
     tone: "blue",
-    href: "/contact",
+    href: "/contact?service=group-art-wellbeing#enquiry",
   },
   {
     slug: "workshops-programs",
     image: art7,
     tone: "gold",
-    href: "/contact",
+    href: "/contact?service=workshops-programs#enquiry",
   },
 ];

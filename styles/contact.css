@@ -318,3 +318,41 @@ textarea.contact-input {
     padding-bottom: 72px;
   }
 }
+
+/* Validation, counter and the service the enquiry is about */
+.contact-field-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  color: #ab4347;
+}
+.contact-status ul {
+  list-style: disc;
+  margin: 8px 0 0;
+  padding-left: 1.2rem;
+  line-height: 1.65;
+}
+.contact-status a {
+  color: inherit;
+}
+.contact-status:focus {
+  outline: none;
+}
+.contact-count {
+  margin: 6px 0 0;
+  font-size: 0.78rem;
+  text-align: right;
+  color: #625d64;
+}
+.contact-about {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #625d64;
+}
+.contact-success .contact-reference {
+  margin-top: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}

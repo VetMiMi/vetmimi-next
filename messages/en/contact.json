@@ -15,13 +15,15 @@
   },
   "success": {
     "title": "Thank you. Your message has been sent.",
-    "text": "Daw Mi has received your enquiry."
+    "text": "Daw Mi has received your enquiry.",
+    "reference": "Your reference: {reference}"
   },
   "form": {
     "title": "Send an enquiry",
     "error": {
-      "text": "Something did not go through. Your message has not been sent yet. Your information is still here, so you can try again.",
-      "retry": "Retry"
+      "title": "Your message was not sent.",
+      "text": "Nothing was submitted. Your details are still here, so you can try again.",
+      "retry": "Try again"
     },
     "optional": "(optional)",
     "name": {
@@ -53,12 +55,28 @@
     },
     "message": {
       "label": "Message",
-      "placeholder": "Tell Daw Mi what you have in mind..."
+      "placeholder": "Tell Daw Mi what you have in mind...",
+      "count": "{count} of {max} characters"
     },
     "privacy": "I have read and agree to the <link>privacy policy</link>",
     "note": "Please do not include private medical or detailed health information in this form.",
     "submit": "Send message",
-    "sending": "Sending…"
+    "sending": "Sending…",
+    "rateLimited": "Too many messages from this connection. Please wait and try again later.",
+    "about": "About: {service}",
+    "honeypot": "Leave this field empty",
+    "errors": {
+      "summary": "Please check the highlighted fields.",
+      "name": "Please enter your name.",
+      "nameLong": "Please shorten your name to 120 characters or fewer.",
+      "email": "Please enter an email address like name@example.com.",
+      "enquiryType": "Please choose an enquiry type.",
+      "subject": "Please enter a subject.",
+      "subjectLong": "Please shorten the subject to 200 characters or fewer.",
+      "message": "Please write your message.",
+      "messageLong": "Please shorten your message to 5,000 characters or fewer.",
+      "privacy": "Please tick this box to continue."
+    }
   },
   "details": {
     "title": "Contact details",

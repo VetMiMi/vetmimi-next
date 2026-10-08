@@ -75,12 +75,7 @@ export function ConnectionCard({
 
       {status && (
         <div className="flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-divider pt-6">
-          <ConnectButton
-            provider={provider}
-            again={
-              status === "expiring_soon" || status === "reconnect_required"
-            }
-          />
+          <ConnectButton provider={provider} status={status} />
           {linked && (
             <ConfirmButton
               label={`Disconnect ${name}`}

@@ -80,7 +80,7 @@ const reasons: Record<string, string> = {
   rejected:
     "The platform refused the post. Check its text and images, then Retry, or use Copy & open.",
   reconnect_required:
-    "The connection to the platform has expired and needs connecting again. Use Copy & open now, or Retry once it is reconnected in Settings → Connections.",
+    "The connection to the platform has expired and needs connecting again. Use Copy & open now, or Retry once it is reconnected.",
   unknown_outcome:
     "The platform did not confirm the post. It may have posted — check the platform, then Retry or Mark as posted.",
 };

@@ -47,6 +47,11 @@ export function Suggestions({
 
   const channels = CHANNELS.filter((channel) => draft[channel].enabled);
   const shown = CHANNELS.filter((channel) => texts[channel] !== undefined);
+  const hint = pending
+    ? "This can take up to half a minute. You can keep editing meanwhile."
+    : channels.length === 0
+      ? "Switch on Facebook, Instagram or LinkedIn above to get suggestions."
+      : undefined;
 
   function suggest() {
     setError(undefined);
@@ -89,6 +94,7 @@ export function Suggestions({
           <Select
             label="Write in"
             name="suggestionLanguage"
+            required
             options={languages}
             value={language}
             onChange={(event) => setLanguage(event.target.value as Language)}
@@ -104,13 +110,11 @@ export function Suggestions({
           {pending ? "Writing suggestions…" : "Suggest versions"}
         </Button>
       </div>
-      <p className="text-[0.88rem] leading-[1.6] text-muted" aria-live="polite">
-        {pending
-          ? "This can take up to half a minute. You can keep editing meanwhile."
-          : channels.length === 0
-            ? "Switch on Facebook, Instagram or LinkedIn above to get suggestions."
-            : ""}
-      </p>
+      {hint && (
+        <p role="status" className="text-[0.88rem] leading-[1.6] text-muted">
+          {hint}
+        </p>
+      )}
       {error && <Notice tone="error">{error}</Notice>}
 
       {shown.map((channel) => {

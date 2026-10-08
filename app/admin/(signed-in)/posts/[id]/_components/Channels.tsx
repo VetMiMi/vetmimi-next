@@ -130,7 +130,7 @@ export function Channels({
                         href="/admin/settings/connections"
                         className="font-semibold underline underline-offset-4 transition-colors duration-150 hover:text-ink motion-reduce:transition-none"
                       >
-                        Open Connections
+                        Go to Connections
                       </Link>
                     </>
                   )}

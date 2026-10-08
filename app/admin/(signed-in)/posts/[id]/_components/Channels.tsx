@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import Link from "next/link";
 import { ArrowClockwise, ArrowSquareOut, Copy } from "@phosphor-icons/react";
 import { Button } from "@/components/admin/Button";
 import { Card } from "@/components/admin/Card";
@@ -14,6 +15,7 @@ import {
   canRetry,
   failureReason,
   isSocial,
+  needsConnection,
 } from "@/lib/admin/postWorkflow";
 import type { components } from "@/lib/api/schema";
 import { ChannelBadge } from "../../_components/ChannelBadge";
@@ -45,10 +47,13 @@ function liveLink(post: Post, p: Publication) {
 export function Channels({
   post,
   media,
+  canConnect,
   onChange,
 }: {
   post: Post;
   media: Record<string, Media>;
+  // The site administrator, who manages the platform connections.
+  canConnect: boolean;
   onChange: (post: Post) => void;
 }) {
   const [copying, setCopying] = useState<SocialChannel>();
@@ -118,6 +123,17 @@ export function Channels({
               {p.status === "failed" && (
                 <p className="text-[0.88rem] leading-[1.6] text-action">
                   {failureReason(p.error)}
+                  {canConnect && needsConnection(p.error) && (
+                    <>
+                      {" "}
+                      <Link
+                        href="/admin/settings/connections"
+                        className="font-semibold underline underline-offset-4 transition-colors duration-150 hover:text-ink motion-reduce:transition-none"
+                      >
+                        Open Connections
+                      </Link>
+                    </>
+                  )}
                 </p>
               )}
               {waiting(p) && (

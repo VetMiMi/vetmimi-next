@@ -80,7 +80,7 @@ const reasons: Record<string, string> = {
   rejected:
     "The platform refused the post. Check its text and images, then Retry, or use Copy & open.",
   reconnect_required:
-    "The connection to the platform has expired and needs connecting again. Use Copy & open now, or Retry once it is reconnected.",
+    "The connection to the platform has expired and needs connecting again. Use Copy & open now, or Retry once it is reconnected in Settings → Connections.",
   unknown_outcome:
     "The platform did not confirm the post. It may have posted — check the platform, then Retry or Mark as posted.",
 };
@@ -89,6 +89,10 @@ const reasons: Record<string, string> = {
 export const failureReason = (error: string | undefined) =>
   (error && reasons[error]) ??
   "The post did not go out. Retry, or use Copy & open.";
+
+// Failures that a connection in Settings → Connections puts right.
+export const needsConnection = (error: string | undefined) =>
+  error === "reconnect_required" || error === "not_connected";
 
 export const platformHome: Record<SocialChannel, string> = {
   facebook: "https://www.facebook.com/",

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { NoAccess } from "@/components/admin/NoAccess";
-import { PageHeader } from "@/components/admin/PageHeader";
 import { canUse } from "@/lib/admin/roles";
 import { adminCall, requireRole } from "@/lib/admin/session";
 import { unwrap } from "@/lib/api/problem";
 import { PublicBookingSwitch } from "./PublicBookingSwitch";
+import { SettingsHeader } from "./SettingsHeader";
 import { SettingsSection } from "./SettingsSection";
 
 export const metadata: Metadata = { title: "Settings" };
@@ -28,10 +28,7 @@ export default async function SettingsPage() {
 
   return (
     <>
-      <PageHeader
-        title="Settings"
-        description="Booking rules and wording. Each section saves on its own."
-      />
+      <SettingsHeader active="booking" withTabs={siteAdmin} />
       <div className="flex flex-col gap-8">
         {/* Optional in the schema only because content editors get the site
             group; a booking admin always receives it. */}

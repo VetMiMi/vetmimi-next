@@ -16,6 +16,8 @@ import {
   PaperPlaneTilt,
   PauseCircle,
   PhoneDisconnect,
+  Plugs,
+  PlugsConnected,
   Prohibit,
   UserMinus,
   VideoCamera,
@@ -37,6 +39,9 @@ type Statuses = {
   publication: Schemas["PublicationStatus"];
   service: Schemas["ServiceState"];
   enquiry: Schemas["ContactEnquiry"]["status"];
+  connection:
+    | Schemas["LinkedInConnection"]["status"]
+    | Schemas["MetaConnection"]["status"];
 };
 
 export type StatusKind = keyof Statuses;
@@ -125,5 +130,17 @@ export const statuses: {
   enquiry: {
     new: { label: "New", ...indigo, icon: EnvelopeSimple },
     handled: { label: "Handled", ...paper, icon: CheckCircle },
+  },
+  // Facebook/Instagram and LinkedIn connections (#153).
+  connection: {
+    not_connected: { label: "Not connected", ...paper, icon: Plugs },
+    choosing_page: { label: "Choose a Page", ...butter, icon: HandPointing },
+    connected: { label: "Connected", ...olive, icon: PlugsConnected },
+    expiring_soon: { label: "Expiring soon", ...ochre, icon: HourglassLow },
+    reconnect_required: {
+      label: "Reconnect needed",
+      ...red,
+      icon: WarningCircle,
+    },
   },
 };

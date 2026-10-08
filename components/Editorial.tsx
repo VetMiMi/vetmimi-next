@@ -1,30 +1,65 @@
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import type { Story } from "@/lib/data";
-import "@/styles/editorial.css";
 import Image from "next/image";
+import { Link } from "@/i18n/navigation";
+import type { PublicImage, StoryItem } from "@/lib/stories";
+import "@/styles/editorial.css";
 
-export function StoryCard({ story }: { story: Story }) {
+// A story's picture: an imported artwork through next/image, or an API cover
+// as a plain <img>, since its web sizes already exist on the API's host.
+export function StoryImage({
+  image,
+  alt,
+  sizes,
+  className,
+}: {
+  image: NonNullable<StoryItem["image"]>;
+  alt: string;
+  sizes: string;
+  className?: string;
+}) {
+  if (!isPublicImage(image)) {
+    return <Image className={className} src={image} alt={alt} sizes={sizes} />;
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      className={className}
+      src={image.sizes[0]?.url}
+      srcSet={image.sizes
+        .map(({ url, width }) => `${url} ${width}w`)
+        .join(", ")}
+      sizes={sizes}
+      width={image.width}
+      height={image.height}
+      alt={alt}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
+
+function isPublicImage(
+  image: NonNullable<StoryItem["image"]>,
+): image is PublicImage {
+  return "sizes" in image;
+}
+
+export function StoryCard({ story }: { story: StoryItem }) {
   const t = useTranslations("stories");
   const tEditorial = useTranslations("common.editorial");
-  const title = t(`items.${story.slug}.title`);
   return (
-    <article className="ed-story">
-      <Image
-        src={story.img}
-        alt=""
-        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-      />
+    <article className={story.image ? "ed-story" : "ed-story ed-story-text"}>
+      {story.image && <StoryImage image={story.image} alt="" sizes="110px" />}
       <div>
-        <p className="ed-label">{t(`types.${story.type}`)}</p>
+        <p className="ed-label">{t(`types.${story.kind}`)}</p>
         <h3>
-          <Link href={`/stories/${story.slug}`}>{title}</Link>
+          <Link href={`/stories/${story.slug}`}>{story.title}</Link>
         </h3>
-        <p>{t(`items.${story.slug}.excerpt`)}</p>
+        <p>{story.excerpt}</p>
         <Link
           className="ed-link"
           href={`/stories/${story.slug}`}
-          aria-label={tEditorial("readStoryLabel", { title })}
+          aria-label={tEditorial("readStoryLabel", { title: story.title })}
         >
           {tEditorial("readStory")}
         </Link>

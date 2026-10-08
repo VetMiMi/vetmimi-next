@@ -16,7 +16,8 @@
   },
   "types": {
     "story": "Story",
-    "insight": "Insight"
+    "insight": "Insight",
+    "announcement": "Announcement"
   },
   "detail": {
     "breadcrumbLabel": "Breadcrumb",

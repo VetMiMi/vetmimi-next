@@ -16,7 +16,8 @@
   },
   "types": {
     "story": "ဇာတ်လမ်း",
-    "insight": "အတွေးအမြင်"
+    "insight": "အတွေးအမြင်",
+    "announcement": "ကြေညာချက်"
   },
   "detail": {
     "breadcrumbLabel": "လမ်းကြောင်းပြ",

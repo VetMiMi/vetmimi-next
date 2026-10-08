@@ -56,6 +56,7 @@ export async function loadStories(locale: Locale): Promise<StoryItem[]> {
     kind: story.type,
     title: t(`items.${story.slug}.title`),
     excerpt: t(`items.${story.slug}.excerpt`),
+    category: t(`items.${story.slug}.category`),
     image: story.img,
     featured: story.featured,
     fromApi: false,

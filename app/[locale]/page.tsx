@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
+import { loadStories } from "@/lib/articles";
 import { pageMetadata } from "@/lib/seo";
 import { HomePage } from "./_components/HomePage";
 
@@ -17,9 +18,14 @@ export async function generateMetadata({
   });
 }
 
+// Refreshed when an article publishes (POST /api/revalidate), and hourly in
+// case the API was unreachable the last time the page was built.
+export const revalidate = 3600;
+
 // The home page is interactive throughout, so it renders as one client
-// component; this server page adds only its metadata.
+// component; this server page adds its metadata and the stories preview.
 export default async function Home({ params }: PageProps<"/[locale]">) {
-  setRequestLocale((await params).locale as Locale);
-  return <HomePage />;
+  const locale = (await params).locale as Locale;
+  setRequestLocale(locale);
+  return <HomePage stories={await loadStories(locale)} />;
 }

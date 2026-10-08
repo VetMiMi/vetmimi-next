@@ -51,5 +51,8 @@
     "readStoryLabel": "{title} ကို ဖတ်ရန်",
     "filterLabel": "အမျိုးအစားအလိုက် စစ်ထုတ်ရန်",
     "count": "{count, plural, other {{count} ခု}}"
+  },
+  "og": {
+    "alt": "VetMiMi · {title}"
   }
 }

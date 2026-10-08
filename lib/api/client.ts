@@ -57,12 +57,15 @@ const forwardVisitorIp: Middleware = {
 };
 
 // Public routes and sign-in: authenticated as this Next app (ADR-002).
+// A cached content read is shared by every visitor, so it forwards no
+// visitor address, and reading the request headers would stop the page
+// from being static.
 export function publicApi(options: CallOptions = {}) {
   const client = apiClient(
     { "X-Service-Key": requireEnv("API_SERVICE_KEY") },
     options,
   );
-  client.use(forwardVisitorIp);
+  if (!options.tags) client.use(forwardVisitorIp);
   return client;
 }
 

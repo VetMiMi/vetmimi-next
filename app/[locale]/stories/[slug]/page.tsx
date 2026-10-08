@@ -1,21 +1,59 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   getMessages,
   getTranslations,
   setRequestLocale,
 } from "next-intl/server";
-import { StoryCard } from "@/components/Editorial";
+import Markdown from "react-markdown";
+import { StoryCard, StoryImage } from "@/components/Editorial";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { STORIES, type StorySlug } from "@/lib/data";
-import Image from "next/image";
+import { getArticle, loadStories, type Article } from "@/lib/articles";
+import { STORIES, type Story, type StorySlug } from "@/lib/data";
+import { storyFromArticle } from "@/lib/stories";
 
-// Prerender one static page per entry at build time;
-// any other slug is a 404 without rendering anything.
-export const dynamicParams = false;
+// The written stories are prerendered at build time; a published article
+// renders on its first visit and is then cached like them. Refreshed when an
+// article publishes (POST /api/revalidate), and hourly in case the API was
+// unreachable the last time the page was built.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return STORIES.map((item) => ({ slug: item.slug }));
+}
+
+// A published article brings its own SEO text and cover; a written story
+// keeps the site's defaults.
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/stories/[slug]">): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const article = await getArticle(locale as Locale, slug);
+  if (!article) return {};
+  const cover = article.coverImage;
+  const image = cover?.sizes[0];
+  return {
+    title: article.seoTitle,
+    description: article.seoDescription,
+    openGraph: {
+      type: "article",
+      title: article.seoTitle,
+      description: article.seoDescription,
+      publishedTime: article.publishedAt,
+      images:
+        cover && image
+          ? [
+              {
+                url: image.url,
+                width: image.width,
+                height: Math.round((image.width * cover.height) / cover.width),
+                alt: cover.alt || undefined,
+              },
+            ]
+          : undefined,
+    },
+  };
 }
 
 export default async function StoryDetail({
@@ -23,16 +61,15 @@ export default async function StoryDetail({
 }: PageProps<"/[locale]/stories/[slug]">) {
   const { locale, slug } = await params;
   setRequestLocale(locale as Locale);
+  const [article, items, t] = await Promise.all([
+    getArticle(locale as Locale, slug),
+    loadStories(locale as Locale),
+    getTranslations("stories"),
+  ]);
   const story = STORIES.find((item) => item.slug === slug);
-  if (!story) notFound();
-  const t = await getTranslations("stories");
-  // Optional per-story text: only some stories have a subtitle or a body yet.
-  const { stories } = await getMessages();
-  const subtitles: Partial<Record<StorySlug, string>> = stories.subtitles;
-  const bodies: Partial<Record<StorySlug, string[]>> = stories.bodies;
-  const excerpt = t(`items.${story.slug}.excerpt`);
-  const typeLabel = t(`types.${story.type}`);
-  const paragraphs = bodies[story.slug] ?? [excerpt];
+  const kind = article ? storyFromArticle(article).kind : story?.type;
+  if (!kind) notFound();
+  const typeLabel = t(`types.${kind}`);
   return (
     <div className="ed-page">
       <nav
@@ -44,23 +81,11 @@ export default async function StoryDetail({
         <span>{typeLabel}</span>
       </nav>
       <article className="ed-reading">
-        <header className="ed-article-header">
-          <p className="ed-label">{typeLabel}</p>
-          <h1>{t(`items.${story.slug}.title`)}</h1>
-          <p className="ed-lead">{subtitles[story.slug] || excerpt}</p>
-          <p className="ed-preview-label">{t("detail.preview")}</p>
-        </header>
-        <Image
-          className="ed-article-image"
-          src={story.img}
-          alt={t("detail.imageAlt")}
-          sizes="(max-width: 1168px) 100vw, 1120px"
-        />
-        <div className="ed-article-body">
-          {paragraphs.map((text, index) => (
-            <p key={index}>{text}</p>
-          ))}
-        </div>
+        {article ? (
+          <PublishedArticle article={article} typeLabel={typeLabel} />
+        ) : (
+          story && <WrittenStory story={story} typeLabel={typeLabel} />
+        )}
       </article>
       <section className="ed-container">
         <div className="ed-section-top">
@@ -70,7 +95,8 @@ export default async function StoryDetail({
           </Link>
         </div>
         <div className="ed-story-list">
-          {STORIES.filter((item) => item.slug !== slug)
+          {items
+            .filter((item) => item.slug !== slug)
             .slice(0, 2)
             .map((item) => (
               <StoryCard key={item.slug} story={item} />
@@ -78,5 +104,78 @@ export default async function StoryDetail({
         </div>
       </section>
     </div>
+  );
+}
+
+const ARTICLE_IMAGE_SIZES = "(max-width: 1168px) 100vw, 1120px";
+
+function PublishedArticle({
+  article,
+  typeLabel,
+}: {
+  article: Article;
+  typeLabel: string;
+}) {
+  return (
+    <>
+      <header className="ed-article-header">
+        <p className="ed-label">{typeLabel}</p>
+        <h1>{article.title}</h1>
+        <p className="ed-lead">{article.excerpt}</p>
+      </header>
+      {article.coverImage && (
+        <StoryImage
+          className="ed-article-image"
+          image={article.coverImage}
+          alt={article.coverImage.alt}
+          sizes={ARTICLE_IMAGE_SIZES}
+          eager
+        />
+      )}
+      {/* No raw HTML and no inline images, as the portal's preview shows. */}
+      <div className="ed-article-body">
+        <Markdown skipHtml disallowedElements={["img"]} unwrapDisallowed>
+          {article.body}
+        </Markdown>
+      </div>
+    </>
+  );
+}
+
+async function WrittenStory({
+  story,
+  typeLabel,
+}: {
+  story: Story;
+  typeLabel: string;
+}) {
+  const t = await getTranslations("stories");
+  // Optional per-story text: only some stories have a subtitle or a body yet.
+  const { stories } = await getMessages();
+  const subtitles: Partial<Record<StorySlug, string>> = stories.subtitles;
+  const bodies: Partial<Record<StorySlug, string[]>> = stories.bodies;
+  const excerpt = t(`items.${story.slug}.excerpt`);
+  const paragraphs = bodies[story.slug] ?? [excerpt];
+  return (
+    <>
+      <header className="ed-article-header">
+        <p className="ed-label">{typeLabel}</p>
+        <h1>{t(`items.${story.slug}.title`)}</h1>
+        <p className="ed-lead">{subtitles[story.slug] || excerpt}</p>
+        <p className="ed-preview-label">{t("detail.preview")}</p>
+      </header>
+      <StoryImage
+        className="ed-article-image"
+        image={story.img}
+        alt={t("detail.imageAlt")}
+        sizes={ARTICLE_IMAGE_SIZES}
+        eager
+      />
+      <div className="ed-article-body">
+        {paragraphs.map((text, index) => (
+          <p key={index}>{text}</p>
+        ))}
+      </div>
+    </>
   );
 }

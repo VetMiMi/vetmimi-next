@@ -1,4 +1,4 @@
-import { pageAlternates, siteUrl } from "./seo.ts";
+import { isLiveSite, pageAlternates, siteUrl } from "./seo.ts";
 
 // IndexNow tells Bing (and so ChatGPT search and Copilot) at once that a
 // page changed, instead of waiting for the next crawl. The key proves the
@@ -38,7 +38,7 @@ export function indexNowPayload(key: string, slugs: string[]) {
 export async function pingIndexNow(tags: string[]): Promise<void> {
   const key = process.env.INDEXNOW_KEY?.trim();
   const slugs = articleSlugs(tags);
-  if (process.env.VERCEL_ENV !== "production" || !key || !slugs.length) {
+  if (!isLiveSite() || !key || !slugs.length) {
     return;
   }
   try {

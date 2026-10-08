@@ -69,6 +69,15 @@ jobs:
           path: playwright-report/
           retention-days: 14
 
+  dockerfile:
+    name: Dockerfile lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
   commits:
     name: Commit checks
     runs-on: ubuntu-latest

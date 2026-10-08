@@ -1,0 +1,50 @@
+name: Image check
+
+# Builds the live site's image on pull requests that could break it, without
+# pushing, and proves it starts and can resize images (sharp on arm64).
+
+on:
+  pull_request:
+    paths:
+      - Dockerfile
+      - .dockerignore
+      - next.config.ts
+      - package.json
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - .github/workflows/image.yml
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    name: Build and start the image
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/arm64
+          load: true
+          tags: vetmimi-next:check
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: Start the image and check health and image resizing
+        run: |
+          docker run -d --name web -p 3000:3000 vetmimi-next:check
+          for _ in $(seq 1 30); do
+            curl -fsS http://localhost:3000/api/health && break
+            sleep 1
+          done
+          curl -fsS http://localhost:3000/api/health | grep -q '"status":"ok"'
+          image=$(curl -fsS http://localhost:3000/ | grep -o '/_next/image?url=[^" ]*' | head -1 | sed 's/&amp;/\&/g')
+          test -n "$image"
+          curl -fsS -o /dev/null "http://localhost:3000$image"
+          # Without sharp Next serves the original image, so load it directly.
+          docker exec web sh -c 'node -e "require(process.argv[1])" "$(dirname "$(find /app/node_modules -path "*/node_modules/sharp/package.json" | head -1)")"'
+      - if: failure()
+        run: docker logs web

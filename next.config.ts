@@ -4,6 +4,8 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  // The live site runs as a Docker image (Dockerfile); Vercel ignores this.
+  output: "standalone",
   images: {
     // Next 16 only serves qualities listed here; any other `quality` prop
     // is silently rounded to the nearest one. 75 is the default.

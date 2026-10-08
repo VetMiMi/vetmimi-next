@@ -1,9 +1,11 @@
 import { revalidateTag } from "next/cache";
+import { after } from "next/server";
+import { pingIndexNow } from "@/lib/indexnow";
 import { revalidateSecretMatches } from "@/lib/revalidateSecret";
 
 // Called by the API when an article publishes or changes, with
 // {"tags": ["articles", "article:<slug>"]}, so the stories pages and the
-// sitemap (built from the same "articles" fetch) show it.
+// sitemap and /llms.txt (built from the same "articles" fetch) show it.
 export async function POST(request: Request) {
   const secret = request.headers.get("x-revalidate-secret");
   if (!revalidateSecretMatches(secret, process.env.SITE_REVALIDATE_SECRET)) {
@@ -19,6 +21,8 @@ export async function POST(request: Request) {
   // expire: 0, so the next visit shows the new article rather than the
   // cached page once more; there are few visitors to keep waiting.
   for (const tag of tags) revalidateTag(tag, { expire: 0 });
+  // After the response, so the API never waits on IndexNow.
+  after(() => pingIndexNow(tags));
   return Response.json({ revalidated: tags });
 }
 

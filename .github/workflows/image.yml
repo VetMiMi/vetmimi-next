@@ -41,9 +41,10 @@ jobs:
             sleep 1
           done
           curl -fsS http://localhost:3000/api/health | grep -q '"status":"ok"'
-          image=$(curl -fsS http://localhost:3000/ | grep -o '/_next/image?url=[^"]*' | head -1 | sed 's/&amp;/\&/g')
+          image=$(curl -fsS http://localhost:3000/ | grep -o '/_next/image?url=[^" ]*' | head -1 | sed 's/&amp;/\&/g')
           test -n "$image"
           curl -fsS -o /dev/null "http://localhost:3000$image"
+          # Without sharp Next serves the original image, so load it directly.
           docker exec web sh -c 'node -e "require(process.argv[1])" "$(dirname "$(find /app/node_modules -path "*/node_modules/sharp/package.json" | head -1)")"'
       - if: failure()
         run: docker logs web

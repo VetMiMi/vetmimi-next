@@ -34,6 +34,29 @@ export function pageAlternates(locale: Locale, pathname: string) {
   };
 }
 
+// Public facts about the practice and Daw Mi that structured data repeats.
+// Each is already shown on a page: the footer links the Facebook page, the
+// contact page says "Sydney, NSW, Australia" (no street address is
+// published), and About names her training (CECAT) and professional body
+// (ACCA). Change them here and on the page together.
+export const PRACTICE = {
+  name: "VetMiMi",
+  facebookUrl: "https://www.facebook.com/vet.mimi",
+  locality: "Sydney",
+  region: "NSW",
+  country: "AU",
+  countryName: "Australia",
+  serviceType: "Art therapy",
+};
+
+// Her English public name on both languages until her Burmese public name
+// is confirmed (#52).
+export const DAW_MI = {
+  name: "Daw Mi",
+  alumniOf: "College for Educational and Clinical Art Therapy",
+  memberOf: "Australian Community Counselling Association",
+};
+
 export const OPEN_GRAPH_LOCALES: Record<Locale, string> = {
   en: "en_AU",
   my: "my_MM",
@@ -43,7 +66,7 @@ export const OPEN_GRAPH_LOCALES: Record<Locale, string> = {
 // replaces the layout's whole object, so pages spread this in again.
 export function openGraphDefaults(locale: Locale) {
   return {
-    siteName: "VetMiMi",
+    siteName: PRACTICE.name,
     locale: OPEN_GRAPH_LOCALES[locale],
     alternateLocale: routing.locales
       .filter((each) => each !== locale)

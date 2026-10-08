@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { PRACTICE } from "@/lib/seo";
 import { C } from "@/lib/tokens";
 import { PetalOutline, WaveDivider } from "@/components/art/Shapes";
 import { ExternalLink } from "@/components/ExternalLink";
@@ -161,7 +162,7 @@ export default function SiteFooter() {
               links={[
                 [t("nav.bookAppointment"), "/book"],
                 [t("nav.contact"), "/contact"],
-                [t("footer.facebook"), "https://www.facebook.com/vet.mimi"],
+                [t("footer.facebook"), PRACTICE.facebookUrl],
                 [t("footer.email"), "mailto:meenaerie@gmail.com"],
               ]}
             />

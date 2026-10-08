@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { ServiceJsonLd } from "@/components/JsonLd";
 import ServiceDetail from "@/components/ServiceDetail";
 import type { Locale } from "@/i18n/routing";
 import { pageMetadata } from "@/lib/seo";
@@ -33,5 +34,10 @@ export default async function ServicePage({
 }: PageProps<"/[locale]/services/[slug]">) {
   const { locale, slug } = await params;
   setRequestLocale(locale as Locale);
-  return <ServiceDetail slug={slug} />;
+  return (
+    <>
+      <ServiceJsonLd slug={slug} />
+      <ServiceDetail slug={slug} />
+    </>
+  );
 }

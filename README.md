@@ -31,12 +31,14 @@ All data, auth, booking rules and video signaling live in the Go API, [VetMiMi/v
 ## Features
 
 **Visitors and clients**
+
 - Home, About, Services (3 service pages), Art of Wellness, Portfolio gallery, Stories, Contact, and the legal pages. Every page has an English version and a Burmese version under `/my`.
 - **Booking** in four steps: service → date and time (practice time zone) → details → review. If a slot is taken in the meantime, the API offers alternative times.
 - **Manage link** (`/manage/<token>`): cancel the appointment, with a late-cancellation warning, or ask to reschedule by proposing up to 3 times. The current booking stays in place until a new time is confirmed.
 - **Video session** (`/session/<token>`): a camera and mic check with a level meter, then a 1:1 call. The session page handles opening the link too early, a weak connection, reconnecting, and being replaced when the same person joins from another device.
 
 **Admin console (`/admin`, English only)**
+
 - Sign-in with email, password and a **TOTP code**. The console has three roles (site admin, booking admin, content editor), and the navigation shows each person only what their role allows.
 - **Appointments:** a list with filters and an "attention" panel. Each appointment's page shows its history and private notes, and offers only the status changes the API allows for it. Daw Mi can reschedule, create appointments manually, and start the video session from here.
 - **Availability:** weekly hours, date overrides, and blocks. When a new block clashes with existing bookings, the console warns before saving.
@@ -67,16 +69,16 @@ All data, auth, booking rules and video signaling live in the Go API, [VetMiMi/v
 
 ## Tech stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router, Server Functions, `proxy.ts`), React 19, TypeScript 5 |
-| Styling | Tailwind CSS 4, CSS variable design tokens, Phosphor icons, `next/font` (Fraunces, Manrope, Noto Sans/Serif Myanmar) |
-| i18n | next-intl 4: English at `/`, Burmese at `/my`, 12 message namespaces |
-| API client | openapi-fetch + openapi-typescript, generated from the API's OpenAPI contract |
-| Real-time | WebRTC (`RTCPeerConnection`), WebSocket signaling |
-| Content | react-markdown |
-| Testing | `node:test` unit tests, Playwright, axe-core |
-| Hosting | Vercel (production from `main`, a preview deploy for every PR) |
+| Layer      | Technology                                                                                                           |
+| ---------- | -------------------------------------------------------------------------------------------------------------------- |
+| Framework  | Next.js 16 (App Router, Server Functions, `proxy.ts`), React 19, TypeScript 5                                        |
+| Styling    | Tailwind CSS 4, CSS variable design tokens, Phosphor icons, `next/font` (Fraunces, Manrope, Noto Sans/Serif Myanmar) |
+| i18n       | next-intl 4: English at `/`, Burmese at `/my`, 12 message namespaces                                                 |
+| API client | openapi-fetch + openapi-typescript, generated from the API's OpenAPI contract                                        |
+| Real-time  | WebRTC (`RTCPeerConnection`), WebSocket signaling                                                                    |
+| Content    | react-markdown                                                                                                       |
+| Testing    | `node:test` unit tests, Playwright, axe-core                                                                         |
+| Hosting    | Vercel (production from `main`, a preview deploy for every PR)                                                       |
 
 ## Architecture
 
@@ -103,24 +105,24 @@ cp .env.example .env.local   # then fill in the values below
 pnpm dev                     # http://localhost:3000
 ```
 
-| Variable | Purpose |
-|---|---|
-| `API_URL` | Base URL of the Go API: `http://localhost:8080` locally; in production, the API host's own address (the hostname behind the API's `PUBLIC_API_URL`) |
-| `API_SERVICE_KEY` | The API's `SERVICE_KEY`, sent as `X-Service-Key` on public routes and sign-in |
-| `SITE_REVALIDATE_SECRET` | Shared secret the API sends to `POST /api/revalidate` when an article is published |
-| `SITE_URL` | *Optional.* Public address used for canonical links, hreflang, the sitemap and social cards. Without it, Vercel production builds use the project's production domain and every other build uses `http://localhost:3000` |
+| Variable                 | Purpose                                                                                                                                                                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `API_URL`                | Base URL of the Go API: `http://localhost:8080` locally; in production, the API host's own address (the hostname behind the API's `PUBLIC_API_URL`)                                                                      |
+| `API_SERVICE_KEY`        | The API's `SERVICE_KEY`, sent as `X-Service-Key` on public routes and sign-in                                                                                                                                            |
+| `SITE_REVALIDATE_SECRET` | Shared secret the API sends to `POST /api/revalidate` when an article is published                                                                                                                                       |
+| `SITE_URL`               | _Optional._ Public address used for canonical links, hreflang, the sitemap and social cards. Without it, Vercel production builds use the project's production domain and every other build uses `http://localhost:3000` |
 
 All variables are server-only (there is no `NEXT_PUBLIC_`). Production and preview values live in Vercel. **A build needs none of them.** Without the API, the site still runs: booking shows "not available yet", stories fall back to the built-in content, and admin sign-in explains that it isn't available. Only production builds allow search engines to crawl (`app/robots.ts`); preview builds send `Disallow: /`.
 
 **Useful scripts**
 
-| Command | What it does |
-|---|---|
-| `pnpm gate` | Runs lint, format check, type check, i18n check, unit tests and production build, one machine-wide run at a time |
-| `pnpm test:unit` | Unit tests in `lib/**/*.test.ts` (Node's built-in test runner) |
-| `pnpm i18n:check` | Checks English/Burmese key parity and page metadata |
-| `pnpm api:types` | Regenerates `lib/api/schema.ts` from the pinned API version |
-| `pnpm e2e` | Playwright and axe, run against a site that is already running |
+| Command           | What it does                                                                                                     |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `pnpm gate`       | Runs lint, format check, type check, i18n check, unit tests and production build, one machine-wide run at a time |
+| `pnpm test:unit`  | Unit tests in `lib/**/*.test.ts` (Node's built-in test runner)                                                   |
+| `pnpm i18n:check` | Checks English/Burmese key parity and page metadata                                                              |
+| `pnpm api:types`  | Regenerates `lib/api/schema.ts` from the pinned API version                                                      |
+| `pnpm e2e`        | Playwright and axe, run against a site that is already running                                                   |
 
 ## Testing
 
@@ -131,6 +133,7 @@ All variables are server-only (there is no `NEXT_PUBLIC_`). Production and previ
   - keyboard use of the skip link, menu and language switcher
 
   These checks run in CI. Known failures are listed in `e2e/axe-baseline.json`. The baseline only ratchets down: a new failure fails the job, and so does a listed failure that has been fixed until its entry is removed. When the job fails, download the `playwright-report` artifact from the run's summary page and open `index.html` (or run `pnpm exec playwright show-report <folder>`). Each axe test includes an `axe-violations.json` attachment naming the rule, its impact and the elements involved.
+
 - **CI** (`.github/workflows/ci.yml`) runs on every PR and every push to `main`, with three jobs:
   - **Web checks:** the API types match the pinned version, then lint, format, types, i18n, unit tests and build
   - **Web end-to-end:** the Playwright and axe checks above

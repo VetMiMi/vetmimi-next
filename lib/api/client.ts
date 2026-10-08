@@ -7,8 +7,9 @@ import { ApiError } from "./problem";
 const TIMEOUT_MS = 10_000;
 
 // Content reads may opt into Next's data cache with tags (ADR-008); every
-// other call is fresh.
-type CallOptions = { tags?: string[] };
+// other call is fresh. A call known to be slow (the AI assistant) may wait
+// longer than the usual ten seconds.
+export type CallOptions = { tags?: string[]; timeoutMs?: number };
 
 // Read when a call is made, not at import, so `pnpm build` passes in CI
 // without the secrets.
@@ -26,7 +27,10 @@ export function apiConfigured(): boolean {
   return Boolean(process.env.API_URL && process.env.API_SERVICE_KEY);
 }
 
-function apiClient(auth: Record<string, string>, { tags }: CallOptions) {
+function apiClient(
+  auth: Record<string, string>,
+  { tags, timeoutMs = TIMEOUT_MS }: CallOptions,
+) {
   const cache: RequestInit = tags ? { next: { tags } } : { cache: "no-store" };
   return createClient<paths>({
     baseUrl: requireEnv("API_URL"),
@@ -35,7 +39,7 @@ function apiClient(auth: Record<string, string>, { tags }: CallOptions) {
       try {
         return await fetch(request, {
           ...cache,
-          signal: AbortSignal.timeout(TIMEOUT_MS),
+          signal: AbortSignal.timeout(timeoutMs),
         });
       } catch (cause) {
         throw ApiError.unavailable(cause);

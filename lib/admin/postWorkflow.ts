@@ -90,6 +90,10 @@ export const failureReason = (error: string | undefined) =>
   (error && reasons[error]) ??
   "The post did not go out. Retry, or use Copy & open.";
 
+// Failures that a connection in Settings → Connections puts right.
+export const needsConnection = (error: string | undefined) =>
+  error === "reconnect_required" || error === "not_connected";
+
 export const platformHome: Record<SocialChannel, string> = {
   facebook: "https://www.facebook.com/",
   instagram: "https://www.instagram.com/",

@@ -41,6 +41,17 @@ async function mediaOf(post: components["schemas"]["Post"]) {
   return found.filter((media): media is Media => media !== null);
 }
 
+// Whether "Suggest versions" shows: off when the server has no AI key, and
+// off rather than an error page when the status cannot be read.
+async function aiStatus() {
+  return adminCall(async (api) => unwrap(await api.GET("/admin/ai/status")))
+    .then((status) => status.enabled)
+    .catch((error) => {
+      if (error instanceof ApiError) return false;
+      throw error;
+    });
+}
+
 // One post, its channel versions and its workflow (#151, #152).
 export default async function PostPage({
   params,
@@ -61,7 +72,7 @@ export default async function PostPage({
     throw error;
   });
   if (!post) return <NoAccess />;
-  const media = await mediaOf(post);
+  const [media, aiEnabled] = await Promise.all([mediaOf(post), aiStatus()]);
 
   return (
     <>
@@ -74,6 +85,7 @@ export default async function PostPage({
         post={post}
         media={media}
         canReview={canUse(user.roles, ["site_admin"])}
+        aiEnabled={aiEnabled}
       />
     </>
   );

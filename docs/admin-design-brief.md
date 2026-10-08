@@ -215,6 +215,16 @@ channel's badge names the channel first ("Instagram · Failed").
 | `paused`   | Paused   | `ochre`  | `#79602e` | `PauseCircle` |
 | `archived` | Archived | `paper`  | `#625d64` | `Archive`     |
 
+### Platform connections (#153)
+
+| Status               | Label            | Tint     | Text      | Icon             |
+| -------------------- | ---------------- | -------- | --------- | ---------------- |
+| `not_connected`      | Not connected    | `paper`  | `#625d64` | `Plugs`          |
+| `choosing_page`      | Choose a Page    | `butter` | `#79602e` | `HandPointing`   |
+| `connected`          | Connected        | `olive`  | `ink`     | `PlugsConnected` |
+| `expiring_soon`      | Expiring soon    | `ochre`  | `#79602e` | `HourglassLow`   |
+| `reconnect_required` | Reconnect needed | `red`    | `#ab4347` | `WarningCircle`  |
+
 ## 4. Typography
 
 Three families from `app/fonts.ts`, self-hosted by `next/font`, exposed as

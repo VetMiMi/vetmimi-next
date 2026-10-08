@@ -25,11 +25,13 @@ import { MediaPicker } from "./MediaPicker";
 import { PostFields } from "./PostFields";
 import { Readiness } from "./Readiness";
 import { SocialTabs } from "./SocialTabs";
+import { Suggestions } from "./Suggestions";
 import { useUnsavedWarning } from "./useUnsavedWarning";
 import { sectionTitle, WebsiteFields } from "./WebsiteFields";
 import { Workflow } from "./Workflow";
 
 type Post = components["schemas"]["Post"];
+type Channel = Draft["facebook"];
 
 const same = (a: Draft, b: Draft) => JSON.stringify(a) === JSON.stringify(b);
 
@@ -46,10 +48,12 @@ export function PostEditor({
   post: loaded,
   media: loadedMedia,
   canReview,
+  aiEnabled,
 }: {
   post: Post;
   media: Media[];
   canReview: boolean;
+  aiEnabled: boolean;
 }) {
   const [post, setPost] = useState(loaded);
   const [saved, setSaved] = useState(() => toDraft(loaded));
@@ -77,6 +81,10 @@ export function PostEditor({
     const nextDraft = afterSave(saved, next);
     setSaved(nextDraft);
     setDraft(nextDraft);
+  }
+
+  function setChannel(channel: SocialChannel, patch: Partial<Channel>) {
+    setDraft((d) => ({ ...d, [channel]: { ...d[channel], ...patch } }));
   }
 
   function attach(item: Media) {
@@ -192,15 +200,13 @@ export function PostEditor({
             draft={draft}
             media={media}
             errors={fieldErrors}
-            onChange={(channel, patch) =>
-              setDraft((d) => ({
-                ...d,
-                [channel]: { ...d[channel], ...patch },
-              }))
-            }
+            onChange={setChannel}
             onPickImage={setPicking}
           />
         </Card>
+        {aiEnabled && editable && (
+          <Suggestions postId={post.id} draft={draft} onAccept={setChannel} />
+        )}
       </form>
 
       {/* On a phone the Save card sits below the whole form, so unsaved
@@ -278,7 +284,12 @@ export function PostEditor({
         />
 
         {post.publications.length > 0 && (
-          <Channels post={post} media={media} onChange={moved} />
+          <Channels
+            post={post}
+            media={media}
+            canConnect={canReview}
+            onChange={moved}
+          />
         )}
 
         {editable && <Readiness problems={problems} />}

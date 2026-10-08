@@ -1,15 +1,16 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { CheckCircle } from "@phosphor-icons/react";
 import { Button } from "@/components/admin/Button";
 import { Card } from "@/components/admin/Card";
 import { Notice } from "@/components/admin/Notice";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { useToast } from "@/components/admin/Toast";
+import type { Media } from "@/lib/admin/media";
 import {
   afterSave,
   EDITABLE,
+  imageLimits,
   readiness,
   toDraft,
   toPatch,
@@ -19,28 +20,47 @@ import {
 import { whenShort } from "@/lib/admin/posts";
 import type { components } from "@/lib/api/schema";
 import { savePost } from "../../actions";
-import { ChannelBadge } from "../../_components/ChannelBadge";
+import { Channels } from "./Channels";
+import { MediaPicker } from "./MediaPicker";
 import { PostFields } from "./PostFields";
+import { Readiness } from "./Readiness";
 import { SocialTabs } from "./SocialTabs";
 import { useUnsavedWarning } from "./useUnsavedWarning";
 import { sectionTitle, WebsiteFields } from "./WebsiteFields";
+import { Workflow } from "./Workflow";
 
 type Post = components["schemas"]["Post"];
 
 const same = (a: Draft, b: Draft) => JSON.stringify(a) === JSON.stringify(b);
 
-// The post editor (#151): the post, its website article and its social
-// versions on the left; saving, what approval still needs and the workflow
-// on the right (below on a phone). Nothing saves by itself: "Save changes"
-// sends the version it was loaded at, so a change made elsewhere is caught
-// rather than overwritten, and the typed text stays on the page.
-export function PostEditor({ post: loaded }: { post: Post }) {
+const FORM_ID = "post-form";
+
+// The post editor (#151, #152): the post, its website article and its
+// social versions on the left; saving, what approval still needs, the
+// workflow and each channel's publishing on the right (below on a phone).
+// Nothing saves by itself: "Save changes" sends the version it was loaded
+// at, so a change made elsewhere is caught rather than overwritten, and
+// the typed text stays on the page. Images are part of the draft: attach,
+// reorder or take one out, then save.
+export function PostEditor({
+  post: loaded,
+  media: loadedMedia,
+  canReview,
+}: {
+  post: Post;
+  media: Media[];
+  canReview: boolean;
+}) {
   const [post, setPost] = useState(loaded);
   const [saved, setSaved] = useState(() => toDraft(loaded));
   const [draft, setDraft] = useState(saved);
   const [error, setError] = useState<{ message: string; stale: boolean }>();
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [pending, startTransition] = useTransition();
+  const [media, setMedia] = useState(() =>
+    Object.fromEntries(loadedMedia.map((item) => [item.id, item])),
+  );
+  const [picking, setPicking] = useState<"cover" | SocialChannel>();
   const noticeRef = useRef<HTMLDivElement>(null);
   const toast = useToast();
 
@@ -48,16 +68,36 @@ export function PostEditor({ post: loaded }: { post: Post }) {
   const dirty = !same(draft, saved);
   const release = useUnsavedWarning(dirty);
 
-  const imageIds: Record<SocialChannel, string[]> = {
-    facebook: post.versions.facebook?.imageIds ?? [],
-    instagram: post.versions.instagram?.imageIds ?? [],
-    linkedin: post.versions.linkedin?.imageIds ?? [],
-  };
-  const problems = readiness(draft, {
-    facebook: imageIds.facebook.length,
-    instagram: imageIds.instagram.length,
-    linkedin: imageIds.linkedin.length,
-  });
+  const problems = readiness(draft);
+
+  // A workflow step or a channel's progress: the post moved on, and with
+  // no unsaved changes the working copy follows it.
+  function moved(next: Post) {
+    setPost(next);
+    const nextDraft = afterSave(saved, next);
+    setSaved(nextDraft);
+    setDraft(nextDraft);
+  }
+
+  function attach(item: Media) {
+    setMedia((all) => ({ ...all, [item.id]: item }));
+    if (picking === "cover") {
+      setDraft((d) => ({
+        ...d,
+        website: { ...d.website, coverImageId: item.id },
+      }));
+    } else if (picking) {
+      const channel = picking;
+      setDraft((d) => {
+        const ids = d[channel].imageIds;
+        const imageIds =
+          ids.length < imageLimits[channel] ? [...ids, item.id] : [item.id];
+        return { ...d, [channel]: { ...d[channel], imageIds } };
+      });
+    }
+    setPicking(undefined);
+    toast("Image attached. Save to keep it");
+  }
 
   function save(event: React.FormEvent) {
     event.preventDefault();
@@ -100,13 +140,16 @@ export function PostEditor({ post: loaded }: { post: Post }) {
     window.location.reload();
   }
 
+  // The form holds the fields only; the side panel's buttons name it, so
+  // the workflow's and the library's own fields never submit the post.
   return (
-    <form
-      noValidate
-      onSubmit={save}
-      className="flex flex-col gap-6 min-[900px]:grid min-[900px]:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] min-[900px]:items-start min-[900px]:gap-x-[clamp(28px,4vw,56px)]"
-    >
-      <div className="flex min-w-0 flex-col gap-6">
+    <div className="flex flex-col gap-6 min-[900px]:grid min-[900px]:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] min-[900px]:items-start min-[900px]:gap-x-[clamp(28px,4vw,56px)]">
+      <form
+        id={FORM_ID}
+        noValidate
+        onSubmit={save}
+        className="flex min-w-0 flex-col gap-6"
+      >
         {post.reviewNote && post.status === "draft" && (
           <Notice tone="info">Changes requested: {post.reviewNote}</Notice>
         )}
@@ -133,11 +176,13 @@ export function PostEditor({ post: loaded }: { post: Post }) {
           <fieldset disabled={!editable} className="m-0 min-w-0 border-0 p-0">
             <WebsiteFields
               website={draft.website}
-              coverImageId={post.versions.website?.coverImageId}
+              media={media}
+              editable={editable}
               errors={fieldErrors}
               onChange={(patch) =>
                 setDraft((d) => ({ ...d, website: { ...d.website, ...patch } }))
               }
+              onPickCover={() => setPicking("cover")}
             />
           </fieldset>
         </Card>
@@ -145,7 +190,7 @@ export function PostEditor({ post: loaded }: { post: Post }) {
           <SocialTabs
             disabled={!editable}
             draft={draft}
-            imageIds={imageIds}
+            media={media}
             errors={fieldErrors}
             onChange={(channel, patch) =>
               setDraft((d) => ({
@@ -153,9 +198,10 @@ export function PostEditor({ post: loaded }: { post: Post }) {
                 [channel]: { ...d[channel], ...patch },
               }))
             }
+            onPickImage={setPicking}
           />
         </Card>
-      </div>
+      </form>
 
       {/* On a phone the Save card sits below the whole form, so unsaved
           changes also get a save button above the tab bar. */}
@@ -163,6 +209,7 @@ export function PostEditor({ post: loaded }: { post: Post }) {
         <div className="fixed inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom))] z-20 px-5 min-[900px]:hidden">
           <Button
             type="submit"
+            form={FORM_ID}
             size="page"
             busy={pending}
             className="w-full shadow-lifted"
@@ -172,9 +219,11 @@ export function PostEditor({ post: loaded }: { post: Post }) {
         </div>
       )}
 
+      {/* Sticky, and scrolled on its own when the workflow and channels
+          make it taller than the window. */}
       <aside
         aria-label="Saving and workflow"
-        className="flex flex-col gap-6 min-[900px]:sticky min-[900px]:top-[104px]"
+        className="flex flex-col gap-6 min-[900px]:sticky min-[900px]:top-[104px] min-[900px]:max-h-[calc(100dvh-128px)] min-[900px]:overflow-y-auto"
       >
         <Card as="section">
           <h2 className={sectionTitle}>{editable ? "Save" : "Status"}</h2>
@@ -208,6 +257,7 @@ export function PostEditor({ post: loaded }: { post: Post }) {
                 </p>
                 <Button
                   type="submit"
+                  form={FORM_ID}
                   size="page"
                   busy={pending}
                   disabled={!dirty}
@@ -220,51 +270,26 @@ export function PostEditor({ post: loaded }: { post: Post }) {
           </div>
         </Card>
 
-        {editable && (
-          <Card as="section">
-            <h2 className={sectionTitle}>Before approval</h2>
-            {problems.length === 0 ? (
-              <p className="flex items-start gap-2 text-[0.92rem] text-ink">
-                <CheckCircle
-                  aria-hidden="true"
-                  size={20}
-                  className="mt-0.5 shrink-0 text-olive"
-                />
-                Every channel that is on is ready for review.
-              </p>
-            ) : (
-              <ul className="flex list-disc flex-col gap-2 pl-5 text-[0.92rem] leading-[1.6] text-muted">
-                {problems.map((problem) => (
-                  <li key={problem}>{problem}</li>
-                ))}
-              </ul>
-            )}
-          </Card>
-        )}
+        <Workflow
+          post={post}
+          canReview={canReview}
+          dirty={dirty}
+          onChange={moved}
+        />
 
         {post.publications.length > 0 && (
-          <Card as="section">
-            <h2 className={sectionTitle}>Channels</h2>
-            <ul className="flex flex-wrap gap-2">
-              {post.publications.map((p) => (
-                <li key={p.channel}>
-                  <ChannelBadge channel={p.channel} status={p.status} />
-                </li>
-              ))}
-            </ul>
-          </Card>
+          <Channels post={post} media={media} onChange={moved} />
         )}
 
-        {/* Submit, approve, schedule, publish and copy & open land here
-            with #152. */}
-        <section className="rounded-card border border-dashed border-input-border px-[clamp(24px,4vw,44px)] py-6">
-          <h2 className="mb-2 text-[1.35rem]">Workflow</h2>
-          <p className="text-[0.92rem] leading-[1.6] text-muted">
-            Submitting for review, approving, scheduling and publishing will be
-            here. For now, save your changes.
-          </p>
-        </section>
+        {editable && <Readiness problems={problems} />}
       </aside>
-    </form>
+
+      <MediaPicker
+        target={picking}
+        draft={draft}
+        onPick={attach}
+        onClose={() => setPicking(undefined)}
+      />
+    </div>
   );
 }

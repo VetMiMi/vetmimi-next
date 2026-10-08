@@ -1,5 +1,9 @@
 {
   "privacy": {
+    "metadata": {
+      "title": "Privacy Policy",
+      "description": "What information this website collects through its contact and booking forms, how it is used, and how to ask for access, correction or deletion."
+    },
     "title": "Privacy Policy",
     "notice": "This privacy policy is a placeholder pending formal legal review. All content is subject to change. Last updated [Date].",
     "links": {
@@ -47,6 +51,10 @@
     }
   },
   "disclaimer": {
+    "metadata": {
+      "title": "Disclaimer",
+      "description": "General information about the art therapy services Daw Mi offers. Not personalised advice, and not a crisis service: in an emergency, call 000."
+    },
     "title": "Important information about this website",
     "notice": "This disclaimer is a placeholder pending formal legal review. All content is subject to change. Last updated [Date].",
     "crisis": "<strong>If you are in crisis:</strong> Contact emergency services on <strong>000</strong>, Lifeline on <strong>13 11 14</strong>, or go to your nearest emergency department. This website is not a crisis service.",
@@ -91,6 +99,10 @@
     }
   },
   "bookingPolicy": {
+    "metadata": {
+      "title": "Booking & Cancellation Policy",
+      "description": "How appointment requests are confirmed, and what to know about rescheduling, cancellation, notice periods and payment."
+    },
     "title": "Booking & Cancellation Policy",
     "notice": "This booking and cancellation policy is a placeholder pending formal review. All content is subject to change. Last updated [Date].",
     "links": {

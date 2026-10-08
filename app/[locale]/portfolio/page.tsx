@@ -1,12 +1,25 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageEnd } from "@/components/Editorial";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/seo";
 import { ARTWORKS, HIGHLIGHTS } from "@/lib/portfolio";
 import { ArtworkGallery } from "./_components/ArtworkGallery";
 import "@/styles/portfolio.css";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/portfolio">): Promise<Metadata> {
+  const locale = (await params).locale as Locale;
+  const t = await getTranslations({ locale, namespace: "portfolio.metadata" });
+  return pageMetadata(locale, "/portfolio", {
+    title: t("title"),
+    description: t("description"),
+  });
+}
 
 export default async function Portfolio({
   params,

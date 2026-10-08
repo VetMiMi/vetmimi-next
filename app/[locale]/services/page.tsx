@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/seo";
 import { services } from "@/lib/services";
 import type { ServiceStep } from "@/lib/services";
 import "@/styles/services.css";
@@ -14,6 +16,17 @@ const SERVICE_ART: Record<string, StaticImageData> = {
   "group-art-wellbeing": groupArt,
   "workshops-programs": workshopsArt,
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/services">): Promise<Metadata> {
+  const locale = (await params).locale as Locale;
+  const t = await getTranslations({ locale, namespace: "services.metadata" });
+  return pageMetadata(locale, "/services", {
+    title: t("title"),
+    description: t("description"),
+  });
+}
 
 export default async function Services({
   params,

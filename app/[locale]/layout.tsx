@@ -4,7 +4,8 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import "../globals.css";
 import SiteLayout from "@/components/SiteLayout";
-import { routing } from "@/i18n/routing";
+import { routing, type Locale } from "@/i18n/routing";
+import { openGraphDefaults, siteUrl } from "@/lib/seo";
 import {
   caveat,
   fraunces,
@@ -20,12 +21,16 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: LayoutProps<"/[locale]">): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({
-    locale: locale as (typeof routing.locales)[number],
-    namespace: "common.metadata",
-  });
-  return { title: t("title"), description: t("description") };
+  const locale = (await params).locale as Locale;
+  const t = await getTranslations({ locale, namespace: "common.metadata" });
+  // Each page adds its own title, description, canonical and hreflang.
+  return {
+    metadataBase: new URL(siteUrl()),
+    title: { default: t("title"), template: "%s · VetMiMi" },
+    description: t("description"),
+    openGraph: openGraphDefaults(locale),
+    twitter: { card: "summary_large_image" },
+  };
 }
 
 export default async function LocaleLayout({

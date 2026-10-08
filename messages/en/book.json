@@ -1,4 +1,8 @@
 {
+  "metadata": {
+    "title": "Book an appointment",
+    "description": "Choose a service, a date and a time, then send your request. Daw Mi will review it and you will receive an email when it is confirmed."
+  },
   "page": {
     "back": "← Services",
     "title": "Book an appointment"

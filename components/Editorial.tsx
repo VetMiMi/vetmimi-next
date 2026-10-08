@@ -11,14 +11,26 @@ export function StoryImage({
   alt,
   sizes,
   className,
+  eager,
 }: {
   image: NonNullable<StoryItem["image"]>;
   alt: string;
   sizes: string;
   className?: string;
+  /** The article's cover, in view on arrival: loaded straight away. */
+  eager?: boolean;
 }) {
+  const loading = eager ? "eager" : "lazy";
   if (!isPublicImage(image)) {
-    return <Image className={className} src={image} alt={alt} sizes={sizes} />;
+    return (
+      <Image
+        className={className}
+        src={image}
+        alt={alt}
+        sizes={sizes}
+        loading={loading}
+      />
+    );
   }
   return (
     // eslint-disable-next-line @next/next/no-img-element
@@ -32,7 +44,7 @@ export function StoryImage({
       width={image.width}
       height={image.height}
       alt={alt}
-      loading="lazy"
+      loading={loading}
       decoding="async"
     />
   );

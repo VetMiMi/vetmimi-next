@@ -129,6 +129,7 @@ function PublishedArticle({
           image={article.coverImage}
           alt={article.coverImage.alt}
           sizes={ARTICLE_IMAGE_SIZES}
+          eager
         />
       )}
       {/* No raw HTML and no inline images, as the portal's preview shows. */}
@@ -168,6 +169,7 @@ async function WrittenStory({
         image={story.img}
         alt={t("detail.imageAlt")}
         sizes={ARTICLE_IMAGE_SIZES}
+        eager
       />
       <div className="ed-article-body">
         {paragraphs.map((text, index) => (

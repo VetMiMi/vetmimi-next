@@ -7,12 +7,14 @@ import {
 } from "next-intl/server";
 import Markdown from "react-markdown";
 import { StoryCard, StoryImage } from "@/components/Editorial";
+import { JsonLd } from "@/components/JsonLd";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getArticle, loadStories, type Article } from "@/lib/articles";
 import { pageMetadata } from "@/lib/seo";
 import { STORIES, type Story, type StorySlug } from "@/lib/data";
 import { storyFromArticle } from "@/lib/stories";
+import { storyJsonLd } from "@/lib/structured-data";
 
 // The written stories are prerendered at build time; a published article
 // renders on its first visit and is then cached like them. Refreshed when an
@@ -92,6 +94,21 @@ export default async function StoryDetail({
   const kind = article ? storyFromArticle(article).kind : story?.type;
   if (!kind) notFound();
   const typeLabel = t(`types.${kind}`);
+  const jsonLd = article
+    ? storyJsonLd(locale as Locale, {
+        slug,
+        headline: article.title,
+        description: article.excerpt,
+        datePublished: article.publishedAt,
+        image: article.coverImage?.sizes[0]?.url,
+      })
+    : story &&
+      storyJsonLd(locale as Locale, {
+        slug,
+        headline: t(`items.${story.slug}.title`),
+        description: t(`items.${story.slug}.excerpt`),
+        image: story.img.src,
+      });
   return (
     <div className="ed-page">
       <nav
@@ -103,6 +120,7 @@ export default async function StoryDetail({
         <span>{typeLabel}</span>
       </nav>
       <article className="ed-reading">
+        {jsonLd && <JsonLd data={jsonLd} />}
         {article ? (
           <PublishedArticle article={article} typeLabel={typeLabel} />
         ) : (

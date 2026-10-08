@@ -112,7 +112,7 @@ pnpm dev                     # http://localhost:3000
 | `SITE_REVALIDATE_SECRET` | Shared secret the API sends to `POST /api/revalidate` when an article is published                                                                                                                                       |
 | `SITE_URL`               | _Optional._ Public address used for canonical links, hreflang, the sitemap and social cards. Without it, Vercel production builds use the project's production domain and every other build uses `http://localhost:3000` |
 
-All variables are server-only (there is no `NEXT_PUBLIC_`). Production and preview values live in Vercel. **A build needs none of them.** Without the API, the site still runs: booking shows "not available yet", stories fall back to the built-in content, and admin sign-in explains that it isn't available. Only production builds allow search engines to crawl (`app/robots.ts`); preview builds send `Disallow: /`.
+All variables are server-only (there is no `NEXT_PUBLIC_`). Preview values live in Vercel; the live values live on the host and in the release workflow (see [Self-hosting](#self-hosting)). **A build needs none of them.** Without the API, the site still runs: booking shows "not available yet", stories fall back to the built-in content, and admin sign-in explains that it isn't available. Only the live site (Vercel production, or a build with `SITE_ENV=production`) allows search engines to crawl (`app/robots.ts`); every other build sends `Disallow: /`.
 
 **Useful scripts**
 
@@ -134,10 +134,30 @@ All variables are server-only (there is no `NEXT_PUBLIC_`). Production and previ
 
   These checks run in CI. Known failures are listed in `e2e/axe-baseline.json`. The baseline only ratchets down: a new failure fails the job, and so does a listed failure that has been fixed until its entry is removed. When the job fails, download the `playwright-report` artifact from the run's summary page and open `index.html` (or run `pnpm exec playwright show-report <folder>`). Each axe test includes an `axe-violations.json` attachment naming the rule, its impact and the elements involved.
 
-- **CI** (`.github/workflows/ci.yml`) runs on every PR and every push to `main`, with three jobs:
+- **CI** (`.github/workflows/ci.yml`) runs on every PR and every push to `main`, with four jobs:
   - **Web checks:** the API types match the pinned version, then lint, format, types, i18n, unit tests and build
   - **Web end-to-end:** the Playwright and axe checks above
+  - **Dockerfile lint:** hadolint on the `Dockerfile`
   - **Commit checks:** every commit message follows the Conventional Commits format
+- **Image check** (`.github/workflows/image.yml`) builds the Docker image on PRs that change it or its dependencies, starts it, and checks `/api/health` and image resizing.
+
+## Self-hosting
+
+The live site runs on the same AWS host as the API, as a Docker container behind Caddy. Vercel only builds pull request previews.
+
+- **Image:** `ghcr.io/vetmimi/vetmimi-next:<commit sha>` (and `:main` for the latest), `linux/arm64`, built from the `Dockerfile`: Next's standalone server on Node 22 Alpine, run as the `node` user on port 3000.
+- **Health:** `GET /api/health` answers `200 {"status":"ok"}` without calling the API. The image's Docker health check uses it, and so does the host's deploy.
+- **Deploys:** after CI passes on `main`, `.github/workflows/release.yml` builds the image on an Arm runner, pushes both tags, then runs `ssh deploy@$DEPLOY_HOST web <sha>`. The deploy key may run only the host's `deploy.sh`, which pulls the image, swaps it in, and rolls back if it isn't healthy. Without `DEPLOY_HOST` the deploy is skipped. To redeploy `main`, run the workflow by hand.
+
+Static pages are rendered while the image is built, so their address is fixed then:
+
+| Build input                                | Where it is set                                  | Purpose                                                                                                                                                                  |
+| ------------------------------------------ | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `SITE_URL` build argument                  | Repository variable `SITE_URL`                   | Public address for canonical links, hreflang, the sitemap and social cards. Required to deploy                                                                           |
+| `SITE_ENV=production` build argument       | `release.yml`                                    | Marks the live site: `robots.txt` allows crawling and IndexNow is pinged                                                                                                 |
+| `api_url`, `api_service_key` build secrets | Secrets `BUILD_API_URL`, `BUILD_API_SERVICE_KEY` | _Optional._ The API's public address and key, so the home and stories pages are built with the published articles. Mounted for the build only, never stored in the image |
+
+Both build arguments are also the image's defaults at run time. The host supplies the server secrets as environment variables: `API_URL` (the API on the host's internal network), `API_SERVICE_KEY`, `SITE_REVALIDATE_SECRET` and, optionally, `INDEXNOW_KEY`. `NODE_OPTIONS` defaults to `--max-old-space-size=320`; override it there if needed. The deploy job needs the `production` environment's `DEPLOY_HOST`, `DEPLOY_SSH_KEY` and `DEPLOY_KNOWN_HOSTS` secrets.
 
 ## Project status
 

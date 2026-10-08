@@ -1,0 +1,17 @@
+# Only what `next build` reads goes into the build context.
+.git
+.github
+.claude
+.worktrees
+.vercel
+.next
+node_modules
+.env*
+e2e
+playwright-report
+test-results
+coverage
+docs
+*.md
+Dockerfile
+.dockerignore

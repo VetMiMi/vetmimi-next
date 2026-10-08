@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { services, type ServiceQuestion } from "@/lib/services";
 import {
@@ -23,13 +23,16 @@ export function JsonLd({ data }: { data: Record<string, unknown> }) {
 
 export async function PracticeJsonLd() {
   const locale = (await getLocale()) as Locale;
-  const t = await getTranslations({ locale });
+  const [t, { home }] = await Promise.all([
+    getTranslations({ locale }),
+    getMessages({ locale }),
+  ]);
   return (
     <JsonLd
       data={practiceJsonLd(locale, {
         description: t("home.metadata.description"),
         email: t("contact.details.email.value"),
-        faq: homeFaqQuestions(t.raw("home.faq.items")),
+        faq: homeFaqQuestions(home.faq.items),
       })}
     />
   );

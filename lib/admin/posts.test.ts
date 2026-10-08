@@ -18,6 +18,7 @@ const post = (patch: Partial<PostSummary>): PostSummary => ({
   kind: "insight",
   status: "scheduled",
   channels: ["website"],
+  publications: [],
   version: 1,
   createdAt: "2026-10-01T00:00:00Z",
   updatedAt: "2026-10-01T00:00:00Z",
@@ -47,28 +48,18 @@ describe("post list filters", () => {
 describe("channel states", () => {
   it("lists enabled channels in order, with publishing results", () => {
     assert.deepEqual(
-      channelStates(
-        { status: "publishing", channels: ["instagram", "website"] },
-        [
+      channelStates({
+        channels: ["instagram", "website", "linkedin"],
+        publications: [
           { channel: "website", status: "published" },
           { channel: "instagram", status: "failed" },
         ],
-      ),
+      }),
       [
         { channel: "website", status: "published" },
         { channel: "instagram", status: "failed" },
+        { channel: "linkedin" },
       ],
-    );
-  });
-
-  it("marks every channel of a published post published", () => {
-    assert.deepEqual(
-      channelStates({ status: "published", channels: ["linkedin"] }),
-      [{ channel: "linkedin", status: "published" }],
-    );
-    assert.deepEqual(
-      channelStates({ status: "draft", channels: ["website"] }),
-      [{ channel: "website" }],
     );
   });
 });
@@ -90,7 +81,8 @@ describe("calendar", () => {
     const now = post({
       id: "c",
       status: "published",
-      updatedAt: "2026-10-20T03:00:00Z",
+      publishedAt: "2026-10-20T03:00:00Z",
+      updatedAt: "2026-10-25T03:00:00Z",
     });
     const other = post({ id: "d", scheduledAt: "2026-11-02T00:00:00Z" });
     const days = postsByDay([late, now, early, other], "2026-10");

@@ -40,8 +40,6 @@ const post = (patch: Partial<Post> = {}): Post => ({
   ...patch,
 });
 
-const noImages = { facebook: 0, instagram: 0, linkedin: 0 };
-
 describe("post draft", () => {
   it("round-trips and keeps what the editor does not change", () => {
     const loaded = post();
@@ -67,6 +65,18 @@ describe("post draft", () => {
       enabled: false,
       imageIds: [],
     });
+  });
+
+  it("sends the images and cover as edited", () => {
+    const loaded = post();
+    const draft = toDraft(loaded);
+    draft.website.coverImageId = undefined;
+    draft.instagram.imageIds = ["b", "a"];
+    draft.linkedin.imageIds = ["c"];
+    const patch = toPatch(draft, loaded, 3);
+    assert.equal(patch.versions?.website?.coverImageId, undefined);
+    assert.deepEqual(patch.versions?.instagram?.imageIds, ["b", "a"]);
+    assert.deepEqual(patch.versions?.linkedin?.imageIds, ["c"]);
   });
 
   it("sends no stage after review and consent only for a True Story", () => {
@@ -99,8 +109,9 @@ describe("platform rules", () => {
   it("lists what blocks approval", () => {
     const draft = toDraft(post({ kind: "true_story" }));
     draft.instagram.text = "#a ".repeat(31) + "x".repeat(2200);
-    draft.linkedin = { enabled: true, text: "", link: "" };
-    assert.deepEqual(readiness(draft, noImages), [
+    draft.instagram.imageIds = [];
+    draft.linkedin = { enabled: true, text: "", link: "", imageIds: [] };
+    assert.deepEqual(readiness(draft), [
       "True Story: tick every consent item.",
       "Website: add the English excerpt.",
       "Instagram: needs at least one image.",
@@ -112,8 +123,6 @@ describe("platform rules", () => {
 
   it("needs a channel", () => {
     const draft = toDraft(post({ versions: {} }));
-    assert.deepEqual(readiness(draft, noImages), [
-      "Turn on at least one channel.",
-    ]);
+    assert.deepEqual(readiness(draft), ["Turn on at least one channel."]);
   });
 });

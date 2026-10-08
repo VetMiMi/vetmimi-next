@@ -35,6 +35,8 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Skip Next internals, Vercel paths and any file with an extension.
-  matcher: "/((?!api|_next|_vercel|.*\\..*).*)",
+  // Skip Next internals, Vercel paths and any file with an extension. Skip
+  // the media upload too: a proxied body is buffered and cut at 10 MB, and
+  // the route handler checks the session itself.
+  matcher: "/((?!api|_next|_vercel|admin/media/upload|.*\\..*).*)",
 };

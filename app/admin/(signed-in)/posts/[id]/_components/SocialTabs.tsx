@@ -3,10 +3,12 @@
 import { useRef, useState } from "react";
 import { Input } from "@/components/admin/Input";
 import { Textarea } from "@/components/admin/Textarea";
+import type { Media } from "@/lib/admin/media";
 import { channelNames } from "@/lib/admin/posts";
 import {
   characterCount,
   hashtagCount,
+  imageLimits,
   limits,
   type Draft,
   type SocialChannel,
@@ -17,13 +19,19 @@ import { previews } from "./SocialPreviews";
 import { sectionTitle } from "./WebsiteFields";
 import { Switch } from "./Switch";
 
-type Version = { enabled: boolean; text: string; link?: string };
+type Version = {
+  enabled: boolean;
+  text: string;
+  link?: string;
+  imageIds: string[];
+};
 
 const CHANNELS: SocialChannel[] = ["facebook", "instagram", "linkedin"];
 
 const imageRules: Record<SocialChannel, string> = {
   facebook: "Up to 10 images, or none to show the link.",
-  instagram: "Instagram needs 1 to 10 images.",
+  instagram:
+    "Instagram needs 1 to 10 images. More than one makes a carousel, in this order.",
   linkedin: "At most one image.",
 };
 
@@ -65,15 +73,17 @@ function counter(channel: SocialChannel, text: string) {
 export function SocialTabs({
   disabled,
   draft,
-  imageIds,
+  media,
   errors,
   onChange,
+  onPickImage,
 }: {
   disabled: boolean;
   draft: Draft;
-  imageIds: Record<SocialChannel, string[]>;
+  media: Record<string, Media>;
   errors: Record<string, string>;
   onChange: (channel: SocialChannel, patch: Partial<Version>) => void;
+  onPickImage: (channel: SocialChannel) => void;
 }) {
   const [active, setActive] = useState<SocialChannel>("facebook");
   const tabs = useRef<Partial<Record<SocialChannel, HTMLButtonElement | null>>>(
@@ -184,8 +194,13 @@ export function SocialTabs({
         </fieldset>
         <ImageSlot
           label="Images"
-          ids={imageIds[active]}
           rule={imageRules[active]}
+          ids={version.imageIds}
+          media={media}
+          max={imageLimits[active]}
+          disabled={disabled}
+          onChange={(imageIds) => onChange(active, { imageIds })}
+          onAdd={() => onPickImage(active)}
         />
         <div>
           <h3 className="mb-3 font-body! text-[0.75rem] leading-normal! font-semibold! tracking-[0.1em] text-muted uppercase">
@@ -194,7 +209,7 @@ export function SocialTabs({
           <Preview
             text={version.text}
             link={version.link}
-            images={imageIds[active].length}
+            images={version.imageIds.flatMap((id) => media[id] ?? [])}
           />
         </div>
       </div>

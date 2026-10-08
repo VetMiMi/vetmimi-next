@@ -10,7 +10,9 @@ import {
   ShareFat,
   ThumbsUp,
 } from "@phosphor-icons/react";
+import type { Media } from "@/lib/admin/media";
 import { hashtagRuns, type SocialChannel } from "@/lib/admin/postDraft";
+import { MediaThumb } from "./MediaThumb";
 
 // A guide to how each post will read on its platform, in the site's own
 // type and colours: the platforms' layouts, not their look. The account
@@ -21,7 +23,7 @@ const ACCOUNTS = {
   linkedin: "Daw Mi",
 };
 
-type PreviewProps = { text: string; link?: string; images: number };
+type PreviewProps = { text: string; link?: string; images: Media[] };
 
 function Text({ text }: { text: string }) {
   if (!text.trim())
@@ -67,13 +69,16 @@ function Header({ name, note }: { name: string; note?: string }) {
   );
 }
 
-function Images({ count, ratio }: { count: number; ratio: string }) {
+// The first image as the platform crops it, and how many follow.
+function Images({ images, ratio }: { images: Media[]; ratio: string }) {
   return (
-    <div
-      className={`flex ${ratio} items-center justify-center gap-2 bg-paper text-[0.82rem] text-muted`}
-    >
-      <ImageSquare aria-hidden="true" size={22} />
-      {count === 1 ? "1 image" : `${count} images`}
+    <div className={`relative ${ratio} bg-paper`}>
+      <MediaThumb media={images[0]} width={800} className="size-full" />
+      {images.length > 1 && (
+        <span className="absolute top-3 right-3 rounded-pill bg-ink/70 px-2.5 py-1 text-[0.75rem] font-semibold text-white">
+          1 / {images.length}
+        </span>
+      )}
     </div>
   );
 }
@@ -113,8 +118,8 @@ function FacebookPreview({ text, link, images }: PreviewProps) {
       <div className="px-4 pb-3">
         <Text text={text} />
       </div>
-      {images > 0 ? (
-        <Images count={images} ratio="aspect-[1.91/1]" />
+      {images.length > 0 ? (
+        <Images images={images} ratio="aspect-[1.91/1]" />
       ) : (
         link && <LinkCard link={link} />
       )}
@@ -138,8 +143,8 @@ function InstagramPreview({ text, images }: PreviewProps) {
         </span>
         <p className="font-semibold">{ACCOUNTS.instagram}</p>
       </div>
-      {images > 0 ? (
-        <Images count={images} ratio="aspect-square" />
+      {images.length > 0 ? (
+        <Images images={images} ratio="aspect-square" />
       ) : (
         <div className="flex aspect-square items-center justify-center gap-2 bg-paper px-6 text-center text-[0.82rem] text-action">
           <ImageSquare aria-hidden="true" size={22} />
@@ -167,8 +172,8 @@ function LinkedInPreview({ text, link, images }: PreviewProps) {
       <div className="px-4 pb-3">
         <Text text={text} />
       </div>
-      {images > 0 ? (
-        <Images count={images} ratio="aspect-[1.91/1]" />
+      {images.length > 0 ? (
+        <Images images={images} ratio="aspect-[1.91/1]" />
       ) : (
         link && <LinkCard link={link} />
       )}

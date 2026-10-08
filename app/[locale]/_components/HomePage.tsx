@@ -13,7 +13,8 @@ import {
   AlmondEye,
 } from "@/components/art/Shapes";
 import { AA, C } from "@/lib/tokens";
-import { STORIES } from "@/lib/data";
+import { StoryImage } from "@/components/Editorial";
+import type { StoryItem } from "@/lib/stories";
 
 import art3 from "@/assets/image-3.webp";
 import dawMiPortrait from "@/assets/daw-mi-portrait.webp";
@@ -152,7 +153,8 @@ const TESTIMONIALS = [
 const SERVICE_IDS = ["individual", "group", "workshops"] as const;
 
 /* ────────────────────────────────────── */
-export function HomePage() {
+// `stories` is the Stories page's list: published articles first.
+export function HomePage({ stories }: { stories: StoryItem[] }) {
   const t = useTranslations("home");
   // Story titles and excerpts are shared with the Stories pages.
   const tStories = useTranslations("stories");
@@ -1042,8 +1044,7 @@ export function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {STORIES.slice(0, 3).map((story) => {
-              const title = tStories(`items.${story.slug}.title`);
+            {stories.slice(0, 3).map(({ title, ...story }) => {
               return (
                 <article
                   key={story.slug}
@@ -1057,18 +1058,20 @@ export function HomePage() {
                     boxShadow: "0 2px 16px rgba(107,99,150,0.09)",
                   }}
                 >
-                  <Image
-                    src={story.img}
-                    alt=""
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    style={{
-                      width: "100%",
-                      height: "200px",
-                      objectFit: "cover",
-                      objectPosition: "center 30%",
-                      display: "block",
-                    }}
-                  />
+                  {story.image && (
+                    <StoryImage
+                      image={story.image}
+                      alt=""
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      style={{
+                        width: "100%",
+                        height: "200px",
+                        objectFit: "cover",
+                        objectPosition: "center 30%",
+                        display: "block",
+                      }}
+                    />
+                  )}
                   <div
                     style={{
                       padding: "1.5rem",
@@ -1088,7 +1091,7 @@ export function HomePage() {
                         marginBottom: "0.75rem",
                       }}
                     >
-                      {tStories(`items.${story.slug}.category`)}
+                      {story.category ?? tStories(`types.${story.kind}`)}
                     </div>
                     <h3
                       style={{
@@ -1110,7 +1113,7 @@ export function HomePage() {
                         margin: "0 0 1.25rem",
                       }}
                     >
-                      {tStories(`items.${story.slug}.excerpt`)}
+                      {story.excerpt}
                     </p>
                     <Link
                       href={`/stories/${story.slug}`}

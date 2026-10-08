@@ -11,12 +11,14 @@ export function StoryImage({
   alt,
   sizes,
   className,
+  style,
   eager,
 }: {
   image: NonNullable<StoryItem["image"]>;
   alt: string;
   sizes: string;
   className?: string;
+  style?: React.CSSProperties;
   /** The article's cover, in view on arrival: loaded straight away. */
   eager?: boolean;
 }) {
@@ -25,6 +27,7 @@ export function StoryImage({
     return (
       <Image
         className={className}
+        style={style}
         src={image}
         alt={alt}
         sizes={sizes}
@@ -36,6 +39,7 @@ export function StoryImage({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       className={className}
+      style={style}
       src={image.sizes[0]?.url}
       srcSet={image.sizes
         .map(({ url, width }) => `${url} ${width}w`)

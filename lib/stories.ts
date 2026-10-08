@@ -21,6 +21,8 @@ export type StoryItem = {
   kind: StoryKind;
   title: string;
   excerpt: string;
+  /** A written story's own label ("Reflections"); articles show their kind. */
+  category?: string;
   image?: StaticImageData | PublicImage;
   featured?: boolean;
   fromApi: boolean;

@@ -10,11 +10,12 @@ import type { Locale } from "@/i18n/routing";
 export type Article = components["schemas"]["PublicArticle"];
 
 // Published articles come from the API and are cached until the API calls
-// POST /api/revalidate (tags "articles" and "article:<slug>"). Until the API
-// is configured, or whenever it fails, the stories in the messages still
-// show: these pages never error because of the API.
+// POST /api/revalidate (tags "articles" and "article:<slug>"); the sitemap
+// reads the same list, so it refreshes with them. Until the API is
+// configured, or whenever it fails, the stories in the messages still show:
+// these pages never error because of the API.
 
-const listArticles = cache(async (locale: Locale) => {
+export const listArticles = cache(async (locale: Locale) => {
   if (!apiConfigured()) return [];
   try {
     const { data } = await publicApi({ tags: ["articles"] }).GET(

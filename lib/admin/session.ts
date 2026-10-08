@@ -2,7 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { adminApi, type AdminApi } from "@/lib/api/client";
+import { adminApi, type AdminApi, type CallOptions } from "@/lib/api/client";
 import { ApiError, unwrap } from "@/lib/api/problem";
 import type { components } from "@/lib/api/schema";
 import { canUse, type Role } from "./roles";
@@ -76,11 +76,14 @@ export async function requireRole(
 // Every admin API call goes through here, not only the page's first check:
 // layouts do not re-render on client navigation, so a session that ends
 // mid-visit is caught by the call that finds it.
-export async function adminCall<T>(fn: (api: AdminApi) => Promise<T>) {
+export async function adminCall<T>(
+  fn: (api: AdminApi) => Promise<T>,
+  options: CallOptions = {},
+) {
   const token = await sessionToken();
   if (!token) return redirectToSignIn();
   try {
-    return await fn(adminApi(token));
+    return await fn(adminApi(token, options));
   } catch (error) {
     if (isUnauthenticated(error)) return redirectToSignIn();
     throw error;

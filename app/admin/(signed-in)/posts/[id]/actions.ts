@@ -2,7 +2,12 @@
 
 import { mutate } from "@/lib/admin/mutation";
 import { adminCall } from "@/lib/admin/session";
-import { unwrap } from "@/lib/api/problem";
+import {
+  suggestedTexts,
+  suggestionFailure,
+  type Language,
+} from "@/lib/admin/suggestions";
+import { ApiError, unwrap } from "@/lib/api/problem";
 import type { components } from "@/lib/api/schema";
 
 type Schemas = components["schemas"];
@@ -158,6 +163,47 @@ export async function reloadPost(id: string) {
       }),
     ),
   );
+}
+
+// "Suggest versions" (#153): the AI assistant's versions of the chosen
+// channels, written from the saved website article. Nothing is saved; the
+// editor shows them beside the current text. The assistant can take half
+// a minute, so this call waits longer than most.
+export async function suggestVersions(
+  id: string,
+  channels: SocialChannel[],
+  language: Language,
+): Promise<
+  | { ok: true; texts: ReturnType<typeof suggestedTexts> }
+  | { ok: false; message: string }
+> {
+  check(id);
+  if (channels.length === 0 || channels.some((c) => !CHANNELS.includes(c)))
+    throw new Error("Bad channels");
+  if (language !== "en" && language !== "my") throw new Error("Bad language");
+  try {
+    const suggestions = await adminCall(
+      async (api) =>
+        unwrap(
+          await api.POST("/admin/posts/{postId}/suggestions", {
+            params: { path: { postId: id } },
+            body: { channels, language },
+          }),
+        ),
+      { timeoutMs: 45_000 },
+    );
+    return { ok: true, texts: suggestedTexts(suggestions) };
+  } catch (error) {
+    if (!(error instanceof ApiError)) throw error;
+    return {
+      ok: false,
+      message: suggestionFailure(
+        error.status,
+        error.code,
+        error.retryAfterSeconds,
+      ),
+    };
+  }
 }
 
 // ── Media library ───────────────────────────────────────────────────────

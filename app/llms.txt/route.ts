@@ -52,7 +52,7 @@ export async function GET() {
       },
       {
         title: "Booking and enquiries",
-        text: t("services.index.intro"),
+        text: t("services.metadata.description"),
         items: [
           `${t("contact.details.email.label")}: ${t("contact.details.email.value")}`,
           `${t("contact.details.location.label")}: ${t("contact.details.location.value")}`,

@@ -2,11 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { mutate, type Outcome } from "@/lib/admin/mutation";
-import { listQuery, parseFilters } from "@/lib/admin/posts";
+import { listQuery, parseFilters, toRow } from "@/lib/admin/posts";
 import { adminCall } from "@/lib/admin/session";
 import { unwrap } from "@/lib/api/problem";
 import type { components } from "@/lib/api/schema";
-import { toRows } from "./rows";
 
 type Schemas = components["schemas"];
 
@@ -24,7 +23,7 @@ export async function morePosts(
       }),
     ),
   );
-  return { items: await toRows(page.items), nextCursor: page.nextCursor };
+  return { items: page.items.map(toRow), nextCursor: page.nextCursor };
 }
 
 // "New post" (#150): a draft with the website article switched on, then

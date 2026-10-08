@@ -80,28 +80,40 @@ export function listHref(filters: ListFilters) {
   return query ? `/admin/posts?${query}` : "/admin/posts";
 }
 
-// Each enabled channel and, once publishing has started, how it went. The
-// list's summaries name only the enabled channels, so a published post's
-// channels all read Published, and a publishing post's come from its own
-// publications.
+// Each enabled channel and, once publishing has started, how it went.
 export type ChannelState = {
   channel: Channel;
   status?: Schemas["PublicationStatus"];
 };
 
 export function channelStates(
-  post: Pick<PostSummary, "status" | "channels">,
-  publications: Pick<Schemas["Publication"], "channel" | "status">[] = [],
+  post: Pick<PostSummary, "channels" | "publications">,
 ): ChannelState[] {
   return channelOrder
     .filter((channel) => post.channels.includes(channel))
     .map((channel) => {
-      const status =
-        publications.find((p) => p.channel === channel)?.status ??
-        (post.status === "published" ? "published" : undefined);
+      const status = post.publications.find(
+        (p) => p.channel === channel,
+      )?.status;
       return { channel, ...(status && { status }) };
     });
 }
+
+// What the list shows of a post: its channels with their states.
+export type PostRow = Pick<
+  PostSummary,
+  "id" | "title" | "kind" | "status" | "scheduledAt" | "updatedAt"
+> & { channels: ChannelState[] };
+
+export const toRow = (post: PostSummary): PostRow => ({
+  id: post.id,
+  title: post.title,
+  kind: post.kind,
+  status: post.status,
+  scheduledAt: post.scheduledAt,
+  updatedAt: post.updatedAt,
+  channels: channelStates(post),
+});
 
 // "Tue 13 Oct, 9:00 am" in Sydney time.
 export function whenShort(instant: string) {
@@ -140,9 +152,9 @@ export function monthLabel(month: string) {
 }
 
 // When a post sits on the calendar: its scheduled time, or for a post
-// published at once, when it last changed (the summary has no publishedAt).
+// published at once, when it went out.
 export const calendarInstant = (post: PostSummary) =>
-  post.scheduledAt ?? post.updatedAt;
+  post.scheduledAt ?? post.publishedAt ?? post.updatedAt;
 
 // The month's posts under their Sydney date, earliest first within a day.
 export function postsByDay(posts: readonly PostSummary[], month: string) {

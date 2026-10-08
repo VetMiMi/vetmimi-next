@@ -5,9 +5,8 @@ import { Button } from "@/components/admin/Button";
 import { DataTable } from "@/components/admin/DataTable";
 import { Notice } from "@/components/admin/Notice";
 import { StatusBadge } from "@/components/admin/StatusBadge";
-import { kindNames, whenShort } from "@/lib/admin/posts";
+import { kindNames, whenShort, type PostRow } from "@/lib/admin/posts";
 import { morePosts } from "../actions";
-import type { PostRow } from "../rows";
 import { ChannelBadges } from "./ChannelBadge";
 
 // Posts, newest first, with "Show more": each page is appended; the API

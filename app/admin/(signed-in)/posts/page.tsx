@@ -12,13 +12,13 @@ import {
   listHref,
   listQuery,
   parseFilters,
+  toRow,
   views,
 } from "@/lib/admin/posts";
 import { adminCall, requireRole } from "@/lib/admin/session";
 import { ApiError, unwrap } from "@/lib/api/problem";
 import { NewPostButton } from "./_components/NewPostButton";
 import { PostList } from "./_components/PostList";
-import { toRows } from "./rows";
 
 export const metadata: Metadata = { title: "Posts" };
 
@@ -51,7 +51,6 @@ export default async function PostsPage({
     throw error;
   });
   if (!page) return <NoAccess />;
-  const rows = await toRows(page.items);
 
   const empty = filters.q ? (
     <EmptyState
@@ -126,7 +125,7 @@ export default async function PostsPage({
         // A new list for a new view or search: "Show more" starts again.
         key={listHref(filters)}
         params={params}
-        first={{ items: rows, nextCursor: page.nextCursor }}
+        first={{ items: page.items.map(toRow), nextCursor: page.nextCursor }}
         empty={empty}
       />
     </>

@@ -14,6 +14,16 @@ export function siteUrl(): string {
   return "http://localhost:3000";
 }
 
+// Whether this deployment is the live site, which alone is crawled and pings
+// IndexNow. Vercel marks its production deployment itself; the self-hosted
+// image is built and run with SITE_ENV=production (README, Self-hosting).
+export function isLiveSite(): boolean {
+  return (
+    process.env.VERCEL_ENV === "production" ||
+    process.env.SITE_ENV === "production"
+  );
+}
+
 // The absolute URL of a page in one language. English keeps the bare path
 // and Burmese lives under /my, as `localePrefix: "as-needed"` routes them.
 function localeUrl(locale: Locale, pathname: string): string {

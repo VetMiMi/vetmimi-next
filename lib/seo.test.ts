@@ -1,8 +1,13 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
-import { pageAlternates, siteUrl } from "./seo.ts";
+import { isLiveSite, pageAlternates, siteUrl } from "./seo.ts";
 
-const ENV = ["SITE_URL", "VERCEL_ENV", "VERCEL_PROJECT_PRODUCTION_URL"];
+const ENV = [
+  "SITE_URL",
+  "SITE_ENV",
+  "VERCEL_ENV",
+  "VERCEL_PROJECT_PRODUCTION_URL",
+];
 const saved = Object.fromEntries(ENV.map((name) => [name, process.env[name]]));
 const setEnv = (values: Record<string, string>) => {
   for (const name of ENV) delete process.env[name];
@@ -41,6 +46,22 @@ describe("site URL", () => {
   it("falls back to localhost instead of failing", () => {
     setEnv({ VERCEL_ENV: "production" });
     assert.equal(siteUrl(), "http://localhost:3000");
+  });
+});
+
+describe("live site", () => {
+  it("is Vercel production or a self-hosted production build", () => {
+    setEnv({ VERCEL_ENV: "production" });
+    assert.equal(isLiveSite(), true);
+    setEnv({ SITE_ENV: "production" });
+    assert.equal(isLiveSite(), true);
+  });
+
+  it("is not a preview or a local build", () => {
+    setEnv({ VERCEL_ENV: "preview" });
+    assert.equal(isLiveSite(), false);
+    setEnv({});
+    assert.equal(isLiveSite(), false);
   });
 });
 

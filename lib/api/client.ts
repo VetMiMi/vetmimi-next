@@ -73,3 +73,28 @@ export function adminApi(token: string, options: CallOptions = {}) {
 }
 
 export type AdminApi = ReturnType<typeof adminApi>;
+
+const UPLOAD_TIMEOUT_MS = 120_000;
+
+// The media upload (uploadMedia), streamed on as it arrived: the generated
+// client would hold the whole 20 MB body in memory, and the API gives an
+// upload two minutes, not ten seconds.
+export async function uploadMedia(
+  token: string,
+  body: ReadableStream<Uint8Array>,
+  contentType: string,
+) {
+  const init: RequestInit & { duplex: "half" } = {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}`, "Content-Type": contentType },
+    body,
+    duplex: "half",
+    cache: "no-store",
+    signal: AbortSignal.timeout(UPLOAD_TIMEOUT_MS),
+  };
+  try {
+    return await fetch(`${requireEnv("API_URL")}/admin/media`, init);
+  } catch (cause) {
+    throw ApiError.unavailable(cause);
+  }
+}

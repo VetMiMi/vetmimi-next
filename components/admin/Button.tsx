@@ -47,7 +47,12 @@ const sizes = {
   page: "min-h-12 px-[22px] py-[14px]",
 };
 
-function classes(variant: Variant, size: "control" | "page", extra = "") {
+// Also for the rare plain <a> that needs `target` or a click handler.
+export function buttonClass(
+  variant: Variant,
+  size: "control" | "page" = "control",
+  extra = "",
+) {
   // Quiet is the EditorialLink: no box, so no padding to push it off the
   // text it sits beside; it keeps the 44px height for touch.
   const box = variant === "quiet" ? "min-h-11" : sizes[size];
@@ -83,7 +88,7 @@ function ButtonLink({
   className,
   children,
 }: LinkProps) {
-  const cls = classes(variant, size, className);
+  const cls = buttonClass(variant, size, className);
   const label = <Label {...{ variant, icon, children }} />;
   return isAdminPath(href) ? (
     <Link href={href} className={cls}>
@@ -123,7 +128,7 @@ export function Button(props: ButtonProps | LinkProps) {
       type={type}
       disabled={disabled || busy}
       data-busy={busy || undefined}
-      className={classes(variant, size, className)}
+      className={buttonClass(variant, size, className)}
     >
       <Label variant={variant} icon={busy ? spinner : icon}>
         {children}

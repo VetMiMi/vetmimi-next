@@ -22,10 +22,22 @@ export type Draft = {
     title: Localized;
     excerpt: Localized;
     body: Localized;
+    coverImageId?: string;
   };
-  facebook: { enabled: boolean; text: string; link: string };
-  instagram: { enabled: boolean; text: string };
-  linkedin: { enabled: boolean; text: string; link: string };
+  // Media library ids, in the order the platform shows them.
+  facebook: {
+    enabled: boolean;
+    text: string;
+    link: string;
+    imageIds: string[];
+  };
+  instagram: { enabled: boolean; text: string; imageIds: string[] };
+  linkedin: {
+    enabled: boolean;
+    text: string;
+    link: string;
+    imageIds: string[];
+  };
 };
 
 // What the storyteller agreed to, from the True Story workflow in the
@@ -40,6 +52,13 @@ export const limits = {
   instagram: { characters: 2200, hashtags: 30 },
   linkedin: { characters: 3000 },
 } as const;
+
+// The most images each platform takes in one post.
+export const imageLimits: Record<SocialChannel, number> = {
+  facebook: 10,
+  instagram: 10,
+  linkedin: 1,
+};
 
 // Statuses whose post can still be changed; publishing starts a record.
 export const EDITABLE: Post["status"][] = [
@@ -73,17 +92,24 @@ export function toDraft(post: Post): Draft {
       title: localized(w?.title),
       excerpt: localized(w?.excerpt),
       body: localized(w?.body),
+      ...(w?.coverImageId && { coverImageId: w.coverImageId }),
     },
     facebook: {
       enabled: f?.enabled ?? false,
       text: f?.text ?? "",
       link: f?.link ?? "",
+      imageIds: f?.imageIds ?? [],
     },
-    instagram: { enabled: i?.enabled ?? false, text: i?.caption ?? "" },
+    instagram: {
+      enabled: i?.enabled ?? false,
+      text: i?.caption ?? "",
+      imageIds: i?.imageIds ?? [],
+    },
     linkedin: {
       enabled: l?.enabled ?? false,
       text: l?.text ?? "",
       link: l?.link ?? "",
+      imageIds: l?.imageIds ?? [],
     },
   };
 }
@@ -109,14 +135,15 @@ const optional = <K extends string>(key: K, value: string) =>
   (value.trim() ? { [key]: value.trim() } : {}) as Partial<Record<K, string>>;
 
 // The save. A channel named in `versions` replaces that version whole, so
-// what this editor does not change yet (images, the cover, SEO fields) is
-// carried over from the post as loaded.
+// what this editor does not change yet (the SEO fields) is carried over
+// from the post as loaded.
 export function toPatch(
   draft: Draft,
   post: Post,
   version: number,
 ): Schemas["PostPatch"] {
-  const { website: w, facebook: f, instagram: i, linkedin: l } = post.versions;
+  const w = post.versions.website;
+  const { website, facebook: f, instagram: i, linkedin: l } = draft;
   return {
     version,
     title: draft.title.trim(),
@@ -130,31 +157,31 @@ export function toPatch(
     }),
     versions: {
       website: {
-        enabled: draft.website.enabled,
-        ...optional("slug", draft.website.slug),
-        title: filled(draft.website.title),
-        excerpt: filled(draft.website.excerpt),
-        body: filled(draft.website.body),
-        ...(w?.coverImageId && { coverImageId: w.coverImageId }),
+        enabled: website.enabled,
+        ...optional("slug", website.slug),
+        title: filled(website.title),
+        excerpt: filled(website.excerpt),
+        body: filled(website.body),
+        ...(website.coverImageId && { coverImageId: website.coverImageId }),
         ...(w?.seoTitle && { seoTitle: w.seoTitle }),
         ...(w?.seoDescription && { seoDescription: w.seoDescription }),
       },
       facebook: {
-        enabled: draft.facebook.enabled,
-        ...optional("text", draft.facebook.text),
-        ...optional("link", draft.facebook.link),
-        imageIds: f?.imageIds ?? [],
+        enabled: f.enabled,
+        ...optional("text", f.text),
+        ...optional("link", f.link),
+        imageIds: f.imageIds,
       },
       instagram: {
-        enabled: draft.instagram.enabled,
-        ...optional("caption", draft.instagram.text),
-        imageIds: i?.imageIds ?? [],
+        enabled: i.enabled,
+        ...optional("caption", i.text),
+        imageIds: i.imageIds,
       },
       linkedin: {
-        enabled: draft.linkedin.enabled,
-        ...optional("text", draft.linkedin.text),
-        ...optional("link", draft.linkedin.link),
-        imageIds: l?.imageIds ?? [],
+        enabled: l.enabled,
+        ...optional("text", l.text),
+        ...optional("link", l.link),
+        imageIds: l.imageIds,
       },
     },
   };
@@ -176,10 +203,7 @@ export function hashtagRuns(text: string) {
 
 // What still stands between the post and approval, in the order the
 // editor shows it. Drafts may break these; approval may not.
-export function readiness(
-  draft: Draft,
-  imageCount: Record<SocialChannel, number>,
-) {
+export function readiness(draft: Draft) {
   const problems: string[] = [];
   if (draft.kind === "true_story" && !draft.consent.checks.every(Boolean))
     problems.push("True Story: tick every consent item.");
@@ -193,7 +217,7 @@ export function readiness(
   }
   if (f.enabled && !f.text.trim()) problems.push("Facebook: write the post.");
   if (i.enabled) {
-    if (imageCount.instagram === 0)
+    if (i.imageIds.length === 0)
       problems.push("Instagram: needs at least one image.");
     if (characterCount(i.text) > limits.instagram.characters)
       problems.push("Instagram: the caption is over 2,200 characters.");

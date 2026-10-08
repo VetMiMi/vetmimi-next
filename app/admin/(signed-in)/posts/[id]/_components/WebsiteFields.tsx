@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/admin/Input";
 import { Textarea } from "@/components/admin/Textarea";
+import type { Media } from "@/lib/admin/media";
 import type { Draft } from "@/lib/admin/postDraft";
 import { slugify } from "@/lib/slug";
 import { ImageSlot } from "./ImageSlot";
@@ -18,14 +19,18 @@ export const sectionTitle = "mb-6 text-[1.35rem]";
 // excerpt and body.
 export function WebsiteFields({
   website,
-  coverImageId,
+  media,
+  editable,
   errors,
   onChange,
+  onPickCover,
 }: {
   website: Website;
-  coverImageId?: string;
+  media: Record<string, Media>;
+  editable: boolean;
   errors: Record<string, string>;
   onChange: (patch: Partial<Website>) => void;
+  onPickCover: () => void;
 }) {
   const err = (field: string) => errors[`versions.website.${field}`];
   const set =
@@ -124,8 +129,13 @@ export function WebsiteFields({
       />
       <ImageSlot
         label="Cover image"
-        ids={coverImageId ? [coverImageId] : []}
         rule="Shown at the top of the article and in link previews."
+        ids={website.coverImageId ? [website.coverImageId] : []}
+        media={media}
+        max={1}
+        disabled={!editable}
+        onChange={([coverImageId]) => onChange({ coverImageId })}
+        onAdd={onPickCover}
       />
     </section>
   );

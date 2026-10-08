@@ -1,9 +1,11 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageEnd } from "@/components/Editorial";
 import { ExternalLink } from "@/components/ExternalLink";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/seo";
 import "@/styles/art-of-wellness.css";
 import artSession from "@/assets/art-of-wellness/art-session.webp";
 import festivalOfMusic from "@/assets/art-of-wellness/festival-of-music.webp";
@@ -35,6 +37,20 @@ const TEAM = [
   },
   { id: "michelleFawcett", name: "Michelle Fawcett", photo: michelleFawcett },
 ] as const;
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/art-of-wellness">): Promise<Metadata> {
+  const locale = (await params).locale as Locale;
+  const t = await getTranslations({
+    locale,
+    namespace: "artOfWellness.metadata",
+  });
+  return pageMetadata(locale, "/art-of-wellness", {
+    title: t("title"),
+    description: t("description"),
+  });
+}
 
 export default async function ArtOfWellness({
   params,

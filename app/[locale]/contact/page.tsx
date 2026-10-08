@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/seo";
 import { apiConfigured } from "@/lib/api/client";
 import { issueFormToken } from "@/lib/spam";
 import type { ServiceSlug } from "@/lib/services";
@@ -14,6 +16,17 @@ const SERVICE_ENQUIRY: Partial<Record<ServiceSlug, EnquiryId>> = {
   "group-art-wellbeing": "workshop",
   "workshops-programs": "workshop",
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/contact">): Promise<Metadata> {
+  const locale = (await params).locale as Locale;
+  const t = await getTranslations({ locale, namespace: "contact.metadata" });
+  return pageMetadata(locale, "/contact", {
+    title: t("title"),
+    description: t("description"),
+  });
+}
 
 export default async function Contact({
   params,

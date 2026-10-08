@@ -1,10 +1,23 @@
-import { setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/seo";
 import { apiConfigured, publicApi } from "@/lib/api/client";
 import { ApiError, unwrap } from "@/lib/api/problem";
 import { issueFormToken } from "@/lib/spam";
 import { BookingFlow } from "./_components/BookingFlow";
 import "@/styles/booking.css";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/book">): Promise<Metadata> {
+  const locale = (await params).locale as Locale;
+  const t = await getTranslations({ locale, namespace: "book.metadata" });
+  return pageMetadata(locale, "/book", {
+    title: t("title"),
+    description: t("description"),
+  });
+}
 
 // The bookable services are read fresh on every visit: Daw Mi can pause
 // booking or a service at any moment.

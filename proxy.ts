@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "./i18n/routing";
 
 // Picks the language from the URL, then the visitor's saved choice (cookie),
-// then their browser language, and adds hreflang Link headers.
+// then their browser language. hreflang lives in each page's <head>.
 const handleI18nRouting = createMiddleware(routing);
 
 // Admin paths that need no session: sign-in itself, and the primitives

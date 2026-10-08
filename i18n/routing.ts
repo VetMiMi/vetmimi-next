@@ -6,6 +6,9 @@ export const routing = defineRouting({
   locales: ["en", "my"],
   defaultLocale: "en",
   localePrefix: "as-needed",
+  // hreflang comes only from each page's <head> (lib/seo.ts), not also from
+  // a Link header that could disagree with it.
+  alternateLinks: false,
 });
 
 export type Locale = (typeof routing.locales)[number];

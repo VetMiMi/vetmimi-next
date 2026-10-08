@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Your appointment | VetMiMi",
-    "rescheduleTitle": "Ask to reschedule | VetMiMi"
+    "title": "Your appointment",
+    "rescheduleTitle": "Ask to reschedule"
   },
   "page": {
     "eyebrow": "Your appointment",

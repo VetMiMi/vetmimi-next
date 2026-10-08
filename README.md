@@ -32,6 +32,13 @@ Production and preview values live in the Vercel project's environment
 variables, set by the owner; agents do not change Vercel settings. A build
 needs neither value: a call fails with a clear error when one is missing.
 
+`SITE_URL` is the public address used for canonical links, hreflang, the
+sitemap and social cards (`lib/seo.ts`). It is optional: without it a Vercel
+production build uses the project's production domain, and every other
+build uses `http://localhost:3000`. Set it once the final domain is chosen.
+Only the production build allows crawling (`app/robots.ts`); previews send
+`Disallow: /`.
+
 ## Tests
 
 `pnpm gate` runs the unit tests in `lib/*.test.ts`. The end-to-end checks in

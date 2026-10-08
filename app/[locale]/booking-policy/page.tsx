@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/seo";
 import { AA, C } from "@/lib/tokens";
 import { WaveDivider } from "@/components/art/Shapes";
 
@@ -14,6 +16,20 @@ const SECTIONS = [
   "payment",
   "contact",
 ] as const;
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/booking-policy">): Promise<Metadata> {
+  const locale = (await params).locale as Locale;
+  const t = await getTranslations({
+    locale,
+    namespace: "legal.bookingPolicy.metadata",
+  });
+  return pageMetadata(locale, "/booking-policy", {
+    title: t("title"),
+    description: t("description"),
+  });
+}
 
 export default async function BookingPolicy({
   params,

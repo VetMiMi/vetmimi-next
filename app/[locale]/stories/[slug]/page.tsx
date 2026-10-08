@@ -10,6 +10,7 @@ import { StoryCard, StoryImage } from "@/components/Editorial";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getArticle, loadStories, type Article } from "@/lib/articles";
+import { pageMetadata } from "@/lib/seo";
 import { STORIES, type Story, type StorySlug } from "@/lib/data";
 import { storyFromArticle } from "@/lib/stories";
 
@@ -24,35 +25,56 @@ export function generateStaticParams() {
 }
 
 // A published article brings its own SEO text and cover; a written story
-// keeps the site's defaults.
+// uses its title and excerpt, and the site's default image.
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/stories/[slug]">): Promise<Metadata> {
-  const { locale, slug } = await params;
-  const article = await getArticle(locale as Locale, slug);
-  if (!article) return {};
-  const cover = article.coverImage;
-  const image = cover?.sizes[0];
-  return {
-    title: article.seoTitle,
-    description: article.seoDescription,
-    openGraph: {
-      type: "article",
+  const { locale: requested, slug } = await params;
+  const locale = requested as Locale;
+  const pathname = `/stories/${slug}`;
+  const article = await getArticle(locale, slug);
+  if (article) {
+    const page = pageMetadata(locale, pathname, {
       title: article.seoTitle,
       description: article.seoDescription,
-      publishedTime: article.publishedAt,
-      images:
-        cover && image
-          ? [
-              {
-                url: image.url,
-                width: image.width,
-                height: Math.round((image.width * cover.height) / cover.width),
-                alt: cover.alt || undefined,
-              },
-            ]
-          : undefined,
-    },
+    });
+    const cover = article.coverImage;
+    const image = cover?.sizes[0];
+    return {
+      ...page,
+      openGraph: {
+        ...page.openGraph,
+        type: "article",
+        publishedTime: article.publishedAt,
+        images:
+          cover && image
+            ? [
+                {
+                  url: image.url,
+                  width: image.width,
+                  height: Math.round(
+                    (image.width * cover.height) / cover.width,
+                  ),
+                  alt: cover.alt || undefined,
+                },
+              ]
+            : undefined,
+      },
+    };
+  }
+  const story = STORIES.find((item) => item.slug === slug);
+  if (!story) return {};
+  const t = await getTranslations({
+    locale,
+    namespace: `stories.items.${story.slug}`,
+  });
+  const page = pageMetadata(locale, pathname, {
+    title: t("title"),
+    description: t("excerpt"),
+  });
+  return {
+    ...page,
+    openGraph: { ...page.openGraph, type: "article", authors: [story.author] },
   };
 }
 

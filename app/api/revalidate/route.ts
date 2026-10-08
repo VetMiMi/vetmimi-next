@@ -2,7 +2,8 @@ import { revalidateTag } from "next/cache";
 import { revalidateSecretMatches } from "@/lib/revalidateSecret";
 
 // Called by the API when an article publishes or changes, with
-// {"tags": ["articles", "article:<slug>"]}, so the stories pages show it.
+// {"tags": ["articles", "article:<slug>"]}, so the stories pages and the
+// sitemap (built from the same "articles" fetch) show it.
 export async function POST(request: Request) {
   const secret = request.headers.get("x-revalidate-secret");
   if (!revalidateSecretMatches(secret, process.env.SITE_REVALIDATE_SECRET)) {

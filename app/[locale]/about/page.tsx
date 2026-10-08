@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import {
@@ -8,10 +9,22 @@ import {
 import { PageEnd } from "@/components/Editorial";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
+import { pageMetadata } from "@/lib/seo";
 import dawMiPortrait from "@/assets/daw-mi-portrait.webp";
 import artImage from "@/assets/image-4.webp";
 import hewPhoto from "@/assets/human-experience-week/daw-mi-with-artwork-3.webp";
 import { VideoIntro } from "./_components/VideoIntro";
+
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/about">): Promise<Metadata> {
+  const locale = (await params).locale as Locale;
+  const t = await getTranslations({ locale, namespace: "about.metadata" });
+  return pageMetadata(locale, "/about", {
+    title: t("title"),
+    description: t("description"),
+  });
+}
 
 export default async function About({ params }: PageProps<"/[locale]/about">) {
   const { locale } = await params;

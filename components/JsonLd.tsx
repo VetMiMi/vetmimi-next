@@ -1,8 +1,9 @@
-import { getLocale, getTranslations } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
-import { services } from "@/lib/services";
+import { services, type ServiceQuestion } from "@/lib/services";
 import {
   dawMiJsonLd,
+  homeFaqQuestions,
   jsonLdText,
   practiceJsonLd,
   serviceJsonLd,
@@ -22,12 +23,16 @@ export function JsonLd({ data }: { data: Record<string, unknown> }) {
 
 export async function PracticeJsonLd() {
   const locale = (await getLocale()) as Locale;
-  const t = await getTranslations({ locale });
+  const [t, { home }] = await Promise.all([
+    getTranslations({ locale }),
+    getMessages({ locale }),
+  ]);
   return (
     <JsonLd
       data={practiceJsonLd(locale, {
         description: t("home.metadata.description"),
         email: t("contact.details.email.value"),
+        faq: homeFaqQuestions(home.faq.items),
       })}
     />
   );
@@ -53,6 +58,7 @@ export async function ServiceJsonLd({ slug }: { slug: string }) {
     locale,
     namespace: `services.items.${service.slug}`,
   });
+  const questions: ServiceQuestion[] = t.raw("questions");
   return (
     <JsonLd
       data={serviceJsonLd(locale, {
@@ -60,6 +66,7 @@ export async function ServiceJsonLd({ slug }: { slug: string }) {
         name: t("name"),
         description: t("summary"),
         href: service.href,
+        questions,
       })}
     />
   );

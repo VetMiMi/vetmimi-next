@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { afterEach, beforeEach, describe, it } from "node:test";
 import {
   dawMiJsonLd,
+  homeFaqQuestions,
   jsonLdText,
   practiceJsonLd,
   serviceJsonLd,
@@ -24,6 +25,7 @@ const practice = () =>
   practiceJsonLd("en", {
     description: "A space where creativity and reflection meet.",
     email: "hello@vetmimi.example",
+    faq: [],
   });
 const dawMi = () =>
   dawMiJsonLd("my", {
@@ -36,6 +38,7 @@ const service = (href: string) =>
     name: "Group art & wellbeing",
     description: "Make art alongside other people.",
     href,
+    questions: [],
   });
 
 // Every key anywhere in the object, nested ones included.
@@ -77,7 +80,9 @@ describe("structured data", () => {
   });
 
   it("points a service to its booking or enquiry page in the same language", () => {
-    const data = service("/contact?service=group-art-wellbeing#enquiry");
+    const [data] = service("/contact?service=group-art-wellbeing#enquiry")[
+      "@graph"
+    ] as Node[];
     assert.equal(data["@type"], "Service");
     assert.equal(data.url, `${SITE}/my/services/group-art-wellbeing`);
     assert.equal((data.provider as Node)["@id"], `${SITE}/#practice`);
@@ -85,6 +90,53 @@ describe("structured data", () => {
       "@type": "ServiceChannel",
       serviceUrl: `${SITE}/my/contact?service=group-art-wellbeing#enquiry`,
     });
+  });
+
+  it("adds the home FAQ in the page's language, without the Medicare answer", () => {
+    const faq = homeFaqQuestions({
+      draw: { q: "ပုံဆွဲတတ်ဖို့ လိုပါသလား။", a: "မလိုပါဘူး။" },
+      medicare: { q: "Medicare?", a: "May be covered." },
+      howMany: { q: "ဆက်ရှင် ဘယ်နှစ်ကြိမ်?", a: "တချို့က တစ်ကြိမ်။" },
+    });
+    const graph = practiceJsonLd("my", {
+      description: "d",
+      email: "hello@vetmimi.example",
+      faq,
+    })["@graph"] as Node[];
+    const page = graph.find((node) => node["@type"] === "FAQPage")!;
+    assert.equal(page["@id"], `${SITE}/my#faq`);
+    assert.equal(page.inLanguage, "my");
+    assert.deepEqual(page.mainEntity, [
+      {
+        "@type": "Question",
+        name: "ပုံဆွဲတတ်ဖို့ လိုပါသလား။",
+        acceptedAnswer: { "@type": "Answer", text: "မလိုပါဘူး။" },
+      },
+      {
+        "@type": "Question",
+        name: "ဆက်ရှင် ဘယ်နှစ်ကြိမ်?",
+        acceptedAnswer: { "@type": "Answer", text: "တချို့က တစ်ကြိမ်။" },
+      },
+    ]);
+    assert.equal(jsonLdText(practice()).includes("FAQPage"), false);
+  });
+
+  it("adds a service's own questions beside the service", () => {
+    const graph = serviceJsonLd("en", {
+      slug: "individual-art-therapy",
+      name: "Individual Art Therapy",
+      description: "One-to-one time.",
+      href: "/book",
+      questions: [{ question: "Do I need to be good at art?", answer: "No." }],
+    })["@graph"] as Node[];
+    assert.deepEqual(
+      graph.map((node) => node["@type"]),
+      ["Service", "FAQPage"],
+    );
+    assert.equal(
+      graph[1]["@id"],
+      `${SITE}/services/individual-art-therapy#faq`,
+    );
   });
 
   it("credits a story to Daw Mi and the practice, dated only when known", () => {

@@ -147,6 +147,19 @@ export default async function StoryDetail({
   );
 }
 
+// Every story is Daw Mi's; her name links to About, where answer engines
+// and readers can check who she is.
+async function Byline() {
+  const t = await getTranslations("common.brand");
+  return (
+    <p>
+      <Link className="ed-link" href="/about" rel="author">
+        {t("tagline")}
+      </Link>
+    </p>
+  );
+}
+
 const ARTICLE_IMAGE_SIZES = "(max-width: 1168px) 100vw, 1120px";
 
 function PublishedArticle({
@@ -162,6 +175,7 @@ function PublishedArticle({
         <p className="ed-label">{typeLabel}</p>
         <h1>{article.title}</h1>
         <p className="ed-lead">{article.excerpt}</p>
+        <Byline />
       </header>
       {article.coverImage && (
         <StoryImage
@@ -202,6 +216,7 @@ async function WrittenStory({
         <p className="ed-label">{typeLabel}</p>
         <h1>{t(`items.${story.slug}.title`)}</h1>
         <p className="ed-lead">{subtitles[story.slug] || excerpt}</p>
+        <Byline />
         <p className="ed-preview-label">{t("detail.preview")}</p>
       </header>
       <StoryImage

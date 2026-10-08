@@ -34,10 +34,56 @@ const dawMiRef = (locale: Locale) => ({
   url: pageUrl(locale, "/about"),
 });
 
-// Home: the site, for its name in search results, and the practice.
+// Home FAQ entries (keys of messages/<locale>/home.json faq.items) that stay
+// on the page but out of the structured data, so answer engines do not quote
+// them as fact.
+// - medicare: owner decision 2026-10-08 (#173), until Daw Mi confirms the
+//   wording of the Medicare and private health answer.
+export const FAQ_EXCLUDED_FROM_STRUCTURED_DATA = ["medicare"];
+
+export type FaqQuestion = { question: string; answer: string };
+
+// The home FAQ as shown on the page, minus the excluded entries.
+export function homeFaqQuestions(
+  items: Record<string, { q: string; a: string }>,
+): FaqQuestion[] {
+  return Object.entries(items)
+    .filter(([id]) => !FAQ_EXCLUDED_FROM_STRUCTURED_DATA.includes(id))
+    .map(([, { q, a }]) => ({ question: q, answer: a }));
+}
+
+// The questions and answers a page shows, in the page's language, as nodes
+// to spread into its graph: none when the page has no questions.
+export function faqPageNodes(
+  locale: Locale,
+  pathname: string,
+  questions: FaqQuestion[],
+): JsonLdObject[] {
+  if (questions.length === 0) return [];
+  const url = pageUrl(locale, pathname);
+  return [
+    {
+      "@type": "FAQPage",
+      "@id": `${url}#faq`,
+      url,
+      inLanguage: locale,
+      mainEntity: questions.map(({ question, answer }) => ({
+        "@type": "Question",
+        name: question,
+        acceptedAnswer: { "@type": "Answer", text: answer },
+      })),
+    },
+  ];
+}
+
+// Home: the site, for its name in search results, the practice and the FAQ.
 export function practiceJsonLd(
   locale: Locale,
-  { description, email }: { description: string; email: string },
+  {
+    description,
+    email,
+    faq,
+  }: { description: string; email: string; faq: FaqQuestion[] },
 ): JsonLdObject {
   return {
     "@context": CONTEXT,
@@ -63,6 +109,7 @@ export function practiceJsonLd(
         },
         founder: dawMiRef(locale),
       },
+      ...faqPageNodes(locale, "/", faq),
     ],
   };
 }
@@ -83,8 +130,8 @@ export function dawMiJsonLd(
   };
 }
 
-// A service page. `href` is where its main button goes: booking for
-// individual sessions, the enquiry form for the others.
+// A service page and its questions. `href` is where its main button goes:
+// booking for individual sessions, the enquiry form for the others.
 export function serviceJsonLd(
   locale: Locale,
   {
@@ -92,23 +139,36 @@ export function serviceJsonLd(
     name,
     description,
     href,
-  }: { slug: string; name: string; description: string; href: string },
+    questions,
+  }: {
+    slug: string;
+    name: string;
+    description: string;
+    href: string;
+    questions: FaqQuestion[];
+  },
 ): JsonLdObject {
-  const url = pageUrl(locale, `/services/${slug}`);
+  const pathname = `/services/${slug}`;
+  const url = pageUrl(locale, pathname);
   return {
     "@context": CONTEXT,
-    "@type": "Service",
-    "@id": `${url}#service`,
-    name,
-    description,
-    url,
-    serviceType: PRACTICE.serviceType,
-    provider: practiceRef(locale),
-    areaServed: { "@type": "Country", name: PRACTICE.countryName },
-    availableChannel: {
-      "@type": "ServiceChannel",
-      serviceUrl: pageUrl(locale, href),
-    },
+    "@graph": [
+      {
+        "@type": "Service",
+        "@id": `${url}#service`,
+        name,
+        description,
+        url,
+        serviceType: PRACTICE.serviceType,
+        provider: practiceRef(locale),
+        areaServed: { "@type": "Country", name: PRACTICE.countryName },
+        availableChannel: {
+          "@type": "ServiceChannel",
+          serviceUrl: pageUrl(locale, href),
+        },
+      },
+      ...faqPageNodes(locale, pathname, questions),
+    ],
   };
 }
 

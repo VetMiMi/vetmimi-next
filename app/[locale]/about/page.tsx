@@ -7,6 +7,7 @@ import {
   Question,
 } from "@phosphor-icons/react/dist/ssr";
 import { PageEnd } from "@/components/Editorial";
+import { DawMiJsonLd } from "@/components/JsonLd";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { pageMetadata } from "@/lib/seo";
@@ -33,6 +34,7 @@ export default async function About({ params }: PageProps<"/[locale]/about">) {
 
   return (
     <div className="ed-page">
+      <DawMiJsonLd />
       <section className="ed-container ed-section ed-split">
         <div>
           <p className="ed-label">{t("hero.label")}</p>

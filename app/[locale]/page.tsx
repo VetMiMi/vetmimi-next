@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PracticeJsonLd } from "@/components/JsonLd";
 import type { Locale } from "@/i18n/routing";
 import { loadStories } from "@/lib/articles";
 import { pageMetadata } from "@/lib/seo";
@@ -23,9 +24,15 @@ export async function generateMetadata({
 export const revalidate = 3600;
 
 // The home page is interactive throughout, so it renders as one client
-// component; this server page adds its metadata and the stories preview.
+// component; this server page adds its metadata, structured data and the
+// stories preview.
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const locale = (await params).locale as Locale;
   setRequestLocale(locale);
-  return <HomePage stories={await loadStories(locale)} />;
+  return (
+    <>
+      <PracticeJsonLd />
+      <HomePage stories={await loadStories(locale)} />
+    </>
+  );
 }

@@ -145,9 +145,9 @@ All variables are server-only (there is no `NEXT_PUBLIC_`). Preview values live 
 
 The live site runs on the same AWS host as the API, as a Docker container behind Caddy. Vercel only builds pull request previews.
 
-- **Image:** `ghcr.io/vetmimi/vetmimi-next:<commit sha>` (and `:main` for the latest), `linux/arm64`, built from the `Dockerfile`: Next's standalone server on Node 22 Alpine, run as the `node` user on port 3000.
+- **Image:** `<ecr_registry>/vetmimi-next:<commit sha>` (and `:main` for the latest) in the private ECR repository `vetmimi-next`, `linux/arm64`, built from the `Dockerfile`: Next's standalone server on Node 22 Alpine, run as the `node` user on port 3000.
 - **Health:** `GET /api/health` answers `200 {"status":"ok"}` without calling the API. The image's Docker health check uses it, and so does the host's deploy.
-- **Deploys:** after CI passes on `main`, `.github/workflows/release.yml` builds the image on an Arm runner, pushes both tags, then runs `ssh deploy@$DEPLOY_HOST web <sha>`. The deploy key may run only the host's `deploy.sh`, which pulls the image, swaps it in, and rolls back if it isn't healthy. Without `DEPLOY_HOST` the deploy is skipped. To redeploy `main`, run the workflow by hand.
+- **Deploys:** after CI passes on `main`, `.github/workflows/release.yml` builds the image on an Arm runner, pushes both tags to ECR with the OIDC role in the repository variable `AWS_RELEASE_ROLE_ARN` (no AWS key is stored in GitHub; the role and repository are in vetmimi-api's `deploy/terraform/live`), then runs `ssh deploy@$DEPLOY_HOST web <sha>`. The deploy key may run only the host's `deploy.sh`, which pulls the image, swaps it in, and rolls back if it isn't healthy. Without `AWS_RELEASE_ROLE_ARN` the push and deploy are skipped; without `DEPLOY_HOST`, the deploy. To redeploy `main`, run the workflow by hand.
 
 Static pages are rendered while the image is built, so their address is fixed then:
 

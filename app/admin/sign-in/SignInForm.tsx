@@ -65,13 +65,13 @@ export function SignInForm({ next }: { next: string }) {
         error={fieldErrors.password}
       />
       <Input
-        label="6-digit code from your authenticator app"
+        label="Authenticator code"
         name="code"
+        help="Leave empty if you haven't set one up."
         autoComplete="one-time-code"
         inputMode="numeric"
         maxLength={7}
         spellCheck={false}
-        required
         error={fieldErrors.code}
       />
       <Button

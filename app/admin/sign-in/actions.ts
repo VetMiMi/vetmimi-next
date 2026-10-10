@@ -58,9 +58,7 @@ export async function signIn(
   const fieldErrors: SignInState["fieldErrors"] = {};
   if (!email) fieldErrors.email = "Enter your email address.";
   if (!password) fieldErrors.password = "Enter your password.";
-  if (!code) {
-    fieldErrors.code = "Enter the 6-digit code from your authenticator app.";
-  } else if (!/^\d{6}$/.test(code)) {
+  if (code && !/^\d{6}$/.test(code)) {
     fieldErrors.code = "Enter the code as 6 digits, like 123456.";
   }
 
@@ -72,7 +70,7 @@ export async function signIn(
   try {
     const session = unwrap(
       await publicApi().POST("/auth/sessions", {
-        body: { email, password, totpCode: code },
+        body: { email, password, totpCode: code || undefined },
       }),
     );
     await setSessionCookie(session.token, session.expiresAt);

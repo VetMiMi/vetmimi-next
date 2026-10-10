@@ -39,7 +39,7 @@ All data, auth, booking rules and video signaling live in the Go API, [VetMiMi/v
 
 **Admin console (`/admin`, English only)**
 
-- Sign-in with email, password and a **TOTP code**. The console has three roles (site admin, booking admin, content editor), and the navigation shows each person only what their role allows.
+- Sign-in with email and password, plus a **TOTP code** for accounts with two-step sign-in. The console has three roles (site admin, booking admin, content editor), and the navigation shows each person only what their role allows.
 - **Appointments:** a list with filters and an "attention" panel. Each appointment's page shows its history and private notes, and offers only the status changes the API allows for it. Daw Mi can reschedule, create appointments manually, and start the video session from here.
 - **Availability:** weekly hours, date overrides, and blocks. When a new block clashes with existing bookings, the console warns before saving.
 - **Services** (create, edit, pause, resume) and **Enquiries** (inbox, mark handled).

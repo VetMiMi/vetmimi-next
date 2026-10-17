@@ -4,7 +4,7 @@
 
 **The bilingual website, booking flow, admin console and video session pages for VetMiMi, an art therapy practice in Sydney.**
 
-[Live site](https://vetmimi-arts-therapy.vercel.app) · [Go API](https://github.com/VetMiMi/vetmimi-api) · [Project status](docs/project-status.md)
+[Live site](https://vetmimi.duckdns.org) · [Go API](https://github.com/VetMiMi/vetmimi-api) · [Project status](docs/project-status.md)
 
 [![CI](https://github.com/VetMiMi/vetmimi-next/actions/workflows/ci.yml/badge.svg)](https://github.com/VetMiMi/vetmimi-next/actions/workflows/ci.yml)
 ![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=nextdotjs&logoColor=white)
@@ -112,7 +112,7 @@ pnpm dev                     # http://localhost:3000
 | `SITE_REVALIDATE_SECRET` | Shared secret the API sends to `POST /api/revalidate` when an article is published                                                                                                                                       |
 | `SITE_URL`               | _Optional._ Public address used for canonical links, hreflang, the sitemap and social cards. Without it, Vercel production builds use the project's production domain and every other build uses `http://localhost:3000` |
 
-All variables are server-only (there is no `NEXT_PUBLIC_`). Preview values live in Vercel; the live values live on the host and in the release workflow (see [Self-hosting](#self-hosting)). **A build needs none of them.** Without the API, the site still runs: booking shows "not available yet", stories fall back to the built-in content, and admin sign-in explains that it isn't available. Only the live site (Vercel production, or a build with `SITE_ENV=production`) allows search engines to crawl (`app/robots.ts`); every other build sends `Disallow: /`.
+All variables are server-only (there is no `NEXT_PUBLIC_`). Preview values live in Vercel; the live values live on the host and in the release workflow (see [Self-hosting](#self-hosting)). **A build needs none of them.** Without the API, the site still runs: booking shows "not available yet", stories fall back to the built-in content, and admin sign-in explains that it isn't available. Only the live site, the self-hosted build with `SITE_ENV=production`, lets search engines crawl (`app/robots.ts`); every other build, Vercel's included, sends `Disallow: /`.
 
 **Useful scripts**
 

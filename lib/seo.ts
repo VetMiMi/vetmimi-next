@@ -15,13 +15,10 @@ export function siteUrl(): string {
 }
 
 // Whether this deployment is the live site, which alone is crawled and pings
-// IndexNow. Vercel marks its production deployment itself; the self-hosted
-// image is built and run with SITE_ENV=production (README, Self-hosting).
+// IndexNow: the self-hosted image built with SITE_ENV=production. Vercel's
+// copy is never crawled, so search sees one site.
 export function isLiveSite(): boolean {
-  return (
-    process.env.VERCEL_ENV === "production" ||
-    process.env.SITE_ENV === "production"
-  );
+  return process.env.SITE_ENV === "production";
 }
 
 // The absolute URL of a page in one language. English keeps the bare path

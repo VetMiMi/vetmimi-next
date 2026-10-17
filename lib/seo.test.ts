@@ -50,14 +50,14 @@ describe("site URL", () => {
 });
 
 describe("live site", () => {
-  it("is Vercel production or a self-hosted production build", () => {
-    setEnv({ VERCEL_ENV: "production" });
-    assert.equal(isLiveSite(), true);
+  it("is a self-hosted production build", () => {
     setEnv({ SITE_ENV: "production" });
     assert.equal(isLiveSite(), true);
   });
 
-  it("is not a preview or a local build", () => {
+  it("is not Vercel, a preview or a local build", () => {
+    setEnv({ VERCEL_ENV: "production" });
+    assert.equal(isLiveSite(), false);
     setEnv({ VERCEL_ENV: "preview" });
     assert.equal(isLiveSite(), false);
     setEnv({});

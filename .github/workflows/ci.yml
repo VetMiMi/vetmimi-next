@@ -39,7 +39,7 @@ jobs:
     env:
       # Build and serve the production branches of metadata and robots.
       SITE_URL: http://localhost:3000
-      VERCEL_ENV: production
+      SITE_ENV: production
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4

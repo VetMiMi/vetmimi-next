@@ -17,7 +17,7 @@ import { channelIcons } from "../../_components/ChannelBadge";
 import { ImageSlot } from "./ImageSlot";
 import { previews } from "./SocialPreviews";
 import { sectionTitle } from "./WebsiteFields";
-import { Switch } from "./Switch";
+import { Switch } from "@/components/admin/Switch";
 
 type Version = {
   enabled: boolean;

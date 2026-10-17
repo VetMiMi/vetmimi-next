@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#494c6d"/>
+  <text font-family="Fraunces, serif" x="31" y="42" text-anchor="middle" font-size="30" font-weight="500" fill="#fff7ef">Vm</text>
+  <path d="M17 49c9 2.4 21 2.6 31-.6" fill="none" stroke="#db5f59" stroke-width="2.4" stroke-linecap="round"/>
+</svg>

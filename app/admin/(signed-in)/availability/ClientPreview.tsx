@@ -65,6 +65,7 @@ export function ClientPreview({
         <Select
           label="Service"
           name="preview-service"
+          required
           value={serviceId}
           onChange={(event) => setServiceId(event.target.value)}
           options={services.map((s) => ({
@@ -75,6 +76,7 @@ export function ClientPreview({
         <Input
           label="Date"
           name="preview-date"
+          required
           type="date"
           min={today}
           value={date}

@@ -34,10 +34,12 @@ function cellText(day: CalendarDay) {
   if (day.state === "off") return "Day off";
   if (day.offHours.length) return `Off ${shortHours(day.offHours[0])}`;
   if (day.state === "closed") return "Not working";
-  const [first, ...rest] = day.hours;
-  return rest.length
-    ? `${shortHours(first)} +${rest.length}`
-    : shortHours(first);
+  // The whole working span; the panel and the button's name list each range.
+  const end = day.hours
+    .map((h) => h.end)
+    .sort()
+    .at(-1)!;
+  return shortHours({ start: day.hours[0].start, end });
 }
 
 const icons = { off: Prohibit, changed: PencilSimple };
@@ -88,6 +90,7 @@ export function DayCell({
       type="button"
       tabIndex={focusable ? 0 : -1}
       aria-label={describe(day)}
+      title={describe(day)}
       aria-pressed={selected}
       aria-current={today ? "date" : undefined}
       onClick={onClick}

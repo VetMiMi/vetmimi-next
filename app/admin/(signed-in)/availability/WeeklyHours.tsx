@@ -13,7 +13,6 @@ import {
   hoursErrors,
   rulesFromWeek,
   weekFromRules,
-  type Week,
 } from "@/lib/admin/availability";
 import type { components } from "@/lib/api/schema";
 import { fieldId } from "@/lib/fieldIds";
@@ -27,9 +26,6 @@ type Rule = components["schemas"]["AvailabilityRule"];
 export function WeeklyHours({ rules }: { rules: Rule[] }) {
   const [saved, setSaved] = useState(() => weekFromRules(rules));
   const [week, setWeek] = useState(saved);
-  // Bumped when the week is replaced from outside a day (switch, copy,
-  // undo, save), so that day's time fields start again from the new hours.
-  const [layout, setLayout] = useState(0);
   const [checked, setChecked] = useState(false);
   const [notice, setNotice] = useState<string>();
   const [copyFrom, setCopyFrom] = useState<number>();
@@ -39,11 +35,6 @@ export function WeeklyHours({ rules }: { rules: Rule[] }) {
   const dirty = JSON.stringify(week) !== JSON.stringify(saved);
   const errors = week.map((day) => (checked ? hoursErrors(day) : []));
   const hasErrors = errors.some((day) => day.some(Boolean));
-
-  function replace(next: Week) {
-    setWeek(next);
-    setLayout((n) => n + 1);
-  }
 
   function save() {
     const problems = week.map(hoursErrors);
@@ -63,7 +54,7 @@ export function WeeklyHours({ rules }: { rules: Rule[] }) {
       }
       const fresh = weekFromRules(outcome.data.items);
       setSaved(fresh);
-      replace(fresh);
+      setWeek(fresh);
       setChecked(false);
       toast("Weekly hours saved");
     });
@@ -75,38 +66,21 @@ export function WeeklyHours({ rules }: { rules: Rule[] }) {
         {WEEKDAYS.map((name, day) => (
           <li
             key={name}
-            className="grid gap-3 border-b border-divider py-5 md:grid-cols-[170px_minmax(0,1fr)] md:gap-6"
+            className="flex flex-col gap-3 border-b border-divider py-5"
           >
-            <Switch
-              label={name}
-              checked={week[day].length > 0}
-              onChange={(on) =>
-                replace(
-                  week.map((h, i) =>
-                    i === day ? (on ? [DEFAULT_HOURS] : []) : h,
-                  ),
-                )
-              }
-            />
-            {week[day].length === 0 ? (
-              <p className="text-[0.95rem] text-muted md:pt-2.5">Not working</p>
-            ) : (
-              <div className="flex flex-wrap items-start justify-between gap-x-6">
-                <div className="min-w-0 grow">
-                  <HoursList
-                    key={`${layout}-${day}`}
-                    name={`hours-${day}`}
-                    day={name}
-                    hours={week[day]}
-                    errors={errors[day]}
-                    disabled={pending}
-                    onChange={(hours) =>
-                      setWeek((current) =>
-                        current.map((h, i) => (i === day ? hours : h)),
-                      )
-                    }
-                  />
-                </div>
+            <div className="flex flex-wrap items-center justify-between gap-x-4">
+              <Switch
+                label={name}
+                checked={week[day].length > 0}
+                onChange={(on) =>
+                  setWeek(
+                    week.map((h, i) =>
+                      i === day ? (on ? [DEFAULT_HOURS] : []) : h,
+                    ),
+                  )
+                }
+              />
+              {week[day].length > 0 && (
                 <Button
                   variant="quiet"
                   icon={<Copy aria-hidden="true" size={16} />}
@@ -115,7 +89,23 @@ export function WeeklyHours({ rules }: { rules: Rule[] }) {
                   Copy to…
                   <span className="sr-only"> (copy {name}’s hours)</span>
                 </Button>
-              </div>
+              )}
+            </div>
+            {week[day].length === 0 ? (
+              <p className="text-[0.95rem] text-muted">Not working</p>
+            ) : (
+              <HoursList
+                name={`hours-${day}`}
+                day={name}
+                hours={week[day]}
+                errors={errors[day]}
+                disabled={pending}
+                onChange={(hours) =>
+                  setWeek((current) =>
+                    current.map((h, i) => (i === day ? hours : h)),
+                  )
+                }
+              />
             )}
           </li>
         ))}
@@ -137,7 +127,7 @@ export function WeeklyHours({ rules }: { rules: Rule[] }) {
             <p className="text-[0.88rem] text-muted">
               You have unsaved changes.
             </p>
-            <Button variant="quiet" onClick={() => replace(saved)}>
+            <Button variant="quiet" onClick={() => setWeek(saved)}>
               Undo changes
             </Button>
           </>
@@ -149,7 +139,7 @@ export function WeeklyHours({ rules }: { rules: Rule[] }) {
           from={copyFrom}
           onClose={() => setCopyFrom(undefined)}
           onCopy={(to) => {
-            replace(copyDay(week, copyFrom, to));
+            setWeek(copyDay(week, copyFrom, to));
             setCopyFrom(undefined);
           }}
         />

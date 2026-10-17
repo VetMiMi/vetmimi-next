@@ -7,7 +7,7 @@ import type { Draft } from "@/lib/admin/postDraft";
 import { slugify } from "@/lib/slug";
 import { ImageSlot } from "./ImageSlot";
 import { MarkdownField } from "./MarkdownField";
-import { Switch } from "./Switch";
+import { Switch } from "@/components/admin/Switch";
 
 type Website = Draft["website"];
 type Localized = Website["title"];

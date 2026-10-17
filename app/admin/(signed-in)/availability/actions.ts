@@ -1,233 +1,216 @@
 "use server";
 
-import { mutate, type Outcome } from "@/lib/admin/mutation";
+import { revalidatePath } from "next/cache";
+import {
+  alreadyOff,
+  clearPlan,
+  consecutiveRuns,
+  type Hours,
+} from "@/lib/admin/availability";
+import { failure, mutate, type Outcome } from "@/lib/admin/mutation";
+import { adminCall } from "@/lib/admin/session";
+import type { AdminApi } from "@/lib/api/client";
+import { ApiError, unwrap } from "@/lib/api/problem";
 import type { components } from "@/lib/api/schema";
 import { addDays } from "@/lib/time";
-import { endsTooEarly } from "@/lib/timeRange";
 import { todayIn, zonedDayStart, zonedInstant } from "@/lib/zonedTime";
 
 type Schemas = components["schemas"];
-export type RuleInput = Schemas["AvailabilityRuleInput"];
 export type Conflict = Schemas["AppointmentSummary"];
 
 const PATH = "/admin/availability";
-const NOT_UPDATED =
-  "Availability was not updated. The previous schedule remains active.";
-const NO_SUCH_TIME = "This time does not exist on that date.";
-const messages = { failure: NOT_UPDATED };
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
+const TIME = /^\d{2}:\d{2}$/;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-// Weekly hours (#71): one period per call, so a failure leaves every other
-// period as it was.
-export async function saveRule(id: string | undefined, input: RuleInput) {
+export async function saveWeeklyHours(
+  periods: Schemas["AvailabilityRuleInput"][],
+) {
   return mutate(
     PATH,
-    (api) =>
-      id
-        ? api.PUT("/admin/availability/rules/{ruleId}", {
-            params: { path: { ruleId: id } },
-            body: input,
-          })
-        : api.POST("/admin/availability/rules", { body: input }),
-    messages,
-  );
-}
-
-export async function deleteRule(id: string): Promise<Outcome<unknown>> {
-  return mutate(
-    PATH,
-    (api) =>
-      api.DELETE("/admin/availability/rules/{ruleId}", {
-        params: { path: { ruleId: id } },
-      }),
-    messages,
-  );
-}
-
-// The state an override or block form keeps between submits. `attempt`
-// counts up so the summary or notice takes focus again on every submit.
-export type FormState = {
-  attempt: number;
-  saved?: boolean;
-  message?: string;
-  fieldErrors: Record<string, string>;
-  conflicts?: Conflict[];
-};
-
-const text = (form: FormData, name: string) =>
-  String(form.get(name) ?? "").trim();
-
-function checkTimes(
-  start: string,
-  end: string,
-  errors: FormState["fieldErrors"],
-) {
-  if (!start || !end) errors.time = "Enter a start and an end time.";
-  else if (endsTooEarly(start, end))
-    errors.time = "End time must be after start time.";
-}
-
-function checkNote(
-  note: string,
-  name: string,
-  errors: FormState["fieldErrors"],
-) {
-  if (note.length > 500) errors[name] = "Keep this to 500 characters or fewer.";
-}
-
-// One-off openings and date overrides (#72). Times are typed as Sydney wall
-// clock and sent as the instants they name on that date.
-export async function saveOverride(
-  id: string | undefined,
-  previous: FormState,
-  form: FormData,
-): Promise<FormState> {
-  const attempt = previous.attempt + 1;
-  const timeZone = text(form, "timezone");
-  const onDate = text(form, "date");
-  const kind = text(form, "kind");
-  const start = text(form, "time-start");
-  const end = text(form, "time-end");
-  const note = text(form, "note");
-
-  const fieldErrors: FormState["fieldErrors"] = {};
-  if (!onDate) fieldErrors.date = "Choose a date.";
-  else if (onDate < todayIn(timeZone))
-    fieldErrors.date = "Choose today or a later date.";
-  if (kind !== "open" && kind !== "replace")
-    fieldErrors.kind = "Choose what this date should do.";
-  checkTimes(start, end, fieldErrors);
-  checkNote(note, "note", fieldErrors);
-
-  const startsAt =
-    onDate && start ? zonedInstant(onDate, start, timeZone) : null;
-  const endsAt = onDate && end ? zonedInstant(onDate, end, timeZone) : null;
-  if (!fieldErrors.date && !fieldErrors.time && (!startsAt || !endsAt))
-    fieldErrors.time = NO_SUCH_TIME;
-  if (Object.keys(fieldErrors).length > 0 || !startsAt || !endsAt)
-    return { attempt, fieldErrors };
-
-  const body = {
-    onDate,
-    kind: kind as "open" | "replace",
-    startsAt,
-    endsAt,
-    note: note || undefined,
-  };
-  const outcome = await mutate(
-    PATH,
-    (api) =>
-      id
-        ? api.PUT("/admin/availability/overrides/{overrideId}", {
-            params: { path: { overrideId: id } },
-            body,
-          })
-        : api.POST("/admin/availability/overrides", { body }),
-    messages,
-  );
-  if (outcome.ok) return { attempt, saved: true, fieldErrors: {} };
-  // The API refuses a period outside the date, e.g. across the change to
-  // daylight saving, with a 422 on the times.
-  const timeError = outcome.fieldErrors.startsAt ?? outcome.fieldErrors.endsAt;
-  return {
-    attempt,
-    message: outcome.message,
-    fieldErrors: {
-      ...outcome.fieldErrors,
-      ...(timeError ? { time: NO_SUCH_TIME } : {}),
+    (api) => api.PUT("/admin/availability/rules", { body: { periods } }),
+    {
+      failure:
+        "Your weekly hours were not saved. The previous hours remain active.",
+      codes: {
+        overlapping_period:
+          "Two times on the same day overlap. Nothing was saved.",
+        action_not_allowed:
+          "An end time is not after its start time. Nothing was saved.",
+        invalid_request: "A time is not valid. Nothing was saved.",
+      },
     },
-  };
-}
-
-export async function deleteOverride(id: string): Promise<Outcome<unknown>> {
-  return mutate(
-    PATH,
-    (api) =>
-      api.DELETE("/admin/availability/overrides/{overrideId}", {
-        params: { path: { overrideId: id } },
-      }),
-    messages,
   );
 }
 
-// Blocked time (#73): part of a day, a whole day, or several whole days.
-// Whole days run from local midnight to the local midnight after the last
-// day, which is 23 or 25 hours across a daylight-saving change.
-export async function saveBlock(
-  id: string | undefined,
-  previous: FormState,
-  form: FormData,
-): Promise<FormState> {
-  const attempt = previous.attempt + 1;
-  const timeZone = text(form, "timezone");
-  const mode = text(form, "mode");
-  const date = text(form, "date");
-  const lastDate = text(form, "last-date");
-  const start = text(form, "time-start");
-  const end = text(form, "time-end");
-  const reason = text(form, "reason");
+const DAYS_NOT_CHANGED =
+  "Not every day was changed. The calendar shows what is saved now.";
 
-  const fieldErrors: FormState["fieldErrors"] = {};
-  if (!date) fieldErrors.date = "Choose a date.";
-  if (mode === "part") checkTimes(start, end, fieldErrors);
-  if (mode === "range") {
-    if (!lastDate) fieldErrors["last-date"] = "Choose the last day.";
-    else if (date && lastDate < date)
-      fieldErrors["last-date"] = "The last day cannot be before the first day.";
+// Changing days takes several API calls, so a failure part-way leaves some
+// days changed; the page re-renders either way to show what was saved.
+async function changeDays(
+  dates: string[],
+  change: (
+    api: AdminApi,
+    timeZone: string,
+    dates: string[],
+  ) => Promise<Conflict[] | void>,
+): Promise<Outcome<Conflict[]>> {
+  try {
+    const conflicts = await adminCall(async (api) => {
+      const { timezone } = unwrap(await api.GET("/admin/settings"));
+      const today = todayIn(timezone);
+      const valid = dates.filter((d) => DATE.test(d) && d >= today);
+      if (valid.length === 0 || valid.length > 62)
+        throw new Error("Bad dates for an availability change");
+      return (await change(api, timezone, valid)) ?? [];
+    });
+    return { ok: true, data: conflicts };
+  } catch (error) {
+    if (error instanceof ApiError)
+      return failure(error, { failure: DAYS_NOT_CHANGED });
+    throw error;
+  } finally {
+    revalidatePath(PATH);
   }
-  checkNote(reason, "reason", fieldErrors);
-  if (Object.keys(fieldErrors).length > 0) return { attempt, fieldErrors };
-
-  let startsAt: string | null;
-  let endsAt: string | null;
-  if (mode === "part") {
-    startsAt = zonedInstant(date, start, timeZone);
-    endsAt = zonedInstant(date, end, timeZone);
-    if (!startsAt || !endsAt)
-      return { attempt, fieldErrors: { time: NO_SUCH_TIME } };
-  } else {
-    const last = mode === "range" ? lastDate : date;
-    startsAt = zonedDayStart(date, timeZone);
-    endsAt = zonedDayStart(addDays(last, 1), timeZone);
-  }
-
-  const body = {
-    startsAt,
-    endsAt,
-    allDay: mode !== "part",
-    reason: reason || undefined,
-  };
-  const outcome = await mutate(
-    PATH,
-    (api) =>
-      id
-        ? api.PUT("/admin/availability/blocks/{blockId}", {
-            params: { path: { blockId: id } },
-            body,
-          })
-        : api.POST("/admin/availability/blocks", { body }),
-    messages,
-  );
-  if (!outcome.ok)
-    return {
-      attempt,
-      message: outcome.message,
-      fieldErrors: outcome.fieldErrors,
-    };
-  return {
-    attempt,
-    saved: true,
-    fieldErrors: {},
-    conflicts: outcome.data.conflicts,
-  };
 }
 
-export async function deleteBlock(id: string): Promise<Outcome<unknown>> {
-  return mutate(
-    PATH,
-    (api) =>
-      api.DELETE("/admin/availability/blocks/{blockId}", {
-        params: { path: { blockId: id } },
+async function clearDays(api: AdminApi, timeZone: string, dates: string[]) {
+  const sorted = [...dates].sort();
+  const range = { from: sorted[0], to: sorted.at(-1)! };
+  const [overrides, blocks] = await Promise.all([
+    api
+      .GET("/admin/availability/overrides", { params: { query: range } })
+      .then(unwrap),
+    api
+      .GET("/admin/availability/blocks", { params: { query: range } })
+      .then(unwrap),
+  ]);
+  const plan = clearPlan(dates, overrides.items, blocks.items, timeZone);
+  for (const overrideId of plan.deleteOverrides)
+    unwrap(
+      await api.DELETE("/admin/availability/overrides/{overrideId}", {
+        params: { path: { overrideId } },
       }),
-    messages,
+    );
+  for (const blockId of plan.deleteBlocks)
+    unwrap(
+      await api.DELETE("/admin/availability/blocks/{blockId}", {
+        params: { path: { blockId } },
+      }),
+    );
+  for (const run of plan.reblock)
+    await blockWholeDays(api, timeZone, run.first, run.last, run.reason);
+}
+
+async function blockWholeDays(
+  api: AdminApi,
+  timeZone: string,
+  first: string,
+  last: string,
+  reason?: string,
+) {
+  const saved = unwrap(
+    await api.POST("/admin/availability/blocks", {
+      body: {
+        startsAt: zonedDayStart(first, timeZone),
+        endsAt: zonedDayStart(addDays(last, 1), timeZone),
+        allDay: true,
+        reason,
+      },
+    }),
   );
+  return saved.conflicts;
+}
+
+export async function backToNormal(dates: string[]) {
+  return changeDays(dates, async (api, timeZone, valid) => {
+    await clearDays(api, timeZone, valid);
+  });
+}
+
+// Consecutive dates become one block, so a week away reads as one change.
+export async function markDaysOff(dates: string[]) {
+  return changeDays(dates, async (api, timeZone, valid) => {
+    const sorted = [...valid].sort();
+    const blocks = unwrap(
+      await api.GET("/admin/availability/blocks", {
+        params: { query: { from: sorted[0], to: sorted.at(-1)! } },
+      }),
+    );
+    const off = alreadyOff(valid, blocks.items, timeZone);
+    const toBlock = valid.filter((date) => !off.includes(date));
+    if (toBlock.length === 0) return [];
+    await clearDays(api, timeZone, toBlock);
+    const conflicts: Conflict[] = [];
+    for (const run of consecutiveRuns(toBlock))
+      conflicts.push(
+        ...(await blockWholeDays(api, timeZone, run.first, run.last)),
+      );
+    return conflicts;
+  });
+}
+
+function validHours(hours: Hours[]) {
+  return (
+    hours.length > 0 &&
+    hours.length <= 6 &&
+    hours.every(
+      (h) => TIME.test(h.start) && TIME.test(h.end) && h.start < h.end,
+    )
+  );
+}
+
+// The same hours on every date, in place of the weekly hours.
+export async function changeHours(dates: string[], hours: Hours[]) {
+  if (!validHours(hours)) throw new Error("Bad hours");
+  return changeDays(dates, async (api, timeZone, valid) => {
+    await clearDays(api, timeZone, valid);
+    for (const onDate of valid)
+      for (const { start, end } of hours) {
+        const startsAt = zonedInstant(onDate, start, timeZone);
+        const endsAt = zonedInstant(onDate, end, timeZone);
+        // A time the clocks skip on the morning daylight saving starts.
+        if (!startsAt || !endsAt) continue;
+        unwrap(
+          await api.POST("/admin/availability/overrides", {
+            body: { onDate, kind: "replace", startsAt, endsAt },
+          }),
+        );
+      }
+  });
+}
+
+export async function markPartDayOff(date: string, hours: Hours) {
+  if (!validHours([hours])) throw new Error("Bad hours");
+  return changeDays([date], async (api, timeZone) => {
+    const startsAt = zonedInstant(date, hours.start, timeZone);
+    const endsAt = zonedInstant(date, hours.end, timeZone);
+    if (!startsAt || !endsAt) return [];
+    const saved = unwrap(
+      await api.POST("/admin/availability/blocks", {
+        body: { startsAt, endsAt, allDay: false },
+      }),
+    );
+    return saved.conflicts;
+  });
+}
+
+// The times a client could book for one service on one date. Null when they
+// could not be loaded.
+export async function previewDay(serviceId: string, date: string) {
+  if (!UUID.test(serviceId) || !DATE.test(date)) return null;
+  try {
+    const preview = await adminCall(async (api) =>
+      unwrap(
+        await api.GET("/admin/availability/preview", {
+          params: { query: { serviceId, from: date, to: date } },
+        }),
+      ),
+    );
+    return preview.days.find((day) => day.date === date)?.slots ?? [];
+  } catch (error) {
+    if (error instanceof ApiError) return null;
+    throw error;
+  }
 }

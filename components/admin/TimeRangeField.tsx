@@ -19,6 +19,9 @@ type TimeRangeFieldProps = FieldProps & {
   start?: string;
   end?: string;
   disabled?: boolean;
+  // For a row whose day or date already shows beside it; screen readers
+  // still hear the label.
+  hideLabel?: boolean;
   onChange?: (start: string, end: string) => void;
 };
 
@@ -33,6 +36,7 @@ export function TimeRangeField({
   start = "",
   end = "",
   disabled,
+  hideLabel,
   onChange,
 }: TimeRangeFieldProps) {
   const [range, setRange] = useState({ start, end });
@@ -73,7 +77,7 @@ export function TimeRangeField({
 
   return (
     <fieldset className="m-0 min-w-0 border-0 p-0">
-      <legend className={labelClass}>
+      <legend className={hideLabel ? "sr-only" : labelClass}>
         {label}
         <Requirement required={required} />
       </legend>

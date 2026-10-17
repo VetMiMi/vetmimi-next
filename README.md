@@ -143,7 +143,7 @@ All variables are server-only (there is no `NEXT_PUBLIC_`). Preview values live 
 
 ## Self-hosting
 
-The live site runs on the same AWS host as the API, as a Docker container behind Caddy. Vercel only builds pull request previews.
+The live site runs on the same AWS host as the API, as a Docker container behind Caddy. Vercel builds pull request previews; its production address forwards every path to the live site (`next.config.ts`).
 
 - **Image:** `<ecr_registry>/vetmimi-next:<commit sha>` (and `:main` for the latest) in the private ECR repository `vetmimi-next`, `linux/arm64`, built from the `Dockerfile`: Next's standalone server on Node 22 Alpine, run as the `node` user on port 3000.
 - **Health:** `GET /api/health` answers `200 {"status":"ok"}` without calling the API. The image's Docker health check uses it, and so does the host's deploy.

@@ -3,6 +3,11 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
+// Links already handed out point at Vercel's production address; it now
+// forwards every path to the live site. Temporary (307) until the real domain
+// exists, so browsers do not cache a destination that will change again.
+const LIVE_SITE = "https://vetmimi.duckdns.org";
+
 const nextConfig: NextConfig = {
   // The live site runs as a Docker image (Dockerfile); Vercel ignores this.
   output: "standalone",
@@ -44,6 +49,15 @@ const nextConfig: NextConfig = {
     ];
   },
   async redirects() {
+    if (process.env.VERCEL_ENV === "production") {
+      return [
+        {
+          source: "/:path*",
+          destination: `${LIVE_SITE}/:path*`,
+          permanent: false,
+        },
+      ];
+    }
     return [
       // Artworks now open in a lightbox on the portfolio page itself.
       {

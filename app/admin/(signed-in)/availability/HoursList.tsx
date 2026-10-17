@@ -8,7 +8,7 @@ import { fieldIds } from "@/lib/fieldIds";
 
 // The picker icon is hidden on a phone, where tapping the field opens the
 // picker anyway, so "10:00 AM" fits in half a 375px screen.
-const timeClass = `${controlClass} min-w-0 flex-1 px-2.5 max-sm:[&::-webkit-calendar-picker-indicator]:hidden`;
+const timeClass = `${controlClass} min-w-0 flex-1 px-2.5 max-sm:px-1.5 max-sm:[&::-webkit-calendar-picker-indicator]:hidden`;
 
 // Time ranges, one per row ([start] – [end] ×), with "Add hours". Inputs are
 // named `${name}-${i}-start` and `-end`, so a caller can focus one.
@@ -61,7 +61,7 @@ export function HoursList({
         };
         return (
           <div key={i}>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 max-sm:gap-1">
               {input("start")}
               <span aria-hidden="true" className="text-muted">
                 –

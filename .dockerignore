@@ -11,6 +11,7 @@ e2e
 playwright-report
 test-results
 coverage
+video
 docs
 *.md
 Dockerfile

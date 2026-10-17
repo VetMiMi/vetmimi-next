@@ -13,6 +13,10 @@
 ![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)
 ![WebRTC](https://img.shields.io/badge/WebRTC-1:1_video-333333?style=flat-square&logo=webrtc&logoColor=white)
 
+<br>
+
+[![A visitor books a session in English and Burmese, a second booking for the same time is refused, and Daw Mi manages her week in the admin](https://raw.githubusercontent.com/VetMiMi/vetmimi-api/main/docs/evidence/intro-video.gif)](https://github.com/VetMiMi/vetmimi-api/blob/main/docs/evidence/intro-video.mp4)
+
 </div>
 
 ---

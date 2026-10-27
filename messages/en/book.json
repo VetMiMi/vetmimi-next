@@ -104,7 +104,12 @@
     "selection": "Your selection",
     "selected": "You selected {date} at {time} ({zone}).",
     "change": "Change date or time",
-    "continue": "Continue to Your Details →"
+    "continue": "Continue to Your Details →",
+    "parts": {
+      "morning": "Morning",
+      "afternoon": "Afternoon",
+      "evening": "Evening"
+    }
   },
   "step3": {
     "title": "Your details",

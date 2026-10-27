@@ -141,3 +141,11 @@ export function formatClock(time: string): string {
   const suffix = h < 12 ? "am" : "pm";
   return `${h % 12 === 0 ? 12 : h % 12}:${String(m).padStart(2, "0")} ${suffix}`;
 }
+
+export type DayPart = "morning" | "afternoon" | "evening";
+
+// Where a time falls in the practice's day: before noon, before 5 pm, or later.
+export function dayPart(instant: Date | string, timeZone: string): DayPart {
+  const hour = Number(zonedParts(instant, timeZone).time.slice(0, 2));
+  return hour < 12 ? "morning" : hour < 17 ? "afternoon" : "evening";
+}

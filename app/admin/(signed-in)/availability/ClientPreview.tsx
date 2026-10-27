@@ -8,7 +8,7 @@ import { Select } from "@/components/admin/Select";
 import { noTimesReason, type CalendarDay } from "@/lib/admin/availability";
 import { longDay } from "@/lib/admin/appointments";
 import type { components } from "@/lib/api/schema";
-import { formatClock, zoneLabel, zonedParts } from "@/lib/zonedTime";
+import { dayPart, formatClock, zoneLabel, zonedParts } from "@/lib/zonedTime";
 import { previewDay } from "./actions";
 
 type Schemas = components["schemas"];
@@ -113,16 +113,29 @@ export function ClientPreview({
             <p className="mb-3 text-[0.95rem]">
               Clients can book these times on {longDay(date)}:
             </p>
-            <ul className="flex flex-wrap gap-2">
-              {slots.map((slot) => (
-                <li
-                  key={slot.startsAt}
-                  className="rounded-pill border border-indigo/40 px-3.5 py-1.5 text-[0.88rem] font-semibold text-indigo"
-                >
-                  {formatClock(zonedParts(slot.startsAt, timezone).time)}
-                </li>
-              ))}
-            </ul>
+            {(["morning", "afternoon", "evening"] as const).map((part) => {
+              const times = slots.filter(
+                (slot) => dayPart(slot.startsAt, timezone) === part,
+              );
+              if (times.length === 0) return null;
+              return (
+                <div key={part} className="mb-3">
+                  <h4 className="mb-2 text-[0.82rem] font-semibold text-muted">
+                    {part[0].toUpperCase() + part.slice(1)}
+                  </h4>
+                  <ul className="flex flex-wrap gap-2">
+                    {times.map((slot) => (
+                      <li
+                        key={slot.startsAt}
+                        className="rounded-pill border border-indigo/40 px-3.5 py-1.5 text-[0.88rem] font-semibold text-indigo"
+                      >
+                        {formatClock(zonedParts(slot.startsAt, timezone).time)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
             <p className="mt-3 text-[0.82rem] text-muted">
               Times shown in {zoneLabel(timezone)}.
             </p>

@@ -1,6 +1,6 @@
 "use client";
-import { useRef, type KeyboardEvent, type Ref } from "react";
-import { C } from "@/lib/tokens";
+import { Fragment, useRef, type KeyboardEvent, type Ref } from "react";
+import { AA, C } from "@/lib/tokens";
 
 type Slot = { startsAt: string; endsAt: string };
 
@@ -8,6 +8,9 @@ type Slot = { startsAt: string; endsAt: string };
 // gives the visible text ("10:00 am") and `name` the full accessible name
 // with the zone ("10:00 am AEDT"); both come from the caller, which formats
 // in the practice timezone. Arrow keys move between times.
+//
+// With `group`, each run of times sharing a group gets a heading above it,
+// such as "Morning"; arrow keys still move through every time in order.
 //
 // With `chosen` it is a multi-select instead (#61): toggle buttons, each
 // in the tab order and toggled with Space or Enter, and once `max` are
@@ -21,6 +24,7 @@ export function SlotPicker({
   time,
   name,
   groupRef,
+  group,
   onSelect,
 }: {
   slots: readonly Slot[];
@@ -31,6 +35,7 @@ export function SlotPicker({
   time: (startsAt: string) => string;
   name: (startsAt: string) => string;
   groupRef?: Ref<HTMLDivElement>;
+  group?: (startsAt: string) => string;
   onSelect: (slot: Slot) => void;
 }) {
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
@@ -64,44 +69,65 @@ export function SlotPicker({
       }}
     >
       {slots.map((slot, i) => {
+        const heading = group?.(slot.startsAt);
+        const newGroup =
+          heading !== undefined &&
+          (i === 0 || heading !== group?.(slots[i - 1].startsAt));
         const checked = multiple
           ? chosen.includes(slot.startsAt)
           : slot.startsAt === selected;
         const full = multiple && !checked && chosen.length >= max;
         return (
-          <button
-            key={slot.startsAt}
-            ref={(el) => {
-              buttons.current[i] = el;
-            }}
-            type="button"
-            role={multiple ? undefined : "radio"}
-            aria-checked={multiple ? undefined : checked}
-            aria-pressed={multiple ? checked : undefined}
-            aria-disabled={full || undefined}
-            aria-label={name(slot.startsAt)}
-            tabIndex={
-              multiple || checked || (checkedIndex < 0 && i === 0) ? 0 : -1
-            }
-            onClick={() => {
-              if (!full) onSelect(slot);
-            }}
-            onKeyDown={(e) => onKeyDown(e, i)}
-            className="booking-slot"
-            style={{
-              padding: "0.6rem 1.25rem",
-              minHeight: 44,
-              border: `1px solid ${checked ? C.indigo : `${C.ink}33`}`,
-              borderRadius: 6,
-              cursor: full ? "not-allowed" : "pointer",
-              backgroundColor: checked ? C.indigo : "#fff",
-              color: checked ? "#fff" : full ? `${C.ink}66` : C.ink,
-              fontFamily: "var(--sans)",
-              fontSize: "0.9rem",
-            }}
-          >
-            {time(slot.startsAt)}
-          </button>
+          <Fragment key={slot.startsAt}>
+            {newGroup && (
+              // Visual only: each time's own name already says when it is.
+              <p
+                aria-hidden="true"
+                style={{
+                  flexBasis: "100%",
+                  margin: i === 0 ? 0 : "0.5rem 0 0",
+                  fontFamily: "var(--sans)",
+                  fontSize: "0.8rem",
+                  fontWeight: 600,
+                  color: AA.muted,
+                }}
+              >
+                {heading}
+              </p>
+            )}
+            <button
+              ref={(el) => {
+                buttons.current[i] = el;
+              }}
+              type="button"
+              role={multiple ? undefined : "radio"}
+              aria-checked={multiple ? undefined : checked}
+              aria-pressed={multiple ? checked : undefined}
+              aria-disabled={full || undefined}
+              aria-label={name(slot.startsAt)}
+              tabIndex={
+                multiple || checked || (checkedIndex < 0 && i === 0) ? 0 : -1
+              }
+              onClick={() => {
+                if (!full) onSelect(slot);
+              }}
+              onKeyDown={(e) => onKeyDown(e, i)}
+              className="booking-slot"
+              style={{
+                padding: "0.6rem 1.25rem",
+                minHeight: 44,
+                border: `1px solid ${checked ? C.indigo : `${C.ink}33`}`,
+                borderRadius: 6,
+                cursor: full ? "not-allowed" : "pointer",
+                backgroundColor: checked ? C.indigo : "#fff",
+                color: checked ? "#fff" : full ? `${C.ink}66` : C.ink,
+                fontFamily: "var(--sans)",
+                fontSize: "0.9rem",
+              }}
+            >
+              {time(slot.startsAt)}
+            </button>
+          </Fragment>
         );
       })}
     </div>

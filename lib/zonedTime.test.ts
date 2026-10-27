@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
+  dayPart,
   formatClock,
   formatDay,
   todayIn,
@@ -102,5 +103,27 @@ describe("wording", () => {
     assert.equal(formatClock("14:00"), "2:00 pm");
     assert.equal(formatClock("00:30"), "12:30 am");
     assert.equal(formatClock("12:00"), "12:00 pm");
+  });
+});
+
+describe("part of the day", () => {
+  it("splits at noon and 5 pm in practice time", () => {
+    // 28 October 2026 in Sydney is AEDT, UTC+11.
+    assert.equal(
+      dayPart("2026-10-27T22:59:00Z", "Australia/Sydney"),
+      "morning",
+    ); // 9:59 am
+    assert.equal(
+      dayPart("2026-10-28T01:00:00Z", "Australia/Sydney"),
+      "afternoon",
+    ); // 12:00 pm
+    assert.equal(
+      dayPart("2026-10-28T05:59:00Z", "Australia/Sydney"),
+      "afternoon",
+    ); // 4:59 pm
+    assert.equal(
+      dayPart("2026-10-28T06:00:00Z", "Australia/Sydney"),
+      "evening",
+    ); // 5:00 pm
   });
 });

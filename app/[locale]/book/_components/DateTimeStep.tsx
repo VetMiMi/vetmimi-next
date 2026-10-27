@@ -6,7 +6,7 @@ import { Btn } from "@/components/ui/Button";
 import { CalendarMonth } from "@/components/booking/CalendarMonth";
 import { SlotPicker } from "@/components/booking/SlotPicker";
 import { addMonths, lastDayOfMonth, localDateKey } from "@/lib/time";
-import { todayIn } from "@/lib/zonedTime";
+import { dayPart, todayIn } from "@/lib/zonedTime";
 import { Notice, NoticeActions, noticeLink } from "./Notice";
 import {
   DAY_IDS,
@@ -210,6 +210,9 @@ export function DateTimeStep({
             label={t("step2.availableTimes", { date: format.date(day) })}
             time={format.time}
             name={slotName}
+            group={(startsAt) =>
+              t(`step2.parts.${dayPart(startsAt, timeZone)}`)
+            }
             onSelect={choose}
           />
           <p

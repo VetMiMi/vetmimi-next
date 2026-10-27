@@ -50,9 +50,22 @@ export function rulesFromWeek(week: Week): Rule[] {
   );
 }
 
-export function copyDay(week: Week, from: number, to: readonly number[]) {
+// The weekdays of the chosen dates as indexes into a Week, Monday first.
+export function weekdaysOf(dates: readonly string[]) {
+  const days = dates.map(
+    (date) => (new Date(`${date}T00:00:00Z`).getUTCDay() + 6) % 7,
+  );
+  return [...new Set(days)].sort((a, b) => a - b);
+}
+
+// The week with each of `weekdays` set to `hours`; no hours stops that day.
+export function withWeekdays(
+  week: Week,
+  weekdays: readonly number[],
+  hours: readonly Hours[],
+) {
   return week.map((day, i) =>
-    to.includes(i) && i !== from ? week[from].map((h) => ({ ...h })) : day,
+    weekdays.includes(i) ? hours.map((h) => ({ ...h })) : day,
   );
 }
 
@@ -139,6 +152,21 @@ export type CalendarDay = {
   notes: string[];
   appointments: Appointment[];
 };
+
+// The panel's one-line description of a chosen day.
+export function daySummary(day: CalendarDay) {
+  const hours = day.hours.map(hoursText).join(", ");
+  const text = {
+    open: `Your weekly hours: ${hours}.`,
+    closed: "Not working on this weekday.",
+    changed: `Changed hours: ${hours}.`,
+    off: "Day off.",
+  }[day.state];
+  const part = day.offHours.length
+    ? ` Off ${day.offHours.map(hoursText).join(", ")}.`
+    : "";
+  return text + part;
+}
 
 // Every date of the month with its state. A whole-day block wins over
 // changed hours; "replace" hours stand in for the week, "open" ones add to it.

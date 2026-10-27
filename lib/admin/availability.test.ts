@@ -5,12 +5,13 @@ import {
   calendarDays,
   clearPlan,
   consecutiveRuns,
-  copyDay,
   hoursErrors,
   noTimesReason,
   rulesFromWeek,
   shortHours,
   weekFromRules,
+  weekdaysOf,
+  withWeekdays,
   type Week,
 } from "./availability.ts";
 
@@ -64,22 +65,28 @@ describe("the week", () => {
     ]);
   });
 
-  it("copies one day's hours to the chosen days and leaves the rest", () => {
-    const week = [[nine, two], [], [nine], [], [], [], []];
-    const copied = copyDay(week, 0, [1, 2, 4]);
-    assert.deepEqual(copied[1], [nine, two]);
-    assert.deepEqual(copied[2], [nine, two]);
-    assert.deepEqual(copied[4], [nine, two]);
-    assert.deepEqual(copied[3], []);
-    assert.notEqual(
-      copied[1][0],
-      week[0][0],
-      "copies, so editing one day leaves the other",
+  it("finds the weekdays of chosen dates, Monday first", () => {
+    // Mon 2, Wed 4 and Sun 8 November 2026, and Mon 9 again.
+    assert.deepEqual(
+      weekdaysOf(["2026-11-08", "2026-11-04", "2026-11-02", "2026-11-09"]),
+      [0, 2, 6],
     );
   });
 
-  it("copying a closed day closes the chosen days", () => {
-    assert.deepEqual(copyDay([[], [nine], [], [], [], [], []], 0, [1])[1], []);
+  it("sets chosen weekdays every week and leaves the rest", () => {
+    const week = [[nine], [two], [], [], [], [], []];
+    const changed = withWeekdays(week, [0, 2], [nine, two]);
+    assert.deepEqual(changed, [
+      [nine, two],
+      [two],
+      [nine, two],
+      [],
+      [],
+      [],
+      [],
+    ]);
+    assert.notEqual(changed[2][0], nine, "copies, so later edits stay apart");
+    assert.deepEqual(withWeekdays(week, [1], [])[1], [], "no hours stops it");
   });
 });
 

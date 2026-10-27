@@ -41,6 +41,7 @@ export function DetailsStep({
   onNext: () => void;
 }) {
   const t = useTranslations("book");
+  const tc = useTranslations("common");
   const [touched, setTouched] = useState<Set<DetailsField>>(
     () => new Set(Object.keys(serverErrors) as DetailsField[]),
   );
@@ -269,13 +270,17 @@ export function DetailsStep({
               >
                 {t.rich(`step3.${ack}`, {
                   link: (chunks) => (
+                    // A new tab, so reading the policy never leaves the form.
                     <Link
                       href={
                         ack === "privacyAck" ? "/privacy" : "/booking-policy"
                       }
+                      target="_blank"
+                      rel="noopener"
                       style={{ color: C.rose, textDecoration: "none" }}
                     >
                       {chunks}
+                      <span className="sr-only"> {tc("newTab")}</span>
                     </Link>
                   ),
                 })}{" "}

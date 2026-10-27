@@ -6,6 +6,7 @@ import { CaretDown, Funnel } from "@phosphor-icons/react";
 import { Button } from "@/components/admin/Button";
 import { Checkbox } from "@/components/admin/Checkbox";
 import { controlClass, labelClass } from "@/components/admin/Field";
+import { SelectControl } from "@/components/admin/Select";
 import {
   filterCount,
   formatNames,
@@ -197,18 +198,12 @@ function Choice({
       <label htmlFor={`field-${name}`} className={labelClass}>
         {label}
       </label>
-      <select
+      <SelectControl
         id={`field-${name}`}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className={controlClass}
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        options={options}
+      />
     </div>
   );
 }

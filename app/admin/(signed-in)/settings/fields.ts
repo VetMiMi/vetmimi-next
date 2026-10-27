@@ -197,7 +197,7 @@ export const sections: Record<
         kind: "email",
         key: "contactEmail",
         label: "Contact email",
-        help: "Sender and reply-to address for booking emails.",
+        help: "Booking alerts come here, and clients' replies to booking emails.",
       },
       {
         kind: "localized",

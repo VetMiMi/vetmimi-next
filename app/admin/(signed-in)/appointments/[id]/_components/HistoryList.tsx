@@ -3,6 +3,7 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { eventSentence, whenShort } from "@/lib/admin/appointments";
 import type { components } from "@/lib/api/schema";
 import { zoneAbbreviation } from "@/lib/zonedTime";
+import { EmailActions } from "./EmailActions";
 import { cardTitle } from "./Facts";
 
 type Detail = components["schemas"]["AppointmentDetail"];
@@ -52,8 +53,8 @@ const kinds: Record<Kind, string> = {
   practitioner_new_enquiry: "To Daw Mi: new enquiry",
 };
 
-// The emails about this appointment. Resend and "Mark as communicated"
-// arrive with #70.
+// The emails about this appointment, and what Daw Mi recorded telling the
+// visitor herself.
 export function CommunicationsList({
   appointment: a,
 }: {
@@ -69,15 +70,30 @@ export function CommunicationsList({
           {a.communications.map((c) => (
             <li
               key={c.id}
-              className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-divider py-3 first:pt-0 last:border-b-0 last:pb-0"
+              className="flex flex-col gap-2 border-b border-divider py-3 first:pt-0 last:border-b-0 last:pb-0"
             >
-              <span className="text-[0.95rem]">
-                {kinds[c.kind]}
-                <span className="block text-[0.82rem] text-muted">
-                  {when(c.sentAt ?? c.scheduledFor, a.timezone)}
+              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+                <span className="text-[0.95rem]">
+                  {kinds[c.kind]}
+                  <span className="block text-[0.82rem] text-muted">
+                    {c.channel === "manual"
+                      ? `Told by you: ${c.note}`
+                      : c.resendOf
+                        ? "Sent again"
+                        : null}
+                    {(c.channel === "manual" || c.resendOf) && " · "}
+                    {when(c.sentAt ?? c.scheduledFor, a.timezone)}
+                  </span>
                 </span>
-              </span>
-              <StatusBadge kind="communication" status={c.status} />
+                {c.channel === "email" && (
+                  <StatusBadge kind="communication" status={c.status} />
+                )}
+              </div>
+              <EmailActions
+                appointmentId={a.id}
+                email={c}
+                name={kinds[c.kind]}
+              />
             </li>
           ))}
         </ul>

@@ -168,6 +168,22 @@ describe("partial failure", () => {
     ]);
   });
 
+  it("ignores a failure Daw Mi recorded telling the visitor about", () => {
+    assert.deepEqual(
+      failedNotifications([
+        comm({}),
+        comm({
+          id: "c2",
+          channel: "manual",
+          status: "sent",
+          note: "Phoned her",
+          createdAt: "2026-10-02T00:00:00Z",
+        }),
+      ]),
+      [],
+    );
+  });
+
   it("ignores a failure that was resent, and practitioner emails", () => {
     assert.deepEqual(
       failedNotifications([

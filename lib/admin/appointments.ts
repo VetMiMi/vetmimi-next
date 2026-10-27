@@ -239,14 +239,21 @@ const doneFor: Partial<Record<Communication["kind"], string>> = {
   cancelled: "Appointment cancelled.",
 };
 
-// A failed email that was later resent is dealt with.
+// A failed email is dealt with once it was resent, or once a later message
+// of its kind went out, by email or by Daw Mi herself.
 export function failedNotifications(communications: readonly Communication[]) {
   return communications
     .filter(
       (c) =>
         c.audience === "visitor" &&
         c.status === "failed" &&
-        !communications.some((other) => other.resendOf === c.id),
+        !communications.some(
+          (other) =>
+            other.resendOf === c.id ||
+            (other.kind === c.kind &&
+              other.status === "sent" &&
+              other.createdAt > c.createdAt),
+        ),
     )
     .map((c) =>
       doneFor[c.kind]

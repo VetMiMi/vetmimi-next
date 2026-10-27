@@ -4,7 +4,10 @@ import type { Format, Slot } from "./booking";
 // Back, forward and a refresh keep it (UX §7), and is cleared once the
 // request is stored. The idempotency key belongs to one submission and is
 // kept until it succeeds, so every retry reuses it (ADR-004).
+export type Step = 1 | 2 | 3 | 4;
+
 export type Draft = {
+  step: Step;
   service: string;
   slot: Slot | null;
   name: string;
@@ -18,6 +21,7 @@ export type Draft = {
 };
 
 export const EMPTY_DRAFT: Draft = {
+  step: 1,
   service: "",
   slot: null,
   name: "",
@@ -41,6 +45,13 @@ export function loadDraft(): Draft | null {
   } catch {
     return null;
   }
+}
+
+// The step to reopen on: never past what the saved answers allow.
+export function resumeStep({ step, service, slot }: Draft): Step {
+  if (!service) return 1;
+  if (!slot) return Math.min(step, 2) as Step;
+  return step;
 }
 
 export function saveDraft(draft: Draft) {

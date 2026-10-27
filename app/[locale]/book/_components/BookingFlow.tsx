@@ -14,13 +14,13 @@ import {
   EMPTY_DRAFT,
   clearDraft,
   loadDraft,
+  resumeStep,
   saveDraft,
   type DetailsErrors,
   type Draft,
+  type Step,
 } from "./bookingDraft";
 import type { Receipt, ServiceList } from "./booking";
-
-type Step = 1 | 2 | 3 | 4;
 
 // API field pointers ("/visitor/email") to the details step's fields.
 const DETAILS_FIELDS: Record<string, "name" | "email" | "phone" | "note"> = {
@@ -77,17 +77,20 @@ export function BookingFlow({
     const keep =
       (!requested || saved.service === requested) &&
       !!list?.items.some((s) => s.slug === saved.service);
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- a one-off restore from sessionStorage, which the server cannot read
-    setDraft({
+    const restored = {
       ...saved,
       service: keep ? saved.service : preselected,
       slot: keep ? saved.slot : null,
-    });
+    };
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- a one-off restore from sessionStorage, which the server cannot read
+    setDraft(restored);
+    setStep(resumeStep(restored));
   }, [list, requested, preselected]);
 
+  // The step is saved too, so Back from a policy page or a refresh reopens it.
   useEffect(() => {
-    if (!receipt) saveDraft(draft);
-  }, [draft, receipt]);
+    if (!receipt) saveDraft({ ...draft, step });
+  }, [draft, step, receipt]);
 
   // The result is client state: give it its own history entry, so Back
   // returns to an empty flow and never to a review that could send again.

@@ -4,6 +4,7 @@ import type { components } from "../api/schema.ts";
 import {
   eventSentence,
   failedNotifications,
+  groupAttention,
   hasFilters,
   listHref,
   listQuery,
@@ -176,5 +177,52 @@ describe("partial failure", () => {
       ]),
       [],
     );
+  });
+});
+
+describe("attention", () => {
+  type Item = components["schemas"]["AttentionItem"];
+  const item = (patch: Partial<Item>): Item => ({
+    kind: "failed_communication",
+    appointmentId: "a1",
+    reference: "VM-C6HAVZ",
+    startsAt: "2026-10-23T14:00:00Z",
+    ...patch,
+  });
+
+  it("puts every reason for a booking on one row, in the API's order", () => {
+    const groups = groupAttention([
+      item({ detail: "Email failed: request received" }),
+      item({ detail: "Email failed: booking confirmed" }),
+      item({
+        appointmentId: "a2",
+        reference: "VM-9FK2TM",
+        kind: "completion_due",
+      }),
+      item({ kind: "completion_due", detail: "Mark as completed or no-show" }),
+    ]);
+    assert.deepEqual(groups, [
+      {
+        appointmentId: "a1",
+        reference: "VM-C6HAVZ",
+        startsAt: "2026-10-23T14:00:00Z",
+        reasons: [
+          "Email failed: request received",
+          "Email failed: booking confirmed",
+          "Mark as completed or no-show",
+        ],
+      },
+      {
+        appointmentId: "a2",
+        reference: "VM-9FK2TM",
+        startsAt: "2026-10-23T14:00:00Z",
+        reasons: ["Mark as completed or no-show"],
+      },
+    ]);
+  });
+
+  it("says a reason once, and falls back when the API sends no detail", () => {
+    const [group] = groupAttention([item({}), item({})]);
+    assert.deepEqual(group.reasons, ["An email failed"]);
   });
 });

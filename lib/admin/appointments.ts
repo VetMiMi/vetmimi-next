@@ -16,6 +16,7 @@ type Status = Schemas["AppointmentStatus"];
 type Format = Schemas["Format"];
 type Event = Schemas["AppointmentEvent"];
 type Communication = Schemas["Communication"];
+type AttentionItem = Schemas["AttentionItem"];
 export type ListQuery = NonNullable<
   operations["listAppointments"]["parameters"]["query"]
 >;
@@ -252,4 +253,39 @@ export function failedNotifications(communications: readonly Communication[]) {
         ? `${doneFor[c.kind]} Visitor notification failed.`
         : "A visitor email could not be sent.",
     );
+}
+
+const attentionReasons: Record<AttentionItem["kind"], string> = {
+  pending_request: "New request to answer",
+  hold_expiring: "Request hold expires soon",
+  failed_communication: "An email failed",
+  reschedule_requested: "Visitor asked to reschedule",
+  meeting_link_missing: "Meeting link missing",
+  completion_due: "Mark as completed or no-show",
+  block_conflict: "Falls inside blocked time",
+};
+
+export type AttentionGroup = {
+  appointmentId: string;
+  reference: string;
+  startsAt?: string;
+  reasons: string[];
+};
+
+// One entry per booking, in the API's urgency order, so a booking with four
+// failed emails is one row naming each email.
+export function groupAttention(items: readonly AttentionItem[]) {
+  const groups = new Map<string, AttentionGroup>();
+  for (const item of items) {
+    const group = groups.get(item.appointmentId) ?? {
+      appointmentId: item.appointmentId,
+      reference: item.reference,
+      startsAt: item.startsAt,
+      reasons: [],
+    };
+    const reason = item.detail || attentionReasons[item.kind];
+    if (!group.reasons.includes(reason)) group.reasons.push(reason);
+    groups.set(item.appointmentId, group);
+  }
+  return [...groups.values()];
 }

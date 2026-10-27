@@ -9,7 +9,6 @@ import { addDays, lastDayOfMonth } from "@/lib/time";
 import { todayIn, zoneLabel, zonedDayStart } from "@/lib/zonedTime";
 import { ClientPreview } from "./ClientPreview";
 import { DaysCalendar } from "./DaysCalendar";
-import { WeeklyHours } from "./WeeklyHours";
 
 export const metadata: Metadata = { title: "Availability" };
 
@@ -83,10 +82,11 @@ export default async function AvailabilityPage({
       ]),
   );
 
+  const week = weekFromRules(rules.items);
   const days = calendarDays(month, {
     timeZone: timezone,
     today,
-    week: weekFromRules(rules.items),
+    week,
     overrides: overrides.items,
     blocks: blocks.items,
     appointments: appointments.items,
@@ -111,14 +111,8 @@ export default async function AvailabilityPage({
         description={`When clients can book you. Times are ${zoneLabel(timezone)}.`}
       />
       <Section
-        title="Your weekly hours"
-        text="The hours you work each week. Clients can book inside them unless a day is changed below."
-      >
-        <WeeklyHours rules={rules.items} />
-      </Section>
-      <Section
-        title="Days off and changes"
-        text="Take a day off or work different hours on one date without changing your week."
+        title="Your hours"
+        text="Choose a date to set your hours for that date or for that weekday every week, or to take time off."
       >
         <DaysCalendar
           key={month}
@@ -126,6 +120,7 @@ export default async function AvailabilityPage({
           today={today}
           timezone={timezone}
           days={days}
+          week={week}
         />
       </Section>
       <Section

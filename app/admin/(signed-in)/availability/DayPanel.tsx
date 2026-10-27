@@ -9,10 +9,15 @@ import { useToast } from "@/components/admin/Toast";
 import type { Outcome } from "@/lib/admin/mutation";
 import {
   DEFAULT_HOURS,
+  WEEKDAYS,
+  daySummary,
   hoursErrors,
-  hoursText,
+  rulesFromWeek,
+  weekdaysOf,
+  withWeekdays,
   type CalendarDay,
   type Hours,
+  type Week,
 } from "@/lib/admin/availability";
 import { longDay, statusOptions } from "@/lib/admin/appointments";
 import { formatClock, formatDay, zonedParts } from "@/lib/zonedTime";
@@ -21,40 +26,33 @@ import {
   changeHours,
   markDaysOff,
   markPartDayOff,
+  saveWeeklyHours,
   type Conflict,
 } from "./actions";
 import { ConflictsAlert } from "./ConflictsAlert";
+import { DayHint } from "./DayHint";
 import { HoursList } from "./HoursList";
+import { RepeatChoice } from "./RepeatChoice";
 
 type Mode = "menu" | "hours" | "part" | "confirm-off" | "confirm-part";
 
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
-
-function summary(day: CalendarDay) {
-  const hours = day.hours.map(hoursText).join(", ");
-  const text = {
-    open: `Your weekly hours: ${hours}.`,
-    closed: "Not working on this weekday.",
-    changed: `Changed hours: ${hours}.`,
-    off: "Day off.",
-  }[day.state];
-  const part = day.offHours.length
-    ? ` Off ${day.offHours.map(hoursText).join(", ")}.`
-    : "";
-  return text + part;
-}
+const list = new Intl.ListFormat("en-AU");
 
 // What to do with the dates chosen in the calendar.
 export function DayPanel({
   days,
   timezone,
+  week,
   onDone,
 }: {
   days: CalendarDay[];
   timezone: string;
+  week: Week;
   onDone: () => void;
 }) {
   const [mode, setMode] = useState<Mode>("menu");
+  const [everyWeek, setEveryWeek] = useState(false);
   const [hours, setHours] = useState<Hours[]>(() =>
     days[0]?.hours.length ? days[0].hours : [DEFAULT_HOURS],
   );
@@ -65,17 +63,7 @@ export function DayPanel({
   const [pending, startTransition] = useTransition();
   const toast = useToast();
 
-  if (days.length === 0)
-    return (
-      <section className="self-start rounded-inner border border-divider bg-white p-5 text-[0.92rem] text-muted">
-        <h3 className="mb-2 text-[1.05rem] text-ink">Change a day</h3>
-        <p>
-          Choose a date to take it off or give it different hours. To change
-          several at once, use Select days, or hold Shift or Ctrl (⌘ on a Mac)
-          while you click.
-        </p>
-      </section>
-    );
+  if (days.length === 0) return <DayHint />;
 
   const single = days.length === 1 ? days[0] : undefined;
   const dates = days.map((day) => day.date);
@@ -85,6 +73,8 @@ export function DayPanel({
     (a) =>
       local(a.startsAt) < partHours.end && local(a.endsAt) > partHours.start,
   );
+  const weekdays = weekdaysOf(dates);
+  const every = `every ${list.format(weekdays.map((i) => WEEKDAYS[i]))}`;
   const changed = days.some(
     (d) => d.state === "changed" || d.state === "off" || d.offHours.length,
   );
@@ -116,6 +106,13 @@ export function DayPanel({
         : `${plural(days.length, "day")} marked off`,
       warned,
     );
+  const saveEveryWeek = () =>
+    run(async () => {
+      const outcome = await saveWeeklyHours(
+        rulesFromWeek(withWeekdays(week, weekdays, hours)),
+      );
+      return outcome.ok ? { ok: true as const, data: [] } : outcome;
+    }, `Hours saved for ${every}`);
   const partOff = (warned = false) =>
     run(() => markPartDayOff(dates[0], partHours), "Time off saved", warned);
 
@@ -165,7 +162,7 @@ export function DayPanel({
             : `${plural(days.length, "day")} chosen`}
         </h3>
         <p className="mt-1 text-[0.9rem] text-muted">
-          {single ? summary(single) : dates.map(formatDay).join(", ")}
+          {single ? daySummary(single) : dates.map(formatDay).join(", ")}
         </p>
         {single?.notes.map((note) => (
           <p key={note} className="mt-1 text-[0.88rem] text-muted">
@@ -207,6 +204,14 @@ export function DayPanel({
           onChange={setHours}
         />
       )}
+      {mode === "hours" && (
+        <RepeatChoice
+          only={single ? `Only ${longDay(single.date)}` : "Only these dates"}
+          every={every}
+          everyWeek={everyWeek}
+          onChange={setEveryWeek}
+        />
+      )}
       {mode === "part" && (
         <TimeRangeField
           label="Time off"
@@ -233,7 +238,7 @@ export function DayPanel({
               </Button>
             )}
             <Button variant="secondary" onClick={() => setMode("hours")}>
-              Set different hours
+              Set hours
             </Button>
             {single && single.state !== "off" && (
               <Button variant="secondary" onClick={() => setMode("part")}>
@@ -256,11 +261,12 @@ export function DayPanel({
         {mode === "hours" && (
           <Button
             busy={pending}
-            disabled={hours.length === 0}
+            disabled={hours.length === 0 && !everyWeek}
             onClick={() => {
               setChecked(true);
-              if (!hoursErrors(hours).some(Boolean))
-                run(() => changeHours(dates, hours), "Hours changed");
+              if (hoursErrors(hours).some(Boolean)) return;
+              if (everyWeek) saveEveryWeek();
+              else run(() => changeHours(dates, hours), "Hours changed");
             }}
           >
             {pending ? "Saving…" : "Save hours"}

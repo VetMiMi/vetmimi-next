@@ -11,7 +11,11 @@ import {
   Prohibit,
 } from "@phosphor-icons/react";
 import { buttonClass } from "@/components/admin/Button";
-import { datesBetween, type CalendarDay } from "@/lib/admin/availability";
+import {
+  datesBetween,
+  type CalendarDay,
+  type Week,
+} from "@/lib/admin/availability";
 import { addDays, addMonths, weekdayIndex } from "@/lib/time";
 import { DayCell } from "./DayCell";
 import { DayPanel } from "./DayPanel";
@@ -31,11 +35,13 @@ export function DaysCalendar({
   today,
   timezone,
   days,
+  week,
 }: {
   month: string;
   today: string;
   timezone: string;
   days: CalendarDay[];
+  week: Week;
 }) {
   const [selected, setSelected] = useState<string[]>([]);
   const [anchor, setAnchor] = useState<string>();
@@ -232,6 +238,7 @@ export function DaysCalendar({
         key={selected.join()}
         days={days.filter((day) => selected.includes(day.date))}
         timezone={timezone}
+        week={week}
         onDone={() => setSelected([])}
       />
     </div>

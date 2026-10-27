@@ -12,6 +12,7 @@ import { statuses } from "@/components/admin/status";
 type Schemas = components["schemas"];
 type Detail = Schemas["AppointmentDetail"];
 type Slot = Schemas["Slot"];
+type CommunicationKind = Schemas["CommunicationKind"];
 
 const BASE = "/admin/appointments";
 const MONTH = /^\d{4}-\d{2}$/;
@@ -155,6 +156,40 @@ export async function saveNote(id: string, version: number, note: string) {
       failure: "The note was not saved. The previous note remains.",
       codes: { stale_version: STALE },
     },
+  );
+}
+
+export async function resendEmail(id: string, communicationId: string) {
+  return mutate(
+    `${BASE}/${id}`,
+    (api) =>
+      api.POST(
+        "/admin/appointments/{appointmentId}/communications/{communicationId}/resend",
+        { params: { path: { appointmentId: id, communicationId } } },
+      ),
+    {
+      failure: "The email was not sent again. The earlier one is unchanged.",
+      codes: {
+        action_not_allowed:
+          "This email cannot be sent again. A reminder can only be resent before a confirmed appointment.",
+      },
+    },
+  );
+}
+
+export async function markCommunicated(
+  id: string,
+  kind: CommunicationKind,
+  note: string,
+) {
+  return mutate(
+    `${BASE}/${id}`,
+    (api) =>
+      api.POST("/admin/appointments/{appointmentId}/mark-communicated", {
+        params: { path: { appointmentId: id } },
+        body: { kind, note: note.trim().slice(0, 500) },
+      }),
+    { failure: "This was not recorded. Try again." },
   );
 }
 

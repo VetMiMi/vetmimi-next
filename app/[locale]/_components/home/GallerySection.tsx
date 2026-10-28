@@ -1,60 +1,24 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { AA, C } from "@/lib/tokens";
 import { ArtMosaic } from "../ArtMosaic";
 
 export function GallerySection() {
   const t = useTranslations("home");
   return (
-    <section style={{ background: C.paper, padding: "5rem 0 0" }}>
-      <div
-        style={{
-          maxWidth: "1240px",
-          margin: "0 auto",
-          padding: "0 1.5rem 2.5rem",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-end",
-            marginBottom: "2rem",
-            flexWrap: "wrap",
-            gap: "0.75rem",
-          }}
-        >
+    <section className="bg-paper pt-20">
+      <div className="mx-auto max-w-[1240px] px-6 pb-10">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <div
-              style={{
-                fontFamily: "var(--hand)",
-                color: AA.label,
-                fontSize: "1rem",
-                marginBottom: "0.3rem",
-              }}
-            >
+            <div className="mb-[0.3rem] font-script text-[1rem] text-label">
               {t("gallery.eyebrow")}
             </div>
-            <h2
-              style={{
-                fontFamily: "var(--serif)",
-                fontSize: "clamp(1.7rem, 3vw, 2.4rem)",
-                color: C.ink,
-                margin: 0,
-              }}
-            >
+            <h2 className="text-[clamp(1.7rem,3vw,2.4rem)] text-ink">
               {t("gallery.title")}
             </h2>
           </div>
           <Link
             href="/portfolio"
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: "0.88rem",
-              color: C.indigo,
-              textDecoration: "none",
-              borderBottom: `1px solid ${C.indigo}`,
-            }}
+            className="border-b border-indigo font-body text-[0.88rem] text-indigo no-underline"
           >
             {t("gallery.link")}
           </Link>

@@ -1,92 +1,37 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { GoldMark, PetalOutline } from "@/components/art/Shapes";
-import { AA, C } from "@/lib/tokens";
+
+const BUTTON =
+  "rounded-lg px-[22px] py-[11px] font-body text-[0.88rem] font-semibold no-underline";
 
 export function PathsSection() {
   const t = useTranslations("home");
   return (
-    <section style={{ padding: "0 1.5rem 5rem", background: C.canvas }}>
-      <div
-        style={{
-          maxWidth: "1240px",
-          margin: "0 auto",
-          display: "grid",
-          gap: "1.5rem",
-        }}
-        className="grid-cols-1 md:grid-cols-2"
-      >
+    <section className="bg-canvas px-6 pb-20">
+      <div className="mx-auto grid max-w-[1240px] grid-cols-1 gap-6 md:grid-cols-2">
         {/* Personal */}
-        <div
-          style={{
-            background: AA.label,
-            borderRadius: "20px",
-            padding: "3rem",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <PetalOutline
-            color="#fff"
-            size={90}
-            style={{
-              position: "absolute",
-              bottom: "-1rem",
-              right: "-1rem",
-              opacity: 0.2,
-            }}
-          />
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <h3
-              style={{
-                fontFamily: "var(--serif)",
-                fontSize: "1.5rem",
-                color: "#fff",
-                margin: "0 0 0.75rem",
-              }}
-            >
+        <div className="relative overflow-hidden rounded-(--radius-card) bg-label p-12">
+          <div className="absolute -right-4 -bottom-4 opacity-20">
+            <PetalOutline color="#fff" size={90} />
+          </div>
+          <div className="relative z-1">
+            <h3 className="mb-3 text-[1.5rem] text-white">
               {t("paths.personal.title")}
             </h3>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: "0.9rem",
-                color: "rgba(255,255,255,0.8)",
-                lineHeight: 1.75,
-                margin: "0 0 2rem",
-              }}
-            >
+            <p className="mb-8 font-body text-[0.9rem] leading-[1.75] text-white/80">
               {t("paths.personal.text")}
             </p>
-            <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+            <div className="flex flex-wrap gap-3">
               <Link
                 href="/services"
-                style={{
-                  backgroundColor: "#fff",
-                  color: AA.label,
-                  fontFamily: "var(--sans)",
-                  fontWeight: 600,
-                  fontSize: "0.88rem",
-                  padding: "11px 22px",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                }}
+                className={`${BUTTON} bg-white text-label`}
               >
                 {t("paths.personal.servicesCta")}
               </Link>
               <Link
                 href="/book"
-                style={{
-                  backgroundColor: "transparent",
-                  color: "#fff",
-                  fontFamily: "var(--sans)",
-                  fontWeight: 600,
-                  fontSize: "0.88rem",
-                  padding: "11px 22px",
-                  borderRadius: "8px",
-                  textDecoration: "none",
-                  border: "1.5px solid rgba(255,255,255,0.5)",
-                }}
+                className={`${BUTTON} border-[1.5px] border-white/50 bg-transparent text-white`}
               >
                 {t("paths.personal.bookCta")}
               </Link>
@@ -95,59 +40,18 @@ export function PathsSection() {
         </div>
 
         {/* Professional */}
-        <div
-          style={{
-            background: C.indigo,
-            borderRadius: "20px",
-            padding: "3rem",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          <GoldMark
-            size={48}
-            style={{
-              position: "absolute",
-              bottom: "1.5rem",
-              right: "1.5rem",
-              opacity: 0.5,
-            }}
-          />
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <h3
-              style={{
-                fontFamily: "var(--serif)",
-                fontSize: "1.5rem",
-                color: C.canvas,
-                margin: "0 0 0.75rem",
-              }}
-            >
+        <div className="relative overflow-hidden rounded-(--radius-card) bg-indigo p-12">
+          <div className="absolute right-6 bottom-6 opacity-50">
+            <GoldMark size={48} />
+          </div>
+          <div className="relative z-1">
+            <h3 className="mb-3 text-[1.5rem] text-canvas">
               {t("paths.professional.title")}
             </h3>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: "0.9rem",
-                color: "rgba(255,247,239,0.7)",
-                lineHeight: 1.75,
-                margin: "0 0 2rem",
-              }}
-            >
+            <p className="mb-8 font-body text-[0.9rem] leading-[1.75] text-canvas/70">
               {t("paths.professional.text")}
             </p>
-            <Link
-              href="/contact"
-              style={{
-                backgroundColor: AA.action,
-                color: "#fff",
-                fontFamily: "var(--sans)",
-                fontWeight: 600,
-                fontSize: "0.88rem",
-                padding: "11px 22px",
-                borderRadius: "8px",
-                textDecoration: "none",
-              }}
-            >
+            <Link href="/contact" className={`${BUTTON} bg-action text-white`}>
               {t("paths.professional.contactCta")}
             </Link>
           </div>

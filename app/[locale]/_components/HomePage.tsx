@@ -1,5 +1,4 @@
 import { WaveDivider } from "@/components/art/Shapes";
-import { C } from "@/lib/tokens";
 import type { StoryItem } from "@/lib/stories";
 import { FloatingCTA } from "./home/FloatingCTA";
 import { HeroSection } from "./home/HeroSection";
@@ -16,23 +15,28 @@ import { PathsSection } from "./home/PathsSection";
 // `stories` is the Stories page's list: published articles first.
 export function HomePage({ stories }: { stories: StoryItem[] }) {
   return (
-    <div style={{ background: C.canvas, overflowX: "hidden" }}>
+    <div className="overflow-x-hidden bg-canvas">
       <FloatingCTA />
       <HeroSection />
-      <WaveDivider from={C.canvas} to={C.coral} variant="gentle" flip />
+      <WaveDivider
+        from="var(--canvas)"
+        to="var(--coral)"
+        variant="gentle"
+        flip
+      />
       <PauseSection />
       <GallerySection />
-      <WaveDivider from={C.paper} to={C.canvas} variant="gentle" />
+      <WaveDivider from="var(--paper)" to="var(--canvas)" variant="gentle" />
       <AboutSection />
-      <WaveDivider from={C.canvas} to={C.paper} variant="gentle" />
+      <WaveDivider from="var(--canvas)" to="var(--paper)" variant="gentle" />
       <ServicesSection />
-      <WaveDivider from={C.paper} to={C.indigo} variant="gentle" />
+      <WaveDivider from="var(--paper)" to="var(--indigo)" variant="gentle" />
       <ArtOfWellnessSection />
-      <WaveDivider from={C.indigo} to="#F0EEF5" variant="gentle" />
+      <WaveDivider from="var(--indigo)" to="#F0EEF5" variant="gentle" />
       <StoriesSection stories={stories} />
-      <WaveDivider from="#F0EEF5" to={C.paper} variant="gentle" />
+      <WaveDivider from="#F0EEF5" to="var(--paper)" variant="gentle" />
       <TestimonialsSection />
-      <WaveDivider from={C.paper} to={C.canvas} variant="gentle" />
+      <WaveDivider from="var(--paper)" to="var(--canvas)" variant="gentle" />
       <FaqSection />
       <PathsSection />
     </div>

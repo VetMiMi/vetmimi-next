@@ -1,6 +1,5 @@
 import Image, { type StaticImageData } from "next/image";
 import { useTranslations } from "next-intl";
-import { C } from "@/lib/tokens";
 import growth from "@/assets/artworks/growth-and-becoming.webp";
 import loveHopeFaith from "@/assets/artworks/love-hope-faith.webp";
 import ulx from "@/assets/artworks/the-ulx-eddington-limit.webp";
@@ -14,7 +13,7 @@ type Tile = {
   /** Artwork titles are proper names and stay in English in every language. */
   title: string;
   img: StaticImageData;
-  /** Which part of the painting stays in frame when the tile crops it. */
+  /** The object-position class that keeps the painting's focus in a cropped tile. */
   focus: string;
   /** Grid placement: tall tiles span two rows. */
   place: string;
@@ -28,7 +27,7 @@ const TILES: Tile[] = [
     id: "growth",
     title: "Growth & Becoming",
     img: growth,
-    focus: "center 40%",
+    focus: "object-[center_40%]",
     place: "row-span-2 md:col-start-1 md:row-start-1",
     sizes: "(max-width: 767px) 50vw, 22vw",
   },
@@ -36,7 +35,7 @@ const TILES: Tile[] = [
     id: "loveHopeFaith",
     title: "Love · Hope · Faith",
     img: loveHopeFaith,
-    focus: "center 45%",
+    focus: "object-[center_45%]",
     place: "md:col-start-2 md:row-start-1",
     sizes: "(max-width: 767px) 50vw, 28vw",
   },
@@ -44,7 +43,7 @@ const TILES: Tile[] = [
     id: "driftwood",
     title: "Driftwood",
     img: driftwood,
-    focus: "center 55%",
+    focus: "object-[center_55%]",
     place: "md:col-start-3 md:row-start-1",
     sizes: "(max-width: 767px) 50vw, 28vw",
   },
@@ -52,7 +51,7 @@ const TILES: Tile[] = [
     id: "ulx",
     title: "The ULX & Eddington Limit",
     img: ulx,
-    focus: "45% center",
+    focus: "object-[45%_center]",
     place: "row-span-2 md:col-start-4 md:row-start-1",
     sizes: "(max-width: 767px) 50vw, 22vw",
   },
@@ -60,7 +59,7 @@ const TILES: Tile[] = [
     id: "bloom",
     title: "Bloom",
     img: bloom,
-    focus: "center 35%",
+    focus: "object-[center_35%]",
     place: "md:col-start-2 md:row-start-2",
     sizes: "(max-width: 767px) 50vw, 28vw",
   },
@@ -68,7 +67,7 @@ const TILES: Tile[] = [
     id: "beGood",
     title: "Be good · Be empty · Be equal",
     img: beGood,
-    focus: "center",
+    focus: "object-center",
     place: "md:col-start-3 md:row-start-2",
     sizes: "(max-width: 767px) 50vw, 28vw",
   },
@@ -78,10 +77,7 @@ const TILES: Tile[] = [
 export function ArtMosaic() {
   const t = useTranslations("home.gallery.tiles");
   return (
-    <div
-      className="grid grid-flow-dense auto-rows-[180px] grid-cols-2 gap-[3px] md:grid-cols-[1.1fr_1.4fr_1.4fr_1.1fr] md:grid-rows-[280px_280px]"
-      style={{ background: C.indigo }}
-    >
+    <div className="grid grid-flow-dense auto-rows-[180px] grid-cols-2 gap-[3px] md:grid-cols-[1.1fr_1.4fr_1.4fr_1.1fr] md:grid-rows-[280px_280px] bg-indigo">
       {TILES.map((tile) => (
         <div
           key={tile.id}
@@ -92,20 +88,10 @@ export function ArtMosaic() {
             alt={t(`${tile.id}.alt`)}
             fill
             sizes={tile.sizes}
-            className="object-cover transition-transform duration-[600ms] ease-out group-hover:scale-105"
-            style={{ objectPosition: tile.focus }}
+            className={`object-cover transition-transform duration-[600ms] ease-out group-hover:scale-105 ${tile.focus}`}
           />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(40,37,45,0.52) 0%, transparent 55%)",
-            }}
-          />
-          <div
-            className="absolute bottom-[0.85rem] left-[0.85rem] text-[0.88rem] text-white"
-            style={{ fontFamily: "var(--hand)" }}
-          >
+          <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(40,37,45,0.52)_0%,transparent_55%)]" />
+          <div className="absolute bottom-[0.85rem] left-[0.85rem] font-script text-[0.88rem] text-white">
             {tile.title}
           </div>
         </div>

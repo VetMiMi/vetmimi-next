@@ -1,68 +1,27 @@
 "use client";
 import { useState } from "react";
-import { C } from "@/lib/tokens";
 
 export function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ borderBottom: "1px solid rgba(40,37,45,0.1)" }}>
+    <div className="border-b border-ink/10">
       <button
         onClick={() => setOpen((v) => !v)}
-        style={{
-          width: "100%",
-          textAlign: "left",
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: "1.35rem 0",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          gap: "1rem",
-        }}
+        className="flex w-full cursor-pointer items-start justify-between gap-4 border-none bg-none py-[1.35rem] text-left"
       >
-        <span
-          style={{
-            fontFamily: "var(--serif)",
-            fontSize: "1.05rem",
-            color: C.ink,
-            lineHeight: 1.4,
-          }}
-        >
+        <span className="font-display text-[1.05rem] leading-[1.4] text-ink">
           {q}
         </span>
         <span
-          style={{
-            color: C.coral,
-            fontSize: "1.4rem",
-            lineHeight: 1,
-            flexShrink: 0,
-            marginTop: "2px",
-            transform: open ? "rotate(45deg)" : "rotate(0deg)",
-            transition: "transform 0.25s ease",
-            display: "block",
-          }}
+          className={`mt-0.5 block shrink-0 text-[1.4rem] leading-none text-coral transition-transform duration-250 ease-[ease] ${open ? "rotate-45" : "rotate-0"}`}
         >
           +
         </span>
       </button>
       <div
-        style={{
-          maxHeight: open ? "600px" : "0",
-          overflow: "hidden",
-          transition: "max-height 0.35s ease",
-        }}
+        className={`overflow-hidden transition-[max-height] duration-350 ease-[ease] ${open ? "max-h-[600px]" : "max-h-0"}`}
       >
-        <p
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: "0.93rem",
-            color: "rgba(40,37,45,0.65)",
-            lineHeight: 1.8,
-            paddingBottom: "1.35rem",
-            margin: 0,
-          }}
-        >
+        <p className="m-0 pb-[1.35rem] font-body text-[0.93rem] leading-[1.8] text-ink/65">
           {a}
         </p>
       </div>

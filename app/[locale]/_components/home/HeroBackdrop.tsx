@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { GoldMark, AlmondEye } from "@/components/art/Shapes";
-import { C } from "@/lib/tokens";
 import art7 from "@/assets/image-7.webp";
 
 // A fragment, so each layer stays a direct child of the hero section it
@@ -8,7 +7,6 @@ import art7 from "@/assets/image-7.webp";
 export function HeroBackdrop() {
   return (
     <>
-      {/* art7 full-bleed background */}
       <Image
         src={art7}
         alt=""
@@ -18,58 +16,22 @@ export function HeroBackdrop() {
         quality={60}
         sizes="100vw"
         placeholder="blur"
-        style={{
-          objectFit: "cover",
-          objectPosition: "center 28%",
-          pointerEvents: "none",
-        }}
+        className="pointer-events-none object-cover object-[center_28%]"
         aria-hidden
       />
       {/* Dark gradient overlay — heavy left, fades right */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(105deg, rgba(18,14,26,0.95) 0%, rgba(18,14,26,0.88) 42%, rgba(18,14,26,0.35) 100%)",
-        }}
-      />
+      <div className="absolute inset-0 bg-[linear-gradient(105deg,rgba(18,14,26,0.95)_0%,rgba(18,14,26,0.88)_42%,rgba(18,14,26,0.35)_100%)]" />
 
       {/* Abstract gestures */}
-      <GoldMark
-        size={56}
-        style={{
-          position: "absolute",
-          top: "14%",
-          right: "12%",
-          zIndex: 1,
-          opacity: 0.6,
-          pointerEvents: "none",
-        }}
-      />
-      <GoldMark
-        size={36}
-        style={{
-          position: "absolute",
-          bottom: "18%",
-          right: "28%",
-          zIndex: 1,
-          opacity: 0.4,
-          pointerEvents: "none",
-        }}
-      />
-      <AlmondEye
-        color={C.ochre}
-        size={80}
-        style={{
-          position: "absolute",
-          top: "22%",
-          left: "48%",
-          zIndex: 1,
-          opacity: 0.35,
-          pointerEvents: "none",
-        }}
-      />
+      <div className="pointer-events-none absolute top-[14%] right-[12%] z-1 opacity-60">
+        <GoldMark size={56} />
+      </div>
+      <div className="pointer-events-none absolute right-[28%] bottom-[18%] z-1 opacity-40">
+        <GoldMark size={36} />
+      </div>
+      <div className="pointer-events-none absolute top-[22%] left-[48%] z-1 opacity-35">
+        <AlmondEye color="var(--ochre)" size={80} />
+      </div>
     </>
   );
 }

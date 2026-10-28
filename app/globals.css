@@ -63,6 +63,7 @@
 
   --font-display: var(--serif);
   --font-body: var(--sans);
+  --font-script: var(--hand);
 }
 
 /* Radii and shadows from the brief (§5). Not inline, so each one used is

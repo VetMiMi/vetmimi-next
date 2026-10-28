@@ -2,8 +2,8 @@
 
 For whoever builds `/admin`, the rebuilt public booking flow and the
 `/session/<token>` video page, so they reach the finish of the public pages.
-Every value here comes from the code (`lib/tokens.ts`, `app/globals.css`,
-`app/fonts.ts`, `styles/*.css`, `components/**`) or from the design sources:
+Every value here comes from the code (`app/globals.css`, `app/fonts.ts`,
+`components/**`) or from the design sources:
 the Figma Make Final Design Specification and Master Prompt
 (`../documents/VetMiMi/03 Design/01 Design Specifications/`) and
 `03 Booking & Admin UX.docx` (`../documents/VetMiMi/02 Website Plan/03 UX & Wireframes/`).
@@ -52,8 +52,8 @@ assigns to Services and Booking". In practice:
 
 ## 2. Colour tokens
 
-`lib/tokens.ts` exports `C` with 13 colours plus `white`; `app/globals.css`
-repeats the 13 as CSS variables (`var(--indigo)`). Contrast is the WCAG 2.1
+`app/globals.css` defines the 13 colours as CSS variables (`var(--indigo)`)
+and as Tailwind names (`text-indigo`, `bg-canvas`). Contrast is the WCAG 2.1
 ratio, computed from the hex values. AA needs 4.5:1 for normal text, 3:1 for
 large text (24px, or 18.66px bold) and for borders, icons and focus rings.
 
@@ -107,9 +107,8 @@ controls on an indigo surface without a canvas-coloured outline there.
 
 ### Tailwind names
 
-Admin code styles with Tailwind classes, never `style={…}`: ESLint rejects
-the `style` prop in `app/admin/**` and `components/admin/**` (#9 explains
-why; the public pages keep their inline styles for now). A value that only
+All code styles with Tailwind classes, never `style={…}`: ESLint rejects
+the `style` prop everywhere except `app/_og` and `components/art`. A value that only
 exists at run time gets an `eslint-disable-next-line` comment saying why.
 `app/globals.css` maps every value in this brief to a theme name, so use
 these and nothing else:
@@ -163,7 +162,7 @@ on the tint over canvas / over white.
 The statuses are the contract's `AppointmentStatus`: the practitioner's
 cancellation is `cancelled_by_practitioner`, and `expired` (a request
 nobody answered in time) takes the Declined treatment. These tables live as
-data in `components/admin/status.ts`, typed from `lib/api/schema.ts`, so a
+data in `components/admin/status.ts`, typed from `lib/api/types/`, so a
 status the API adds fails `pnpm typecheck` until it has a row; the admin
 `StatusBadge` and the public booking pages both read it.
 

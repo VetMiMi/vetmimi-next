@@ -5,7 +5,9 @@ import { NoAccess } from "@/components/admin/NoAccess";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { apiPath } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type { Service } from "@/lib/api/types/booking";
 import { ServiceForm } from "../ServiceForm";
 import { serviceName } from "../serviceText";
 import { ServiceStateButton } from "../ServiceStateButton";
@@ -17,12 +19,8 @@ export default async function ServicePage({
 }: PageProps<"/admin/services/[id]">) {
   if (!(await requireRole("booking_admin"))) return <NoAccess />;
   const { id } = await params;
-  const service = await adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/services/{serviceId}", {
-        params: { path: { serviceId: id } },
-      }),
-    ),
+  const service = await adminCall((api) =>
+    api.get<Service>(apiPath`/admin/services/${id}`),
   ).catch((error) => {
     if (error instanceof ApiError && error.status === 404) notFound();
     throw error;

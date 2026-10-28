@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { components } from "../api/schema.ts";
+import type {
+  AppointmentEvent,
+  AttentionItem,
+  Communication,
+} from "../api/types/appointments.ts";
 import {
   eventSentence,
   failedNotifications,
@@ -13,8 +17,7 @@ import {
   whenLong,
 } from "./appointments.ts";
 
-type Event = components["schemas"]["AppointmentEvent"];
-type Communication = components["schemas"]["Communication"];
+type Event = AppointmentEvent;
 
 const SYDNEY = "Australia/Sydney";
 const SERVICE = "6f1c2a7e-3b4d-4c5e-8f90-1a2b3c4d5e6f";
@@ -197,7 +200,7 @@ describe("partial failure", () => {
 });
 
 describe("attention", () => {
-  type Item = components["schemas"]["AttentionItem"];
+  type Item = AttentionItem;
   const item = (patch: Partial<Item>): Item => ({
     kind: "failed_communication",
     appointmentId: "a1",

@@ -1,10 +1,10 @@
 import "server-only";
 import { isJoinToken } from "@/lib/session/ticket";
-import { apiConfigured, publicApi } from "./client";
-import { ApiError, unwrap } from "./problem";
-import type { components } from "./schema";
+import { apiConfigured, apiPath, publicApi } from "./client";
+import { ApiError } from "./problem";
+import type { PublicSessionState as PublicSession } from "./types/video";
 
-export type PublicSession = components["schemas"]["PublicSessionState"];
+export type { PublicSession };
 
 export type SessionLoad =
   | { ok: true; session: PublicSession }
@@ -21,10 +21,8 @@ export async function getSessionState(token: string): Promise<SessionLoad> {
   if (!apiConfigured()) return { ok: false, problem: "not_connected" };
   if (!isJoinToken(token)) return { ok: false, problem: "not_found" };
   try {
-    const session = unwrap(
-      await publicApi().GET("/public/sessions/{token}", {
-        params: { path: { token } },
-      }),
+    const session = await publicApi().get<PublicSession>(
+      apiPath`/public/sessions/${token}`,
     );
     return { ok: true, session };
   } catch (error) {

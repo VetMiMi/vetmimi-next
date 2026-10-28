@@ -1,5 +1,6 @@
-import { publicApi } from "@/lib/api/client";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { apiPath, publicApi } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type { RoomTicket } from "@/lib/api/types/video";
 import { isJoinToken, mapTicketError } from "@/lib/session/ticket";
 
 // A five-minute room ticket for the visitor's browser (ADR-007): the
@@ -22,10 +23,8 @@ export async function POST(
     );
   }
   try {
-    const ticket = unwrap(
-      await publicApi().POST("/public/sessions/{token}/ticket", {
-        params: { path: { token } },
-      }),
+    const ticket = await publicApi().post<RoomTicket>(
+      apiPath`/public/sessions/${token}/ticket`,
     );
     return Response.json(ticket, { status: 201, headers: noStore });
   } catch (error) {

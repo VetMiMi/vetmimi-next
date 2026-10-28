@@ -6,7 +6,7 @@ import {
   setRequestLocale,
 } from "next-intl/server";
 import Markdown from "react-markdown";
-import { StoryCard, StoryImage } from "@/components/Editorial";
+import { ed, StoryCard, StoryImage } from "@/components/Editorial";
 import { JsonLd } from "@/components/JsonLd";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
@@ -110,16 +110,21 @@ export default async function StoryDetail({
         image: story.img.src,
       });
   return (
-    <div className="ed-page">
+    <div className={ed.page}>
       <nav
-        className="ed-container ed-breadcrumb"
+        className={`${ed.container} flex flex-wrap gap-3 pt-7 text-[0.82rem] text-muted`}
         aria-label={t("detail.breadcrumbLabel")}
       >
-        <Link href="/stories">{t("detail.breadcrumbStories")}</Link>
+        <Link className="underline underline-offset-4" href="/stories">
+          {t("detail.breadcrumbStories")}
+        </Link>
         <span aria-hidden="true">/</span>
         <span>{typeLabel}</span>
       </nav>
-      <article className="ed-reading">
+      {/* Title and picture use the full site width (lined up with the
+          breadcrumb and "More to explore"); only the paragraphs stay at a
+          comfortable reading width. */}
+      <article className={ed.container}>
         {jsonLd && <JsonLd data={jsonLd} />}
         {article ? (
           <PublishedArticle article={article} typeLabel={typeLabel} />
@@ -127,14 +132,14 @@ export default async function StoryDetail({
           story && <WrittenStory story={story} typeLabel={typeLabel} />
         )}
       </article>
-      <section className="ed-container">
-        <div className="ed-section-top">
-          <h2>{t("detail.moreTitle")}</h2>
-          <Link className="ed-link" href="/stories">
+      <section className={ed.container}>
+        <div className="mb-8 flex flex-wrap items-baseline justify-between gap-5">
+          <h2 className={ed.h2}>{t("detail.moreTitle")}</h2>
+          <Link className={ed.link} href="/stories">
             {t("detail.allStories")}
           </Link>
         </div>
-        <div className="ed-story-list">
+        <div className="grid grid-cols-2 gap-8 pb-16 max-lg:grid-cols-1">
           {items
             .filter((item) => item.slug !== slug)
             .slice(0, 2)
@@ -152,8 +157,8 @@ export default async function StoryDetail({
 async function Byline() {
   const t = await getTranslations("common.brand");
   return (
-    <p>
-      <Link className="ed-link" href="/about" rel="author">
+    <p className={ed.text}>
+      <Link className={ed.link} href="/about" rel="author">
         {t("tagline")}
       </Link>
     </p>
@@ -161,6 +166,15 @@ async function Byline() {
 }
 
 const ARTICLE_IMAGE_SIZES = "(max-width: 1168px) 100vw, 1120px";
+
+const articleTitle =
+  "mb-6 max-w-[26ch] text-[clamp(2.5rem,5vw,4.5rem)] tracking-[-0.03em] leading-[1.08]";
+const articleImage =
+  "mb-10 block max-h-[520px] w-full rounded-2xl object-cover object-[center_30%]";
+// A published article's Markdown: headings, lists, quotes and links in the
+// same reading rhythm as the paragraphs.
+const markdownBody =
+  "max-w-[760px] pb-12 [&_:is(p,ul,ol,blockquote)]:mb-[1.4em] [&_:is(p,ul,ol)]:text-[1.1rem] [&_:is(p,ul,ol)]:leading-[1.9] [&_p]:text-muted [&_:is(ul,ol)]:pl-[1.4em] [&_ul]:list-disc [&_ol]:list-decimal [&_blockquote]:border-l-2 [&_blockquote]:border-rose [&_blockquote]:pl-[1.2em] [&_blockquote]:italic [&_h1]:mb-6 [&_h1]:max-w-[18ch] [&_h1]:text-[clamp(2.5rem,5vw,4.5rem)] [&_h1]:tracking-[-0.03em] [&_h1]:leading-[1.08] [&_h2]:mt-[1.6em] [&_h2]:mb-[0.6em] [&_h2]:text-[clamp(1.5rem,2.4vw,1.9rem)] [&_h2]:tracking-[-0.02em] [&_h2]:leading-[1.16] [&_h3]:mt-[1.4em] [&_h3]:mb-[0.5em] [&_h3]:text-[1.3rem] [&_h3]:leading-[1.25] [&_a]:text-indigo [&_a]:underline [&_a]:underline-offset-4 [&_hr]:my-[2.4em] [&_hr]:border-[#d8cdca]";
 
 function PublishedArticle({
   article,
@@ -171,15 +185,15 @@ function PublishedArticle({
 }) {
   return (
     <>
-      <header className="ed-article-header">
-        <p className="ed-label">{typeLabel}</p>
-        <h1>{article.title}</h1>
-        <p className="ed-lead">{article.excerpt}</p>
+      <header className="pt-11 pb-8">
+        <p className={ed.label}>{typeLabel}</p>
+        <h1 className={articleTitle}>{article.title}</h1>
+        <p className={ed.lead}>{article.excerpt}</p>
         <Byline />
       </header>
       {article.coverImage && (
         <StoryImage
-          className="ed-article-image"
+          className={articleImage}
           image={article.coverImage}
           alt={article.coverImage.alt}
           sizes={ARTICLE_IMAGE_SIZES}
@@ -187,7 +201,7 @@ function PublishedArticle({
         />
       )}
       {/* No raw HTML and no inline images, as the portal's preview shows. */}
-      <div className="ed-article-body">
+      <div className={markdownBody}>
         <Markdown skipHtml disallowedElements={["img"]} unwrapDisallowed>
           {article.body}
         </Markdown>
@@ -212,23 +226,30 @@ async function WrittenStory({
   const paragraphs = bodies[story.slug] ?? [excerpt];
   return (
     <>
-      <header className="ed-article-header">
-        <p className="ed-label">{typeLabel}</p>
-        <h1>{t(`items.${story.slug}.title`)}</h1>
-        <p className="ed-lead">{subtitles[story.slug] || excerpt}</p>
+      <header className="pt-11 pb-8">
+        <p className={ed.label}>{typeLabel}</p>
+        <h1 className={articleTitle}>{t(`items.${story.slug}.title`)}</h1>
+        <p className={ed.lead}>{subtitles[story.slug] || excerpt}</p>
         <Byline />
-        <p className="ed-preview-label">{t("detail.preview")}</p>
+        <p className="mb-5 text-[0.75rem] leading-[1.8] text-caption">
+          {t("detail.preview")}
+        </p>
       </header>
       <StoryImage
-        className="ed-article-image"
+        className={articleImage}
         image={story.img}
         alt={t("detail.imageAlt")}
         sizes={ARTICLE_IMAGE_SIZES}
         eager
       />
-      <div className="ed-article-body">
+      <div className="max-w-[760px] pb-12">
         {paragraphs.map((text, index) => (
-          <p key={index}>{text}</p>
+          <p
+            key={index}
+            className="mb-[1.4em] text-[1.1rem] leading-[1.9] text-muted"
+          >
+            {text}
+          </p>
         ))}
       </div>
     </>

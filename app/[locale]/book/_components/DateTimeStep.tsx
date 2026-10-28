@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { AA, C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import { CalendarMonth } from "@/components/booking/CalendarMonth";
 import { SlotPicker } from "@/components/booking/SlotPicker";
@@ -73,32 +72,21 @@ export function DateTimeStep({
 
   return (
     <div>
-      <h2 style={stepTitle}>{t("step2.title")}</h2>
-      <div
-        style={{
-          display: "inline-block",
-          padding: "0.4rem 1rem",
-          backgroundColor: `${C.indigo}12`,
-          borderRadius: 20,
-          fontFamily: "var(--sans)",
-          fontSize: "0.85rem",
-          color: C.indigo,
-          marginBottom: "2rem",
-        }}
-      >
+      <h2 className={stepTitle}>{t("step2.title")}</h2>
+      <div className="mb-8 inline-block rounded-pill bg-indigo/7 px-4 py-[0.4rem] text-[0.85rem] text-indigo">
         {service.name}
       </div>
 
       {alert && (
-        <div ref={alertBox} tabIndex={-1} style={{ outline: "none" }}>
+        <div ref={alertBox} tabIndex={-1} className="outline-none">
           <Notice
             tone={alert.kind === "serviceChanged" ? "ochre" : "coral"}
             role="alert"
           >
             {t(`step2.${alert.kind}`)}
             {alert.alternatives.length > 0 && (
-              <div style={{ marginTop: "0.75rem" }}>
-                <div style={{ fontWeight: 600, marginBottom: "0.5rem" }}>
+              <div className="mt-3">
+                <div className="mb-2 font-semibold">
                   {t("step2.alternatives")}
                 </div>
                 <SlotPicker
@@ -119,7 +107,7 @@ export function DateTimeStep({
         <Notice tone="coral" role="alert">
           {t("step2.loadFailed")}
           <NoticeActions>
-            <button type="button" onClick={retry} style={noticeLink}>
+            <button type="button" onClick={retry} className={noticeLink}>
               {t("shared.retry")}
             </button>
           </NoticeActions>
@@ -134,15 +122,15 @@ export function DateTimeStep({
               <button
                 type="button"
                 onClick={() => changeMonth(1)}
-                style={noticeLink}
+                className={noticeLink}
               >
                 {t("step2.nextMonth")}
               </button>
             )}
-            <Link href="/contact" style={noticeLink}>
+            <Link href="/contact" className={noticeLink}>
               {t("shared.contact")}
             </Link>
-            <Link href="/services" style={noticeLink}>
+            <Link href="/services" className={noticeLink}>
               {t("shared.services")}
             </Link>
           </NoticeActions>
@@ -150,15 +138,7 @@ export function DateTimeStep({
       )}
 
       {loading && (
-        <p
-          role="status"
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: "0.85rem",
-            color: AA.muted,
-            margin: "0 0 0.75rem",
-          }}
-        >
+        <p role="status" className="mb-3 text-[0.85rem] text-muted">
           {t("step2.loading")}
         </p>
       )}
@@ -192,16 +172,8 @@ export function DateTimeStep({
       </div>
 
       {day && daySlots.length > 0 && (
-        <div style={{ marginBottom: "1.5rem" }}>
-          <div
-            style={{
-              fontFamily: "var(--sans)",
-              fontWeight: 600,
-              color: C.ink,
-              marginBottom: "0.75rem",
-              fontSize: "0.9rem",
-            }}
-          >
+        <div className="mb-6">
+          <div className="mb-3 text-[0.9rem] font-semibold text-ink">
             {t("step2.availableTimes", { date: format.date(day) })}
           </div>
           <SlotPicker
@@ -215,43 +187,19 @@ export function DateTimeStep({
             }
             onSelect={choose}
           />
-          <p
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: "0.78rem",
-              color: AA.muted,
-              margin: 0,
-            }}
-          >
+          <p className="text-[0.78rem] text-muted">
             {t("calendar.timezoneNote")}
           </p>
         </div>
       )}
 
       {slot && (
-        <div
-          style={{
-            padding: "1.25rem",
-            backgroundColor: C.paper,
-            borderRadius: 8,
-            marginBottom: "2rem",
-            fontFamily: "var(--sans)",
-            fontSize: "0.9rem",
-          }}
-        >
-          <div
-            style={{
-              color: `${C.ink}88`,
-              marginBottom: "0.3rem",
-              fontSize: "0.8rem",
-              textTransform: "uppercase",
-              letterSpacing: "0.06em",
-            }}
-          >
+        <div className="mb-8 rounded-small bg-paper p-5 text-[0.9rem]">
+          <div className="mb-[0.3rem] text-[0.8rem] tracking-[0.06em] text-ink/53 uppercase">
             {t("step2.selection")}
           </div>
-          <div style={{ color: C.ink, fontWeight: 600 }}>{service.name}</div>
-          <div style={{ color: `${C.ink}BB` }}>
+          <div className="font-semibold text-ink">{service.name}</div>
+          <div className="text-ink/73">
             {t("step2.selected", {
               date: format.date(localDateKey(slot.startsAt, timeZone)),
               time: format.time(slot.startsAt),
@@ -267,15 +215,15 @@ export function DateTimeStep({
                 )
                 ?.focus()
             }
-            style={{ ...noticeLink, marginTop: "0.5rem", fontWeight: 400 }}
+            className="mt-2 cursor-pointer text-[0.9rem] text-rose underline underline-offset-2"
           >
             {t("step2.change")}
           </button>
         </div>
       )}
 
-      <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-        <button type="button" onClick={onBack} style={textButton}>
+      <div className="flex items-center gap-4">
+        <button type="button" onClick={onBack} className={textButton}>
           {t("shared.back")}
         </button>
         <Btn onClick={onNext} disabled={!slot}>

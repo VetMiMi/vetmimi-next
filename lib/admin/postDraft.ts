@@ -2,18 +2,23 @@
 // back into a save, and checked against the platforms' rules the API
 // applies at approval (vetmimi-api internal/content/rules.go). Pure, so
 // node:test covers it.
-import type { components } from "../api/schema.ts";
+import type {
+  DraftStatus,
+  Post,
+  PostKind,
+  PostPatch,
+  SocialChannel,
+} from "../api/types/content.ts";
+import type { LocalizedText } from "../api/types/shared.ts";
 
-type Schemas = components["schemas"];
-type Post = Schemas["Post"];
+export type { SocialChannel };
+
 type Localized = { en: string; my: string };
-
-export type SocialChannel = Schemas["SocialChannel"];
 
 export type Draft = {
   title: string;
-  kind: Schemas["PostKind"];
-  stage?: Schemas["DraftStatus"];
+  kind: PostKind;
+  stage?: DraftStatus;
   // True Story consent: confirmed once every item is ticked.
   consent: { checks: boolean[]; note: string };
   website: {
@@ -69,7 +74,7 @@ export const EDITABLE: Post["status"][] = [
   "scheduled",
 ];
 
-const localized = (text?: Schemas["LocalizedText"]): Localized => ({
+const localized = (text?: LocalizedText): Localized => ({
   en: text?.en ?? "",
   my: text?.my ?? "",
 });
@@ -137,11 +142,7 @@ const optional = <K extends string>(key: K, value: string) =>
 // The save. A channel named in `versions` replaces that version whole, so
 // what this editor does not change yet (the SEO fields) is carried over
 // from the post as loaded.
-export function toPatch(
-  draft: Draft,
-  post: Post,
-  version: number,
-): Schemas["PostPatch"] {
+export function toPatch(draft: Draft, post: Post, version: number): PostPatch {
   const w = post.versions.website;
   const { website, facebook: f, instagram: i, linkedin: l } = draft;
   return {

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { ed } from "@/components/Editorial";
 import poster from "@/assets/artworks/driftwood-seascape.webp";
 
 // Daw Mi's own introduction video. Until she records it, the section shows
@@ -20,14 +21,19 @@ export function VideoIntro() {
   const videoTitle = t("videoTitle");
 
   return (
-    <section className="ed-container ed-section" aria-labelledby="video-intro">
-      <p className="ed-label">{t("label")}</p>
-      <h2 id="video-intro">{t("title")}</h2>
-      <p className="ed-lead" style={{ marginBottom: "2rem" }}>
+    <section
+      className={`${ed.container} ${ed.section}`}
+      aria-labelledby="video-intro"
+    >
+      <p className={ed.label}>{t("label")}</p>
+      <h2 id="video-intro" className={ed.h2}>
+        {t("title")}
+      </h2>
+      <p className="mb-8 max-w-[56ch] text-[1.08rem] leading-[1.8] text-muted">
         {t("lead")}
       </p>
 
-      <div className="relative aspect-video max-w-[960px] overflow-hidden rounded-[6px] bg-[#28252d] shadow-[0_24px_48px_rgba(40,37,45,0.22)]">
+      <div className="relative aspect-video max-w-[960px] overflow-hidden rounded-[6px] bg-ink shadow-[0_24px_48px_rgba(40,37,45,0.22)]">
         {!VIDEO_ID ? (
           <>
             <Image
@@ -38,11 +44,8 @@ export function VideoIntro() {
               placeholder="blur"
               className="object-cover"
             />
-            <span className="absolute inset-0 bg-[rgba(40,37,45,0.45)]" />
-            <span
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[clamp(1.6rem,4vw,2.4rem)] text-white"
-              style={{ fontFamily: "var(--hand)" }}
-            >
+            <span className="absolute inset-0 bg-ink/45" />
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-script text-[clamp(1.6rem,4vw,2.4rem)] text-white">
               {t("comingSoon")}
             </span>
           </>
@@ -69,16 +72,13 @@ export function VideoIntro() {
               placeholder="blur"
               className="object-cover"
             />
-            <span className="absolute inset-0 bg-[rgba(40,37,45,0.35)] transition-colors duration-300 group-hover:bg-[rgba(40,37,45,0.2)]" />
-            <span className="absolute top-1/2 left-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[#db5f59] shadow-[0_8px_28px_rgba(219,95,89,0.45)] transition-transform duration-300 group-hover:scale-110">
+            <span className="absolute inset-0 bg-ink/35 transition-colors duration-300 group-hover:bg-ink/20" />
+            <span className="absolute top-1/2 left-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-coral shadow-[0_8px_28px_rgba(219,95,89,0.45)] transition-transform duration-300 group-hover:scale-110">
               <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden>
                 <path d="M8 5v14l11-7z" fill="#fff" />
               </svg>
             </span>
-            <span
-              className="absolute bottom-5 left-6 text-[1.05rem] text-white"
-              style={{ fontFamily: "var(--hand)" }}
-            >
+            <span className="absolute bottom-5 left-6 font-script text-[1.05rem] text-white">
               {t("duration")}
             </span>
           </button>

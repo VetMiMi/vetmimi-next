@@ -1,7 +1,6 @@
-// The video room's WebSocket frames, written by hand from
-// `x-websocket-messages` on `connectVideoRoom` in the API's openapi.yaml,
-// because openapi-typescript does not emit them. JSON text frames of at
-// most 16 KiB, relayed to the other participant and never stored.
+// The video room's WebSocket frames, as the API's internal/video sends
+// them. JSON text frames of at most 16 KiB, relayed to the other
+// participant and never stored.
 
 export type Role = "client" | "practitioner";
 export type Presence = "connected" | "disconnected";
@@ -31,7 +30,7 @@ export type ServerMessage =
       room: RoomState;
     };
 
-// Close codes the API sends (closeCodes in openapi.yaml).
+// Close codes the API sends (internal/video).
 export const CLOSE = {
   replaced: 4000, // a newer connection for the same role took over
   ticketInvalid: 4001, // ticket invalid or expired

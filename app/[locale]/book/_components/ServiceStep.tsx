@@ -1,6 +1,5 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { AA, C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import { Notice, NoticeActions, noticeLink } from "./Notice";
 import { stepIntro, stepTitle } from "./booking";
@@ -31,19 +30,19 @@ export function ServiceStep({
 
   return (
     <div>
-      <h2 style={stepTitle}>
+      <h2 className={stepTitle}>
         {problem ? t("step1.unavailable.title") : t("step1.title")}
       </h2>
-      {!problem && <p style={stepIntro}>{t("step1.intro")}</p>}
+      {!problem && <p className={stepIntro}>{t("step1.intro")}</p>}
 
       {problem === "loadFailed" && (
         <Notice tone="coral" role="alert">
           {t("step1.loadFailed")}
           <NoticeActions>
-            <button type="button" onClick={onRetry} style={noticeLink}>
+            <button type="button" onClick={onRetry} className={noticeLink}>
               {t("shared.retry")}
             </button>
-            <Link href="/contact" style={noticeLink}>
+            <Link href="/contact" className={noticeLink}>
               {t("shared.contact")}
             </Link>
           </NoticeActions>
@@ -53,7 +52,7 @@ export function ServiceStep({
         <Notice tone="coral">
           {t.rich("step1.unavailable.paused", {
             link: (chunks) => (
-              <Link href="/contact" style={{ color: C.rose }}>
+              <Link href="/contact" className="text-rose">
                 {chunks}
               </Link>
             ),
@@ -63,12 +62,12 @@ export function ServiceStep({
       {problem === "unavailable" && (
         <Notice tone="coral">
           <UnavailableBadge label={t("step1.unavailable.badge")} />
-          <p style={{ margin: 0 }}>{t("step1.unavailable.service")}</p>
+          <p>{t("step1.unavailable.service")}</p>
           <NoticeActions>
-            <Link href="/services" style={noticeLink}>
+            <Link href="/services" className={noticeLink}>
               {t("shared.services")}
             </Link>
-            <Link href="/contact" style={noticeLink}>
+            <Link href="/contact" className={noticeLink}>
               {t("shared.contact")}
             </Link>
           </NoticeActions>
@@ -79,8 +78,7 @@ export function ServiceStep({
         <div
           role="radiogroup"
           aria-label={t("step1.title")}
-          className="grid-cols-1 md:grid-cols-2"
-          style={{ display: "grid", gap: "1.25rem", marginBottom: "2rem" }}
+          className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-2"
         >
           {items.map((svc) => (
             <ServiceCard
@@ -94,27 +92,11 @@ export function ServiceStep({
       )}
 
       {!blocked && (
-        <div
-          style={{
-            padding: "1.25rem 1.5rem",
-            backgroundColor: C.paper,
-            borderRadius: 6,
-            marginBottom: "2.5rem",
-            fontFamily: "var(--sans)",
-            fontSize: "0.9rem",
-            color: `${C.ink}BB`,
-            lineHeight: 1.6,
-          }}
-        >
+        <div className="mb-10 rounded-cell bg-paper px-6 py-5 text-[0.9rem] leading-[1.6] text-ink/73">
           {t.rich("step1.workshops", {
-            strong: (chunks) => (
-              <strong style={{ color: C.ink }}>{chunks}</strong>
-            ),
+            strong: (chunks) => <strong className="text-ink">{chunks}</strong>,
             link: (chunks) => (
-              <Link
-                href="/contact"
-                style={{ color: C.rose, textDecoration: "none" }}
-              >
+              <Link href="/contact" className="text-rose no-underline">
                 {chunks}
               </Link>
             ),
@@ -152,62 +134,21 @@ function ServiceCard({
       role="radio"
       aria-checked={checked}
       onClick={onSelect}
-      style={{
-        border: `2px solid ${checked ? C.indigo : `${C.ink}22`}`,
-        borderRadius: 8,
-        padding: "2rem",
-        cursor: "pointer",
-        backgroundColor: checked ? `${C.indigo}08` : "#fff",
-        textAlign: "left",
-        transition: "border-color 0.18s, background-color 0.18s",
-      }}
+      className={`cursor-pointer rounded-small border-2 p-8 text-left transition-[border-color,background-color] duration-[180ms] ease-[ease] ${checked ? "border-indigo bg-indigo/3" : "border-ink/13 bg-white"}`}
     >
-      <div
-        style={{
-          fontFamily: "var(--sans)",
-          fontWeight: 600,
-          fontSize: "1.05rem",
-          color: C.ink,
-          marginBottom: "0.5rem",
-        }}
-      >
+      <div className="mb-2 text-[1.05rem] font-semibold text-ink">
         {service.name}
       </div>
       {service.description && (
-        <div
-          style={{
-            fontFamily: "var(--sans)",
-            color: `${C.ink}BB`,
-            fontSize: "0.9rem",
-            lineHeight: 1.6,
-          }}
-        >
+        <div className="text-[0.9rem] leading-[1.6] text-ink/73">
           {service.description}
         </div>
       )}
-      <div
-        style={{
-          fontFamily: "var(--sans)",
-          color: `${C.ink}BB`,
-          fontSize: "0.82rem",
-          marginTop: "0.75rem",
-        }}
-      >
+      <div className="mt-3 text-[0.82rem] text-ink/73">
         {details.join(" · ")}
       </div>
       {checked && (
-        <div
-          style={{
-            marginTop: "1rem",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.4rem",
-            fontSize: "0.8rem",
-            fontFamily: "var(--sans)",
-            color: C.indigo,
-            fontWeight: 600,
-          }}
-        >
+        <div className="mt-4 inline-flex items-center gap-[0.4rem] text-[0.8rem] font-semibold text-indigo">
           <span aria-hidden>✓</span> {t("step1.selected")}
         </div>
       )}
@@ -217,18 +158,7 @@ function ServiceCard({
 
 function UnavailableBadge({ label }: { label: string }) {
   return (
-    <span
-      style={{
-        display: "inline-block",
-        padding: "0.2rem 0.75rem",
-        marginBottom: "0.6rem",
-        backgroundColor: C.paper,
-        color: AA.muted,
-        borderRadius: 20,
-        fontSize: "0.78rem",
-        fontWeight: 600,
-      }}
-    >
+    <span className="mb-[0.6rem] inline-block rounded-pill bg-paper px-3 py-[0.2rem] text-[0.78rem] font-semibold text-muted">
       {label}
     </span>
   );

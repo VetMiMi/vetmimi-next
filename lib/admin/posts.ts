@@ -1,14 +1,16 @@
 // The publishing portal's list and calendar (#150, ADR-009): the URL ↔ API
 // query mapping, the names the screens use and the month grid. Pure, so
 // node:test covers it.
-import type { components, operations } from "../api/schema.ts";
+import type {
+  Channel,
+  PostKind,
+  PostSummary,
+  PublicationStatus,
+} from "../api/types/content.ts";
 import { addMonths, monthGrid } from "../time.ts";
 import { formatClock, formatDay, zonedParts } from "../zonedTime.ts";
 
-type Schemas = components["schemas"];
-export type PostSummary = Schemas["PostSummary"];
-export type Channel = Schemas["Channel"];
-type ListQuery = NonNullable<operations["listPosts"]["parameters"]["query"]>;
+export type { PostSummary, Channel };
 
 // Posts carry no timezone; the calendar is the practice's, in Sydney.
 export const PRACTICE_TIMEZONE = "Australia/Sydney";
@@ -31,7 +33,7 @@ export const views = [
 ] as const;
 export type View = (typeof views)[number]["id"];
 
-export const kindNames: Record<Schemas["PostKind"], string> = {
+export const kindNames: Record<PostKind, string> = {
   insight: "Insight",
   true_story: "True Story",
   announcement: "Announcement",
@@ -63,7 +65,7 @@ export function parseFilters(params: SearchParams): ListFilters {
   return { view, ...(q && { q }) };
 }
 
-export function listQuery(filters: ListFilters, cursor?: string): ListQuery {
+export function listQuery(filters: ListFilters, cursor?: string) {
   return {
     ...(filters.view !== "all" && { status: filters.view }),
     ...(filters.q && { q: filters.q }),
@@ -83,7 +85,7 @@ export function listHref(filters: ListFilters) {
 // Each enabled channel and, once publishing has started, how it went.
 export type ChannelState = {
   channel: Channel;
-  status?: Schemas["PublicationStatus"];
+  status?: PublicationStatus;
 };
 
 export function channelStates(

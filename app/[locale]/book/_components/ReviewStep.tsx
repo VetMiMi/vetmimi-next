@@ -1,8 +1,7 @@
-import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { CircleNotch } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
-import { C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import { FormTrap } from "@/components/ui/FormTrap";
 import { Notice, NoticeActions, noticeLink } from "./Notice";
@@ -17,51 +16,6 @@ export type SendState =
   | { status: "idle" | "sending" }
   | { status: "failed" }
   | { status: "rateLimited"; retryAfterSeconds?: number };
-
-const rowStyle: CSSProperties = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "flex-start",
-  padding: "0.875rem 0",
-  borderBottom: `1px solid ${C.ink}11`,
-};
-
-const labelCol: CSSProperties = {
-  fontFamily: "var(--sans)",
-  fontSize: "0.8rem",
-  color: `${C.ink}66`,
-  textTransform: "uppercase",
-  letterSpacing: "0.06em",
-  minWidth: 100,
-  marginRight: "1rem",
-  paddingTop: "0.1rem",
-};
-
-// minWidth 0 and anywhere-wrapping keep a long email inside the card at
-// 375 px (#130).
-const valueCol: CSSProperties = {
-  fontFamily: "var(--sans)",
-  fontSize: "0.95rem",
-  color: C.ink,
-  flex: 1,
-  minWidth: 0,
-  overflowWrap: "anywhere",
-};
-
-// 44 px tall to tap, pulled into the row's padding so rows keep their height.
-const editBtn: CSSProperties = {
-  background: "none",
-  border: "none",
-  cursor: "pointer",
-  fontFamily: "var(--sans)",
-  fontSize: "0.82rem",
-  color: C.rose,
-  padding: "0 0 0 1rem",
-  textDecoration: "underline",
-  flexShrink: 0,
-  minHeight: 44,
-  margin: "-0.75rem 0",
-};
 
 export function ReviewStep({
   service,
@@ -101,12 +55,20 @@ export function ReviewStep({
   }, [send.status]);
 
   const row = (label: string, value: ReactNode, step: 1 | 2 | 3) => (
-    <div style={rowStyle}>
-      <span style={labelCol}>{label}</span>
-      <span style={valueCol}>{value}</span>
+    <div className="flex items-start justify-between border-b border-ink/7 py-[0.875rem]">
+      <span className="mr-4 min-w-[100px] pt-[0.1rem] text-[0.8rem] tracking-[0.06em] text-ink/40 uppercase">
+        {label}
+      </span>
+      {/* min-w-0 and anywhere-wrapping keep a long email inside the card at
+          375 px (#130). */}
+      <span className="min-w-0 flex-1 text-[0.95rem] text-ink wrap-anywhere">
+        {value}
+      </span>
+      {/* 44 px tall to tap, pulled into the row's padding so rows keep their
+          height. */}
       <button
         type="button"
-        style={editBtn}
+        className="-my-3 min-h-11 shrink-0 cursor-pointer pl-4 text-[0.82rem] text-rose underline"
         disabled={sending}
         onClick={() => goToStep(step)}
       >
@@ -117,21 +79,21 @@ export function ReviewStep({
 
   return (
     <div>
-      <h2 style={stepTitle}>{t("step4.title")}</h2>
-      <p style={stepIntro}>{t("step4.intro")}</p>
+      <h2 className={stepTitle}>{t("step4.title")}</h2>
+      <p className={stepIntro}>{t("step4.intro")}</p>
 
       <div ref={alertBox}>
         {send.status === "failed" && (
           <Notice tone="coral" role="alert">
             <strong>{t("step4.failed.title")}</strong> {t("step4.failed.text")}
             <NoticeActions>
-              <button type="button" onClick={onSubmit} style={noticeLink}>
+              <button type="button" onClick={onSubmit} className={noticeLink}>
                 {t("shared.retry")}
               </button>
               <button
                 type="button"
                 onClick={() => goToStep(2)}
-                style={noticeLink}
+                className={noticeLink}
               >
                 {t("step4.failed.changeTime")}
               </button>
@@ -149,16 +111,7 @@ export function ReviewStep({
         )}
       </div>
 
-      <div
-        style={{
-          backgroundColor: "#fff",
-          border: `1px solid ${C.ink}18`,
-          borderRadius: 10,
-          padding: "0.25rem 1.5rem",
-          marginBottom: "1.5rem",
-          maxWidth: 560,
-        }}
-      >
+      <div className="mb-6 max-w-[560px] rounded-control border border-ink/9 bg-white px-6 py-1">
         {row(
           t("step4.rows.service"),
           t("step4.serviceValue", {
@@ -185,21 +138,19 @@ export function ReviewStep({
         {draft.note &&
           row(
             t("step4.rows.note"),
-            <span style={{ fontStyle: "italic", color: `${C.ink}BB` }}>
-              {draft.note}
-            </span>,
+            <span className="text-ink/73 italic">{draft.note}</span>,
             3,
           )}
         {row(
           t("step4.rows.acknowledgements"),
           t.rich("step4.acknowledgements", {
             privacy: (chunks) => (
-              <Link href="/privacy" style={{ color: C.rose }}>
+              <Link href="/privacy" className="text-rose">
                 {chunks}
               </Link>
             ),
             policy: (chunks) => (
-              <Link href="/booking-policy" style={{ color: C.rose }}>
+              <Link href="/booking-policy" className="text-rose">
                 {chunks}
               </Link>
             ),
@@ -208,25 +159,8 @@ export function ReviewStep({
         )}
       </div>
 
-      <div
-        style={{
-          padding: "1.25rem 1.5rem",
-          backgroundColor: `${C.ochre}18`,
-          border: `1px solid ${C.ochre}44`,
-          borderRadius: 8,
-          marginBottom: "2rem",
-          maxWidth: 560,
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: "0.875rem",
-            color: C.ink,
-            margin: 0,
-            lineHeight: 1.7,
-          }}
-        >
+      <div className="mb-8 max-w-[560px] rounded-small border border-ochre/27 bg-ochre/9 px-6 py-5">
+        <p className="text-[0.875rem] leading-[1.7] text-ink">
           {t.rich(instant ? "step4.noticeInstant" : "step4.notice", {
             strong: (chunks) => <strong>{chunks}</strong>,
           })}
@@ -239,20 +173,18 @@ export function ReviewStep({
         onChange={onHoneypot}
       />
 
-      <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+      <div className="flex items-center gap-4">
         <button
           type="button"
           onClick={onBack}
           disabled={sending}
-          style={textButton}
+          className={textButton}
         >
           {t("shared.back")}
         </button>
         <Btn onClick={onSubmit} disabled={sending}>
           {sending ? (
-            <span
-              style={{ display: "inline-flex", alignItems: "center", gap: 8 }}
-            >
+            <span className="inline-flex items-center gap-2">
               <CircleNotch
                 size={16}
                 className="motion-safe:animate-spin"

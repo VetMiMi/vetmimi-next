@@ -9,26 +9,32 @@ import {
 } from "@/lib/admin/availability";
 import { failure, mutate, type Outcome } from "@/lib/admin/mutation";
 import { adminCall } from "@/lib/admin/session";
-import type { AdminApi } from "@/lib/api/client";
-import { ApiError, unwrap } from "@/lib/api/problem";
-import type { components } from "@/lib/api/schema";
+import { apiPath, type Api } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type { Settings } from "@/lib/api/types/admin";
+import type { AppointmentSummary } from "@/lib/api/types/appointments";
+import type {
+  AvailabilityBlock,
+  AvailabilityBlockSaved,
+  AvailabilityList,
+  AvailabilityOverride,
+  AvailabilityPreview,
+  AvailabilityRuleInput,
+} from "@/lib/api/types/booking";
 import { addDays } from "@/lib/time";
 import { todayIn, zonedDayStart, zonedInstant } from "@/lib/zonedTime";
 
-type Schemas = components["schemas"];
-export type Conflict = Schemas["AppointmentSummary"];
+export type Conflict = AppointmentSummary;
 
 const PATH = "/admin/availability";
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME = /^\d{2}:\d{2}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export async function saveWeeklyHours(
-  periods: Schemas["AvailabilityRuleInput"][],
-) {
+export async function saveWeeklyHours(periods: AvailabilityRuleInput[]) {
   return mutate(
     PATH,
-    (api) => api.PUT("/admin/availability/rules", { body: { periods } }),
+    (api) => api.put("/admin/availability/rules", { periods }),
     {
       failure:
         "Your weekly hours were not saved. The previous hours remain active.",
@@ -51,14 +57,14 @@ const DAYS_NOT_CHANGED =
 async function changeDays(
   dates: string[],
   change: (
-    api: AdminApi,
+    api: Api,
     timeZone: string,
     dates: string[],
   ) => Promise<Conflict[] | void>,
 ): Promise<Outcome<Conflict[]>> {
   try {
     const conflicts = await adminCall(async (api) => {
-      const { timezone } = unwrap(await api.GET("/admin/settings"));
+      const { timezone } = await api.get<Settings>("/admin/settings");
       const today = todayIn(timezone);
       const valid = dates.filter((d) => DATE.test(d) && d >= today);
       if (valid.length === 0 || valid.length > 62)
@@ -75,50 +81,43 @@ async function changeDays(
   }
 }
 
-async function clearDays(api: AdminApi, timeZone: string, dates: string[]) {
+async function clearDays(api: Api, timeZone: string, dates: string[]) {
   const sorted = [...dates].sort();
   const range = { from: sorted[0], to: sorted.at(-1)! };
   const [overrides, blocks] = await Promise.all([
-    api
-      .GET("/admin/availability/overrides", { params: { query: range } })
-      .then(unwrap),
-    api
-      .GET("/admin/availability/blocks", { params: { query: range } })
-      .then(unwrap),
+    api.get<AvailabilityList<AvailabilityOverride>>(
+      "/admin/availability/overrides",
+      range,
+    ),
+    api.get<AvailabilityList<AvailabilityBlock>>(
+      "/admin/availability/blocks",
+      range,
+    ),
   ]);
   const plan = clearPlan(dates, overrides.items, blocks.items, timeZone);
-  for (const overrideId of plan.deleteOverrides)
-    unwrap(
-      await api.DELETE("/admin/availability/overrides/{overrideId}", {
-        params: { path: { overrideId } },
-      }),
-    );
-  for (const blockId of plan.deleteBlocks)
-    unwrap(
-      await api.DELETE("/admin/availability/blocks/{blockId}", {
-        params: { path: { blockId } },
-      }),
-    );
+  for (const id of plan.deleteOverrides)
+    await api.delete(apiPath`/admin/availability/overrides/${id}`);
+  for (const id of plan.deleteBlocks)
+    await api.delete(apiPath`/admin/availability/blocks/${id}`);
   for (const run of plan.reblock)
     await blockWholeDays(api, timeZone, run.first, run.last, run.reason);
 }
 
 async function blockWholeDays(
-  api: AdminApi,
+  api: Api,
   timeZone: string,
   first: string,
   last: string,
   reason?: string,
 ) {
-  const saved = unwrap(
-    await api.POST("/admin/availability/blocks", {
-      body: {
-        startsAt: zonedDayStart(first, timeZone),
-        endsAt: zonedDayStart(addDays(last, 1), timeZone),
-        allDay: true,
-        reason,
-      },
-    }),
+  const saved = await api.post<AvailabilityBlockSaved>(
+    "/admin/availability/blocks",
+    {
+      startsAt: zonedDayStart(first, timeZone),
+      endsAt: zonedDayStart(addDays(last, 1), timeZone),
+      allDay: true,
+      reason,
+    },
   );
   return saved.conflicts;
 }
@@ -133,10 +132,9 @@ export async function backToNormal(dates: string[]) {
 export async function markDaysOff(dates: string[]) {
   return changeDays(dates, async (api, timeZone, valid) => {
     const sorted = [...valid].sort();
-    const blocks = unwrap(
-      await api.GET("/admin/availability/blocks", {
-        params: { query: { from: sorted[0], to: sorted.at(-1)! } },
-      }),
+    const blocks = await api.get<AvailabilityList<AvailabilityBlock>>(
+      "/admin/availability/blocks",
+      { from: sorted[0], to: sorted.at(-1)! },
     );
     const off = alreadyOff(valid, blocks.items, timeZone);
     const toBlock = valid.filter((date) => !off.includes(date));
@@ -172,11 +170,12 @@ export async function changeHours(dates: string[], hours: Hours[]) {
         const endsAt = zonedInstant(onDate, end, timeZone);
         // A time the clocks skip on the morning daylight saving starts.
         if (!startsAt || !endsAt) continue;
-        unwrap(
-          await api.POST("/admin/availability/overrides", {
-            body: { onDate, kind: "replace", startsAt, endsAt },
-          }),
-        );
+        await api.post("/admin/availability/overrides", {
+          onDate,
+          kind: "replace",
+          startsAt,
+          endsAt,
+        });
       }
   });
 }
@@ -187,10 +186,9 @@ export async function markPartDayOff(date: string, hours: Hours) {
     const startsAt = zonedInstant(date, hours.start, timeZone);
     const endsAt = zonedInstant(date, hours.end, timeZone);
     if (!startsAt || !endsAt) return [];
-    const saved = unwrap(
-      await api.POST("/admin/availability/blocks", {
-        body: { startsAt, endsAt, allDay: false },
-      }),
+    const saved = await api.post<AvailabilityBlockSaved>(
+      "/admin/availability/blocks",
+      { startsAt, endsAt, allDay: false },
     );
     return saved.conflicts;
   });
@@ -201,12 +199,12 @@ export async function markPartDayOff(date: string, hours: Hours) {
 export async function previewDay(serviceId: string, date: string) {
   if (!UUID.test(serviceId) || !DATE.test(date)) return null;
   try {
-    const preview = await adminCall(async (api) =>
-      unwrap(
-        await api.GET("/admin/availability/preview", {
-          params: { query: { serviceId, from: date, to: date } },
-        }),
-      ),
+    const preview = await adminCall((api) =>
+      api.get<AvailabilityPreview>("/admin/availability/preview", {
+        serviceId,
+        from: date,
+        to: date,
+      }),
     );
     return preview.days.find((day) => day.date === date)?.slots ?? [];
   } catch (error) {

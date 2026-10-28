@@ -8,6 +8,7 @@ import {
   type Provider,
 } from "@/lib/admin/connections";
 import { mutate } from "@/lib/admin/mutation";
+import type { Authorization } from "@/lib/api/types/admin";
 
 const PATH = "/admin/settings/connections";
 
@@ -24,9 +25,7 @@ export async function startConnection(provider: Provider) {
   return mutate(
     PATH,
     (api) =>
-      provider === "meta"
-        ? api.POST("/admin/connections/meta/authorize")
-        : api.POST("/admin/connections/linkedin/authorize"),
+      api.post<Authorization>(`/admin/connections/${provider}/authorize`),
     {
       failure: `${providerNames[provider]} sign-in could not start. Nothing changed. Try again in a few minutes.`,
       codes: { unavailable: notSetUp(provider) },
@@ -45,12 +44,13 @@ export async function finishConnection(
   if (!code || !state || code.length > 2048 || state.length > 2048)
     throw new Error("Bad callback");
   const body = { code, state };
-  return mutate<MetaConnection | LinkedInConnection>(
+  return mutate(
     PATH,
     (api) =>
-      provider === "meta"
-        ? api.POST("/admin/connections/meta/callback", { body })
-        : api.POST("/admin/connections/linkedin/callback", { body }),
+      api.post<MetaConnection | LinkedInConnection>(
+        `/admin/connections/${provider}/callback`,
+        body,
+      ),
     { failure: `${providerNames[provider]} was not connected.` },
   );
 }
@@ -60,7 +60,8 @@ export async function chooseMetaPage(pageId: string) {
   if (!/^[\w-]{1,64}$/.test(pageId)) throw new Error("Bad page");
   return mutate(
     PATH,
-    (api) => api.PUT("/admin/connections/meta/page", { body: { pageId } }),
+    (api) =>
+      api.put<MetaConnection>("/admin/connections/meta/page", { pageId }),
     {
       failure: "The Page was not connected. Nothing changed. Try again.",
       codes: {
@@ -75,14 +76,7 @@ export async function chooseMetaPage(pageId: string) {
 
 export async function disconnect(provider: Provider) {
   check(provider);
-  return mutate(
-    PATH,
-    (api) =>
-      provider === "meta"
-        ? api.DELETE("/admin/connections/meta")
-        : api.DELETE("/admin/connections/linkedin"),
-    {
-      failure: `${providerNames[provider]} was not disconnected. It is still connected.`,
-    },
-  );
+  return mutate(PATH, (api) => api.delete(`/admin/connections/${provider}`), {
+    failure: `${providerNames[provider]} was not disconnected. It is still connected.`,
+  });
 }

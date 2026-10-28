@@ -7,10 +7,8 @@ import { Dialog } from "@/components/admin/Dialog";
 import { Notice } from "@/components/admin/Notice";
 import { Textarea } from "@/components/admin/Textarea";
 import { useToast } from "@/components/admin/Toast";
-import type { components } from "@/lib/api/schema";
+import type { Communication } from "@/lib/api/types/appointments";
 import { markCommunicated, resendEmail } from "../../actions";
-
-type Communication = components["schemas"]["Communication"];
 
 const MAX = 500;
 

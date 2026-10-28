@@ -18,6 +18,12 @@ import {
   type Form,
 } from "./enquiry";
 
+// The rose border and halo show focus, so the global coral ring is turned off.
+const input =
+  "w-full rounded-(--radius-control) border border-ink/16 bg-white px-4 py-[13px] font-body text-[1rem] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-caption hover:border-ink/28 focus:border-rose focus:shadow-focus-input";
+const label = "mb-2 block text-[0.88rem] font-medium";
+const row = "grid grid-cols-2 gap-[18px] max-[640px]:grid-cols-1";
+
 export function ContactForm({
   formToken,
   service,
@@ -57,7 +63,10 @@ export function ContactForm({
   });
   const errorFor = (name: Field) =>
     touched.has(name) && errors[name] ? (
-      <p id={`${name}-error`} className="contact-field-error">
+      <p
+        id={`${name}-error`}
+        className="mt-2 flex items-center gap-1.5 text-[0.82rem] text-action"
+      >
         <WarningCircle size={16} weight="bold" aria-hidden />
         {t(`form.errors.${errors[name]}`)}
       </p>
@@ -99,7 +108,9 @@ export function ContactForm({
 
   return (
     <>
-      <h2>{t("form.title")}</h2>
+      <h2 className="mb-7 text-[clamp(1.6rem,2.4vw,2rem)]">
+        {t("form.title")}
+      </h2>
 
       <SendFailure send={send} onRetry={handleSubmit} />
 
@@ -107,14 +118,13 @@ export function ContactForm({
         <div
           ref={summary}
           tabIndex={-1}
-          className="contact-status contact-status--error"
+          className="mb-6 rounded-(--radius-notice) border border-red/27 bg-red/7 px-6 py-5 text-[0.92rem] text-red outline-none"
           role="alert"
-          style={{ marginBottom: 24 }}
         >
-          <p>
+          <p className="leading-[1.65]">
             <strong>{t("form.errors.summary")}</strong>
           </p>
-          <ul>
+          <ul className="mt-2 list-disc pl-[1.2rem] leading-[1.65]">
             {shown.map((f) => (
               <li key={f}>
                 <a href={`#${f === "enquiryType" ? "enquiryType-first" : f}`}>
@@ -126,16 +136,20 @@ export function ContactForm({
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="contact-form" noValidate>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-[22px]"
+        noValidate
+      >
         {service && (
-          <p className="contact-about">
+          <p className="text-[0.92rem] text-muted">
             {t("form.about", { service: service.name })}
           </p>
         )}
-        <div className="contact-row">
+        <div className={row}>
           <div>
-            <label htmlFor="name" className="contact-label">
-              {t("form.name.label")} <span className="req">*</span>
+            <label htmlFor="name" className={label}>
+              {t("form.name.label")} <span className="text-label">*</span>
             </label>
             <input
               {...field("name")}
@@ -143,14 +157,14 @@ export function ContactForm({
               autoComplete="name"
               value={form.name}
               onChange={(e) => update("name", e.target.value)}
-              className="contact-input"
+              className={input}
               placeholder={t("form.name.placeholder")}
             />
             {errorFor("name")}
           </div>
           <div>
-            <label htmlFor="email" className="contact-label">
-              {t("form.email.label")} <span className="req">*</span>
+            <label htmlFor="email" className={label}>
+              {t("form.email.label")} <span className="text-label">*</span>
             </label>
             <input
               {...field("email")}
@@ -158,7 +172,7 @@ export function ContactForm({
               autoComplete="email"
               value={form.email}
               onChange={(e) => update("email", e.target.value)}
-              className="contact-input"
+              className={input}
               placeholder="your@email.com"
             />
             {errorFor("email")}
@@ -166,9 +180,11 @@ export function ContactForm({
         </div>
 
         <div>
-          <label htmlFor="organisation" className="contact-label">
+          <label htmlFor="organisation" className={label}>
             {t("form.organisation.label")}{" "}
-            <span className="opt">{t("form.optional")}</span>
+            <span className="font-normal text-caption">
+              {t("form.optional")}
+            </span>
           </label>
           <input
             id="organisation"
@@ -177,13 +193,13 @@ export function ContactForm({
             autoComplete="organization"
             value={form.organisation}
             onChange={(e) => update("organisation", e.target.value)}
-            className="contact-input"
+            className={input}
             placeholder={t("form.organisation.placeholder")}
           />
         </div>
 
         <fieldset
-          className="contact-pills"
+          className="min-w-0"
           aria-invalid={touched.has("enquiryType") && !!errors.enquiryType}
           aria-describedby={
             touched.has("enquiryType") && errors.enquiryType
@@ -191,12 +207,12 @@ export function ContactForm({
               : undefined
           }
         >
-          <legend className="contact-label">
-            {t("form.enquiryType.label")} <span className="req">*</span>
+          <legend className={label}>
+            {t("form.enquiryType.label")} <span className="text-label">*</span>
           </legend>
-          <div className="contact-pill-list">
+          <div className="flex flex-wrap gap-2">
             {(Object.keys(ENQUIRY_TYPES) as EnquiryId[]).map((type, i) => (
-              <label key={type} className="contact-pill">
+              <label key={type}>
                 <input
                   id={i === 0 ? "enquiryType-first" : undefined}
                   type="radio"
@@ -205,8 +221,11 @@ export function ContactForm({
                   checked={form.enquiryType === type}
                   onChange={() => update("enquiryType", type)}
                   onBlur={() => touch("enquiryType")}
+                  className="peer pointer-events-none absolute size-px opacity-0"
                 />
-                <span>{t(`form.enquiryType.options.${type}`)}</span>
+                <span className="inline-block cursor-pointer rounded-(--radius-pill) border border-ink/16 bg-white px-4 py-[9px] text-[0.88rem] transition-[background-color,border-color,color] duration-150 peer-checked:border-label peer-checked:bg-label peer-checked:text-white peer-focus-visible:shadow-focus-pill hover:border-rose">
+                  {t(`form.enquiryType.options.${type}`)}
+                </span>
               </label>
             ))}
           </div>
@@ -214,33 +233,36 @@ export function ContactForm({
         </fieldset>
 
         <div>
-          <label htmlFor="subject" className="contact-label">
-            {t("form.subject.label")} <span className="req">*</span>
+          <label htmlFor="subject" className={label}>
+            {t("form.subject.label")} <span className="text-label">*</span>
           </label>
           <input
             {...field("subject")}
             type="text"
             value={form.subject}
             onChange={(e) => update("subject", e.target.value)}
-            className="contact-input"
+            className={input}
             placeholder={t("form.subject.placeholder")}
           />
           {errorFor("subject")}
         </div>
 
         <div>
-          <label htmlFor="message" className="contact-label">
-            {t("form.message.label")} <span className="req">*</span>
+          <label htmlFor="message" className={label}>
+            {t("form.message.label")} <span className="text-label">*</span>
           </label>
           <textarea
             {...field("message")}
             rows={7}
             value={form.message}
             onChange={(e) => update("message", e.target.value)}
-            className="contact-input"
+            className={`${input} min-h-[168px] leading-[1.65]`}
             placeholder={t("form.message.placeholder")}
           />
-          <p className="contact-count" aria-live="polite">
+          <p
+            className="mt-1.5 text-right text-[0.78rem] text-muted"
+            aria-live="polite"
+          >
             {t("form.message.count", {
               count: form.message.length,
               max: MESSAGE_MAX,
@@ -250,24 +272,37 @@ export function ContactForm({
         </div>
 
         <div>
-          <label htmlFor="privacy" className="contact-privacy">
+          <label
+            htmlFor="privacy"
+            className="flex cursor-pointer items-start gap-3 text-[0.9rem]"
+          >
             <input
               {...field("privacy")}
               type="checkbox"
               checked={form.privacy}
               onChange={(e) => update("privacy", e.target.checked)}
+              className="mt-1 size-4 shrink-0 accent-rose"
             />
             <span>
               {t.rich("form.privacy", {
-                link: (chunks) => <Link href="/privacy">{chunks}</Link>,
+                link: (chunks) => (
+                  <Link
+                    href="/privacy"
+                    className="text-label underline underline-offset-2"
+                  >
+                    {chunks}
+                  </Link>
+                ),
               })}
-              <span className="req"> *</span>
+              <span className="text-label"> *</span>
             </span>
           </label>
           {errorFor("privacy")}
         </div>
 
-        <p className="contact-note">{t("form.note")}</p>
+        <p className="rounded-(--radius-control) bg-canvas px-4 py-3 text-[0.8rem] leading-[1.65] text-ink/72">
+          {t("form.note")}
+        </p>
 
         <FormTrap
           label={t("form.honeypot")}
@@ -279,7 +314,7 @@ export function ContactForm({
           <Btn
             type="submit"
             disabled={send.status === "sending"}
-            style={{ minWidth: 180 }}
+            className="min-w-[180px]"
           >
             {send.status === "sending" ? t("form.sending") : t("form.submit")}
           </Btn>

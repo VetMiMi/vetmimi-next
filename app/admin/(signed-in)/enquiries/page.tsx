@@ -14,7 +14,9 @@ import {
   views,
 } from "@/lib/admin/enquiries";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { ApiError } from "@/lib/api/problem";
+import type { ContactEnquiry } from "@/lib/api/types/contact";
+import type { Page } from "@/lib/api/types/shared";
 import { EnquiryList } from "./_components/EnquiryList";
 
 export const metadata: Metadata = { title: "Enquiries" };
@@ -28,11 +30,10 @@ export default async function EnquiriesPage({
   const params = await searchParams;
   const filters = parseFilters(params);
 
-  const page = await adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/contact-enquiries", {
-        params: { query: listQuery(filters) },
-      }),
+  const page = await adminCall((api) =>
+    api.get<Page<ContactEnquiry>>(
+      "/admin/contact-enquiries",
+      listQuery(filters),
     ),
   ).catch((error) => {
     // The API refused this user: the permission message, no data.

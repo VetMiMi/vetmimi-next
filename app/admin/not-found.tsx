@@ -12,7 +12,10 @@ export default function AdminNotFound() {
       <p className="mb-7 text-[0.95rem] text-muted">
         The address may be mistyped, or the page may have moved.
       </p>
-      <Link href="/admin" className="ed-button">
+      <Link
+        href="/admin"
+        className="inline-flex min-h-12 items-center justify-center gap-5 rounded-control bg-action px-[22px] py-[14px] text-center text-[0.9rem] font-semibold text-white no-underline hover:bg-action-hover"
+      >
         Go to admin
       </Link>
     </main>

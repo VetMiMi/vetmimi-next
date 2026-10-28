@@ -4,7 +4,16 @@ import { NoAccess } from "@/components/admin/NoAccess";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { calendarDays, weekFromRules } from "@/lib/admin/availability";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { unwrap } from "@/lib/api/problem";
+import type { Settings } from "@/lib/api/types/admin";
+import type { AppointmentList } from "@/lib/api/types/appointments";
+import type {
+  AvailabilityBlock,
+  AvailabilityList,
+  AvailabilityOverride,
+  AvailabilityRule,
+  Service,
+} from "@/lib/api/types/booking";
+import type { Page } from "@/lib/api/types/shared";
 import { addDays, lastDayOfMonth } from "@/lib/time";
 import { todayIn, zoneLabel, zonedDayStart } from "@/lib/zonedTime";
 import { ClientPreview } from "./ClientPreview";
@@ -38,8 +47,8 @@ export default async function AvailabilityPage({
   searchParams,
 }: PageProps<"/admin/availability">) {
   if (!(await requireRole("booking_admin"))) return <NoAccess />;
-  const settings = await adminCall(async (api) =>
-    unwrap(await api.GET("/admin/settings")),
+  const settings = await adminCall((api) =>
+    api.get<Settings>("/admin/settings"),
   );
   const { timezone } = settings;
   const today = todayIn(timezone);
@@ -54,31 +63,25 @@ export default async function AvailabilityPage({
   const [rules, overrides, blocks, appointments, services] = await adminCall(
     (api) =>
       Promise.all([
-        api.GET("/admin/availability/rules").then(unwrap),
-        api
-          .GET("/admin/availability/overrides", {
-            params: { query: { from: first, to: last } },
-          })
-          .then(unwrap),
-        api
-          .GET("/admin/availability/blocks", {
-            params: { query: { from: first, to: last } },
-          })
-          .then(unwrap),
-        api
-          .GET("/admin/appointments", {
-            params: {
-              query: {
-                view: "all",
-                status: ["pending", "confirmed"],
-                from: zonedDayStart(first, timezone),
-                to: zonedDayStart(addDays(last, 1), timezone),
-                limit: 100,
-              },
-            },
-          })
-          .then(unwrap),
-        api.GET("/admin/services").then(unwrap),
+        api.get<AvailabilityList<AvailabilityRule>>(
+          "/admin/availability/rules",
+        ),
+        api.get<AvailabilityList<AvailabilityOverride>>(
+          "/admin/availability/overrides",
+          { from: first, to: last },
+        ),
+        api.get<AvailabilityList<AvailabilityBlock>>(
+          "/admin/availability/blocks",
+          { from: first, to: last },
+        ),
+        api.get<AppointmentList>("/admin/appointments", {
+          view: "all",
+          status: ["pending", "confirmed"],
+          from: zonedDayStart(first, timezone),
+          to: zonedDayStart(addDays(last, 1), timezone),
+          limit: 100,
+        }),
+        api.get<Page<Service>>("/admin/services"),
       ]),
   );
 

@@ -2,15 +2,11 @@
 // role has at each status, scheduling in Sydney time, how a channel's
 // failure reads, and what "Copy & open" copies. Pure, so node:test covers
 // it. The API decides every transition; this only chooses what to offer.
-import type { components } from "../api/schema.ts";
+import type { Post, PostStatus, Publication } from "../api/types/content.ts";
 import type { SocialChannel } from "./postDraft.ts";
 import { channelNames, PRACTICE_TIMEZONE } from "./posts.ts";
 import { addDays } from "../time.ts";
 import { todayIn, zonedInstant, zonedParts } from "../zonedTime.ts";
-
-type Schemas = components["schemas"];
-type Post = Schemas["Post"];
-type PostStatus = Schemas["PostStatus"];
 
 export type WorkflowAction =
   | "submit"
@@ -125,7 +121,7 @@ export const imageIdsOf = (
 // already posted by hand (to correct the link), while the post is out.
 export function canMarkPosted(
   postStatus: PostStatus,
-  publication: Pick<Schemas["Publication"], "channel" | "status">,
+  publication: Pick<Publication, "channel" | "status">,
 ) {
   return (
     isSocial(publication.channel) &&
@@ -136,7 +132,7 @@ export function canMarkPosted(
 
 export const canRetry = (
   postStatus: PostStatus,
-  publication: Pick<Schemas["Publication"], "channel" | "status">,
+  publication: Pick<Publication, "channel" | "status">,
 ) =>
   postStatus === "publishing" &&
   isSocial(publication.channel) &&

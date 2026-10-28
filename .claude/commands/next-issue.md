@@ -15,8 +15,8 @@ the two-track cap is about memory and about merge conflicts. Shared surfaces
 that force serialisation:
 
 - `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.github/`, `.gitignore`
-- `package.json` and `pnpm-lock.yaml`, including the pinned API ref
-- `lib/api/` (generated from the API's `openapi.yaml`) and `lib/tokens.ts`
+- `package.json` and `pnpm-lock.yaml`
+- `lib/api/` (client and handwritten types)
 - `app/globals.css`, `app/fonts.ts`, `proxy.ts`, `next.config.ts`, `i18n/`
 - the same `messages/<locale>/<area>.json` file in both tracks
 - `components/admin/` primitives (Button, Input, Dialog, …) while they are
@@ -41,9 +41,9 @@ gh pr list --state open
 
 Take the next issue from the ordered backlog in `docs/project-status.md`.
 Verify the previous pull request merged before branching (PRs here squash,
-so old branches are stale). If the issue needs an endpoint, check it exists
-in `../vetmimi-api/openapi.yaml` on the API's `main` **and** in a tag; if
-not, the API issue goes first.
+so old branches are stale). If the issue needs an endpoint, check the API's
+`main` serves it (the feature's `handler.go` in `../vetmimi-api`); if not, the
+API issue goes first.
 
 ## 2. Plan
 

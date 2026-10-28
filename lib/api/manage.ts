@@ -1,9 +1,9 @@
 import "server-only";
-import { apiConfigured, publicApi } from "./client";
-import { ApiError, unwrap } from "./problem";
-import type { components } from "./schema";
+import { apiConfigured, apiPath, publicApi } from "./client";
+import { ApiError } from "./problem";
+import type { ManagedAppointment } from "./types/booking";
 
-export type ManagedAppointment = components["schemas"]["ManagedAppointment"];
+export type { ManagedAppointment };
 
 export type ManageProblem =
   "not_found" | "rate_limited" | "unavailable" | "not_connected";
@@ -39,10 +39,8 @@ export async function getManagedAppointment(
   if (!apiConfigured()) return { ok: false, problem: "not_connected" };
   if (!isManagementToken(token)) return { ok: false, problem: "not_found" };
   try {
-    const appointment = unwrap(
-      await publicApi().GET("/public/manage/{token}", {
-        params: { path: { token } },
-      }),
+    const appointment = await publicApi().get<ManagedAppointment>(
+      apiPath`/public/manage/${token}`,
     );
     return { ok: true, appointment };
   } catch (error) {

@@ -9,11 +9,11 @@ import { Notice } from "@/components/admin/Notice";
 import { Textarea } from "@/components/admin/Textarea";
 import { useToast } from "@/components/admin/Toast";
 import { clockWithZone, formatNames, longDay } from "@/lib/admin/appointments";
-import type { components } from "@/lib/api/schema";
+import type { AppointmentDetail } from "@/lib/api/types/appointments";
 import { localDateKey } from "@/lib/time";
 import { changeStatus, type StatusAction } from "../../actions";
 
-type Detail = components["schemas"]["AppointmentDetail"];
+type Detail = AppointmentDetail;
 
 type Step = {
   label: string;

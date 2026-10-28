@@ -1,10 +1,10 @@
 // What the appointment's Video session block shows (#83). Pure, so
 // node:test covers it. The API decides what Daw Mi may do (allowedActions);
 // this only picks the sentence and the button for it.
-import type { components } from "../api/schema.ts";
+import type { AppointmentDetail } from "../api/types/appointments.ts";
 import { formatClock, zoneAbbreviation, zonedParts } from "../zonedTime.ts";
 
-type Detail = components["schemas"]["AppointmentDetail"];
+type Detail = AppointmentDetail;
 
 export type VideoPanelState =
   | "none" // no VetMiMi room: in person, a pasted link, or not confirmed yet

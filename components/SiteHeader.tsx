@@ -8,7 +8,6 @@ import {
 } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
-import { AA, C } from "@/lib/tokens";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const NAV_LINKS = [
@@ -70,81 +69,28 @@ export default function SiteHeader() {
 
   return (
     <header
-      style={{
-        position: "sticky",
-        top: 0,
-        zIndex: 100,
-        backgroundColor: C.canvas,
-        borderBottom: scrolled
-          ? "1px solid rgba(40,37,45,0.09)"
-          : "1px solid transparent",
-        transition: "border-color 0.3s",
-      }}
+      className={`sticky top-0 z-100 border-b bg-canvas transition-[border-color] duration-300 ease-[ease] ${scrolled ? "border-ink/9" : "border-transparent"}`}
     >
-      <div
-        style={{
-          maxWidth: "1240px",
-          margin: "0 auto",
-          padding: "0 1.5rem",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: "72px",
-        }}
-      >
-        <Link
-          href="/"
-          style={{
-            textDecoration: "none",
-            display: "flex",
-            flexDirection: "column",
-            lineHeight: 1,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "var(--serif)",
-              fontSize: "1.45rem",
-              fontWeight: 400,
-              color: C.ink,
-              letterSpacing: "-0.01em",
-            }}
-          >
+      <div className="mx-auto flex h-18 max-w-[1240px] items-center justify-between px-6">
+        <Link href="/" className="flex flex-col leading-none">
+          <span className="font-display text-[1.45rem] font-normal tracking-[-0.01em] text-ink">
             VetMiMi
           </span>
-          <span
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: "0.6rem",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: AA.label,
-              marginTop: "2px",
-            }}
-          >
+          <span className="mt-0.5 text-[0.6rem] tracking-[0.12em] text-label uppercase">
             {t("brand.tagline")}
           </span>
         </Link>
 
         <nav
           aria-label={t("nav.label")}
-          style={{ alignItems: "center", gap: "1.75rem" }}
-          className="hidden lg:flex"
+          className="hidden items-center gap-7 lg:flex"
         >
           {NAV_LINKS.map(({ key, to }) => (
             <Link
               key={to}
               href={to}
               onClick={() => setMenuOpen(false)}
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: "0.84rem",
-                fontWeight: 500,
-                color: isActive(to) ? AA.action : C.ink,
-                textDecoration: "none",
-                opacity: isActive(to) ? 1 : 0.72,
-                transition: "opacity 0.2s, color 0.2s",
-              }}
+              className={`text-[0.84rem] font-medium transition-[opacity,color] duration-200 ease-[ease] ${isActive(to) ? "text-action" : "text-ink opacity-72"}`}
             >
               {t(`nav.${key}`)}
             </Link>
@@ -152,24 +98,11 @@ export default function SiteHeader() {
           <LanguageSwitcher />
         </nav>
 
-        <div
-          style={{ alignItems: "center", gap: "0.75rem" }}
-          className="flex lg:hidden"
-        >
+        <div className="flex items-center gap-3 lg:hidden">
           <Link
             href="/book"
             onClick={() => setMenuOpen(false)}
-            className="touch-target"
-            style={{
-              backgroundColor: AA.action,
-              color: "#fff",
-              fontFamily: "var(--sans)",
-              fontWeight: 600,
-              fontSize: "0.78rem",
-              padding: "8px 16px",
-              borderRadius: "6px",
-              textDecoration: "none",
-            }}
+            className="touch-target rounded-md bg-action px-4 py-2 text-[0.78rem] font-semibold text-white"
           >
             {t("nav.book")}
           </Link>
@@ -179,16 +112,7 @@ export default function SiteHeader() {
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
             aria-label={t(menuOpen ? "nav.closeMenu" : "nav.openMenu")}
-            style={{
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              padding: "6px",
-              minWidth: 44,
-              minHeight: 44,
-              color: C.ink,
-              lineHeight: 1,
-            }}
+            className="min-h-11 min-w-11 cursor-pointer p-1.5 leading-none text-ink"
           >
             {menuOpen ? "✕" : "☰"}
           </button>
@@ -201,53 +125,26 @@ export default function SiteHeader() {
           id="mobile-navigation"
           aria-label={t("nav.label")}
           onKeyDown={keepFocusInMenu}
-          style={{
-            backgroundColor: C.canvas,
-            borderTop: "1px solid rgba(40,37,45,0.07)",
-            padding: "1.5rem 1.5rem 2rem",
-            maxHeight: "calc(100dvh - 72px)",
-            overflowY: "auto",
-          }}
-          className="lg:hidden"
+          className="max-h-[calc(100dvh-72px)] overflow-y-auto border-t border-ink/7 bg-canvas px-6 pt-6 pb-8 lg:hidden"
         >
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div className="flex flex-col">
             {NAV_LINKS.map(({ key, to }) => (
               <Link
                 key={to}
                 href={to}
                 onClick={() => setMenuOpen(false)}
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: "1rem",
-                  fontWeight: 500,
-                  color: isActive(to) ? AA.action : C.ink,
-                  textDecoration: "none",
-                  padding: "0.85rem 0",
-                  borderBottom: "1px solid rgba(40,37,45,0.06)",
-                }}
+                className={`border-b border-ink/6 py-[0.85rem] text-[1rem] font-medium ${isActive(to) ? "text-action" : "text-ink"}`}
               >
                 {t(`nav.${key}`)}
               </Link>
             ))}
-            <div style={{ padding: "1rem 0 0" }}>
+            <div className="pt-4">
               <LanguageSwitcher />
             </div>
             <Link
               href="/book"
               onClick={() => setMenuOpen(false)}
-              style={{
-                marginTop: "1.25rem",
-                backgroundColor: AA.action,
-                color: "#fff",
-                fontFamily: "var(--sans)",
-                fontWeight: 600,
-                fontSize: "0.95rem",
-                padding: "13px 24px",
-                borderRadius: "8px",
-                textDecoration: "none",
-                textAlign: "center",
-                display: "block",
-              }}
+              className="mt-5 block rounded-lg bg-action px-6 py-[13px] text-center text-[0.95rem] font-semibold text-white"
             >
               {t("nav.bookAppointment")}
             </Link>

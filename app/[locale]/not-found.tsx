@@ -1,168 +1,54 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { AA, C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import { AlmondEye, PetalOutline, GoldMark } from "@/components/art/Shapes";
+
+const LINK = "mx-4 text-[0.9rem] text-label";
 
 export default function NotFound() {
   const t = useTranslations("common");
   return (
-    <div
-      style={{
-        backgroundColor: C.canvas,
-        minHeight: "100dvh",
-        padding: "10rem 2rem",
-        textAlign: "center",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
-      {/* Decorative — top right */}
-      <div
-        style={{
-          position: "absolute",
-          top: "4rem",
-          right: "6vw",
-          opacity: 0.35,
-          pointerEvents: "none",
-        }}
-      >
+    <div className="relative min-h-dvh overflow-hidden bg-canvas px-8 py-40 text-center">
+      <div className="pointer-events-none absolute top-16 right-[6vw] opacity-35">
         <AlmondEye />
       </div>
-
-      {/* Decorative — bottom left */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "5rem",
-          left: "5vw",
-          opacity: 0.28,
-          pointerEvents: "none",
-        }}
-      >
+      <div className="pointer-events-none absolute bottom-20 left-[5vw] opacity-28">
         <PetalOutline />
       </div>
-
-      {/* Decorative — center loosely */}
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          opacity: 0.08,
-          pointerEvents: "none",
-        }}
-      >
+      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-1/2 opacity-8">
         <GoldMark />
       </div>
 
-      {/* Content */}
-      <div style={{ position: "relative", zIndex: 1 }}>
-        {/* 404 label */}
-        <div
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: "0.72rem",
-            color: AA.label,
-            textTransform: "uppercase",
-            letterSpacing: "0.14em",
-            fontWeight: 700,
-            marginBottom: "1rem",
-          }}
-        >
+      <div className="relative z-1">
+        <div className="mb-4 text-[0.72rem] font-bold tracking-[0.14em] text-label uppercase">
           404
         </div>
-
-        {/* Heading */}
-        <h1
-          style={{
-            fontFamily: "var(--serif)",
-            fontSize: "clamp(2.5rem,5vw,4rem)",
-            color: C.ink,
-            maxWidth: 600,
-            margin: "0 auto",
-            lineHeight: 1.15,
-          }}
-        >
+        <h1 className="mx-auto max-w-[600px] text-[clamp(2.5rem,5vw,4rem)] text-ink leading-[1.15]">
           {t("notFound.heading")}
         </h1>
 
         {/* Negative space */}
-        <div style={{ minHeight: "20vh" }} />
+        <div className="min-h-[20vh]" />
 
-        {/* Copy */}
-        <p
-          style={{
-            fontFamily: "var(--sans)",
-            color: `${C.ink}BB`,
-            lineHeight: 1.78,
-            fontSize: "1rem",
-            maxWidth: 440,
-            margin: "0 auto 2.5rem",
-          }}
-        >
+        <p className="mx-auto mb-10 max-w-[440px] text-[1rem] leading-[1.78] text-ink/73">
           {t("notFound.text")}
         </p>
 
-        {/* Primary actions */}
-        <div
-          style={{
-            display: "flex",
-            gap: "1rem",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            marginBottom: "2rem",
-          }}
-        >
+        <div className="mb-8 flex flex-wrap justify-center gap-4">
           <Btn href="/">{t("notFound.home")}</Btn>
           <Btn href="/services" variant="secondary">
             {t("notFound.services")}
           </Btn>
         </div>
 
-        {/* Secondary links */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
-          <Link
-            href="/portfolio"
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: "0.9rem",
-              color: AA.label,
-              textDecoration: "none",
-              margin: "0 1rem",
-            }}
-          >
+        <div className="flex flex-wrap justify-center">
+          <Link href="/portfolio" className={LINK}>
             {t("nav.portfolio")}
           </Link>
-          <Link
-            href="/stories"
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: "0.9rem",
-              color: AA.label,
-              textDecoration: "none",
-              margin: "0 1rem",
-            }}
-          >
+          <Link href="/stories" className={LINK}>
             {t("nav.stories")}
           </Link>
-          <Link
-            href="/contact"
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: "0.9rem",
-              color: AA.label,
-              textDecoration: "none",
-              margin: "0 1rem",
-            }}
-          >
+          <Link href="/contact" className={LINK}>
             {t("nav.contact")}
           </Link>
         </div>

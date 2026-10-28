@@ -12,7 +12,6 @@ import type { Phase } from "@/lib/session/machine";
 import { ControlBar } from "./ControlBar";
 import type { StageText } from "./text";
 import type { TrackToggle } from "./useLocalMedia";
-import "@/styles/session.css";
 
 // Keeps the screen on while the call is up, where the browser allows it.
 function useWakeLock() {
@@ -162,10 +161,15 @@ export function SessionStage({
 
   const showSelf = camera.available && camera.on;
 
+  // Coral is 3.37:1 on the stage, so its focus rings are canvas; the leave
+  // dialog is a white card again, so its rings stay coral.
+  const rings =
+    "[&_:focus-visible]:outline-canvas [&_dialog_:focus-visible]:outline-coral";
+
   return (
     <div
       ref={stage}
-      className="session-stage fixed inset-0 z-[200] flex h-dvh flex-col bg-stage text-canvas"
+      className={`fixed inset-0 z-[200] flex h-dvh flex-col bg-stage text-canvas ${rings}`}
     >
       <div className="flex min-h-14 flex-wrap items-center gap-x-5 gap-y-2 px-4 pt-[max(12px,env(safe-area-inset-top))] md:px-6">
         {corner}

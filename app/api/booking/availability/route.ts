@@ -1,5 +1,6 @@
 import { publicApi } from "@/lib/api/client";
-import { ApiError, problemResponse, unwrap } from "@/lib/api/problem";
+import { ApiError, problemResponse } from "@/lib/api/problem";
+import type { PublicAvailability } from "@/lib/api/types/booking";
 import { addDays } from "@/lib/time";
 
 // Free slots for the booking calendar (ADR-002: the browser asks Next, Next
@@ -29,10 +30,9 @@ export async function GET(request: Request) {
   }
 
   try {
-    const availability = unwrap(
-      await publicApi().GET("/public/availability", {
-        params: { query: { service, from, to } },
-      }),
+    const availability = await publicApi().get<PublicAvailability>(
+      "/public/availability",
+      { service, from, to },
     );
     return Response.json(availability, {
       headers: { "Cache-Control": "no-store" },

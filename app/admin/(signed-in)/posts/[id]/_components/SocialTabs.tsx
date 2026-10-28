@@ -203,7 +203,7 @@ export function SocialTabs({
           onAdd={() => onPickImage(active)}
         />
         <div>
-          <h3 className="mb-3 font-body! text-[0.75rem] leading-normal! font-semibold! tracking-[0.1em] text-muted uppercase">
+          <h3 className="mb-3 font-body text-[0.75rem] leading-normal font-semibold tracking-[0.1em] text-muted uppercase">
             Preview
           </h3>
           <Preview

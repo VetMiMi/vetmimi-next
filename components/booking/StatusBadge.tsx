@@ -1,8 +1,8 @@
 import { useTranslations } from "next-intl";
 import { statuses } from "@/components/admin/status";
-import type { components } from "@/lib/api/schema";
+import type { AppointmentStatus } from "@/lib/api/types/appointments";
 
-type Status = components["schemas"]["AppointmentStatus"];
+type Status = AppointmentStatus;
 
 // The public appointment badge: the admin's tint and icon for each status
 // (brief §3, components/admin/status.ts), with the label in the visitor's

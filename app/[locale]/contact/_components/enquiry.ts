@@ -1,7 +1,6 @@
-import type { components } from "@/lib/api/schema";
+import type { EnquiryType } from "@/lib/api/types/contact";
 
 // The enquiry form's fields and their checks, run on blur and on submit.
-type EnquiryType = components["schemas"]["EnquiryType"];
 export type Field =
   "name" | "email" | "enquiryType" | "subject" | "message" | "privacy";
 export type Form = Record<Exclude<Field, "privacy">, string> & {

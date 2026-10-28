@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { NoAccess } from "@/components/admin/NoAccess";
 import { canUse } from "@/lib/admin/roles";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { unwrap } from "@/lib/api/problem";
+import type { Settings } from "@/lib/api/types/admin";
 import { PublicBookingSwitch } from "./PublicBookingSwitch";
 import { SettingsHeader } from "./SettingsHeader";
 import { SettingsSection } from "./SettingsSection";
@@ -15,8 +15,8 @@ export const metadata: Metadata = { title: "Settings" };
 export default async function SettingsPage() {
   const user = await requireRole("booking_admin");
   if (!user) return <NoAccess />;
-  const settings = await adminCall(async (api) =>
-    unwrap(await api.GET("/admin/settings")),
+  const settings = await adminCall((api) =>
+    api.get<Settings>("/admin/settings"),
   );
   const siteAdmin = canUse(user.roles, ["site_admin"]);
   const timezones = [

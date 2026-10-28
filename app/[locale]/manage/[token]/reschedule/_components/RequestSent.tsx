@@ -22,7 +22,7 @@ export function RequestSent({
       <h2
         ref={title}
         tabIndex={-1}
-        className="flex items-center gap-2 text-[1.5rem] outline-none!"
+        className="flex items-center gap-2 text-[1.5rem] outline-none"
       >
         <CheckCircle aria-hidden="true" size={26} className="text-indigo" />
         {t("title")}

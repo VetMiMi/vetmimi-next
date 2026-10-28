@@ -7,11 +7,9 @@ import { Input } from "@/components/admin/Input";
 import type { Outcome } from "@/lib/admin/mutation";
 import { PRACTICE_TIMEZONE } from "@/lib/admin/posts";
 import { scheduleInstant, scheduleStart } from "@/lib/admin/postWorkflow";
-import type { components } from "@/lib/api/schema";
+import type { Post } from "@/lib/api/types/content";
 import { zoneLabel } from "@/lib/zonedTime";
 import { schedulePost } from "../actions";
-
-type Post = components["schemas"]["Post"];
 
 // When the post goes out, as a date and a time in Sydney whatever the
 // browser's own zone (brief §10: times name the zone).

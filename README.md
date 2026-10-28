@@ -70,8 +70,7 @@ All data, auth, booking rules and video signaling live in the Go API, [VetMiMi/v
 
 ## How it's built
 
-- **The server is the browser's only contact with the API.** All API calls go through `lib/api/client.ts`, which is marked `server-only`. It is typed from the API's OpenAPI contract, and every call has a 10-second timeout. Error details from the API are removed before anything reaches a page. Visitors' IP addresses are forwarded so the API can rate-limit.
-- **The API types always match a released version of the API.** `pnpm api:types` regenerates `lib/api/schema.ts` from `openapi.yaml` at the API version pinned in `package.json` (`v0.4.2`). CI regenerates the file and fails if it differs from the committed copy.
+- **The server is the browser's only contact with the API.** All API calls go through `lib/api/client.ts`, which is marked `server-only`. Its responses are typed by the handwritten types in `lib/api/types/`, and every call has a 10-second timeout. Error details from the API are removed before anything reaches a page. Visitors' IP addresses are forwarded so the API can rate-limit.
 - **Video calls are 1:1 WebRTC** (`lib/session/`):
   - The browser gets a 5-minute ticket from the server, then opens a WebSocket to the API for signaling.
   - Peers connect using the standard WebRTC "perfect negotiation" pattern.
@@ -90,7 +89,7 @@ All data, auth, booking rules and video signaling live in the Go API, [VetMiMi/v
 | Framework  | Next.js 16 (App Router, Server Functions, `proxy.ts`), React 19, TypeScript 5                                        |
 | Styling    | Tailwind CSS 4, CSS variable design tokens, Phosphor icons, `next/font` (Fraunces, Manrope, Noto Sans/Serif Myanmar) |
 | i18n       | next-intl 4: English at `/`, Burmese at `/my`, 12 message namespaces                                                 |
-| API client | openapi-fetch + openapi-typescript, generated from the API's OpenAPI contract                                        |
+| API client | A small `fetch` wrapper with handwritten types for the API's JSON                                                    |
 | Real-time  | WebRTC (`RTCPeerConnection`), WebSocket signaling                                                                    |
 | Content    | react-markdown                                                                                                       |
 | Testing    | `node:test` unit tests, Playwright, axe-core                                                                         |
@@ -137,7 +136,6 @@ All variables are server-only (there is no `NEXT_PUBLIC_`). Preview values live 
 | `pnpm gate`       | Runs lint, format check, type check, i18n check, unit tests and production build, one machine-wide run at a time |
 | `pnpm test:unit`  | Unit tests in `lib/**/*.test.ts` (Node's built-in test runner)                                                   |
 | `pnpm i18n:check` | Checks English/Burmese key parity and page metadata                                                              |
-| `pnpm api:types`  | Regenerates `lib/api/schema.ts` from the pinned API version                                                      |
 | `pnpm e2e`        | Playwright and axe, run against a site that is already running                                                   |
 
 ## Testing

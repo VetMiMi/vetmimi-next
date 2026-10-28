@@ -2,7 +2,15 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { ImperfectHalo } from "@/components/art/Shapes";
-import { C } from "@/lib/tokens";
+
+// Satori draws these images and cannot read CSS variables, so the four
+// colours they use are spelled out (the same values as app/globals.css).
+const C = {
+  canvas: "#fff7ef",
+  ink: "#28252d",
+  indigo: "#494c6d",
+  red: "#c04d46",
+};
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

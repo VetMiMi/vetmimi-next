@@ -69,7 +69,7 @@ export function MonthCalendar({
       >
         {[...days].map(([date, posts]) => (
           <li key={date}>
-            <h3 className="mb-3 font-body! text-[0.75rem] leading-normal! font-semibold! tracking-[0.1em] text-muted uppercase">
+            <h3 className="mb-3 font-body text-[0.75rem] leading-normal font-semibold tracking-[0.1em] text-muted uppercase">
               {longDay(date)}
               {date === today && " · Today"}
             </h3>

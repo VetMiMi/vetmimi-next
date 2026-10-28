@@ -3,12 +3,10 @@
 // never by adding hours. Calendar dates are "YYYY-MM-DD" keys and months
 // "YYYY-MM"; their arithmetic runs on Date.UTC, so the visitor's own zone
 // can never move a day (#24).
-import type { components } from "./api/schema";
+import type { Slot } from "./api/types/shared";
 import { zonedParts } from "./zonedTime.ts";
 
 export { zoneAbbreviation } from "./zonedTime.ts";
-
-type Slot = components["schemas"]["Slot"];
 
 // The practice-calendar date an instant falls on.
 export function localDateKey(instant: string | Date, timeZone: string) {

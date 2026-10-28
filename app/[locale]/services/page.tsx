@@ -83,7 +83,7 @@ export default async function Services({
                   <p className={eyebrow}>
                     {t(`items.${service.slug}.audience`)}
                   </p>
-                  <h2 className="mb-[18px] text-[clamp(1.8rem,2.8vw,2.5rem)] tracking-[-0.018em] [&:not(:lang(my))]:leading-[1.16]!">
+                  <h2 className="mb-[18px] text-[clamp(1.8rem,2.8vw,2.5rem)] tracking-[-0.018em] leading-[1.16]">
                     {name}
                   </h2>
                   <p className="max-w-[44ch] text-[1.04rem] leading-[1.75] text-muted">

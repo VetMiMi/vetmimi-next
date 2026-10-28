@@ -16,7 +16,7 @@ export function HeroSection() {
 
         {/* `!` beats the global heading weight and line height; the :lang
             guard leaves Burmese on its own taller line height. */}
-        <h1 className="mb-5 max-w-[680px] text-[clamp(3rem,6vw,5.5rem)] font-light! tracking-[-0.01em] text-[#FEFCF8] [&:not(:lang(my))]:leading-[1.04]!">
+        <h1 className="mb-5 max-w-[680px] text-[clamp(3rem,6vw,5.5rem)] font-light tracking-[-0.01em] text-[#FEFCF8] leading-[1.04]">
           {t("hero.title")}
         </h1>
 

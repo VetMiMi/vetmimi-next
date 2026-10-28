@@ -6,7 +6,7 @@ type Variant = "primary" | "secondary" | "quiet" | "danger";
 type CommonProps = {
   children: React.ReactNode;
   variant?: Variant;
-  // "page" is the taller page-level action (48px, as .ed-button).
+  // "page" is the taller page-level action (48px, as on the public pages).
   size?: "control" | "page";
   icon?: React.ReactNode;
   className?: string;

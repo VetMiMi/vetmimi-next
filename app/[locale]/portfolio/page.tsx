@@ -63,7 +63,7 @@ export default async function Portfolio({
               <p className={`${ed.text} font-script text-[1.1rem]`}>
                 {t(`highlights.items.${item.id}.when`)}
               </p>
-              <h3 className="text-[1.35rem] [&:not(:lang(my))]:leading-[1.25]!">
+              <h3 className="text-[1.35rem] leading-[1.25]">
                 {t(`highlights.items.${item.id}.title`)}
               </h3>
               <p

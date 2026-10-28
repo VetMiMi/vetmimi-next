@@ -23,7 +23,7 @@ export default function NotFound() {
         <div className="mb-4 text-[0.72rem] font-bold tracking-[0.14em] text-label uppercase">
           404
         </div>
-        <h1 className="mx-auto max-w-[600px] text-[clamp(2.5rem,5vw,4rem)] text-ink [&:not(:lang(my))]:leading-[1.15]!">
+        <h1 className="mx-auto max-w-[600px] text-[clamp(2.5rem,5vw,4rem)] text-ink leading-[1.15]">
           {t("notFound.heading")}
         </h1>
 

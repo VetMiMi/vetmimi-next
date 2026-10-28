@@ -48,7 +48,7 @@ export function StoriesSection({ stories }: { stories: StoryItem[] }) {
                   </div>
                   {/* `!` beats the global heading line height; the :lang
                       guard leaves Burmese on its own taller one. */}
-                  <h3 className="mb-3 text-[1.35rem] text-ink [&:not(:lang(my))]:leading-[1.3]!">
+                  <h3 className="mb-3 text-[1.35rem] text-ink leading-[1.3]">
                     {title}
                   </h3>
                   <p className="mb-5 font-body text-[0.88rem] leading-[1.75] text-ink/68">

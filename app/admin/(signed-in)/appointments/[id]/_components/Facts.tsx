@@ -1,5 +1,5 @@
-// A label/value list in the .contact-details pattern: the `dt` style from
-// brief §4 above each value.
+// A label/value list, as on the contact page: the `dt` style from brief §4
+// above each value.
 export function Facts({
   items,
 }: {

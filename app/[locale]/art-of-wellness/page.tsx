@@ -22,7 +22,7 @@ const PROGRAM_URL =
 const frame = "rounded-card bg-[#eee4e2] p-3";
 const frameImage = "block h-auto w-full rounded-xl";
 const grid3 = "grid grid-cols-3 gap-[clamp(28px,4vw,48px)] max-md:grid-cols-1";
-const h3 = "text-[1.35rem] [&:not(:lang(my))]:leading-[1.25]!";
+const h3 = "text-[1.35rem] leading-[1.25]";
 const sectionTop = "mb-8 flex flex-wrap items-baseline justify-between gap-5";
 
 // Text for these lists lives in messages/<locale>/artOfWellness.json, keyed

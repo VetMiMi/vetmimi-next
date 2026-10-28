@@ -18,10 +18,9 @@ import {
   type Form,
 } from "./enquiry";
 
-// `outline-none!` because the global coral :focus-visible ring in
-// globals.css sits outside any layer; the rose border and halo show focus.
+// The rose border and halo show focus, so the global coral ring is turned off.
 const input =
-  "w-full rounded-(--radius-control) border border-ink/16 bg-white px-4 py-[13px] font-body text-[1rem] text-ink outline-none! transition-[border-color,box-shadow] duration-150 placeholder:text-caption hover:border-ink/28 focus:border-rose focus:shadow-focus-input";
+  "w-full rounded-(--radius-control) border border-ink/16 bg-white px-4 py-[13px] font-body text-[1rem] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-caption hover:border-ink/28 focus:border-rose focus:shadow-focus-input";
 const label = "mb-2 block text-[0.88rem] font-medium";
 const row = "grid grid-cols-2 gap-[18px] max-[640px]:grid-cols-1";
 
@@ -119,7 +118,7 @@ export function ContactForm({
         <div
           ref={summary}
           tabIndex={-1}
-          className="mb-6 rounded-(--radius-notice) border border-red/27 bg-red/7 px-6 py-5 text-[0.92rem] text-red outline-none!"
+          className="mb-6 rounded-(--radius-notice) border border-red/27 bg-red/7 px-6 py-5 text-[0.92rem] text-red outline-none"
           role="alert"
         >
           <p className="leading-[1.65]">

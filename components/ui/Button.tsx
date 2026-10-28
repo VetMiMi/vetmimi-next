@@ -8,7 +8,6 @@ type ButtonProps = {
   onClick?: () => void;
   type?: "button" | "submit";
   disabled?: boolean;
-  style?: React.CSSProperties;
   className?: string;
 };
 
@@ -46,7 +45,6 @@ export function Btn({
   onClick,
   type = "button",
   disabled,
-  style,
   className,
 }: ButtonProps) {
   const classes = [variants[variant], disabled && "opacity-50", className]
@@ -54,7 +52,7 @@ export function Btn({
     .join(" ");
   if (href) {
     return (
-      <SmartLink href={href} style={style} className={classes}>
+      <SmartLink href={href} className={classes}>
         {children}
       </SmartLink>
     );
@@ -64,7 +62,6 @@ export function Btn({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      style={style}
       className={classes}
     >
       {children}

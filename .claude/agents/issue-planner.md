@@ -47,7 +47,7 @@ consistent.
   shapes, and every problem `code` the UI must handle, with the message each
   one shows. If a route is missing from the API's `main`, say so.
 - **Routes and files** — actual paths under `app/`, `components/`,
-  `lib/api/`, `messages/`, `styles/`, and the route handlers under
+  `lib/api/`, `messages/`, and the route handlers under
   `app/api/` that forward to the API.
 - **States** — every state the screen can be in (loading, empty, error,
   success, permission denied, stale, offline where relevant), with the

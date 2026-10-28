@@ -59,7 +59,7 @@ export function SlotPicker({
       role={multiple ? "group" : "radiogroup"}
       aria-label={label}
       tabIndex={-1}
-      className="mb-2 flex flex-wrap gap-[0.6rem] outline-none!"
+      className="mb-2 flex flex-wrap gap-[0.6rem] outline-none"
     >
       {slots.map((slot, i) => {
         const heading = group?.(slot.startsAt);

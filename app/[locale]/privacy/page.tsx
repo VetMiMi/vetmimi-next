@@ -48,7 +48,7 @@ export default async function Privacy({
             >
               {t("links.home")}
             </Link>
-            <h1 className="mb-8 text-[clamp(2rem,4vw,3rem)] text-ink [&:not(:lang(my))]:leading-[1.15]!">
+            <h1 className="mb-8 text-[clamp(2rem,4vw,3rem)] text-ink leading-[1.15]">
               {t("title")}
             </h1>
           </div>
@@ -71,7 +71,7 @@ export default async function Privacy({
 
         {SECTIONS.map((id) => (
           <div key={id} className="mb-10">
-            <h2 className="mb-3 text-[clamp(1.15rem,2vw,1.35rem)] font-semibold! text-ink">
+            <h2 className="mb-3 text-[clamp(1.15rem,2vw,1.35rem)] font-semibold text-ink">
               {t(`sections.${id}.heading`)}
             </h2>
             <p className="text-[1rem] leading-[1.78] text-ink/73">

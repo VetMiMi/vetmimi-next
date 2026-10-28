@@ -50,7 +50,7 @@ export function ResultState({ receipt }: { receipt: Receipt }) {
         <h1
           ref={heading}
           tabIndex={-1}
-          className="mb-6 text-[clamp(2rem,4vw,2.8rem)] text-ink outline-none! not-[:lang(my)]:leading-[1.2]!"
+          className="mb-6 text-[clamp(2rem,4vw,2.8rem)] text-ink outline-none leading-[1.2]"
         >
           {t(`result.${status}.title`)}
         </h1>

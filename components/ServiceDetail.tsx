@@ -24,7 +24,7 @@ export const text = "text-[1rem] leading-[1.75] text-muted";
 export const intro = "max-w-[56ch] text-[1.08rem] leading-[1.75] text-muted";
 // Burmese keeps the taller heading lines from globals.css.
 export const heading =
-  "mb-5 text-[clamp(1.8rem,2.8vw,2.5rem)] tracking-[-0.018em] [&:not(:lang(my))]:leading-[1.16]!";
+  "mb-5 text-[clamp(1.8rem,2.8vw,2.5rem)] tracking-[-0.018em] leading-[1.16]";
 export const button =
   "inline-flex min-h-12 items-center justify-center gap-[18px] rounded-(--radius-control) bg-action px-[22px] py-3.5 text-center text-[0.9rem] font-semibold text-white transition-colors duration-200 hover:bg-action-hover";
 export const textLink =
@@ -137,7 +137,7 @@ export default function ServiceDetail({ slug }: { slug: string }) {
               <span className="mb-[22px] block text-[0.85rem] font-semibold text-(--accent) max-md:mb-3">
                 0{index + 1}
               </span>
-              <h3 className="mb-3.5 text-[1.45rem] [&:not(:lang(my))]:leading-[1.25]!">
+              <h3 className="mb-3.5 text-[1.45rem] leading-[1.25]">
                 {step.title}
               </h3>
               <p className={text}>{step.text}</p>

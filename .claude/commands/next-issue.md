@@ -16,7 +16,7 @@ that force serialisation:
 
 - `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.github/`, `.gitignore`
 - `package.json` and `pnpm-lock.yaml`
-- `lib/api/` (client and handwritten types) and `lib/tokens.ts`
+- `lib/api/` (client and handwritten types)
 - `app/globals.css`, `app/fonts.ts`, `proxy.ts`, `next.config.ts`, `i18n/`
 - the same `messages/<locale>/<area>.json` file in both tracks
 - `components/admin/` primitives (Button, Input, Dialog, …) while they are

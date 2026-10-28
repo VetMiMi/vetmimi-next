@@ -162,10 +162,9 @@ export function SessionStage({
   const showSelf = camera.available && camera.on;
 
   // Coral is 3.37:1 on the stage, so its focus rings are canvas; the leave
-  // dialog is a white card again, so its rings stay coral. Important, to beat
-  // the unlayered global ring in globals.css.
+  // dialog is a white card again, so its rings stay coral.
   const rings =
-    "[&_:focus-visible]:outline-canvas! [&_dialog_:focus-visible]:outline-coral!";
+    "[&_:focus-visible]:outline-canvas [&_dialog_:focus-visible]:outline-coral";
 
   return (
     <div

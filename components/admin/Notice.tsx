@@ -6,7 +6,7 @@ import {
 
 type Tone = "error" | "info" | "success";
 
-// The .contact-status box (brief §7 Errors): an outcome that must stay on
+// The status box (brief §7 Errors): an outcome that must stay on
 // the page, such as what state remains active after a failure, in a tint of
 // the tone's colour. An error is announced at once (`role="alert"`); news
 // such as "You have signed out." politely (`role="status"`). It takes focus

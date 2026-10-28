@@ -6,7 +6,7 @@ type TextareaProps = FieldProps &
     keyof FieldProps | "id" | "className" | "children"
   >;
 
-// textarea.contact-input: taller, resizable only downwards, looser lines.
+// The input box as a textarea: taller, resizable only downwards, looser lines.
 export function Textarea({
   label,
   name,

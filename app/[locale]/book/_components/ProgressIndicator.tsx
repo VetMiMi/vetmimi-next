@@ -1,7 +1,4 @@
 import { useTranslations } from "next-intl";
-import { C } from "@/lib/tokens";
-
-// ── Progress indicator ──────────────────────────────────────────────────────
 
 export function ProgressIndicator({ step }: { step: number }) {
   const t = useTranslations("book.progress");
@@ -13,62 +10,30 @@ export function ProgressIndicator({ step }: { step: number }) {
   ];
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-        gap: "0.5rem",
-        marginBottom: "3rem",
-      }}
-    >
+    <div className="mb-12 grid grid-cols-4 gap-2">
       {steps.map((s) => {
         const isActive = s.n === step;
         const isComplete = s.n < step;
-
-        const circleStyle: React.CSSProperties = {
-          width: 36,
-          height: 36,
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "0.875rem",
-          fontFamily: "var(--sans)",
-          fontWeight: 600,
-          flexShrink: 0,
-          backgroundColor: isActive ? C.indigo : isComplete ? C.rose : C.paper,
-          color: isActive || isComplete ? "#fff" : C.ink,
-          border: isActive || isComplete ? "none" : `1px solid ${C.ink}33`,
-          transition: "background-color 0.2s",
-        };
+        const circle = isActive
+          ? "bg-indigo text-white"
+          : isComplete
+            ? "bg-rose text-white"
+            : "border border-ink/20 bg-paper text-ink";
+        const label = isActive
+          ? "font-semibold text-indigo"
+          : isComplete
+            ? "text-rose"
+            : "text-ink/40";
 
         return (
-          <div
-            key={s.n}
-            style={{ display: "flex", justifyContent: "center", minWidth: 0 }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: "0.4rem",
-              }}
-            >
-              <div style={circleStyle}>{isComplete ? "✓" : s.n}</div>
-              <span
-                style={{
-                  fontSize: "0.72rem",
-                  fontFamily: "var(--sans)",
-                  color: isActive
-                    ? C.indigo
-                    : isComplete
-                      ? C.rose
-                      : `${C.ink}66`,
-                  fontWeight: isActive ? 600 : 400,
-                  textAlign: "center",
-                }}
+          <div key={s.n} className="flex min-w-0 justify-center">
+            <div className="flex flex-col items-center gap-[0.4rem]">
+              <div
+                className={`flex size-9 shrink-0 items-center justify-center rounded-full text-[0.875rem] font-semibold transition-[background-color] duration-200 ease-[ease] ${circle}`}
               >
+                {isComplete ? "✓" : s.n}
+              </div>
+              <span className={`text-center text-[0.72rem] ${label}`}>
                 {s.label}
               </span>
             </div>

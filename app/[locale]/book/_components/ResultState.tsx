@@ -2,7 +2,6 @@ import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { CheckCircle, HourglassMedium } from "@phosphor-icons/react";
 import { Link } from "@/i18n/navigation";
-import { AA, C } from "@/lib/tokens";
 import { Btn } from "@/components/ui/Button";
 import { PetalOutline } from "@/components/art/Shapes";
 import { usePracticeFormat } from "@/components/booking/practiceFormat";
@@ -34,189 +33,73 @@ export function ResultState({ receipt }: { receipt: Receipt }) {
   ];
 
   return (
-    <div
-      style={{
-        backgroundColor: C.canvas,
-        minHeight: "100dvh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "4rem 2rem",
-      }}
-    >
-      <div style={{ maxWidth: 560, textAlign: "center" }}>
-        <PetalOutline size={56} style={{ margin: "0 auto 1.5rem" }} />
+    <div className="flex min-h-dvh items-center justify-center bg-canvas px-8 py-16">
+      <div className="max-w-[560px] text-center">
+        <div className="mx-auto mb-6 w-14">
+          <PetalOutline size={56} />
+        </div>
         <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.4rem",
-            padding: "0.4rem 1.25rem",
-            backgroundColor:
-              status === "pending" ? `${C.ochre}30` : `${C.indigo}1F`,
-            color: status === "pending" ? AA.goldText : C.indigo,
-            borderRadius: 20,
-            fontFamily: "var(--sans)",
-            fontSize: "0.82rem",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            marginBottom: "2rem",
-          }}
+          className={`mb-8 inline-flex items-center gap-[0.4rem] rounded-pill px-5 py-[0.4rem] text-[0.82rem] font-bold tracking-[0.08em] uppercase ${status === "pending" ? "bg-ochre/19 text-gold-text" : "bg-indigo/12 text-indigo"}`}
         >
           <Icon size={16} weight="bold" aria-hidden />
           {t(`result.${status}.badge`)}
         </div>
 
+        {/* The line height needs `!` to beat the global h1 rule; Burmese keeps
+            its own taller one. */}
         <h1
           ref={heading}
           tabIndex={-1}
-          style={{
-            outline: "none",
-            fontFamily: "var(--serif)",
-            fontSize: "clamp(2rem,4vw,2.8rem)",
-            color: C.ink,
-            marginBottom: "1.5rem",
-            lineHeight: 1.2,
-          }}
+          className="mb-6 text-[clamp(2rem,4vw,2.8rem)] text-ink outline-none! not-[:lang(my)]:leading-[1.2]!"
         >
           {t(`result.${status}.title`)}
         </h1>
 
-        <p
-          style={{
-            fontFamily: "var(--sans)",
-            color: `${C.ink}BB`,
-            lineHeight: 1.78,
-            fontSize: "1rem",
-            marginBottom: "2rem",
-          }}
-        >
+        <p className="mb-8 text-[1rem] leading-[1.78] text-ink/73">
           {t(`result.${status}.text`)}
         </p>
 
-        <div
-          style={{
-            backgroundColor: "#fff",
-            border: `1px solid ${C.ink}18`,
-            borderRadius: 10,
-            padding: "1.25rem 1.5rem",
-            textAlign: "left",
-            marginBottom: "1.5rem",
-            fontFamily: "var(--sans)",
-            lineHeight: 1.7,
-            overflowWrap: "anywhere",
-          }}
-        >
-          <div
-            style={{ fontWeight: 700, color: C.ink, marginBottom: "0.4rem" }}
-          >
+        <div className="mb-6 rounded-control border border-ink/9 bg-white px-6 py-5 text-left leading-[1.7] wrap-anywhere">
+          <div className="mb-[0.4rem] font-bold text-ink">
             {t("result.reference", { reference: receipt.reference })}
           </div>
           {summary.map((line) => (
-            <div key={line} style={{ color: `${C.ink}CC` }}>
+            <div key={line} className="text-ink/80">
               {line}
             </div>
           ))}
         </div>
 
-        <div
-          style={{
-            backgroundColor: C.paper,
-            borderRadius: 10,
-            padding: "1.75rem 2rem",
-            textAlign: "left",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <div
-            style={{
-              fontFamily: "var(--sans)",
-              fontWeight: 700,
-              color: C.ink,
-              marginBottom: "1rem",
-              fontSize: "0.9rem",
-            }}
-          >
+        <div className="mb-6 rounded-control bg-paper px-8 py-7 text-left">
+          <div className="mb-4 text-[0.9rem] font-bold text-ink">
             {t("result.next.title")}
           </div>
           {nextSteps.map((step, i) => (
             <div
               key={step}
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                gap: "1rem",
-                marginBottom: i < 2 ? "0.875rem" : 0,
-              }}
+              className="flex items-start gap-4 not-last:mb-[0.875rem]"
             >
-              <div
-                style={{
-                  width: 26,
-                  height: 26,
-                  borderRadius: "50%",
-                  backgroundColor: C.indigo,
-                  color: "#fff",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "0.75rem",
-                  fontFamily: "var(--sans)",
-                  fontWeight: 700,
-                  flexShrink: 0,
-                }}
-              >
+              <div className="flex size-[26px] shrink-0 items-center justify-center rounded-full bg-indigo text-[0.75rem] font-bold text-white">
                 {i + 1}
               </div>
-              <span
-                style={{
-                  fontFamily: "var(--sans)",
-                  color: `${C.ink}CC`,
-                  lineHeight: 1.6,
-                  paddingTop: "0.15rem",
-                }}
-              >
+              <span className="pt-[0.15rem] leading-[1.6] text-ink/80">
                 {step}
               </span>
             </div>
           ))}
         </div>
 
-        <p
-          style={{
-            fontFamily: "var(--sans)",
-            fontSize: "0.82rem",
-            color: AA.muted,
-            lineHeight: 1.6,
-            textAlign: "left",
-            marginBottom: "2.5rem",
-          }}
-        >
+        <p className="mb-10 text-left text-[0.82rem] leading-[1.6] text-muted">
           {t.rich("boundary", {
             strong: (chunks) => <strong>{chunks}</strong>,
           })}
         </p>
 
-        <div
-          style={{
-            display: "flex",
-            gap: "1rem",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
+        <div className="flex flex-wrap justify-center gap-4">
           <Btn href="/">{t("result.home")}</Btn>
           <Link
             href="/contact"
-            style={{
-              fontFamily: "var(--sans)",
-              color: C.rose,
-              fontSize: "0.9rem",
-              textDecoration: "none",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.3rem",
-            }}
+            className="inline-flex items-center gap-[0.3rem] text-[0.9rem] text-rose no-underline"
           >
             {t("result.question")}
           </Link>

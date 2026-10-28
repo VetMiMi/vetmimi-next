@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { AA, C } from "@/lib/tokens";
 import { addDays, monthGrid, weekdayIndex } from "@/lib/time";
 
 export type CalendarLabels = {
@@ -85,24 +84,8 @@ export function CalendarMonth({
   for (let i = 0; i < cells.length; i += 7) weeks.push(cells.slice(i, i + 7));
 
   return (
-    <div
-      style={{
-        backgroundColor: "#fff",
-        border: `1px solid ${C.ink}18`,
-        borderRadius: 10,
-        padding: "1.5rem",
-        marginBottom: "1.5rem",
-        maxWidth: 420,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "1.25rem",
-        }}
-      >
+    <div className="mb-6 max-w-[420px] rounded-control border border-ink/9 bg-white p-6">
+      <div className="mb-5 flex items-center justify-between">
         <MonthButton
           label={labels.previousMonth}
           disabled={!canPrevious}
@@ -113,7 +96,7 @@ export function CalendarMonth({
         <span
           id={`calendar-${month}`}
           aria-live="polite"
-          style={{ fontFamily: "var(--sans)", fontWeight: 600, color: C.ink }}
+          className="font-semibold text-ink"
         >
           {labels.title}
         </span>
@@ -131,27 +114,19 @@ export function CalendarMonth({
         aria-labelledby={`calendar-${month}`}
         aria-busy={busy || undefined}
       >
-        <div role="row" style={rowStyle}>
+        <div role="row" className={weekRow}>
           {labels.weekdaysShort.map((d) => (
             <div
               key={d}
               role="columnheader"
-              style={{
-                textAlign: "center",
-                fontSize: "0.72rem",
-                fontFamily: "var(--sans)",
-                color: AA.muted,
-                fontWeight: 600,
-                padding: "0.25rem 0",
-                marginBottom: "0.5rem",
-              }}
+              className="mb-2 py-1 text-center text-[0.72rem] font-semibold text-muted"
             >
               {d}
             </div>
           ))}
         </div>
         {weeks.map((week, i) => (
-          <div key={i} role="row" style={{ ...rowStyle, marginBottom: 2 }}>
+          <div key={i} role="row" className={`mb-[2px] ${weekRow}`}>
             {week.map((date, j) =>
               date ? (
                 <div key={date} role="gridcell">
@@ -185,11 +160,7 @@ export function CalendarMonth({
   );
 }
 
-const rowStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(7,1fr)",
-  gap: "2px",
-} as const;
+const weekRow = "grid grid-cols-[repeat(7,1fr)] gap-[2px]";
 
 function MonthButton({
   label,
@@ -208,15 +179,7 @@ function MonthButton({
       aria-label={label}
       disabled={disabled}
       onClick={onClick}
-      style={{
-        background: "none",
-        border: "none",
-        cursor: disabled ? "default" : "pointer",
-        fontSize: "1.1rem",
-        color: disabled ? `${C.ink}33` : C.ink,
-        minWidth: 44,
-        minHeight: 44,
-      }}
+      className={`min-h-11 min-w-11 text-[1.1rem] ${disabled ? "cursor-default text-ink/20" : "cursor-pointer text-ink"}`}
     >
       <span aria-hidden>{children}</span>
     </button>
@@ -245,6 +208,13 @@ function DayButton({
   onKeyDown: (e: KeyboardEvent) => void;
 }) {
   const available = count > 0;
+  const tone = selected
+    ? "border-indigo bg-indigo text-white"
+    : available
+      ? "border-transparent bg-coral/9 text-coral"
+      : "border-transparent text-ink/20";
+  const cursor = available ? "cursor-pointer" : "cursor-default";
+  const weight = available || today ? "font-semibold" : "font-normal";
   return (
     <button
       ref={buttonRef}
@@ -256,26 +226,7 @@ function DayButton({
       aria-current={today ? "date" : undefined}
       onClick={available ? onClick : undefined}
       onKeyDown={onKeyDown}
-      className="booking-day"
-      style={{
-        width: "100%",
-        aspectRatio: "1",
-        border: selected ? `2px solid ${C.indigo}` : "2px solid transparent",
-        borderRadius: 6,
-        cursor: available ? "pointer" : "default",
-        backgroundColor: selected
-          ? C.indigo
-          : available
-            ? `${C.coral}18`
-            : "transparent",
-        color: selected ? "#fff" : available ? C.coral : `${C.ink}33`,
-        fontFamily: "var(--sans)",
-        fontSize: "0.82rem",
-        fontWeight: available || today ? 600 : 400,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      className={`flex aspect-square w-full items-center justify-center rounded-cell border-2 text-[0.82rem] transition-[background-color,color,border-color] ease-[ease] ${cursor} ${weight} ${tone}`}
     >
       {Number(date.slice(8))}
     </button>

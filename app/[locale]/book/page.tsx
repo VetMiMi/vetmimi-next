@@ -7,7 +7,6 @@ import { ApiError } from "@/lib/api/problem";
 import type { PublicBookableServiceList } from "@/lib/api/types/booking";
 import { issueFormToken } from "@/lib/spam";
 import { BookingFlow } from "./_components/BookingFlow";
-import "@/styles/booking.css";
 
 export async function generateMetadata({
   params,

@@ -1,6 +1,5 @@
 "use client";
 import { Fragment, useRef, type KeyboardEvent, type Ref } from "react";
-import { AA, C } from "@/lib/tokens";
 
 type Slot = { startsAt: string; endsAt: string };
 
@@ -60,13 +59,7 @@ export function SlotPicker({
       role={multiple ? "group" : "radiogroup"}
       aria-label={label}
       tabIndex={-1}
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "0.6rem",
-        marginBottom: "0.5rem",
-        outline: "none",
-      }}
+      className="mb-2 flex flex-wrap gap-[0.6rem] outline-none!"
     >
       {slots.map((slot, i) => {
         const heading = group?.(slot.startsAt);
@@ -77,20 +70,18 @@ export function SlotPicker({
           ? chosen.includes(slot.startsAt)
           : slot.startsAt === selected;
         const full = multiple && !checked && chosen.length >= max;
+        const tone = checked
+          ? "cursor-pointer border-indigo bg-indigo text-white"
+          : full
+            ? "cursor-not-allowed border-ink/20 bg-white text-ink/40"
+            : "cursor-pointer border-ink/20 bg-white text-ink";
         return (
           <Fragment key={slot.startsAt}>
             {newGroup && (
               // Visual only: each time's own name already says when it is.
               <p
                 aria-hidden="true"
-                style={{
-                  flexBasis: "100%",
-                  margin: i === 0 ? 0 : "0.5rem 0 0",
-                  fontFamily: "var(--sans)",
-                  fontSize: "0.8rem",
-                  fontWeight: 600,
-                  color: AA.muted,
-                }}
+                className="basis-full text-[0.8rem] font-semibold text-muted not-first:mt-2"
               >
                 {heading}
               </p>
@@ -112,18 +103,7 @@ export function SlotPicker({
                 if (!full) onSelect(slot);
               }}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className="booking-slot"
-              style={{
-                padding: "0.6rem 1.25rem",
-                minHeight: 44,
-                border: `1px solid ${checked ? C.indigo : `${C.ink}33`}`,
-                borderRadius: 6,
-                cursor: full ? "not-allowed" : "pointer",
-                backgroundColor: checked ? C.indigo : "#fff",
-                color: checked ? "#fff" : full ? `${C.ink}66` : C.ink,
-                fontFamily: "var(--sans)",
-                fontSize: "0.9rem",
-              }}
+              className={`min-h-11 rounded-cell border px-5 py-[0.6rem] text-[0.9rem] transition-[background-color,color,border-color] ease-[ease] ${tone}`}
             >
               {time(slot.startsAt)}
             </button>

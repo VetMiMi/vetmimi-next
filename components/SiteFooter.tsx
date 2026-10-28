@@ -1,9 +1,12 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { PRACTICE } from "@/lib/seo";
-import { C } from "@/lib/tokens";
 import { PetalOutline, WaveDivider } from "@/components/art/Shapes";
 import { ExternalLink } from "@/components/ExternalLink";
+
+// A 44px tall row for each link (brief §10); the heading's margin
+// shrinks by the same amount, so the first link stays in place.
+const LINK = "flex min-h-11 items-center text-[0.86rem] text-canvas/90";
 
 function FooterCol({
   title,
@@ -14,47 +17,27 @@ function FooterCol({
 }) {
   return (
     <nav aria-label={title}>
-      <div
-        style={{
-          fontFamily: "var(--sans)",
-          fontSize: "0.65rem",
-          letterSpacing: "0.13em",
-          textTransform: "uppercase",
-          color: "rgba(255,247,239,0.85)",
-          marginBottom: "0.55rem",
-        }}
-      >
+      <div className="mb-[0.55rem] text-[0.65rem] tracking-[0.13em] text-canvas/85 uppercase">
         {title}
       </div>
       {links.map(([label, to]) => {
-        // A 44px tall row for each link (brief §10); the heading's margin
-        // shrinks by the same amount, so the first link stays in place.
-        const style = {
-          display: "flex",
-          alignItems: "center",
-          minHeight: "44px",
-          fontFamily: "var(--sans)",
-          fontSize: "0.86rem",
-          color: "rgba(255,247,239,0.9)",
-          textDecoration: "none",
-        };
         // Site pages keep the visitor's language; Facebook and email do not.
         if (to.startsWith("/")) {
           return (
-            <Link key={label} href={to} style={style}>
+            <Link key={label} href={to} className={LINK}>
               {label}
             </Link>
           );
         }
         if (to.startsWith("http")) {
           return (
-            <ExternalLink key={label} href={to} style={style}>
+            <ExternalLink key={label} href={to} className={LINK}>
               {label}
             </ExternalLink>
           );
         }
         return (
-          <a key={label} href={to} style={style}>
+          <a key={label} href={to} className={LINK}>
             {label}
           </a>
         );
@@ -67,83 +50,26 @@ export default function SiteFooter() {
   const t = useTranslations("common");
   return (
     <footer>
-      <WaveDivider from={C.paper} to={C.indigo} variant="dramatic" />
-      <div
-        style={{
-          backgroundColor: C.indigo,
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <PetalOutline
-          color={C.coral}
-          size={110}
-          style={{
-            position: "absolute",
-            bottom: "1.5rem",
-            right: "1.5rem",
-            opacity: 0.35,
-          }}
-        />
+      <WaveDivider from="var(--paper)" to="var(--indigo)" variant="dramatic" />
+      <div className="relative overflow-hidden bg-indigo">
+        <div className="absolute right-6 bottom-6 opacity-35">
+          <PetalOutline color="var(--coral)" size={110} />
+        </div>
         <div
           aria-hidden
-          style={{
-            position: "absolute",
-            top: "2.5rem",
-            left: "2rem",
-            width: "40px",
-            height: "58px",
-            borderRadius: "20px 20px 35% 35%",
-            border: "1px solid rgba(255,247,239,0.12)",
-            opacity: 0.5,
-          }}
+          className="absolute top-10 left-8 h-[58px] w-10 rounded-[20px_20px_35%_35%] border border-canvas/12 opacity-50"
         />
 
-        <div
-          style={{
-            maxWidth: "1240px",
-            margin: "0 auto",
-            padding: "4rem 1.5rem 3rem",
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          <div
-            style={{ display: "grid", gap: "2.5rem" }}
-            className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]"
-          >
+        <div className="relative z-1 mx-auto max-w-[1240px] px-6 pt-16 pb-12">
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
             <div>
-              <div
-                style={{
-                  fontFamily: "var(--serif)",
-                  fontSize: "1.4rem",
-                  color: C.canvas,
-                  marginBottom: "0.4rem",
-                }}
-              >
+              <div className="mb-[0.4rem] font-display text-[1.4rem] text-canvas">
                 VetMiMi
               </div>
-              <div
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: "0.65rem",
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  color: "#e9bac8",
-                  marginBottom: "1.25rem",
-                }}
-              >
+              <div className="mb-5 text-[0.65rem] tracking-[0.12em] text-[#e9bac8] uppercase">
                 {t("footer.tagline")}
               </div>
-              <p
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: "0.84rem",
-                  color: "rgba(255,247,239,0.85)",
-                  lineHeight: 1.75,
-                  maxWidth: "280px",
-                }}
-              >
+              <p className="max-w-[280px] text-[0.84rem] leading-[1.75] text-canvas/85">
                 {t("footer.blurb")}
               </p>
             </div>
@@ -176,33 +102,11 @@ export default function SiteFooter() {
             />
           </div>
 
-          <div
-            style={{
-              borderTop: "1px solid rgba(255,247,239,0.1)",
-              marginTop: "3rem",
-              paddingTop: "1.5rem",
-              display: "flex",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "0.75rem",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: "0.75rem",
-                color: "rgba(255,247,239,0.8)",
-              }}
-            >
+          <div className="mt-12 flex flex-wrap justify-between gap-3 border-t border-canvas/10 pt-6">
+            <span className="text-[0.75rem] text-canvas/80">
               {t("footer.copyright", { year: new Date().getFullYear() })}
             </span>
-            <span
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: "0.75rem",
-                color: "rgba(255,247,239,0.8)",
-              }}
-            >
+            <span className="text-[0.75rem] text-canvas/80">
               {t("footer.location")}
             </span>
           </div>

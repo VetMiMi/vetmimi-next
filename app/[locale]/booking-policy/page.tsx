@@ -3,7 +3,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { pageMetadata } from "@/lib/seo";
-import { AA, C } from "@/lib/tokens";
 import { WaveDivider } from "@/components/art/Shapes";
 
 const SECTIONS = [
@@ -38,122 +37,53 @@ export default async function BookingPolicy({
   setRequestLocale(locale as Locale);
   const t = await getTranslations("legal.bookingPolicy");
   return (
-    <div style={{ backgroundColor: C.canvas, minHeight: "100dvh" }}>
-      {/* Header */}
-      <div style={{ padding: "7rem 0 4rem" }}>
-        <div style={{ maxWidth: 1240, margin: "0 auto", padding: "0 2rem" }}>
-          <div style={{ maxWidth: 720, margin: "0 auto", textAlign: "center" }}>
+    <div className="min-h-dvh bg-canvas">
+      <div className="pt-28 pb-16">
+        <div className="mx-auto max-w-[1240px] px-8">
+          <div className="mx-auto max-w-[720px] text-center">
             <Link
               href="/"
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: "0.78rem",
-                color: AA.muted,
-                textDecoration: "none",
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                display: "inline-block",
-                marginBottom: "1.5rem",
-              }}
+              className="mb-6 inline-block text-[0.78rem] tracking-[0.08em] text-muted uppercase"
             >
               {t("links.home")}
             </Link>
-            <h1
-              style={{
-                fontFamily: "var(--serif)",
-                fontSize: "clamp(2rem,4vw,3rem)",
-                color: C.ink,
-                margin: "0 0 2rem",
-                lineHeight: 1.15,
-              }}
-            >
+            <h1 className="mb-8 text-[clamp(2rem,4vw,3rem)] text-ink [&:not(:lang(my))]:leading-[1.15]!">
               {t("title")}
             </h1>
           </div>
         </div>
 
-        <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 2rem" }}>
-          <WaveDivider from={C.canvas} to={C.paper} variant="gentle" />
+        <div className="mx-auto max-w-[720px] px-8">
+          <WaveDivider
+            from="var(--canvas)"
+            to="var(--paper)"
+            variant="gentle"
+          />
         </div>
       </div>
 
-      {/* Content */}
-      <div style={{ maxWidth: 720, margin: "0 auto", padding: "0 2rem 7rem" }}>
+      <div className="mx-auto max-w-[720px] px-8 pb-28">
         {/* Placeholder notice */}
-        <div
-          style={{
-            backgroundColor: C.paper,
-            borderRadius: 8,
-            padding: "1.25rem 1.5rem",
-            marginBottom: "3rem",
-            fontFamily: "var(--sans)",
-            fontSize: "0.875rem",
-            color: `${C.ink}BB`,
-            lineHeight: 1.7,
-            borderLeft: `3px solid ${C.ochre}`,
-          }}
-        >
+        <div className="mb-12 rounded-lg border-l-3 border-ochre bg-paper px-6 py-5 text-[0.875rem] text-ink/73">
           {t("notice")}
         </div>
 
         {SECTIONS.map((id) => (
-          <div key={id} style={{ marginBottom: "2.5rem" }}>
-            <h2
-              style={{
-                fontFamily: "var(--serif)",
-                fontSize: "clamp(1.15rem,2vw,1.35rem)",
-                color: C.ink,
-                marginBottom: "0.75rem",
-                fontWeight: 600,
-              }}
-            >
+          <div key={id} className="mb-10">
+            <h2 className="mb-3 text-[clamp(1.15rem,2vw,1.35rem)] font-semibold! text-ink">
               {t(`sections.${id}.heading`)}
             </h2>
-            <p
-              style={{
-                fontFamily: "var(--sans)",
-                color: `${C.ink}BB`,
-                lineHeight: 1.78,
-                margin: 0,
-                fontSize: "1rem",
-              }}
-            >
+            <p className="text-[1rem] leading-[1.78] text-ink/73">
               {t(`sections.${id}.body`)}
             </p>
           </div>
         ))}
 
-        {/* Footer links */}
-        <div
-          style={{
-            borderTop: `1px solid ${C.ink}18`,
-            paddingTop: "2.5rem",
-            marginTop: "3rem",
-            display: "flex",
-            gap: "1.5rem",
-            flexWrap: "wrap",
-          }}
-        >
-          <Link
-            href="/"
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: "0.9rem",
-              color: AA.label,
-              textDecoration: "none",
-            }}
-          >
+        <div className="mt-12 flex flex-wrap gap-6 border-t border-ink/9 pt-10">
+          <Link href="/" className="text-[0.9rem] text-label">
             {t("links.returnHome")}
           </Link>
-          <Link
-            href="/contact"
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: "0.9rem",
-              color: AA.label,
-              textDecoration: "none",
-            }}
-          >
+          <Link href="/contact" className="text-[0.9rem] text-label">
             {t("links.contact")}
           </Link>
         </div>

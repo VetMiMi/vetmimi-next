@@ -1,4 +1,3 @@
-import { AA, C } from "@/lib/tokens";
 import { Link } from "@/i18n/navigation";
 
 type Variant = "primary" | "secondary" | "editorial";
@@ -13,49 +12,15 @@ type ButtonProps = {
   className?: string;
 };
 
-const styles: Record<Variant, React.CSSProperties> = {
-  primary: {
-    backgroundColor: AA.action,
-    color: "#fff",
-    border: `2px solid ${AA.action}`,
-    padding: "14px 32px",
-    borderRadius: "8px",
-    fontFamily: "var(--sans)",
-    fontWeight: 600,
-    fontSize: "0.92rem",
-    cursor: "pointer",
-    textDecoration: "none",
-    display: "inline-block",
-    letterSpacing: "0.01em",
-  },
-  secondary: {
-    backgroundColor: "transparent",
-    color: C.indigo,
-    border: `2px solid ${C.indigo}`,
-    padding: "14px 32px",
-    borderRadius: "8px",
-    fontFamily: "var(--sans)",
-    fontWeight: 600,
-    fontSize: "0.92rem",
-    cursor: "pointer",
-    textDecoration: "none",
-    display: "inline-block",
-    letterSpacing: "0.01em",
-  },
-  editorial: {
-    backgroundColor: "transparent",
-    color: C.ink,
-    border: "none",
-    padding: "0",
-    fontFamily: "var(--sans)",
-    fontWeight: 500,
-    fontSize: "0.92rem",
-    cursor: "pointer",
-    textDecoration: "none",
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "6px",
-  },
+const BOX =
+  "inline-block cursor-pointer rounded-lg border-2 px-8 py-3.5 text-[0.92rem] font-semibold tracking-[0.01em]";
+const EDITORIAL =
+  "inline-flex cursor-pointer items-center gap-1.5 text-[0.92rem] font-medium text-ink";
+
+const variants: Record<Variant, string> = {
+  primary: `${BOX} border-action bg-action text-white`,
+  secondary: `${BOX} border-indigo text-indigo`,
+  editorial: EDITORIAL,
 };
 
 // Site pages go through the i18n Link so they keep the visitor's language;
@@ -84,14 +49,12 @@ export function Btn({
   style,
   className,
 }: ButtonProps) {
-  const s: React.CSSProperties = {
-    ...styles[variant],
-    opacity: disabled ? 0.5 : 1,
-    ...style,
-  };
+  const classes = [variants[variant], disabled && "opacity-50", className]
+    .filter(Boolean)
+    .join(" ");
   if (href) {
     return (
-      <SmartLink href={href} style={s} className={className}>
+      <SmartLink href={href} style={style} className={classes}>
         {children}
       </SmartLink>
     );
@@ -101,8 +64,8 @@ export function Btn({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      style={s}
-      className={className}
+      style={style}
+      className={classes}
     >
       {children}
     </button>
@@ -118,19 +81,15 @@ export function EditorialLink({
   href?: string;
   onClick?: () => void;
 }) {
-  const s: React.CSSProperties = {
-    ...styles.editorial,
-    borderBottom: `1px solid currentColor`,
-    paddingBottom: "1px",
-  };
+  const classes = `${EDITORIAL} border-b pb-px`;
   if (href)
     return (
-      <SmartLink href={href} style={s}>
+      <SmartLink href={href} className={classes}>
         {children} →
       </SmartLink>
     );
   return (
-    <button onClick={onClick} style={s}>
+    <button onClick={onClick} className={classes}>
       {children} →
     </button>
   );

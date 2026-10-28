@@ -7,16 +7,14 @@ import SiteHeader from "@/components/SiteHeader";
 export default function SiteLayout({ children }: { children: ReactNode }) {
   const t = useTranslations("common");
   return (
-    <div
-      style={{ minHeight: "100%", display: "flex", flexDirection: "column" }}
-    >
+    <div className="flex min-h-full flex-col">
       {/* The first stop for the Tab key, so keyboard and screen reader
           visitors can pass the header on every page. */}
       <a href="#main" className="skip-link">
         {t("skipLink")}
       </a>
       <SiteHeader />
-      <main id="main" tabIndex={-1} style={{ flex: 1 }}>
+      <main id="main" tabIndex={-1} className="flex-1">
         {children}
       </main>
       <SiteFooter />

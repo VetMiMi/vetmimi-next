@@ -89,7 +89,7 @@ export function DetailsStep({
       <p className={stepIntro}>{t("step3.intro")}</p>
 
       {showSummary && shown.length > 0 && (
-        <div ref={summary} tabIndex={-1} className="outline-none!">
+        <div ref={summary} tabIndex={-1} className="outline-none">
           <Notice tone="coral" role="alert">
             <strong>{t("step3.errors.summary")}</strong>
             <ul className="mt-2 list-disc pl-[1.2rem]">

@@ -3,7 +3,7 @@ import { FieldError, FieldHelp, labelClass } from "./Field";
 
 export type RadioOption = { value: string; label: string; help?: string };
 
-// Choices that change what happens next, as .contact-choice cards with
+// Choices that change what happens next, as cards (like the contact page's) with
 // radio semantics: the whole card is the target, the chosen one gets the
 // indigo border and tint as well as the filled radio, never colour alone.
 export function RadioCards({

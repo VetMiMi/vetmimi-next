@@ -41,7 +41,7 @@ export function AboutSection() {
           </div>
           {/* `!` beats the global heading line height; the :lang guard
               leaves Burmese on its own taller one. */}
-          <h2 className="mb-6 text-[clamp(1.8rem,3.5vw,2.8rem)] text-ink [&:not(:lang(my))]:leading-[1.12]!">
+          <h2 className="mb-6 text-[clamp(1.8rem,3.5vw,2.8rem)] text-ink leading-[1.12]">
             {t("about.title")}
           </h2>
           <p className="mb-5 font-body text-[0.97rem] leading-[1.85] text-ink/66">

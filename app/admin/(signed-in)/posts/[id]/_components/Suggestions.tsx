@@ -129,7 +129,7 @@ export function Suggestions({
           >
             <h3
               id={`suggestion-${channel}`}
-              className="flex items-center gap-2 font-body! text-[1rem]! font-semibold!"
+              className="flex items-center gap-2 font-body text-[1rem] font-semibold"
             >
               <Icon aria-hidden="true" size={20} className="text-indigo" />
               {channelNames[channel]}

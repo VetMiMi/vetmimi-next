@@ -7,7 +7,7 @@ type CheckboxProps = FieldProps &
     keyof FieldProps | "id" | "className" | "children" | "type"
   >;
 
-// The .contact-privacy pattern: box beside its label, rose when ticked. The
+// The contact page's privacy checkbox: box beside its label, rose when ticked. The
 // whole label is the tap target, at least 44px high.
 export function Checkbox({
   label,

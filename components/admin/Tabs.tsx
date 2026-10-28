@@ -7,7 +7,7 @@ export type TabItem = {
   count?: number;
 };
 
-// Filters whose state lives in the URL, in the .ed-filters pill style
+// Filters whose state lives in the URL, in the stories page's pill style
 // (brief §8). They wrap rather than scroll sideways. The border is the
 // admin input border (#8a8389, 3.69:1) rather than the public #c6bec6,
 // which is under the 3:1 a control's edge needs.

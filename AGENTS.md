@@ -66,10 +66,9 @@ components/            public site components; components/ui for shared atoms
 components/admin/      admin UI components (see docs/admin-design-brief.md)
 components/art/        decorative SVG shapes (always aria-hidden)
 lib/api/               API client (client.ts) and handwritten types (types/)
-lib/tokens.ts          colour tokens; app/fonts.ts for the three fonts
+app/fonts.ts           the three fonts; the theme (colours, fonts, radii) is in app/globals.css
 i18n/                  next-intl routing, navigation wrappers, message loading
 messages/<locale>/     every public string, one JSON file per area
-styles/                page-family CSS (editorial, services, contact, …)
 scripts/               gate.sh, check-messages.mjs
 docs/                  project status, admin design brief
 ```
@@ -121,9 +120,12 @@ Summarised from `messages/README.md`, which is the authority.
 
 ## Design
 
-- Colours come from `lib/tokens.ts` (`C.*`) or the matching CSS variables in
-  `app/globals.css`. Fonts come from `app/fonts.ts` through `var(--serif)`,
-  `var(--sans)` and `var(--hand)`. Do not add another palette or font.
+- Style with Tailwind classes only: no `style={…}` objects (ESLint rejects
+  them) and no new CSS files. Colours, fonts (`font-display`, `font-body`,
+  `font-script`), radii and shadows come from the theme in `app/globals.css`;
+  a value the theme lacks is an arbitrary value (`text-[1.05rem]`). Do not
+  add another palette or font. The exceptions are `app/_og`, which Satori
+  draws from inline styles, and the colour props of `components/art`.
 - The admin, the booking flow and `/session` use the calm treatment the
   design specification gives Services and Booking. Everything they need —
   colour roles, contrast results, status badges, spacing, components and the

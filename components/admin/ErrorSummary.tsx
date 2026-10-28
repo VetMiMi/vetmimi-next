@@ -7,7 +7,7 @@ import { fieldId } from "@/lib/fieldIds";
 export type FieldErrorItem = { name: string; message: string };
 
 // The box at the top of a form after a failed submit (brief §7 Forms), in
-// the .contact-status--error style with #ab4347 text (4.94:1 on its tint).
+// the contact page's error style with #ab4347 text (4.94:1 on its tint).
 // Focus moves to it when errors appear; give it a new `key` on each submit
 // to move focus again. It is a client component only for that.
 export function ErrorSummary({

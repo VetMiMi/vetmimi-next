@@ -2,7 +2,7 @@ import { WarningCircle } from "@phosphor-icons/react";
 
 // The details form's input, label and error, kept to the original /book look.
 export const inputClass =
-  "w-full rounded-sm border border-ink/20 bg-white px-4 py-3 text-[1rem] text-ink outline-none!";
+  "w-full rounded-sm border border-ink/20 bg-white px-4 py-3 text-[1rem] text-ink outline-none";
 
 export const labelClass =
   "mb-[0.3rem] block text-[0.85rem] font-semibold text-ink";

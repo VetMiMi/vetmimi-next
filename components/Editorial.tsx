@@ -16,9 +16,9 @@ export const ed = {
     "grid grid-cols-2 items-center gap-[clamp(32px,6vw,80px)] max-md:grid-cols-1",
   label:
     "mb-3.5 text-[0.7rem] leading-[1.6] font-bold tracking-[0.12em] text-label uppercase",
-  h1: "mb-6 max-w-[18ch] text-[clamp(2.5rem,5vw,4.5rem)] tracking-[-0.03em] [&:not(:lang(my))]:leading-[1.08]!",
-  h2: "mb-5 text-[clamp(1.8rem,3vw,2.65rem)] tracking-[-0.02em] [&:not(:lang(my))]:leading-[1.16]!",
-  h3: "mb-3 text-[clamp(1.3rem,2vw,1.6rem)] [&:not(:lang(my))]:leading-[1.25]!",
+  h1: "mb-6 max-w-[18ch] text-[clamp(2.5rem,5vw,4.5rem)] tracking-[-0.03em] leading-[1.08]",
+  h2: "mb-5 text-[clamp(1.8rem,3vw,2.65rem)] tracking-[-0.02em] leading-[1.16]",
+  h3: "mb-3 text-[clamp(1.3rem,2vw,1.6rem)] leading-[1.25]",
   text: "mb-5 leading-[1.8] text-muted",
   lead: "mb-5 max-w-[56ch] text-[1.08rem] leading-[1.8] text-muted",
   link: "text-[0.9rem] font-semibold text-indigo underline underline-offset-5",
@@ -34,14 +34,12 @@ export function StoryImage({
   alt,
   sizes,
   className,
-  style,
   eager,
 }: {
   image: NonNullable<StoryItem["image"]>;
   alt: string;
   sizes: string;
   className?: string;
-  style?: React.CSSProperties;
   /** The article's cover, in view on arrival: loaded straight away. */
   eager?: boolean;
 }) {
@@ -50,7 +48,6 @@ export function StoryImage({
     return (
       <Image
         className={className}
-        style={style}
         src={image}
         alt={alt}
         sizes={sizes}
@@ -62,7 +59,6 @@ export function StoryImage({
     // eslint-disable-next-line @next/next/no-img-element
     <img
       className={className}
-      style={style}
       src={image.sizes[0]?.url}
       srcSet={image.sizes
         .map(({ url, width }) => `${url} ${width}w`)

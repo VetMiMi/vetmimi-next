@@ -168,13 +168,13 @@ async function Byline() {
 const ARTICLE_IMAGE_SIZES = "(max-width: 1168px) 100vw, 1120px";
 
 const articleTitle =
-  "mb-6 max-w-[26ch] text-[clamp(2.5rem,5vw,4.5rem)] tracking-[-0.03em] [&:not(:lang(my))]:leading-[1.08]!";
+  "mb-6 max-w-[26ch] text-[clamp(2.5rem,5vw,4.5rem)] tracking-[-0.03em] leading-[1.08]";
 const articleImage =
   "mb-10 block max-h-[520px] w-full rounded-2xl object-cover object-[center_30%]";
 // A published article's Markdown: headings, lists, quotes and links in the
 // same reading rhythm as the paragraphs.
 const markdownBody =
-  "max-w-[760px] pb-12 [&_:is(p,ul,ol,blockquote)]:mb-[1.4em] [&_:is(p,ul,ol)]:text-[1.1rem] [&_:is(p,ul,ol)]:leading-[1.9] [&_p]:text-muted [&_:is(ul,ol)]:pl-[1.4em] [&_ul]:list-disc [&_ol]:list-decimal [&_blockquote]:border-l-2 [&_blockquote]:border-rose [&_blockquote]:pl-[1.2em] [&_blockquote]:italic [&_h1]:mb-6 [&_h1]:max-w-[18ch] [&_h1]:text-[clamp(2.5rem,5vw,4.5rem)] [&_h1]:tracking-[-0.03em] [&:not(:lang(my))_h1]:leading-[1.08]! [&_h2]:mt-[1.6em] [&_h2]:mb-[0.6em] [&_h2]:text-[clamp(1.5rem,2.4vw,1.9rem)] [&_h2]:tracking-[-0.02em] [&:not(:lang(my))_h2]:leading-[1.16]! [&_h3]:mt-[1.4em] [&_h3]:mb-[0.5em] [&_h3]:text-[1.3rem] [&:not(:lang(my))_h3]:leading-[1.25]! [&_a]:text-indigo [&_a]:underline [&_a]:underline-offset-4 [&_hr]:my-[2.4em] [&_hr]:border-[#d8cdca]";
+  "max-w-[760px] pb-12 [&_:is(p,ul,ol,blockquote)]:mb-[1.4em] [&_:is(p,ul,ol)]:text-[1.1rem] [&_:is(p,ul,ol)]:leading-[1.9] [&_p]:text-muted [&_:is(ul,ol)]:pl-[1.4em] [&_ul]:list-disc [&_ol]:list-decimal [&_blockquote]:border-l-2 [&_blockquote]:border-rose [&_blockquote]:pl-[1.2em] [&_blockquote]:italic [&_h1]:mb-6 [&_h1]:max-w-[18ch] [&_h1]:text-[clamp(2.5rem,5vw,4.5rem)] [&_h1]:tracking-[-0.03em] [&_h1]:leading-[1.08] [&_h2]:mt-[1.6em] [&_h2]:mb-[0.6em] [&_h2]:text-[clamp(1.5rem,2.4vw,1.9rem)] [&_h2]:tracking-[-0.02em] [&_h2]:leading-[1.16] [&_h3]:mt-[1.4em] [&_h3]:mb-[0.5em] [&_h3]:text-[1.3rem] [&_h3]:leading-[1.25] [&_a]:text-indigo [&_a]:underline [&_a]:underline-offset-4 [&_hr]:my-[2.4em] [&_hr]:border-[#d8cdca]";
 
 function PublishedArticle({
   article,

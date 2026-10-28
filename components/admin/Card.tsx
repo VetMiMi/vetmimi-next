@@ -1,4 +1,4 @@
-// The .contact-card surface (brief §8): raised on canvas, white where it
+// The raised card surface (brief §8): raised on canvas, white where it
 // sits on paper. `as` gives it the right landmark or list semantics.
 export function Card({
   as: Tag = "div",

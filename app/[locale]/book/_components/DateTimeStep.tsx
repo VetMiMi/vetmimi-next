@@ -78,7 +78,7 @@ export function DateTimeStep({
       </div>
 
       {alert && (
-        <div ref={alertBox} tabIndex={-1} className="outline-none!">
+        <div ref={alertBox} tabIndex={-1} className="outline-none">
           <Notice
             tone={alert.kind === "serviceChanged" ? "ochre" : "coral"}
             role="alert"

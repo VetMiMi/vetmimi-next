@@ -23,9 +23,8 @@ export async function generateMetadata({
 // case the API was unreachable the last time the page was built.
 export const revalidate = 3600;
 
-// The home page is interactive throughout, so it renders as one client
-// component; this server page adds its metadata, structured data and the
-// stories preview.
+// The home page's sections are server components; this page adds the
+// metadata, structured data and the stories preview.
 export default async function Home({ params }: PageProps<"/[locale]">) {
   const locale = (await params).locale as Locale;
   setRequestLocale(locale);

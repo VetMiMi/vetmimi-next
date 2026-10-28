@@ -20,14 +20,12 @@ Read, in order:
 3. `docs/admin-design-brief.md` — for any UI work, public or admin
 4. `messages/README.md` — for any work that adds or changes visible text
 5. The API ADRs the issue touches, in `../vetmimi-api/docs/adr/`: anything
-   calling the API → 002 and 003; booking → 004 and 006; `/session` → 007;
+   calling the API → 002 and 011; booking → 004 and 006; `/session` → 007;
    content → 008
-6. The API contract: `/Users/noelpaingoaksoe/Desktop/vetmimi/vetmimi-api/openapi.yaml`
-   (the API's working copy, normally `main`), and, once `package.json` pins
-   a ref (`"vetmimiApi": {"ref": "v0.x.y"}`), the file at that ref:
-   `cd ../vetmimi-api && git show <ref>:openapi.yaml`. That is a read; do
-   not check anything out. What the site may use is what the pinned ref
-   contains; anything only on `main` is unreleased.
+6. The API's routes and JSON shapes: each feature's `handler.go` (the route
+   list) and `http_*.go` (request and response structs) in `../vetmimi-api`
+   on its `main`, and this site's `lib/api/types/`. That is a read; do not
+   check anything out. What the site may use is what the API's `main` serves.
 7. The issue itself: `gh issue view <n> --comments`
 8. The requirement document the issue cites, under
    `../documents/VetMiMi/02 Website Plan/`. Read it with
@@ -45,9 +43,9 @@ consistent.
 - **Approach** — the mechanism in a few sentences: which parts are server
   components, which are client components and why, where data is fetched.
   Prefer the boring option; simplicity is the owner's top priority.
-- **Contract** — the exact `openapi.yaml` operations used, their request and
-  response schemas, and every `Problem` code the UI must handle, with the
-  message each one shows. If an operation is missing or unreleased, say so.
+- **Contract** — the exact API routes used, their request and response
+  shapes, and every problem `code` the UI must handle, with the message each
+  one shows. If a route is missing from the API's `main`, say so.
 - **Routes and files** — actual paths under `app/`, `components/`,
   `lib/api/`, `messages/`, `styles/`, and the route handlers under
   `app/api/` that forward to the API.
@@ -75,9 +73,9 @@ consistent.
 End with exactly one line:
 
 - `VERDICT: CLEAR` — implementation can start.
-- `VERDICT: API-FIRST` — the work needs an operation that is not in a tagged
-  `openapi.yaml`. Name the operations and draft the API issue's acceptance
-  criteria. This parks the web issue until the API ref it needs is tagged.
+- `VERDICT: API-FIRST` — the work needs a route the API's `main` does not
+  serve. Name the routes and draft the API issue's acceptance criteria. This
+  parks the web issue until that API change merges.
 - `VERDICT: ADR-REQUIRED` — the work settles a decision that materially
   affects architecture, privacy, security, deployment or cost. Append a
   drafted ADR using `../vetmimi-api/docs/adr/README.md`'s template. Do not

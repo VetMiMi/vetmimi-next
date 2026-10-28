@@ -32,7 +32,6 @@
       "Bash(pnpm format:*)",
       "Bash(pnpm format:check:*)",
       "Bash(pnpm i18n:check:*)",
-      "Bash(pnpm api:types:*)",
       "Bash(pnpm exec prettier:*)",
       "Bash(pnpm exec eslint:*)",
       "Bash(scripts/gate.sh:*)",

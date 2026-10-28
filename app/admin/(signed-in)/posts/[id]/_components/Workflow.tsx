@@ -14,12 +14,11 @@ import {
   workflowActions,
   type WorkflowAction,
 } from "@/lib/admin/postWorkflow";
-import type { components } from "@/lib/api/schema";
+import type { Post } from "@/lib/api/types/content";
 import { postStep, requestChanges } from "../actions";
 import { ScheduleForm } from "./ScheduleForm";
 import { sectionTitle } from "./WebsiteFields";
 
-type Post = components["schemas"]["Post"];
 type Failure = { message: string; problems: string[]; reload: boolean };
 
 const done: Partial<Record<WorkflowAction, string>> = {

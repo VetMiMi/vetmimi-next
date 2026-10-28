@@ -13,7 +13,12 @@ import {
   views,
 } from "@/lib/admin/appointments";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { unwrap } from "@/lib/api/problem";
+import type {
+  AppointmentList as List,
+  BookingDashboard,
+} from "@/lib/api/types/appointments";
+import type { Service } from "@/lib/api/types/booking";
+import type { Page } from "@/lib/api/types/shared";
 import { todayIn } from "@/lib/zonedTime";
 import { AppointmentList } from "./_components/AppointmentList";
 import { AppointmentsTable } from "./_components/AppointmentsTable";
@@ -35,17 +40,13 @@ export default async function AppointmentsPage({
 
   const [dashboard, services] = await adminCall((api) =>
     Promise.all([
-      api.GET("/admin/dashboard").then(unwrap),
-      api.GET("/admin/services").then(unwrap),
+      api.get<BookingDashboard>("/admin/dashboard"),
+      api.get<Page<Service>>("/admin/services"),
     ]),
   );
   const { timezone } = dashboard;
-  const list = await adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/appointments", {
-        params: { query: listQuery(filters, timezone) },
-      }),
-    ),
+  const list = await adminCall((api) =>
+    api.get<List>("/admin/appointments", listQuery(filters, timezone)),
   );
   const now = new Date().toISOString();
   const pending = dashboard.pending;

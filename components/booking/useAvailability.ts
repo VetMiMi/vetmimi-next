@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { lastDayOfMonth } from "@/lib/time";
-import type { components } from "@/lib/api/schema";
+import type { PublicAvailability } from "@/lib/api/types/booking";
 
-type Availability = components["schemas"]["PublicAvailability"];
+type Availability = PublicAvailability;
 
 type Result = { data: Availability } | { error: true };
 

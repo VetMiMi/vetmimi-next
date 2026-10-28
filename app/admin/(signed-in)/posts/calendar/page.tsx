@@ -19,7 +19,9 @@ import {
   PRACTICE_TIMEZONE,
 } from "@/lib/admin/posts";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { ApiError } from "@/lib/api/problem";
+import type { PostSummary } from "@/lib/api/types/content";
+import type { Page } from "@/lib/api/types/shared";
 import { todayIn } from "@/lib/zonedTime";
 import { NewPostButton } from "../_components/NewPostButton";
 import { MonthCalendar } from "./MonthCalendar";
@@ -45,10 +47,11 @@ export default async function PostCalendarPage({
     Promise.all(
       SHOWN.map(
         async (status) =>
-          unwrap(
-            await api.GET("/admin/posts", {
-              params: { query: { status, limit: CALENDAR_LIMIT } },
-            }),
+          (
+            await api.get<Page<PostSummary>>("/admin/posts", {
+              status,
+              limit: CALENDAR_LIMIT,
+            })
           ).items,
       ),
     ),

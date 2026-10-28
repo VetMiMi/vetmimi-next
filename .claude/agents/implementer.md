@@ -56,10 +56,10 @@ Other tracks, the API's tests and the owner's dev server share the laptop.
 
 ## Order of work
 
-1. If the plan bumps the pinned API ref, do it first and regenerate
-   `lib/api/schema.ts` with `pnpm api:types`. Never edit generated files.
-2. Route handlers in `app/api/` (thin: validate, forward with the generated
-   client, map `Problem` responses) or server-component data fetching.
+1. If the plan uses a new API route or field, add its shape to
+   `lib/api/types/` first, copied from the API's Go structs.
+2. Route handlers in `app/api/` (thin: validate, forward with the client in
+   `lib/api/`, map `Problem` responses) or server-component data fetching.
 3. Components: reuse `components/ui/` and `components/admin/`; build a new
    primitive only when the brief lists it and it does not exist yet.
 4. Pages, with every state from the plan designed, not improvised.
@@ -113,8 +113,7 @@ command output and real screenshots before you write it. Paste the output of
 - Put a real value in a committed file. New variables go in `.env.example`
   with an empty value and a purpose; server-only ones never get a
   `NEXT_PUBLIC_` prefix.
-- Call the Go API from the browser (except the ADR-007 WebSocket), or edit
-  `lib/api/schema.ts` by hand.
+- Call the Go API from the browser (except the ADR-007 WebSocket).
 - Edit `.claude/`, `AGENTS.md`, `CLAUDE.md` or `docs/project-status.md`.
 - Skip, weaken or delete a check to go green.
 - Run `vercel` commands or anything that costs money or changes the live

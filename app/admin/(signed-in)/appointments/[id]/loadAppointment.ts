@@ -1,7 +1,9 @@
 import "server-only";
 import { notFound } from "next/navigation";
 import { adminCall } from "@/lib/admin/session";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { apiPath } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type { AppointmentDetail } from "@/lib/api/types/appointments";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -10,12 +12,8 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 // permission message and no data (Booking UX §29).
 export async function loadAppointment(id: string) {
   if (!UUID.test(id)) notFound();
-  return adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/appointments/{appointmentId}", {
-        params: { path: { appointmentId: id } },
-      }),
-    ),
+  return adminCall((api) =>
+    api.get<AppointmentDetail>(apiPath`/admin/appointments/${id}`),
   ).catch((error) => {
     if (error instanceof ApiError && error.status === 404) notFound();
     if (error instanceof ApiError && error.status === 403) return null;

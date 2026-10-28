@@ -18,7 +18,7 @@ import {
   type SocialChannel,
 } from "@/lib/admin/postDraft";
 import { whenShort } from "@/lib/admin/posts";
-import type { components } from "@/lib/api/schema";
+import type { Post } from "@/lib/api/types/content";
 import { savePost } from "../../actions";
 import { Channels } from "./Channels";
 import { MediaPicker } from "./MediaPicker";
@@ -30,7 +30,6 @@ import { useUnsavedWarning } from "./useUnsavedWarning";
 import { sectionTitle, WebsiteFields } from "./WebsiteFields";
 import { Workflow } from "./Workflow";
 
-type Post = components["schemas"]["Post"];
 type Channel = Draft["facebook"];
 
 const same = (a: Draft, b: Draft) => JSON.stringify(a) === JSON.stringify(b);

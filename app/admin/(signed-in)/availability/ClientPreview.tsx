@@ -7,12 +7,11 @@ import { Notice } from "@/components/admin/Notice";
 import { Select } from "@/components/admin/Select";
 import { noTimesReason, type CalendarDay } from "@/lib/admin/availability";
 import { longDay } from "@/lib/admin/appointments";
-import type { components } from "@/lib/api/schema";
+import type { Settings } from "@/lib/api/types/admin";
+import type { Slot } from "@/lib/api/types/shared";
 import { dayPart, formatClock, zoneLabel, zonedParts } from "@/lib/zonedTime";
 import { previewDay } from "./actions";
 
-type Schemas = components["schemas"];
-type Slot = Schemas["Slot"];
 export type PreviewService = { id: string; name: string; paused: boolean };
 
 // The exact times a client could pick on the public booking page.
@@ -27,7 +26,7 @@ export function ClientPreview({
   today: string;
   timezone: string;
   settings: Pick<
-    Schemas["Settings"],
+    Settings,
     "publicBookingEnabled" | "maxAdvanceDays" | "minNoticeHours"
   >;
   days: CalendarDay[];

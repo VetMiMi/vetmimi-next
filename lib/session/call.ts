@@ -1,4 +1,4 @@
-import type { components } from "@/lib/api/schema";
+import type { RoomTicket } from "@/lib/api/types/video";
 import { closeOutcome, type CallEvent } from "./machine";
 import { CLOSE, type ServerMessage } from "./messages";
 import { PeerLink } from "./peer";
@@ -12,8 +12,6 @@ import {
   type StatsSample,
   type WeakState,
 } from "./stats";
-
-type RoomTicket = components["schemas"]["RoomTicket"];
 
 export type TicketResult =
   { ok: true; ticket: RoomTicket } | { ok: false; code: string };

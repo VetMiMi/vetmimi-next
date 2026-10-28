@@ -1,12 +1,18 @@
-import type { components } from "./schema";
+import type { Slot } from "./types/shared.ts";
 
-type Problem = components["schemas"]["Problem"];
+// The fields of the API's problem+json body that the site reads.
+type Problem = {
+  code: string;
+  errors?: { field: string; message: string }[];
+  alternatives?: Slot[];
+};
 
 type ApiErrorInit = {
   status: number;
   code: string;
   fieldErrors?: Record<string, string>;
   retryAfterSeconds?: number;
+  alternatives?: Slot[];
 };
 
 // A failed API call, reduced to what a screen needs to choose its own words.
@@ -17,6 +23,8 @@ export class ApiError extends Error {
   readonly code: string;
   readonly fieldErrors: Record<string, string>;
   readonly retryAfterSeconds?: number;
+  // Free times offered instead when the asked one was taken.
+  readonly alternatives: Slot[];
 
   constructor(init: ApiErrorInit, options?: ErrorOptions) {
     super(`API ${init.status} ${init.code}`, options);
@@ -25,6 +33,7 @@ export class ApiError extends Error {
     this.code = init.code;
     this.fieldErrors = init.fieldErrors ?? {};
     this.retryAfterSeconds = init.retryAfterSeconds;
+    this.alternatives = init.alternatives ?? [];
   }
 
   // The API did not answer: refused, reset or timed out.
@@ -42,6 +51,8 @@ export class ApiError extends Error {
         (problem?.errors ?? []).map(({ field, message }) => [field, message]),
       ),
       retryAfterSeconds: retryAfter(response.headers.get("Retry-After")),
+      alternatives:
+        problem?.code === "slot_unavailable" ? problem.alternatives : undefined,
     });
   }
 }
@@ -58,19 +69,6 @@ function isProblem(body: unknown): body is Problem {
 function retryAfter(header: string | null): number | undefined {
   if (header === null || !/^\d+$/.test(header.trim())) return undefined;
   return Number(header.trim());
-}
-
-// Returns the data of an openapi-fetch result, or throws its ApiError, so a
-// caller handles success in line and failure in one catch.
-export function unwrap<T>(result: {
-  data?: T;
-  error?: unknown;
-  response: Response;
-}): T {
-  if (result.error !== undefined || !result.response.ok) {
-    throw ApiError.fromResponse(result.response, result.error);
-  }
-  return result.data as T;
 }
 
 // The Problem a route handler sends the browser: status, code and field

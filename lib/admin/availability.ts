@@ -1,17 +1,21 @@
 // The availability page's rules: the week as Daw Mi edits it, what each
 // calendar date looks like, and which saved changes touch the dates she
 // picks. Pure, so node:test covers it.
-import type { components } from "../api/schema.ts";
+import type { Settings } from "../api/types/admin.ts";
+import type { AppointmentSummary } from "../api/types/appointments.ts";
+import type {
+  AvailabilityBlock,
+  AvailabilityOverride,
+  AvailabilityRuleInput,
+} from "../api/types/booking.ts";
 import { addDays, lastDayOfMonth, weekdayIndex } from "../time.ts";
 import { endsTooEarly, findOverlap } from "../timeRange.ts";
 import { formatClock, zonedDayStart, zonedParts } from "../zonedTime.ts";
 
-type Schemas = components["schemas"];
-type Rule = Schemas["AvailabilityRuleInput"];
-type Override = Schemas["AvailabilityOverride"];
-type Block = Schemas["AvailabilityBlock"];
-type Appointment = Schemas["AppointmentSummary"];
-type Settings = Schemas["Settings"];
+type Rule = AvailabilityRuleInput;
+type Override = AvailabilityOverride;
+type Block = AvailabilityBlock;
+type Appointment = AppointmentSummary;
 
 export type Hours = { start: string; end: string };
 // Index 0 is Monday; the API numbers weekdays 1 (Monday) to 7.

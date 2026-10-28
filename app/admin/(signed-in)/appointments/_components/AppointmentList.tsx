@@ -3,12 +3,12 @@
 import { useState, useTransition } from "react";
 import { Button } from "@/components/admin/Button";
 import { Notice } from "@/components/admin/Notice";
-import type { components } from "@/lib/api/schema";
+import type { AppointmentSummary } from "@/lib/api/types/appointments";
 import { localDateKey } from "@/lib/time";
 import { moreAppointments } from "../actions";
 import { AppointmentsTable } from "./AppointmentsTable";
 
-type Summary = components["schemas"]["AppointmentSummary"];
+type Summary = AppointmentSummary;
 
 const sectionTitle = "mb-4 text-[1.35rem]";
 

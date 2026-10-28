@@ -1,13 +1,18 @@
 import "server-only";
 import { cache } from "react";
 import { getTranslations } from "next-intl/server";
-import { apiConfigured, publicApi } from "@/lib/api/client";
-import type { components } from "@/lib/api/schema";
+import { apiConfigured, apiPath, publicApi } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type {
+  PublicArticle,
+  PublicArticleSummary,
+} from "@/lib/api/types/content";
+import type { Page } from "@/lib/api/types/shared";
 import { STORIES } from "@/lib/data";
 import { mergeStories, storyFromArticle, type StoryItem } from "@/lib/stories";
 import type { Locale } from "@/i18n/routing";
 
-export type Article = components["schemas"]["PublicArticle"];
+export type Article = PublicArticle;
 
 // Published articles come from the API and are cached until the API calls
 // POST /api/revalidate (tags "articles" and "article:<slug>"); the sitemap
@@ -18,13 +23,13 @@ export type Article = components["schemas"]["PublicArticle"];
 export const listArticles = cache(async (locale: Locale) => {
   if (!apiConfigured()) return [];
   try {
-    const { data } = await publicApi({ tags: ["articles"] }).GET(
-      "/public/articles",
-      { params: { query: { locale, limit: 100 } } },
-    );
-    return data?.items ?? [];
+    const { items } = await publicApi({ tags: ["articles"] }).get<
+      Page<PublicArticleSummary>
+    >("/public/articles", { locale, limit: 100 });
+    return items;
   } catch (error) {
-    console.error("stories: article list unavailable", error);
+    if (!(error instanceof ApiError) || error.status >= 500)
+      console.error("stories: article list unavailable", error);
     return [];
   }
 });
@@ -33,13 +38,13 @@ export const getArticle = cache(
   async (locale: Locale, slug: string): Promise<Article | undefined> => {
     if (!apiConfigured()) return undefined;
     try {
-      const { data } = await publicApi({ tags: [`article:${slug}`] }).GET(
-        "/public/articles/{slug}",
-        { params: { path: { slug }, query: { locale } } },
+      return await publicApi({ tags: [`article:${slug}`] }).get<Article>(
+        apiPath`/public/articles/${slug}`,
+        { locale },
       );
-      return data;
     } catch (error) {
-      console.error("stories: article unavailable", error);
+      if (!(error instanceof ApiError) || error.status >= 500)
+        console.error("stories: article unavailable", error);
       return undefined;
     }
   },

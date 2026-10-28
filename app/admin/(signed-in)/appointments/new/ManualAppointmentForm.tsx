@@ -21,18 +21,17 @@ import {
   type KeyState,
   type ManualFields,
 } from "@/lib/admin/manualAppointment";
-import type { components } from "@/lib/api/schema";
+import type { Format, Slot } from "@/lib/api/types/shared";
 import { zoneAbbreviation } from "@/lib/zonedTime";
 import { createManual } from "../actions";
 import { SlotChooser } from "../_components/SlotChooser";
 import { DetailsFields } from "./DetailsFields";
 import { ManualReviewDialog } from "./ManualReviewDialog";
 
-type Slot = components["schemas"]["Slot"];
 type Service = {
   id: string;
   name: string;
-  formats: components["schemas"]["Format"][];
+  formats: Format[];
   durationMinutes?: number;
   paused: boolean;
 };

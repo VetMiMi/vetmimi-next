@@ -2,7 +2,10 @@
 
 import { mutate } from "@/lib/admin/mutation";
 import { adminCall } from "@/lib/admin/session";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { apiPath } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type { VideoRoomSummary } from "@/lib/api/types/appointments";
+import type { RoomTicket } from "@/lib/api/types/video";
 import type { TicketResult } from "@/lib/session/call";
 import { mapTicketError } from "@/lib/session/ticket";
 
@@ -16,12 +19,8 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export async function startVideo(id: string): Promise<TicketResult> {
   if (!UUID.test(id)) return { ok: false, code: "not_found" };
   try {
-    const ticket = await adminCall(async (api) =>
-      unwrap(
-        await api.POST("/admin/appointments/{appointmentId}/video-session", {
-          params: { path: { appointmentId: id } },
-        }),
-      ),
+    const ticket = await adminCall((api) =>
+      api.post<RoomTicket>(apiPath`/admin/appointments/${id}/video-session`),
     );
     return { ok: true, ticket };
   } catch (error) {
@@ -40,9 +39,9 @@ export async function endVideo(id: string) {
   return mutate(
     `/admin/appointments/${id}`,
     (api) =>
-      api.POST("/admin/appointments/{appointmentId}/video-session/end", {
-        params: { path: { appointmentId: id } },
-      }),
+      api.post<VideoRoomSummary>(
+        apiPath`/admin/appointments/${id}/video-session/end`,
+      ),
     {
       failure: "The session was not ended. It is still open.",
       codes: { invalid_transition: "This session has already ended." },

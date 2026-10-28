@@ -2,14 +2,14 @@
 
 import { redirect } from "next/navigation";
 import { adminApi } from "@/lib/api/client";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { ApiError } from "@/lib/api/problem";
 import { clearSessionCookie, sessionToken } from "@/lib/admin/session";
 
 export async function signOut() {
   const token = await sessionToken();
   if (token) {
     try {
-      unwrap(await adminApi(token).DELETE("/auth/sessions/current"));
+      await adminApi(token).delete("/auth/sessions/current");
     } catch (error) {
       // A 401 means the session had already ended. Any other failure still
       // signs this device out: the cookie goes, and the API ends the session

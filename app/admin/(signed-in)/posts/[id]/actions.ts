@@ -7,11 +7,15 @@ import {
   suggestionFailure,
   type Language,
 } from "@/lib/admin/suggestions";
-import { ApiError, unwrap } from "@/lib/api/problem";
-import type { components } from "@/lib/api/schema";
-
-type Schemas = components["schemas"];
-type SocialChannel = Schemas["SocialChannel"];
+import { apiPath } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type {
+  Media,
+  Post,
+  PostSuggestions,
+  SocialChannel,
+} from "@/lib/api/types/content";
+import type { Page } from "@/lib/api/types/shared";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const CHANNELS: SocialChannel[] = ["facebook", "instagram", "linkedin"];
@@ -37,24 +41,12 @@ const stepFailures: Record<Step, string> = {
   archive: "The post was not archived. Its status has not changed.",
 };
 
-const paths = {
-  submit: "/admin/posts/{postId}/submit",
-  approve: "/admin/posts/{postId}/approve",
-  unschedule: "/admin/posts/{postId}/unschedule",
-  publish: "/admin/posts/{postId}/publish",
-  archive: "/admin/posts/{postId}/archive",
-} as const;
-
 export async function postStep(step: Step, id: string, version: number) {
   check(id);
-  if (!(step in paths)) throw new Error("Bad step");
+  if (!(step in stepFailures)) throw new Error("Bad step");
   return mutate(
     `/admin/posts/${id}`,
-    (api) =>
-      api.POST(paths[step], {
-        params: { path: { postId: id } },
-        body: { version },
-      }),
+    (api) => api.post<Post>(apiPath`/admin/posts/${id}/${step}`, { version }),
     {
       failure: stepFailures[step],
       codes: {
@@ -77,9 +69,9 @@ export async function requestChanges(
   return mutate(
     `/admin/posts/${id}`,
     (api) =>
-      api.POST("/admin/posts/{postId}/request-changes", {
-        params: { path: { postId: id } },
-        body: { version, note: note.trim().slice(0, 2000) },
+      api.post<Post>(apiPath`/admin/posts/${id}/request-changes`, {
+        version,
+        note: note.trim().slice(0, 2000),
       }),
     {
       failure: "Changes were not requested. The post is still in review.",
@@ -98,9 +90,9 @@ export async function schedulePost(
   return mutate(
     `/admin/posts/${id}`,
     (api) =>
-      api.POST("/admin/posts/{postId}/schedule", {
-        params: { path: { postId: id } },
-        body: { version, scheduledAt },
+      api.post<Post>(apiPath`/admin/posts/${id}/schedule`, {
+        version,
+        scheduledAt,
       }),
     {
       failure: "The post was not scheduled. Its status has not changed.",
@@ -115,9 +107,7 @@ export async function retryChannel(id: string, channel: SocialChannel) {
   return mutate(
     `/admin/posts/${id}`,
     (api) =>
-      api.POST("/admin/posts/{postId}/channels/{channel}/retry", {
-        params: { path: { postId: id, channel } },
-      }),
+      api.post<Post>(apiPath`/admin/posts/${id}/channels/${channel}/retry`),
     {
       failure: "The retry did not start. The channel is still marked failed.",
       codes: {
@@ -139,10 +129,10 @@ export async function markPosted(
   return mutate(
     `/admin/posts/${id}`,
     (api) =>
-      api.POST("/admin/posts/{postId}/channels/{channel}/mark-posted", {
-        params: { path: { postId: id, channel } },
-        body: link ? { permalink: link } : {},
-      }),
+      api.post<Post>(
+        apiPath`/admin/posts/${id}/channels/${channel}/mark-posted`,
+        link ? { permalink: link } : {},
+      ),
     {
       failure:
         "The channel was not marked as posted. Its status has not changed.",
@@ -156,13 +146,7 @@ export async function markPosted(
 // The latest state while channels are still going out.
 export async function reloadPost(id: string) {
   check(id);
-  return adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/posts/{postId}", {
-        params: { path: { postId: id } },
-      }),
-    ),
-  );
+  return adminCall((api) => api.get<Post>(apiPath`/admin/posts/${id}`));
 }
 
 // "Suggest versions" (#153): the AI assistant's versions of the chosen
@@ -183,13 +167,11 @@ export async function suggestVersions(
   if (language !== "en" && language !== "my") throw new Error("Bad language");
   try {
     const suggestions = await adminCall(
-      async (api) =>
-        unwrap(
-          await api.POST("/admin/posts/{postId}/suggestions", {
-            params: { path: { postId: id } },
-            body: { channels, language },
-          }),
-        ),
+      (api) =>
+        api.post<PostSuggestions>(apiPath`/admin/posts/${id}/suggestions`, {
+          channels,
+          language,
+        }),
       { timeoutMs: 45_000 },
     );
     return { ok: true, texts: suggestedTexts(suggestions) };
@@ -209,18 +191,12 @@ export async function suggestVersions(
 // ── Media library ───────────────────────────────────────────────────────
 
 export async function listMedia(q: string, cursor?: string) {
-  return adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/media", {
-        params: {
-          query: {
-            ...(q.trim() && { q: q.trim().slice(0, 100) }),
-            ...(cursor && { cursor }),
-            limit: 24,
-          },
-        },
-      }),
-    ),
+  return adminCall((api) =>
+    api.get<Page<Media>>("/admin/media", {
+      ...(q.trim() && { q: q.trim().slice(0, 100) }),
+      ...(cursor && { cursor }),
+      limit: 24,
+    }),
   );
 }
 
@@ -234,13 +210,10 @@ export async function describeMedia(
   return mutate(
     "/admin/posts",
     (api) =>
-      api.PATCH("/admin/media/{mediaId}", {
-        params: { path: { mediaId: id } },
-        body: {
-          version,
-          alt: { en: alt.en.trim(), my: alt.my.trim() },
-          ...(credit.trim() && { credit: credit.trim() }),
-        },
+      api.patch<Media>(apiPath`/admin/media/${id}`, {
+        version,
+        alt: { en: alt.en.trim(), my: alt.my.trim() },
+        ...(credit.trim() && { credit: credit.trim() }),
       }),
     {
       failure: "The alt text was not saved. The image was not attached.",
@@ -256,10 +229,7 @@ export async function deleteMedia(id: string) {
   check(id);
   return mutate(
     "/admin/posts",
-    (api) =>
-      api.DELETE("/admin/media/{mediaId}", {
-        params: { path: { mediaId: id } },
-      }),
+    (api) => api.delete(apiPath`/admin/media/${id}`),
     {
       failure: "The image was not deleted. It is still in the library.",
       codes: {

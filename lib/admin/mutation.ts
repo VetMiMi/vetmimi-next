@@ -1,7 +1,7 @@
 import "server-only";
 import { revalidatePath } from "next/cache";
-import type { AdminApi } from "@/lib/api/client";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import type { Api } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
 import { adminCall } from "./session";
 
 // What a Server Function hands back to the form that called it: the data,
@@ -55,15 +55,11 @@ export function failure(
 // an API refusal turned into words. Anything else is a bug and is thrown.
 export async function mutate<T>(
   path: string,
-  call: (api: AdminApi) => Promise<{
-    data?: T;
-    error?: unknown;
-    response: Response;
-  }>,
+  call: (api: Api) => Promise<T>,
   messages: Messages,
 ): Promise<Outcome<T>> {
   try {
-    const data = await adminCall(async (api) => unwrap(await call(api)));
+    const data = await adminCall(call);
     revalidatePath(path);
     return { ok: true, data };
   } catch (error) {

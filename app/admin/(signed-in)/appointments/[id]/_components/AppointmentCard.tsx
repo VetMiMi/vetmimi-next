@@ -5,11 +5,11 @@ import {
   longDay,
   whenShort,
 } from "@/lib/admin/appointments";
-import type { components } from "@/lib/api/schema";
+import type { AppointmentDetail } from "@/lib/api/types/appointments";
 import { formatClock, zoneAbbreviation, zonedParts } from "@/lib/zonedTime";
 import { Facts, cardTitle } from "./Facts";
 
-type Detail = components["schemas"]["AppointmentDetail"];
+type Detail = AppointmentDetail;
 
 // The booking facts (Booking UX §12), every time in the practice timezone
 // with its zone named.

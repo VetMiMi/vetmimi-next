@@ -1,11 +1,14 @@
 // The post editor's "Suggest versions" (#153): the AI assistant's channel
 // suggestions turned into the editor's text, and its refusals into words.
 // Pure, so node:test covers it.
-import type { components } from "../api/schema.ts";
+import type {
+  PostSuggestions,
+  SuggestionLanguage,
+} from "../api/types/content.ts";
 import type { SocialChannel } from "./postDraft.ts";
 
-export type Suggestions = components["schemas"]["PostSuggestions"];
-export type Language = components["schemas"]["SuggestionRequest"]["language"];
+export type Suggestions = PostSuggestions;
+export type Language = SuggestionLanguage;
 
 const CHANNELS: SocialChannel[] = ["facebook", "instagram", "linkedin"];
 

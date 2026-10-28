@@ -1,7 +1,7 @@
 import { Checkbox } from "@/components/admin/Checkbox";
 import { Input } from "@/components/admin/Input";
 import { Select } from "@/components/admin/Select";
-import type { components } from "@/lib/api/schema";
+import type { Service } from "@/lib/api/types/booking";
 import { bookingActions } from "./serviceText";
 
 export const legendClass =
@@ -13,7 +13,7 @@ export function BookingFields({
   service,
   errors,
 }: {
-  service?: components["schemas"]["Service"];
+  service?: Service;
   errors: Record<string, string>;
 }) {
   return (

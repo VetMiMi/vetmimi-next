@@ -1,13 +1,16 @@
 import { Card } from "@/components/admin/Card";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { eventSentence, whenShort } from "@/lib/admin/appointments";
-import type { components } from "@/lib/api/schema";
+import type {
+  AppointmentDetail,
+  CommunicationKind,
+} from "@/lib/api/types/appointments";
 import { zoneAbbreviation } from "@/lib/zonedTime";
 import { EmailActions } from "./EmailActions";
 import { cardTitle } from "./Facts";
 
-type Detail = components["schemas"]["AppointmentDetail"];
-type Kind = components["schemas"]["CommunicationKind"];
+type Detail = AppointmentDetail;
+type Kind = CommunicationKind;
 
 const when = (instant: string, tz: string) =>
   `${whenShort(instant, tz)} ${zoneAbbreviation(instant, tz)}`;

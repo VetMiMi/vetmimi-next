@@ -1,12 +1,12 @@
 "use server";
-import { publicApi } from "@/lib/api/client";
+import { apiPath, publicApi } from "@/lib/api/client";
 import {
   getManagedAppointment,
   isManagementToken,
   manageProblem,
   type ManagedAppointment,
 } from "@/lib/api/manage";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { ApiError } from "@/lib/api/problem";
 
 export type ManageOutcome =
   | { ok: true; appointment: ManagedAppointment }
@@ -61,11 +61,9 @@ export async function cancelManaged(
 ): Promise<ManageOutcome> {
   if (!isManagementToken(token)) return { ok: false, code: "not_found" };
   try {
-    const appointment = unwrap(
-      await publicApi().POST("/public/manage/{token}/cancel", {
-        params: { path: { token } },
-        body: { message: message(text) },
-      }),
+    const appointment = await publicApi().post<ManagedAppointment>(
+      apiPath`/public/manage/${token}/cancel`,
+      { message: message(text) },
     );
     return { ok: true, appointment };
   } catch (error) {
@@ -88,11 +86,9 @@ export async function requestReschedule(
     return { ok: false, code: "invalid_request" };
   }
   try {
-    const appointment = unwrap(
-      await publicApi().POST("/public/manage/{token}/reschedule-request", {
-        params: { path: { token } },
-        body: { preferredTimes, message: note },
-      }),
+    const appointment = await publicApi().post<ManagedAppointment>(
+      apiPath`/public/manage/${token}/reschedule-request`,
+      { preferredTimes, message: note },
     );
     return { ok: true, appointment };
   } catch (error) {

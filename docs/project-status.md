@@ -19,8 +19,8 @@ To be set by the orchestrator from the
 - Merges: squash only; the pull request title becomes the commit subject.
 - Every pull request gets a Vercel preview deployment; UI pull requests carry
   screenshots at 375, 768 and 1280 px.
-- Pinned API ref: none yet (ADR-003 adds `"vetmimiApi": {"ref": …}` to
-  `package.json` with the first API-backed feature).
+- API contract: handwritten types in `lib/api/types/`, kept beside the API's
+  Go structs (ADR-011); no pinned ref.
 
 ## Accepted decisions
 
@@ -28,7 +28,7 @@ The decisions live in the API repository and apply to both.
 
 - [ADR-001 — Go API in its own repository](../../vetmimi-api/docs/adr/001-go-api-in-its-own-repository.md)
 - [ADR-002 — Custom admin inside the Next.js app, Next as the browser's only origin](../../vetmimi-api/docs/adr/002-custom-admin-in-the-next-app.md)
-- [ADR-003 — OpenAPI-first contract shared by generation](../../vetmimi-api/docs/adr/003-openapi-first-contract.md)
+- [ADR-011 — Gin with handwritten structs, routes listed per feature](../../vetmimi-api/docs/adr/011-gin-with-handwritten-structs.md) (supersedes ADR-003)
 - [ADR-004 — PostgreSQL owns scheduling correctness](../../vetmimi-api/docs/adr/004-postgresql-owns-scheduling.md)
 - [ADR-005 — One cheap live host; ECS Fargate kept as a validated Terraform target](../../vetmimi-api/docs/adr/005-cheap-live-host-and-fargate-target.md)
 - [ADR-006 — Communications as durable records, delivered by asynq workers](../../vetmimi-api/docs/adr/006-communications-as-durable-records.md)

@@ -2,7 +2,7 @@ import { DataTable, type Column } from "@/components/admin/DataTable";
 import { EmptyState } from "@/components/admin/EmptyState";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Tabs } from "@/components/admin/Tabs";
-import type { components } from "@/lib/api/schema";
+import type { AppointmentStatus } from "@/lib/api/types/appointments";
 import { Group, State } from "./FormSection";
 
 // Made-up people (AGENTS.md Secrets).
@@ -11,7 +11,7 @@ type Row = {
   name: string;
   service: string;
   when: string;
-  status: components["schemas"]["AppointmentStatus"];
+  status: AppointmentStatus;
 };
 
 const rows: Row[] = [

@@ -9,13 +9,13 @@ import { Dialog } from "@/components/admin/Dialog";
 import { Notice } from "@/components/admin/Notice";
 import { useToast } from "@/components/admin/Toast";
 import { requestedTimes, whenLong } from "@/lib/admin/appointments";
-import type { components } from "@/lib/api/schema";
+import type { AppointmentDetail } from "@/lib/api/types/appointments";
+import type { Slot } from "@/lib/api/types/shared";
 import { zoneAbbreviation } from "@/lib/zonedTime";
 import { reschedule } from "../../actions";
 import { SlotChooser } from "../../_components/SlotChooser";
 
-type Detail = components["schemas"]["AppointmentDetail"];
-type Slot = components["schemas"]["Slot"];
+type Detail = AppointmentDetail;
 type Failure = { message: string; stale: boolean; alternatives: Slot[] };
 
 // Choose a free time, review old → new, then move (Booking UX §15). Every

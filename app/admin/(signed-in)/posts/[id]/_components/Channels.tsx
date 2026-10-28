@@ -17,13 +17,12 @@ import {
   isSocial,
   needsConnection,
 } from "@/lib/admin/postWorkflow";
-import type { components } from "@/lib/api/schema";
+import type { Post } from "@/lib/api/types/content";
 import { ChannelBadge } from "../../_components/ChannelBadge";
 import { reloadPost, retryChannel } from "../actions";
 import { CopyAndOpen } from "./CopyAndOpen";
 import { sectionTitle } from "./WebsiteFields";
 
-type Post = components["schemas"]["Post"];
 type Publication = Post["publications"][number];
 
 // While a channel is still going out, look again every few seconds for a

@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { components } from "../api/schema.ts";
+import type {
+  AppointmentAction,
+  VideoRoomSummary,
+} from "../api/types/appointments.ts";
 import {
   firstName,
   roomWindow as withNbsp,
@@ -11,8 +14,8 @@ import {
 const roomWindow = (...args: Parameters<typeof withNbsp>) =>
   withNbsp(...args).replaceAll("\u00a0", " ");
 
-type Room = components["schemas"]["VideoRoomSummary"];
-type Action = components["schemas"]["AppointmentAction"];
+type Room = VideoRoomSummary;
+type Action = AppointmentAction;
 
 const SYDNEY = "Australia/Sydney";
 

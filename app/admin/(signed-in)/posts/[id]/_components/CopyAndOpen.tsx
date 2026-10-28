@@ -11,11 +11,9 @@ import { largest, type Media } from "@/lib/admin/media";
 import type { SocialChannel } from "@/lib/admin/postDraft";
 import { channelNames } from "@/lib/admin/posts";
 import { copyText, imageIdsOf, platformHome } from "@/lib/admin/postWorkflow";
-import type { components } from "@/lib/api/schema";
+import type { Post } from "@/lib/api/types/content";
 import { markPosted } from "../actions";
 import { MediaThumb } from "./MediaThumb";
-
-type Post = components["schemas"]["Post"];
 
 const stepTitle = "mb-2 font-semibold text-ink";
 

@@ -1,7 +1,10 @@
 "use server";
 import { publicApi } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/problem";
-import type { components } from "@/lib/api/schema";
+import type {
+  ContactEnquiryCreate,
+  ContactEnquiryReceipt,
+} from "@/lib/api/types/contact";
 import { checkTraps } from "@/lib/spam";
 
 export type EnquiryOutcome =
@@ -26,7 +29,7 @@ const failed = (code: string): EnquiryOutcome => ({
 // forged timestamp gets the ordinary failure. The Idempotency-Key is made
 // when the form mounts and reused on Try again.
 export async function sendEnquiry(input: {
-  enquiry: components["schemas"]["ContactEnquiryCreate"];
+  enquiry: ContactEnquiryCreate;
   idempotencyKey: string;
   formToken: string;
   honeypot: string;
@@ -41,25 +44,22 @@ export async function sendEnquiry(input: {
   if (trap !== "ok") return failed("unavailable");
 
   try {
-    const { data, error, response } = await publicApi().POST(
+    const { reference } = await publicApi().post<ContactEnquiryReceipt>(
       "/public/contact-enquiries",
-      {
-        params: { header: { "Idempotency-Key": input.idempotencyKey } },
-        body: input.enquiry,
-      },
+      input.enquiry,
+      { "Idempotency-Key": input.idempotencyKey },
     );
-    if (data) return { ok: true, reference: data.reference };
-    const problem = ApiError.fromResponse(response, error);
-    console.warn(`contact enquiry: ${problem.status} ${problem.code}`);
+    return { ok: true, reference };
+  } catch (error) {
+    const problem =
+      error instanceof ApiError ? error : ApiError.unavailable(error);
+    const log = problem.status >= 500 ? console.error : console.warn;
+    log(`contact enquiry: ${problem.status} ${problem.code}`);
     return {
       ok: false,
       code: problem.status >= 500 ? "unavailable" : problem.code,
       fieldErrors: problem.fieldErrors,
       retryAfterSeconds: problem.retryAfterSeconds,
     };
-  } catch (error) {
-    const code = error instanceof ApiError ? error.code : "unavailable";
-    console.error(`contact enquiry failed: ${code}`);
-    return failed("unavailable");
   }
 }

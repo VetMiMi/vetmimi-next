@@ -2,7 +2,8 @@
 
 import { redirect } from "next/navigation";
 import { publicApi } from "@/lib/api/client";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { ApiError } from "@/lib/api/problem";
+import type { SessionCreated } from "@/lib/api/types/admin";
 import { safeNext } from "@/lib/admin/safe-next";
 import { setSessionCookie } from "@/lib/admin/session";
 
@@ -68,11 +69,11 @@ export async function signIn(
   }
 
   try {
-    const session = unwrap(
-      await publicApi().POST("/auth/sessions", {
-        body: { email, password, totpCode: code || undefined },
-      }),
-    );
+    const session = await publicApi().post<SessionCreated>("/auth/sessions", {
+      email,
+      password,
+      totpCode: code || undefined,
+    });
     await setSessionCookie(session.token, session.expiresAt);
   } catch (error) {
     return { attempt, email, fieldErrors: {}, notice: noticeFor(error) };

@@ -1,12 +1,9 @@
 // The contact-enquiry screens' URL ↔ API query mapping and the words they
 // use (#77). Pure, so node:test covers it.
-import type { components, operations } from "../api/schema.ts";
+import type { ContactEnquiry, EnquiryType } from "../api/types/contact.ts";
+import type { Locale } from "../api/types/shared.ts";
 
-type Schemas = components["schemas"];
-type Enquiry = Schemas["ContactEnquiry"];
-type ListQuery = NonNullable<
-  operations["listContactEnquiries"]["parameters"]["query"]
->;
+type Enquiry = ContactEnquiry;
 
 // An enquiry carries no timezone of its own; the issue asks for Sydney
 // time, the practice's.
@@ -25,7 +22,7 @@ export const views = [
 ] as const;
 export type View = (typeof views)[number]["id"];
 
-export const enquiryTypes: Record<Schemas["EnquiryType"], string> = {
+export const enquiryTypes: Record<EnquiryType, string> = {
   collaboration: "Collaboration / Project",
   workshop: "Workshop / Program",
   speaking: "Speaking / Event",
@@ -35,7 +32,7 @@ export const enquiryTypes: Record<Schemas["EnquiryType"], string> = {
   general: "General",
 };
 
-export const localeNames: Record<Schemas["Locale"], string> = {
+export const localeNames: Record<Locale, string> = {
   en: "English",
   my: "Burmese",
 };
@@ -52,7 +49,7 @@ export function parseFilters(params: SearchParams): ListFilters {
   return { view, ...(q && { q }) };
 }
 
-export function listQuery(filters: ListFilters, cursor?: string): ListQuery {
+export function listQuery(filters: ListFilters, cursor?: string) {
   return {
     ...(filters.view !== "all" && { status: filters.view }),
     ...(filters.q && { q: filters.q }),

@@ -2,13 +2,11 @@ import "server-only";
 import { cache } from "react";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { adminApi, type AdminApi, type CallOptions } from "@/lib/api/client";
-import { ApiError, unwrap } from "@/lib/api/problem";
-import type { components } from "@/lib/api/schema";
+import { adminApi, type Api, type CallOptions } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type { CurrentUser } from "@/lib/api/types/admin";
 import { canUse, type Role } from "./roles";
 import { safeNext } from "./safe-next";
-
-export type CurrentUser = components["schemas"]["CurrentUser"];
 
 // The API's session token (ADR-002). httpOnly, so no script on the page can
 // read it, and scoped to /admin, so the public pages never send it.
@@ -43,7 +41,7 @@ export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   const token = await sessionToken();
   if (!token) return null;
   try {
-    return unwrap(await adminApi(token).GET("/auth/me"));
+    return await adminApi(token).get<CurrentUser>("/auth/me");
   } catch (error) {
     if (isUnauthenticated(error)) return null;
     throw error;
@@ -77,7 +75,7 @@ export async function requireRole(
 // layouts do not re-render on client navigation, so a session that ends
 // mid-visit is caught by the call that finds it.
 export async function adminCall<T>(
-  fn: (api: AdminApi) => Promise<T>,
+  fn: (api: Api) => Promise<T>,
   options: CallOptions = {},
 ) {
   const token = await sessionToken();

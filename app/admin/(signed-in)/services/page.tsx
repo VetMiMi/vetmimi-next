@@ -7,7 +7,8 @@ import { NoAccess } from "@/components/admin/NoAccess";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { unwrap } from "@/lib/api/problem";
+import type { Service } from "@/lib/api/types/booking";
+import type { Page } from "@/lib/api/types/shared";
 import { bookingActions, formatNames, serviceName } from "./serviceText";
 import { ServiceStateButton } from "./ServiceStateButton";
 
@@ -17,8 +18,8 @@ export const metadata: Metadata = { title: "Services" };
 // edited under Content (ADR-008); this is how each one is booked.
 export default async function ServicesPage() {
   if (!(await requireRole("booking_admin"))) return <NoAccess />;
-  const { items } = await adminCall(async (api) =>
-    unwrap(await api.GET("/admin/services")),
+  const { items } = await adminCall((api) =>
+    api.get<Page<Service>>("/admin/services"),
   );
   const services = [...items].sort((a, b) => a.sortOrder - b.sortOrder);
 

@@ -13,11 +13,13 @@ export function SentNotice({ reference }: { reference: string | null }) {
   // The sent card is much shorter than the form, so bring it into view.
   useEffect(() => box.current?.scrollIntoView({ block: "center" }), []);
   return (
-    <div ref={box} className="contact-success" role="status">
-      <h2>{t("success.title")}</h2>
-      <p>{t("success.text")}</p>
+    <div ref={box} role="status">
+      <h2 className="mb-3 text-[clamp(1.6rem,2.4vw,2rem)]">
+        {t("success.title")}
+      </h2>
+      <p className="leading-[1.78] text-ink/72">{t("success.text")}</p>
       {reference && (
-        <p className="contact-reference">
+        <p className="mt-3 leading-[1.78] font-semibold text-ink">
           {t("success.reference", { reference })}
         </p>
       )}
@@ -37,21 +39,24 @@ export function SendFailure({
   if (send.status !== "failed" && send.status !== "rateLimited") return null;
   return (
     <div
-      className="contact-status contact-status--error"
+      className="mb-6 rounded-(--radius-notice) border border-red/27 bg-red/7 px-6 py-5 text-[0.92rem] text-red"
       role="alert"
-      style={{ marginBottom: 24 }}
     >
       {send.status === "failed" ? (
         <>
-          <p>
+          <p className="leading-[1.65]">
             <strong>{t("form.error.title")}</strong> {t("form.error.text")}
           </p>
-          <button type="button" onClick={onRetry}>
+          <button
+            type="button"
+            onClick={onRetry}
+            className="mt-3 cursor-pointer rounded-(--radius-small) border border-red px-3.5 py-1.5 font-body text-[0.85rem] text-red"
+          >
             {t("form.error.retry")}
           </button>
         </>
       ) : (
-        <p>{t("form.rateLimited")}</p>
+        <p className="leading-[1.65]">{t("form.rateLimited")}</p>
       )}
     </div>
   );

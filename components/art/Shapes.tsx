@@ -1,14 +1,14 @@
-import { C } from "@/lib/tokens";
-
 type SVGProps = { style?: React.CSSProperties; className?: string };
 
 /* ── Imperfect Halo ──────────────────────────────────────── */
 export function ImperfectHalo({
-  color = C.indigo,
+  color = "var(--indigo)",
   size = 480,
   opacity = 0.88,
   style,
 }: { color?: string; size?: number; opacity?: number } & SVGProps) {
+  // The Open Graph images (app/_og) draw this one too, and Satori reads
+  // only inline styles.
   return (
     <svg
       width={size}
@@ -45,16 +45,13 @@ export function WaveDivider({
       "M0 28 C240 0, 480 56, 720 28 C960 0, 1200 56, 1440 28 L1440 80 L0 80 Z",
     dramatic: "M0 70 Q720 0 1440 70 L1440 80 L0 80 Z",
   };
+  // The colour comes from the caller, so the background stays inline.
   return (
-    <div style={{ background: from, lineHeight: 0, ...style }}>
+    <div className="leading-0" style={{ background: from, ...style }}>
       <svg
         viewBox="0 0 1440 80"
         preserveAspectRatio="none"
-        style={{
-          display: "block",
-          width: "100%",
-          transform: flip ? "scaleY(-1)" : undefined,
-        }}
+        className={flip ? "block w-full -scale-y-100" : "block w-full"}
         aria-hidden
       >
         <path d={paths[variant]} fill={to} />
@@ -69,17 +66,13 @@ export function AquaRibbon({ style }: SVGProps) {
     <svg
       viewBox="0 0 1440 200"
       preserveAspectRatio="none"
-      style={{
-        display: "block",
-        width: "100%",
-        pointerEvents: "none",
-        ...style,
-      }}
+      className="pointer-events-none block w-full"
+      style={style}
       aria-hidden
     >
       <path
         d="M-60 160 C240 60, 540 200, 840 120 C1080 60, 1260 170, 1500 80"
-        stroke={C.aqua}
+        className="stroke-aqua"
         strokeWidth="38"
         fill="none"
         opacity="0.28"
@@ -87,7 +80,7 @@ export function AquaRibbon({ style }: SVGProps) {
       />
       <path
         d="M-40 165 C250 70, 560 195, 860 115 C1100 55, 1280 165, 1520 75"
-        stroke={C.aqua}
+        className="stroke-aqua"
         strokeWidth="14"
         fill="none"
         opacity="0.18"
@@ -100,19 +93,15 @@ export function AquaRibbon({ style }: SVGProps) {
 /* ── Coral Wave Field (hero right side) ──────────────────── */
 export function CoralWaveField({ style }: SVGProps) {
   return (
-    <svg
-      viewBox="0 0 700 700"
-      style={{ display: "block", ...style }}
-      aria-hidden
-    >
+    <svg viewBox="0 0 700 700" className="block" style={style} aria-hidden>
       <path
         d="M460 0 C540 80, 700 60, 700 200 C700 380, 600 460, 560 560 C520 660, 600 700, 700 700 L700 0 Z"
-        fill={C.red}
+        className="fill-red"
         opacity="0.13"
       />
       <path
         d="M520 0 C600 100, 700 120, 700 260 C700 420, 640 500, 660 620 C680 700, 700 700, 700 700 L700 0 Z"
-        fill={C.coral}
+        className="fill-coral"
         opacity="0.09"
       />
     </svg>
@@ -126,25 +115,26 @@ export function GoldMark({ size = 48, style }: { size?: number } & SVGProps) {
       width={size}
       height={size}
       viewBox="0 0 48 48"
-      style={{ display: "block", ...style }}
+      className="block"
+      style={style}
       aria-hidden
     >
       <path
         d="M8 24 C12 16, 20 10, 28 14 C36 18, 40 30, 34 36 C28 42, 16 38, 12 32 C10 28, 14 20, 20 22"
-        stroke={C.ochre}
+        className="stroke-ochre"
         strokeWidth="2.5"
         fill="none"
         opacity="0.75"
         strokeLinecap="round"
       />
-      <circle cx="28" cy="14" r="2.5" fill={C.ochre} opacity="0.6" />
+      <circle cx="28" cy="14" r="2.5" className="fill-ochre" opacity="0.6" />
     </svg>
   );
 }
 
 /* ── Petal Outline ───────────────────────────────────────── */
 export function PetalOutline({
-  color = C.coral,
+  color = "var(--coral)",
   size = 80,
   style,
 }: { color?: string; size?: number } & SVGProps) {
@@ -153,7 +143,8 @@ export function PetalOutline({
       width={size}
       height={size}
       viewBox="0 0 80 80"
-      style={{ display: "block", ...style }}
+      className="block"
+      style={style}
       aria-hidden
     >
       <path
@@ -186,13 +177,14 @@ export function MintOpenCircle({
       width={size}
       height={size}
       viewBox="0 0 340 340"
-      style={{ display: "block", ...style }}
+      className="block"
+      style={style}
       aria-hidden
     >
       <path
         d="M170 20 A150 150 0 1 1 50 255"
         fill="none"
-        stroke={C.aqua}
+        className="stroke-aqua"
         strokeWidth="2.5"
         opacity="0.55"
         strokeLinecap="round"
@@ -200,7 +192,7 @@ export function MintOpenCircle({
       <path
         d="M170 30 A140 140 0 0 1 295 230"
         fill="none"
-        stroke={C.aqua}
+        className="stroke-aqua"
         strokeWidth="1"
         opacity="0.3"
         strokeLinecap="round"
@@ -211,7 +203,7 @@ export function MintOpenCircle({
 
 /* ── Almond / Eye ────────────────────────────────────────── */
 export function AlmondEye({
-  color = C.rose,
+  color = "var(--rose)",
   size = 60,
   style,
 }: { color?: string; size?: number } & SVGProps) {
@@ -220,7 +212,8 @@ export function AlmondEye({
       width={size}
       height={size * 0.5}
       viewBox="0 0 60 30"
-      style={{ display: "block", ...style }}
+      className="block"
+      style={style}
       aria-hidden
     >
       <path
@@ -237,7 +230,7 @@ export function AlmondEye({
 
 /* ── Service Symbols ─────────────────────────────────────── */
 export function NestedOval({
-  color = C.rose,
+  color = "var(--rose)",
   size = 80,
   style,
 }: { color?: string; size?: number } & SVGProps) {
@@ -246,7 +239,8 @@ export function NestedOval({
       width={size}
       height={size}
       viewBox="0 0 80 80"
-      style={{ display: "block", ...style }}
+      className="block"
+      style={style}
       aria-hidden
     >
       <ellipse
@@ -285,7 +279,7 @@ export function NestedOval({
 }
 
 export function OverlappingCircles({
-  color = C.aqua,
+  color = "var(--aqua)",
   size = 80,
   style,
 }: { color?: string; size?: number } & SVGProps) {
@@ -294,7 +288,8 @@ export function OverlappingCircles({
       width={size}
       height={size * 0.8}
       viewBox="0 0 90 70"
-      style={{ display: "block", ...style }}
+      className="block"
+      style={style}
       aria-hidden
     >
       <circle cx="24" cy="38" r="22" fill={color} opacity="0.2" />
@@ -332,7 +327,7 @@ export function OverlappingCircles({
 }
 
 export function FlowingRibbon({
-  color = C.ochre,
+  color = "var(--ochre)",
   size = 80,
   style,
 }: { color?: string; size?: number } & SVGProps) {
@@ -341,7 +336,8 @@ export function FlowingRibbon({
       width={size}
       height={size * 0.6}
       viewBox="0 0 100 60"
-      style={{ display: "block", ...style }}
+      className="block"
+      style={style}
       aria-hidden
     >
       <path
@@ -362,14 +358,10 @@ export function FlowingRibbon({
 /* ── Lavender Wave (section accent) ─────────────────────── */
 export function LavenderWaveAccent({ style }: SVGProps) {
   return (
-    <svg
-      viewBox="0 0 600 200"
-      style={{ display: "block", ...style }}
-      aria-hidden
-    >
+    <svg viewBox="0 0 600 200" className="block" style={style} aria-hidden>
       <path
         d="M0 120 C100 40, 200 180, 300 100 C400 20, 500 140, 600 80"
-        stroke={C.violet}
+        className="stroke-violet"
         strokeWidth="60"
         fill="none"
         opacity="0.12"
@@ -381,7 +373,7 @@ export function LavenderWaveAccent({ style }: SVGProps) {
 
 /* ── Hand-drawn Connecting Thread ────────────────────────── */
 export function ConnectingThread({
-  color = C.ochre,
+  color = "var(--ochre)",
   points,
   style,
 }: { color?: string; points: [number, number][] } & SVGProps) {
@@ -400,7 +392,8 @@ export function ConnectingThread({
       width={maxX}
       height={maxY}
       viewBox={`0 0 ${maxX} ${maxY}`}
-      style={{ display: "block", ...style }}
+      className="block"
+      style={style}
       aria-hidden
     >
       <path
@@ -421,16 +414,17 @@ export function ConnectingThread({
 
 /* ── Dark feature wave (top of indigo section) ───────────── */
 export function DarkWaveTop({
-  from = C.paper,
-  to = C.indigo,
+  from = "var(--paper)",
+  to = "var(--indigo)",
   style,
 }: { from?: string; to?: string } & SVGProps) {
+  // The colour comes from the caller, so the background stays inline.
   return (
-    <div style={{ background: from, lineHeight: 0, ...style }}>
+    <div className="leading-0" style={{ background: from, ...style }}>
       <svg
         viewBox="0 0 1440 90"
         preserveAspectRatio="none"
-        style={{ display: "block", width: "100%" }}
+        className="block w-full"
         aria-hidden
       >
         <path

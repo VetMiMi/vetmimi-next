@@ -1,5 +1,4 @@
 import { NestedOval, PetalOutline } from "@/components/art/Shapes";
-import { C } from "@/lib/tokens";
 import { Button } from "./Button";
 
 const shapes = { petal: PetalOutline, oval: NestedOval };
@@ -25,8 +24,8 @@ export function EmptyState({
   return (
     <div className="flex flex-col items-start gap-3 rounded-card border border-card-border bg-raised px-[clamp(24px,4vw,44px)] py-[clamp(32px,5vw,48px)]">
       {Shape && (
-        <div aria-hidden="true" className="mb-1">
-          <Shape color={C.rose} size={56} />
+        <div aria-hidden="true" className="mb-1 text-rose">
+          <Shape color="currentColor" size={56} />
         </div>
       )}
       <Heading className="text-[1.35rem]">{title}</Heading>

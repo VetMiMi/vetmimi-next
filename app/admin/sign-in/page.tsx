@@ -4,7 +4,6 @@ import { PetalOutline } from "@/components/art/Shapes";
 import { Notice } from "@/components/admin/Notice";
 import { safeNext } from "@/lib/admin/safe-next";
 import { getCurrentUser } from "@/lib/admin/session";
-import { C } from "@/lib/tokens";
 import { SignInForm } from "./SignInForm";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -26,9 +25,9 @@ export default async function SignInPage({
             being done yet. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -top-11 -right-3 md:-top-14 md:-right-16"
+          className="pointer-events-none absolute -top-11 -right-3 text-rose md:-top-14 md:-right-16"
         >
-          <PetalOutline color={C.rose} size={112} />
+          <PetalOutline color="currentColor" size={112} />
         </div>
         <div className="relative rounded-card border border-card-border bg-raised p-[clamp(24px,4vw,44px)]">
           <p className="mb-3 text-[0.7rem] font-bold tracking-[0.12em] text-label uppercase">

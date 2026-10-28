@@ -1,9 +1,9 @@
 // The media library in the post editor (#151): what may be uploaded, when
 // an image is described well enough to attach, and which web size to show.
 // Pure, so node:test covers it.
-import type { components } from "../api/schema.ts";
+import type { Media } from "../api/types/content.ts";
 
-export type Media = components["schemas"]["Media"];
+export type { Media };
 
 // The API's own limits (vetmimi-api internal/media): 20 MiB, and a JPEG,
 // PNG or WebP recognised from its content.

@@ -16,12 +16,11 @@ import { Input } from "@/components/admin/Input";
 import { Notice } from "@/components/admin/Notice";
 import { Textarea } from "@/components/admin/Textarea";
 import { useToast } from "@/components/admin/Toast";
-import type { components } from "@/lib/api/schema";
+import type { Service } from "@/lib/api/types/booking";
+import type { LocalizedText } from "@/lib/api/types/shared";
 import { slugify } from "@/lib/slug";
 import { deleteService, saveService, type ServiceFormState } from "./actions";
 import { BookingFields, legendClass } from "./BookingFields";
-
-type Service = components["schemas"]["Service"];
 
 const LIST = "/admin/services";
 const initial: ServiceFormState = { attempt: 0, fieldErrors: {} };
@@ -90,7 +89,7 @@ export function ServiceForm({ service }: { service?: Service }) {
   const pair = (
     name: string,
     label: string,
-    value?: components["schemas"]["LocalizedText"],
+    value?: LocalizedText,
     help?: string,
   ) => (
     <div className="grid gap-[18px] md:grid-cols-2">

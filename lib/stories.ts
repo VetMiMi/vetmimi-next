@@ -1,9 +1,13 @@
 import type { StaticImageData } from "next/image";
-import type { components } from "./api/schema.ts";
+import type {
+  PostKind,
+  PublicArticleSummary,
+  PublicImage,
+} from "./api/types/content.ts";
 
-type PostKind = components["schemas"]["PostKind"];
-export type PublicImage = components["schemas"]["PublicImage"];
-export type ArticleSummary = components["schemas"]["PublicArticleSummary"];
+export type { PublicImage };
+
+export type ArticleSummary = PublicArticleSummary;
 
 // The site's word for each kind of post: a True Story is shown as a Story.
 export type StoryKind = "story" | "insight" | "announcement";

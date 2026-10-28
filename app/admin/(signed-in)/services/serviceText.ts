@@ -1,6 +1,4 @@
-import type { components } from "@/lib/api/schema";
-
-type Service = components["schemas"]["Service"];
+import type { Service } from "@/lib/api/types/booking";
 
 export const bookingActions: Record<Service["bookingAction"], string> = {
   book: "Book",

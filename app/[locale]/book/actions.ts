@@ -1,18 +1,20 @@
 "use server";
 import { publicApi } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/problem";
-import type { components } from "@/lib/api/schema";
+import type {
+  AppointmentRequestCreate,
+  AppointmentRequestReceipt,
+} from "@/lib/api/types/booking";
+import type { Slot } from "@/lib/api/types/shared";
 import { checkTraps } from "@/lib/spam";
 
-type Schemas = components["schemas"];
-
 export type SubmitOutcome =
-  | { ok: true; receipt: Schemas["AppointmentRequestReceipt"] }
+  | { ok: true; receipt: AppointmentRequestReceipt }
   | {
       ok: false;
       code: string;
       fieldErrors: Record<string, string>;
-      alternatives: Schemas["Slot"][];
+      alternatives: Slot[];
       retryAfterSeconds?: number;
     };
 
@@ -31,7 +33,7 @@ const failed = (code: string): SubmitOutcome => ({
 // (ADR-004). A tripped bot trap answers like an outage and calls nothing:
 // a Pending result may only follow a stored record.
 export async function requestAppointment(input: {
-  request: Schemas["AppointmentRequestCreate"];
+  request: AppointmentRequestCreate;
   idempotencyKey: string;
   formToken: string;
   honeypot: string;
@@ -47,29 +49,23 @@ export async function requestAppointment(input: {
   }
 
   try {
-    const { data, error, response } = await publicApi().POST(
+    const receipt = await publicApi().post<AppointmentRequestReceipt>(
       "/public/appointments",
-      {
-        params: { header: { "Idempotency-Key": input.idempotencyKey } },
-        body: input.request,
-      },
+      input.request,
+      { "Idempotency-Key": input.idempotencyKey },
     );
-    if (data) return { ok: true, receipt: data };
-    const problem = ApiError.fromResponse(response, error);
-    console.warn(`appointment request: ${problem.status} ${problem.code}`);
+    return { ok: true, receipt };
+  } catch (error) {
+    const problem =
+      error instanceof ApiError ? error : ApiError.unavailable(error);
+    const log = problem.status >= 500 ? console.error : console.warn;
+    log(`appointment request: ${problem.status} ${problem.code}`);
     return {
       ok: false,
       code: problem.status >= 500 ? "unavailable" : problem.code,
       fieldErrors: problem.fieldErrors,
-      alternatives:
-        problem.code === "slot_unavailable"
-          ? ((error as Schemas["SlotUnavailableProblem"]).alternatives ?? [])
-          : [],
+      alternatives: problem.alternatives,
       retryAfterSeconds: problem.retryAfterSeconds,
     };
-  } catch (error) {
-    const code = error instanceof ApiError ? error.code : "unavailable";
-    console.error(`appointment request failed: ${code}`);
-    return failed("unavailable");
   }
 }

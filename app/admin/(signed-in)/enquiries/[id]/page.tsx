@@ -13,7 +13,9 @@ import {
   replyHref,
 } from "@/lib/admin/enquiries";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { apiPath } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type { ContactEnquiry } from "@/lib/api/types/contact";
 import { zoneAbbreviation } from "@/lib/zonedTime";
 import { MarkHandledButton } from "./MarkHandledButton";
 
@@ -35,12 +37,8 @@ export default async function EnquiryPage({
   if (!(await requireRole("booking_admin"))) return <NoAccess />;
   const { id } = await params;
   if (!UUID.test(id)) notFound();
-  const e = await adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/contact-enquiries/{enquiryId}", {
-        params: { path: { enquiryId: id } },
-      }),
-    ),
+  const e = await adminCall((api) =>
+    api.get<ContactEnquiry>(apiPath`/admin/contact-enquiries/${id}`),
   ).catch((error) => {
     if (error instanceof ApiError && error.status === 404) notFound();
     if (error instanceof ApiError && error.status === 403) return null;

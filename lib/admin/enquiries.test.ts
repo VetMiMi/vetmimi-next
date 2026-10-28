@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { components } from "../api/schema.ts";
+import type { ContactEnquiry } from "../api/types/contact.ts";
 import {
   listHref,
   listQuery,
@@ -10,7 +10,7 @@ import {
   toRow,
 } from "./enquiries.ts";
 
-type Enquiry = components["schemas"]["ContactEnquiry"];
+type Enquiry = ContactEnquiry;
 
 const enquiry = (patch: Partial<Enquiry>): Enquiry => ({
   id: "0b6f7c1e-2d3a-4b5c-9d8e-7f6a5b4c3d2e",

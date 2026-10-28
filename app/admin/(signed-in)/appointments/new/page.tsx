@@ -4,7 +4,9 @@ import { EmptyState } from "@/components/admin/EmptyState";
 import { NoAccess } from "@/components/admin/NoAccess";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { unwrap } from "@/lib/api/problem";
+import type { Settings } from "@/lib/api/types/admin";
+import type { Service } from "@/lib/api/types/booking";
+import type { Page } from "@/lib/api/types/shared";
 import { todayIn } from "@/lib/zonedTime";
 import { ManualAppointmentForm } from "./ManualAppointmentForm";
 
@@ -16,8 +18,8 @@ export default async function NewAppointmentPage() {
   if (!(await requireRole("booking_admin"))) return <NoAccess />;
   const [services, settings] = await adminCall((api) =>
     Promise.all([
-      api.GET("/admin/services").then(unwrap),
-      api.GET("/admin/settings").then(unwrap),
+      api.get<Page<Service>>("/admin/services"),
+      api.get<Settings>("/admin/settings"),
     ]),
   );
   // Only services visitors book or request; a paused one is shown but

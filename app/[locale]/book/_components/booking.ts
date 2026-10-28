@@ -1,14 +1,18 @@
 // Shared types and styles for the booking flow.
 import type { CSSProperties } from "react";
-import type { components } from "@/lib/api/schema";
+import type {
+  AppointmentRequestReceipt,
+  PublicBookableService,
+  PublicBookableServiceList,
+} from "@/lib/api/types/booking";
+import type { Format, Slot } from "@/lib/api/types/shared";
 import { C } from "@/lib/tokens";
 
-type Schemas = components["schemas"];
-export type BookableService = Schemas["PublicBookableService"];
-export type ServiceList = Schemas["PublicBookableServiceList"];
-export type Slot = Schemas["Slot"];
-export type Format = Schemas["Format"];
-export type Receipt = Schemas["AppointmentRequestReceipt"];
+export type { Slot, Format };
+
+export type BookableService = PublicBookableService;
+export type ServiceList = PublicBookableServiceList;
+export type Receipt = AppointmentRequestReceipt;
 
 // The quiet text button used for Back and Edit.
 export const textButton: CSSProperties = {

@@ -3,7 +3,8 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "@/i18n/routing";
 import { pageMetadata } from "@/lib/seo";
 import { apiConfigured, publicApi } from "@/lib/api/client";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { ApiError } from "@/lib/api/problem";
+import type { PublicBookableServiceList } from "@/lib/api/types/booking";
 import { issueFormToken } from "@/lib/spam";
 import { BookingFlow } from "./_components/BookingFlow";
 import "@/styles/booking.css";
@@ -52,10 +53,9 @@ async function bookableServices(locale: Locale) {
     };
   }
   try {
-    return unwrap(
-      await publicApi().GET("/public/booking/services", {
-        params: { query: { locale } },
-      }),
+    return await publicApi().get<PublicBookableServiceList>(
+      "/public/booking/services",
+      { locale },
     );
   } catch (error) {
     const code = error instanceof ApiError ? error.code : "unavailable";

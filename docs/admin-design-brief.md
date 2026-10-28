@@ -163,7 +163,7 @@ on the tint over canvas / over white.
 The statuses are the contract's `AppointmentStatus`: the practitioner's
 cancellation is `cancelled_by_practitioner`, and `expired` (a request
 nobody answered in time) takes the Declined treatment. These tables live as
-data in `components/admin/status.ts`, typed from `lib/api/schema.ts`, so a
+data in `components/admin/status.ts`, typed from `lib/api/types/`, so a
 status the API adds fails `pnpm typecheck` until it has a row; the admin
 `StatusBadge` and the public booking pages both read it.
 

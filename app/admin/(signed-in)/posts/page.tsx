@@ -16,7 +16,9 @@ import {
   views,
 } from "@/lib/admin/posts";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { ApiError } from "@/lib/api/problem";
+import type { PostSummary } from "@/lib/api/types/content";
+import type { Page } from "@/lib/api/types/shared";
 import { NewPostButton } from "./_components/NewPostButton";
 import { PostList } from "./_components/PostList";
 
@@ -32,19 +34,18 @@ export default async function PostsPage({
   const filters = parseFilters(params);
 
   const page = await adminCall(async (api) => {
-    const list = unwrap(
-      await api.GET("/admin/posts", { params: { query: listQuery(filters) } }),
+    const list = await api.get<Page<PostSummary>>(
+      "/admin/posts",
+      listQuery(filters),
     );
     // Published also shows the posts still going out, so a channel that
     // failed or waits to be posted by hand is in view.
     if (filters.view !== "published") return list;
-    const publishing = unwrap(
-      await api.GET("/admin/posts", {
-        params: {
-          query: { status: "publishing", q: filters.q, limit: CALENDAR_LIMIT },
-        },
-      }),
-    );
+    const publishing = await api.get<Page<PostSummary>>("/admin/posts", {
+      status: "publishing",
+      q: filters.q,
+      limit: CALENDAR_LIMIT,
+    });
     return { ...list, items: [...publishing.items, ...list.items] };
   }).catch((error) => {
     if (error instanceof ApiError && error.status === 403) return null;

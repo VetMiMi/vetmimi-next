@@ -1,10 +1,8 @@
 // The "New appointment" form's rules (#78): its checks, the request it
 // sends and when its Idempotency-Key is replaced. Pure, so node:test
 // covers it.
-import type { components } from "../api/schema.ts";
-
-type Schemas = components["schemas"];
-type Slot = Schemas["Slot"];
+import type { ManualAppointmentCreate } from "../api/types/appointments.ts";
+import type { Slot } from "../api/types/shared.ts";
 
 export type ManualFields = {
   serviceId: string;
@@ -103,7 +101,7 @@ export function checkAll(fields: ManualFields, slot: Slot | null) {
 export function manualPayload(
   fields: ManualFields,
   slot: Slot,
-): Schemas["ManualAppointmentCreate"] {
+): ManualAppointmentCreate {
   const phone = fields.phone.trim();
   const note = fields.note.trim();
   const adminNote = fields.adminNote.trim();

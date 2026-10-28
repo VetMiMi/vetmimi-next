@@ -5,10 +5,10 @@ import {
   formatNames,
   whenShort,
 } from "@/lib/admin/appointments";
-import type { components } from "@/lib/api/schema";
+import type { AppointmentSummary } from "@/lib/api/types/appointments";
 import { formatDay, zonedParts } from "@/lib/zonedTime";
 
-type Summary = components["schemas"]["AppointmentSummary"];
+type Summary = AppointmentSummary;
 
 // Appointment rows for the list (#65): a table from 768px, cards below.
 // Name only: email and phone stay on the detail page (Booking UX §28).

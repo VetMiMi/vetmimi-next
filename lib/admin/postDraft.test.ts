@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { components } from "../api/schema.ts";
+import type { Post } from "../api/types/content.ts";
 import {
   characterCount,
   hashtagCount,
@@ -9,8 +9,6 @@ import {
   toDraft,
   toPatch,
 } from "./postDraft.ts";
-
-type Post = components["schemas"]["Post"];
 
 const post = (patch: Partial<Post> = {}): Post => ({
   id: "0b6f7c1e-2d3a-4b5c-9d8e-7f6a5b4c3d2e",

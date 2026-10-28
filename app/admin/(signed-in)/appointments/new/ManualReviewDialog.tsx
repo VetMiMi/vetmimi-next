@@ -3,10 +3,8 @@
 import { Dialog } from "@/components/admin/Dialog";
 import { formatNames, whenLong } from "@/lib/admin/appointments";
 import type { ManualFields } from "@/lib/admin/manualAppointment";
-import type { components } from "@/lib/api/schema";
+import type { Slot } from "@/lib/api/types/shared";
 import { zoneAbbreviation } from "@/lib/zonedTime";
-
-type Slot = components["schemas"]["Slot"];
 
 // The check before a consequential write (brief §7 Dialogs): everything the
 // appointment will hold, and whether the visitor hears about it.

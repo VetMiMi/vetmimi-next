@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { WarningCircle } from "@phosphor-icons/react/dist/ssr";
 import { groupAttention, whenShort } from "@/lib/admin/appointments";
-import type { components } from "@/lib/api/schema";
+import type { AttentionItem } from "@/lib/api/types/appointments";
 
-type Item = components["schemas"]["AttentionItem"];
+type Item = AttentionItem;
 
 // There is no separate dashboard yet, so what needs Daw Mi sits at the top
 // of the list. Pending requests have their own section below, so they are

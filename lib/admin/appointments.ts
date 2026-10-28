@@ -1,7 +1,13 @@
 // The appointment list's URL ↔ API query mapping and the words the
 // appointment screens use for times and history. Pure, so node:test covers
 // it. Times always go through the practice timezone (brief §10).
-import type { components, operations } from "../api/schema.ts";
+import type {
+  AppointmentEvent,
+  AppointmentStatus,
+  AttentionItem,
+  Communication,
+} from "../api/types/appointments.ts";
+import type { Format } from "../api/types/shared.ts";
 import { addDays } from "../time.ts";
 import {
   formatClock,
@@ -11,15 +17,8 @@ import {
   zonedParts,
 } from "../zonedTime.ts";
 
-type Schemas = components["schemas"];
-type Status = Schemas["AppointmentStatus"];
-type Format = Schemas["Format"];
-type Event = Schemas["AppointmentEvent"];
-type Communication = Schemas["Communication"];
-type AttentionItem = Schemas["AttentionItem"];
-export type ListQuery = NonNullable<
-  operations["listAppointments"]["parameters"]["query"]
->;
+type Status = AppointmentStatus;
+type Event = AppointmentEvent;
 
 export const PAGE_SIZE = 50;
 
@@ -106,7 +105,7 @@ export function listQuery(
   filters: ListFilters,
   timeZone: string,
   cursor?: string,
-): ListQuery {
+) {
   const { view, status, serviceId, from, to, format, q } = filters;
   return {
     view,

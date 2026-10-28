@@ -4,15 +4,18 @@ import { revalidatePath } from "next/cache";
 import { listQuery, parseFilters } from "@/lib/admin/appointments";
 import { failure, mutate, type Outcome } from "@/lib/admin/mutation";
 import { adminCall } from "@/lib/admin/session";
-import type { AdminApi } from "@/lib/api/client";
-import { ApiError, unwrap } from "@/lib/api/problem";
-import type { components } from "@/lib/api/schema";
+import { apiPath, type Api } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type {
+  AppointmentDetail as Detail,
+  AppointmentList,
+  Communication,
+  CommunicationKind,
+  ManualAppointmentCreate,
+} from "@/lib/api/types/appointments";
+import type { AvailabilityPreview } from "@/lib/api/types/booking";
+import type { Slot } from "@/lib/api/types/shared";
 import { statuses } from "@/components/admin/status";
-
-type Schemas = components["schemas"];
-type Detail = Schemas["AppointmentDetail"];
-type Slot = Schemas["Slot"];
-type CommunicationKind = Schemas["CommunicationKind"];
 
 const BASE = "/admin/appointments";
 const MONTH = /^\d{4}-\d{2}$/;
@@ -27,11 +30,10 @@ export async function moreAppointments(
   timezone: string,
   cursor: string,
 ) {
-  return adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/appointments", {
-        params: { query: listQuery(parseFilters(params), timezone, cursor) },
-      }),
+  return adminCall((api) =>
+    api.get<AppointmentList>(
+      "/admin/appointments",
+      listQuery(parseFilters(params), timezone, cursor),
     ),
   );
 }
@@ -44,14 +46,12 @@ export async function previewMonth(serviceId: string, month: string) {
   const [y, m] = month.split("-").map(Number);
   const last = new Date(Date.UTC(y, m, 0)).getUTCDate();
   try {
-    return await adminCall(async (api) =>
-      unwrap(
-        await api.GET("/admin/availability/preview", {
-          params: {
-            query: { serviceId, from: `${month}-01`, to: `${month}-${last}` },
-          },
-        }),
-      ),
+    return await adminCall((api) =>
+      api.get<AvailabilityPreview>("/admin/availability/preview", {
+        serviceId,
+        from: `${month}-01`,
+        to: `${month}-${last}`,
+      }),
     );
   } catch (error) {
     if (error instanceof ApiError) return null;
@@ -79,41 +79,19 @@ const failures: Record<StatusAction, string> = {
   no_show: notChanged,
 };
 
-function post(
-  api: AdminApi,
-  id: string,
-  action: StatusAction,
-  body: StatusBody,
-) {
-  const params = { path: { appointmentId: id } };
+function statusBody(action: StatusAction, body: StatusBody) {
   const { version, messageToVisitor, notifyVisitor = true, meetingLink } = body;
   const message = messageToVisitor?.trim() || undefined;
   switch (action) {
     case "confirm":
-      return api.POST("/admin/appointments/{appointmentId}/confirm", {
-        params,
-        body: { version, ...(meetingLink && { meetingLink }) },
-      });
+      return { version, ...(meetingLink && { meetingLink }) };
     case "decline":
-      return api.POST("/admin/appointments/{appointmentId}/decline", {
-        params,
-        body: { version, messageToVisitor: message },
-      });
+      return { version, messageToVisitor: message };
     case "cancel":
-      return api.POST("/admin/appointments/{appointmentId}/cancel", {
-        params,
-        body: { version, messageToVisitor: message, notifyVisitor },
-      });
+      return { version, messageToVisitor: message, notifyVisitor };
     case "complete":
-      return api.POST("/admin/appointments/{appointmentId}/complete", {
-        params,
-        body: { version },
-      });
     case "no_show":
-      return api.POST("/admin/appointments/{appointmentId}/no-show", {
-        params,
-        body: { version },
-      });
+      return { version };
   }
 }
 
@@ -124,18 +102,21 @@ export async function changeStatus(
   action: StatusAction,
   body: StatusBody,
 ): Promise<Outcome<Detail>> {
+  if (!(action in failures)) throw new Error("Bad action");
+  // The API's paths use hyphens: no_show is /no-show.
+  const step = action.replace("_", "-");
   const outcome = await mutate(
     `${BASE}/${id}`,
-    (api) => post(api, id, action, body),
+    (api) =>
+      api.post<Detail>(
+        apiPath`/admin/appointments/${id}/${step}`,
+        statusBody(action, body),
+      ),
     { failure: failures[action], codes: { stale_version: STALE } },
   );
   if (outcome.ok || outcome.code !== "invalid_transition") return outcome;
-  const now = await adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/appointments/{appointmentId}", {
-        params: { path: { appointmentId: id } },
-      }),
-    ),
+  const now = await adminCall((api) =>
+    api.get<Detail>(apiPath`/admin/appointments/${id}`),
   ).catch(() => null);
   const status = now && statuses.appointment[now.status].label;
   return {
@@ -148,9 +129,9 @@ export async function saveNote(id: string, version: number, note: string) {
   return mutate(
     `${BASE}/${id}`,
     (api) =>
-      api.PUT("/admin/appointments/{appointmentId}/note", {
-        params: { path: { appointmentId: id } },
-        body: { version, note: note.slice(0, 2000) },
+      api.put<Detail>(apiPath`/admin/appointments/${id}/note`, {
+        version,
+        note: note.slice(0, 2000),
       }),
     {
       failure: "The note was not saved. The previous note remains.",
@@ -163,9 +144,8 @@ export async function resendEmail(id: string, communicationId: string) {
   return mutate(
     `${BASE}/${id}`,
     (api) =>
-      api.POST(
-        "/admin/appointments/{appointmentId}/communications/{communicationId}/resend",
-        { params: { path: { appointmentId: id, communicationId } } },
+      api.post<Communication>(
+        apiPath`/admin/appointments/${id}/communications/${communicationId}/resend`,
       ),
     {
       failure: "The email was not sent again. The earlier one is unchanged.",
@@ -185,10 +165,10 @@ export async function markCommunicated(
   return mutate(
     `${BASE}/${id}`,
     (api) =>
-      api.POST("/admin/appointments/{appointmentId}/mark-communicated", {
-        params: { path: { appointmentId: id } },
-        body: { kind, note: note.trim().slice(0, 500) },
-      }),
+      api.post<Communication>(
+        apiPath`/admin/appointments/${id}/mark-communicated`,
+        { kind, note: note.trim().slice(0, 500) },
+      ),
     { failure: "This was not recorded. Try again." },
   );
 }
@@ -204,37 +184,19 @@ export type SlotOutcome =
 
 async function slotWrite(
   path: string,
-  call: (api: AdminApi) => Promise<{
-    data?: Detail;
-    error?: unknown;
-    response: Response;
-  }>,
+  call: (api: Api) => Promise<Detail>,
   messages: { failure: string; codes: Record<string, string> },
 ): Promise<SlotOutcome> {
   try {
-    const result = await adminCall(async (api) => {
-      const answer = await call(api);
-      // A lost session goes to sign-in, as every other admin call.
-      if (answer.response.status === 401) unwrap(answer);
-      return answer;
-    });
-    if (result.data !== undefined && result.response.ok) {
-      revalidatePath(path);
-      return { ok: true, data: result.data };
-    }
-    const error = ApiError.fromResponse(result.response, result.error);
-    const alternatives =
-      error.code === "slot_unavailable"
-        ? ((result.error as Schemas["SlotUnavailableProblem"]).alternatives ??
-          [])
-        : [];
-    return { ...failure(error, messages), status: error.status, alternatives };
+    const data = await adminCall(call);
+    revalidatePath(path);
+    return { ok: true, data };
   } catch (error) {
     if (!(error instanceof ApiError)) throw error;
     return {
       ...failure(error, messages),
       status: error.status,
-      alternatives: [],
+      alternatives: error.alternatives,
     };
   }
 }
@@ -248,10 +210,7 @@ export async function reschedule(
   return slotWrite(
     `${BASE}/${id}`,
     (api) =>
-      api.POST("/admin/appointments/{appointmentId}/reschedule", {
-        params: { path: { appointmentId: id } },
-        body,
-      }),
+      api.post<Detail>(apiPath`/admin/appointments/${id}/reschedule`, body),
     {
       failure:
         "The appointment was not rescheduled. The original appointment remains active.",
@@ -267,16 +226,15 @@ export async function reschedule(
 // rules as a website booking. The key comes from the form, so a retry of the
 // same submission can never add a second appointment.
 export async function createManual(
-  body: Schemas["ManualAppointmentCreate"],
+  body: ManualAppointmentCreate,
   idempotencyKey: string,
 ) {
   if (!UUID.test(idempotencyKey)) throw new Error("Bad idempotency key");
   return slotWrite(
     BASE,
     (api) =>
-      api.POST("/admin/appointments", {
-        params: { header: { "Idempotency-Key": idempotencyKey } },
-        body,
+      api.post<Detail>("/admin/appointments", body, {
+        "Idempotency-Key": idempotencyKey,
       }),
     {
       failure: "The appointment was not added. Nothing was saved.",

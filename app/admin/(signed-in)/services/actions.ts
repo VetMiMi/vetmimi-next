@@ -1,10 +1,9 @@
 "use server";
 
 import { mutate, type Outcome } from "@/lib/admin/mutation";
-import type { components } from "@/lib/api/schema";
-
-type Schemas = components["schemas"];
-type Localized = Schemas["LocalizedText"];
+import { apiPath } from "@/lib/api/client";
+import type { Service } from "@/lib/api/types/booking";
+import type { Format, LocalizedText } from "@/lib/api/types/shared";
 
 const PATH = "/admin/services";
 const STALE =
@@ -32,7 +31,7 @@ const text = (form: FormData, name: string) =>
   String(form.get(name) ?? "").trim();
 
 // Only the languages filled in; an empty object clears the text.
-const localized = (form: FormData, name: string): Localized => {
+const localized = (form: FormData, name: string): LocalizedText => {
   const en = text(form, `${name}.en`);
   const my = text(form, `${name}.my`);
   return { ...(en && { en }), ...(my && { my }) };
@@ -97,9 +96,7 @@ export async function saveService(
     bufferAfterMinutes,
     formats: form
       .getAll("formats")
-      .filter(
-        (f): f is Schemas["Format"] => f === "online" || f === "in_person",
-      ),
+      .filter((f): f is Format => f === "online" || f === "in_person"),
     feeText: localized(form, "feeText"),
     preparationText: localized(form, "preparationText"),
     sortOrder,
@@ -108,11 +105,11 @@ export async function saveService(
     PATH,
     (api) =>
       id
-        ? api.PATCH("/admin/services/{serviceId}", {
-            params: { path: { serviceId: id } },
-            body: { ...body, version: Number(text(form, "version")) },
+        ? api.patch<Service>(apiPath`/admin/services/${id}`, {
+            ...body,
+            version: Number(text(form, "version")),
           })
-        : api.POST("/admin/services", { body }),
+        : api.post<Service>("/admin/services", body),
     messages,
   );
   if (outcome.ok) return { attempt, saved: true, fieldErrors: {} };
@@ -133,10 +130,7 @@ export async function pauseService(id: string, version: number) {
   return mutate(
     PATH,
     (api) =>
-      api.POST("/admin/services/{serviceId}/pause", {
-        params: { path: { serviceId: id } },
-        body: { version },
-      }),
+      api.post<Service>(apiPath`/admin/services/${id}/pause`, { version }),
     messages,
   );
 }
@@ -145,10 +139,7 @@ export async function resumeService(id: string, version: number) {
   return mutate(
     PATH,
     (api) =>
-      api.POST("/admin/services/{serviceId}/resume", {
-        params: { path: { serviceId: id } },
-        body: { version },
-      }),
+      api.post<Service>(apiPath`/admin/services/${id}/resume`, { version }),
     messages,
   );
 }
@@ -156,10 +147,7 @@ export async function resumeService(id: string, version: number) {
 export async function deleteService(id: string): Promise<Outcome<unknown>> {
   return mutate(
     PATH,
-    (api) =>
-      api.DELETE("/admin/services/{serviceId}", {
-        params: { path: { serviceId: id } },
-      }),
+    (api) => api.delete(apiPath`/admin/services/${id}`),
     messages,
   );
 }

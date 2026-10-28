@@ -25,8 +25,9 @@ project [VetMiMi Website](https://github.com/orgs/VetMiMi/projects/1).
 
 Read this file, then `docs/project-status.md`, then
 `docs/admin-design-brief.md` before UI work. Decisions live in the API's
-`../vetmimi-api/docs/adr/`; ADR-002 (custom admin in this app), ADR-003
-(OpenAPI-first contract) and ADR-007 (video sessions) shape this repository.
+`../vetmimi-api/docs/adr/`; ADR-002 (custom admin in this app), ADR-007
+(video sessions) and ADR-011 (Gin with handwritten structs) shape this
+repository.
 Requirements live in `../documents/VetMiMi/02 Website Plan/`; read the
 relevant one before building a page.
 
@@ -64,7 +65,7 @@ app/api/               route handlers: the thin backend-for-frontend (ADR-002)
 components/            public site components; components/ui for shared atoms
 components/admin/      admin UI components (see docs/admin-design-brief.md)
 components/art/        decorative SVG shapes (always aria-hidden)
-lib/api/               generated API client: schema.ts + client.ts (ADR-003)
+lib/api/               API client (client.ts) and handwritten types (types/)
 lib/tokens.ts          colour tokens; app/fonts.ts for the three fonts
 i18n/                  next-intl routing, navigation wrappers, message loading
 messages/<locale>/     every public string, one JSON file per area
@@ -74,16 +75,14 @@ docs/                  project status, admin design brief
 ```
 
 - **The browser talks only to Next** (ADR-002). Server components and
-  `app/api/*` route handlers call the Go API server-side with the generated
-  client in `lib/api/`; the API origin and its keys never reach the browser.
+  `app/api/*` route handlers call the Go API server-side with the client in
+  `lib/api/`; the API origin and its keys never reach the browser.
   Route handlers stay thin: validate, forward, map the error. Business rules
   live in the API, not here. The one exception is the video WebSocket
   (ADR-007), which the browser opens with a short-lived ticket Next obtained.
-- **The contract is generated** (ADR-003). `lib/api/schema.ts` comes from the
-  API's `openapi.yaml` at the ref pinned in `package.json`; never edit it by
-  hand. A change that needs a new endpoint waits for the API pull request to
-  merge and be tagged, then bumps the pinned ref in the same pull request that
-  uses it.
+- **The contract is handwritten** (ADR-011). `lib/api/types/` holds the JSON
+  shapes the site reads, copied from the API's Go structs; a change that needs
+  a new field or endpoint updates them beside the code that uses it.
 - **Admin and session pages sit outside `app/[locale]`.** They need their own
   root layout (there is no `app/layout.tsx`; `app/[locale]/layout.tsx` renders
   `<html>`), and `/admin` and `/session` must never reach next-intl, or it
@@ -196,8 +195,7 @@ requests; use made-up test people.
 
 - Edit `.claude/`, `AGENTS.md` or `CLAUDE.md` unless the linked issue asks
   for it. A rule that blocks you is reported, not changed.
-- Edit `lib/api/schema.ts` by hand, or call the Go API from the browser
-  (except the ADR-007 WebSocket).
+- Call the Go API from the browser (except the ADR-007 WebSocket).
 - Put a public string in a component instead of `messages/`, or ship Burmese
   as reviewed when it is a draft.
 - Run `vercel` deploy commands, change Vercel or DNS settings, or anything

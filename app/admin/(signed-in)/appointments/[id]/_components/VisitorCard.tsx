@@ -1,8 +1,8 @@
 import { Card } from "@/components/admin/Card";
-import type { components } from "@/lib/api/schema";
+import type { AppointmentDetail } from "@/lib/api/types/appointments";
 import { Facts, cardTitle } from "./Facts";
 
-type Detail = components["schemas"]["AppointmentDetail"];
+type Detail = AppointmentDetail;
 
 const link =
   "underline underline-offset-4 transition-colors duration-150 hover:text-indigo motion-reduce:transition-none";

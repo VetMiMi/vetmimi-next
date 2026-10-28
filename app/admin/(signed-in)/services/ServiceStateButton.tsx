@@ -4,11 +4,9 @@ import { useState, useTransition } from "react";
 import { Button } from "@/components/admin/Button";
 import { ConfirmButton } from "@/components/admin/ConfirmButton";
 import { useToast } from "@/components/admin/Toast";
-import type { components } from "@/lib/api/schema";
+import type { Service } from "@/lib/api/types/booking";
 import { pauseService, resumeService } from "./actions";
 import { serviceName } from "./serviceText";
-
-type Service = components["schemas"]["Service"];
 
 // Pausing hides the service from public booking and needs a confirmation
 // (Booking UX §30); resuming does not. An archived service has neither.

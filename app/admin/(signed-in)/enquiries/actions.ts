@@ -3,7 +3,9 @@
 import { listQuery, parseFilters, toRow } from "@/lib/admin/enquiries";
 import { mutate } from "@/lib/admin/mutation";
 import { adminCall } from "@/lib/admin/session";
-import { unwrap } from "@/lib/api/problem";
+import { apiPath } from "@/lib/api/client";
+import type { ContactEnquiry } from "@/lib/api/types/contact";
+import type { Page } from "@/lib/api/types/shared";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -13,11 +15,10 @@ export async function moreEnquiries(
   params: Record<string, string | string[] | undefined>,
   cursor: string,
 ) {
-  const page = await adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/contact-enquiries", {
-        params: { query: listQuery(parseFilters(params), cursor) },
-      }),
+  const page = await adminCall((api) =>
+    api.get<Page<ContactEnquiry>>(
+      "/admin/contact-enquiries",
+      listQuery(parseFilters(params), cursor),
     ),
   );
   return { items: page.items.map(toRow), nextCursor: page.nextCursor };
@@ -29,9 +30,9 @@ export async function markHandled(id: string) {
   return mutate(
     `/admin/enquiries/${id}`,
     (api) =>
-      api.POST("/admin/contact-enquiries/{enquiryId}/mark-handled", {
-        params: { path: { enquiryId: id } },
-      }),
+      api.post<ContactEnquiry>(
+        apiPath`/admin/contact-enquiries/${id}/mark-handled`,
+      ),
     { failure: "The enquiry was not marked as handled. It is still New." },
   );
 }

@@ -1,7 +1,7 @@
-import type { components } from "@/lib/api/schema";
+import type { Settings, SettingsPatch } from "@/lib/api/types/admin";
 
-export type Settings = components["schemas"]["Settings"];
-export type SettingsPatch = components["schemas"]["SettingsPatch"];
+export type { Settings, SettingsPatch };
+
 type Key = keyof SettingsPatch;
 type Option = { value: string; label: string; help?: string };
 

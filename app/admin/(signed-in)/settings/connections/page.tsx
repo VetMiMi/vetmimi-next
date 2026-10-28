@@ -19,7 +19,7 @@ import {
 } from "@/lib/admin/connections";
 import { PRACTICE_TIMEZONE } from "@/lib/admin/posts";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { ApiError, unwrap } from "@/lib/api/problem";
+import { ApiError } from "@/lib/api/problem";
 import { SettingsHeader } from "../SettingsHeader";
 import { ConnectionCard } from "./ConnectionCard";
 import { FinishConnection } from "./FinishConnection";
@@ -58,11 +58,11 @@ export default async function ConnectionsPage({
     );
 
   const [meta, linkedin] = await Promise.all([
-    adminCall(async (api) =>
-      unwrap(await api.GET("/admin/connections/meta")),
+    adminCall((api) =>
+      api.get<MetaConnection>("/admin/connections/meta"),
     ).catch(readFailed),
-    adminCall(async (api) =>
-      unwrap(await api.GET("/admin/connections/linkedin")),
+    adminCall((api) =>
+      api.get<LinkedInConnection>("/admin/connections/linkedin"),
     ).catch(readFailed),
   ]);
   const failed = failMessage(one(params.failed), one(params.reason));

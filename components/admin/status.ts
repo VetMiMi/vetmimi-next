@@ -25,23 +25,27 @@ import {
   XCircle,
 } from "@phosphor-icons/react/dist/ssr";
 import type { Icon } from "@phosphor-icons/react";
-import type { components } from "@/lib/api/schema";
-
-type Schemas = components["schemas"];
+import type { LinkedInConnection, MetaConnection } from "@/lib/api/types/admin";
+import type {
+  AppointmentStatus,
+  CommunicationStatus,
+  VideoRoomSummary,
+} from "@/lib/api/types/appointments";
+import type { ServiceState } from "@/lib/api/types/booking";
+import type { ContactEnquiry } from "@/lib/api/types/contact";
+import type { PostStatus, PublicationStatus } from "@/lib/api/types/content";
 
 // Each kind's statuses come from the contract, so a status the API adds
 // fails `pnpm typecheck` until it has a row here.
 type Statuses = {
-  appointment: Schemas["AppointmentStatus"];
-  communication: Schemas["CommunicationStatus"];
-  room: Schemas["VideoRoomSummary"]["state"];
-  post: Schemas["PostStatus"];
-  publication: Schemas["PublicationStatus"];
-  service: Schemas["ServiceState"];
-  enquiry: Schemas["ContactEnquiry"]["status"];
-  connection:
-    | Schemas["LinkedInConnection"]["status"]
-    | Schemas["MetaConnection"]["status"];
+  appointment: AppointmentStatus;
+  communication: CommunicationStatus;
+  room: VideoRoomSummary["state"];
+  post: PostStatus;
+  publication: PublicationStatus;
+  service: ServiceState;
+  enquiry: ContactEnquiry["status"];
+  connection: LinkedInConnection["status"] | MetaConnection["status"];
 };
 
 export type StatusKind = keyof Statuses;

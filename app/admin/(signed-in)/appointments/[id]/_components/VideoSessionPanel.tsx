@@ -8,11 +8,11 @@ import { Dialog } from "@/components/admin/Dialog";
 import { Notice } from "@/components/admin/Notice";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { useToast } from "@/components/admin/Toast";
-import type { components } from "@/lib/api/schema";
+import type { AppointmentDetail } from "@/lib/api/types/appointments";
 import { clock, roomWindow, videoPanelState } from "@/lib/admin/videoSession";
 import { endVideo, startVideo } from "../videoActions";
 
-type Detail = components["schemas"]["AppointmentDetail"];
+type Detail = AppointmentDetail;
 
 const DAY = 86_400_000;
 

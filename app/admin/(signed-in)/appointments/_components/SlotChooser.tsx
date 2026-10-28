@@ -8,14 +8,14 @@ import { Button } from "@/components/admin/Button";
 import { FieldError, labelClass } from "@/components/admin/Field";
 import { Notice } from "@/components/admin/Notice";
 import { clockWithZone, longDay } from "@/lib/admin/appointments";
-import type { components } from "@/lib/api/schema";
+import type { AvailabilityPreview } from "@/lib/api/types/booking";
+import type { Slot } from "@/lib/api/types/shared";
 import { fieldIds } from "@/lib/fieldIds";
 import { addMonths, localDateKey } from "@/lib/time";
 import { formatClock, zoneLabel, zonedParts } from "@/lib/zonedTime";
 import { previewMonth } from "../actions";
 
-type Slot = components["schemas"]["Slot"];
-type Preview = components["schemas"]["AvailabilityPreview"];
+type Preview = AvailabilityPreview;
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const monthTitle = new Intl.DateTimeFormat("en-GB", {

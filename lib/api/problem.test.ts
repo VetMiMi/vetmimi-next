@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { ApiError, problemResponse, unwrap } from "./problem.ts";
+import { ApiError, problemResponse } from "./problem.ts";
 
 const problem = (status: number, body: object, headers?: HeadersInit) =>
   new Response(JSON.stringify(body), { status, headers });
@@ -39,25 +39,22 @@ describe("ApiError.fromResponse", () => {
   });
 });
 
-describe("unwrap", () => {
-  it("returns the data of a success, including an empty 204", () => {
-    const ok = new Response("{}", { status: 200 });
-    assert.deepEqual(unwrap({ data: { status: "ok" }, response: ok }), {
-      status: "ok",
+describe("ApiError.alternatives", () => {
+  it("keeps the free times of a slot_unavailable answer only", () => {
+    const slot = {
+      startsAt: "2026-11-02T00:00:00Z",
+      endsAt: "2026-11-02T01:00:00Z",
+    };
+    const taken = ApiError.fromResponse(problem(409, {}), {
+      code: "slot_unavailable",
+      alternatives: [slot],
     });
-    const empty = new Response(null, { status: 204 });
-    assert.equal(unwrap({ data: undefined, response: empty }), undefined);
-  });
-
-  it("throws the ApiError of a failure", () => {
-    const response = problem(401, {});
-    assert.throws(
-      () => unwrap({ error: { code: "unauthenticated" }, response }),
-      (error) =>
-        error instanceof ApiError &&
-        error.status === 401 &&
-        error.code === "unauthenticated",
-    );
+    assert.deepEqual(taken.alternatives, [slot]);
+    const other = ApiError.fromResponse(problem(409, {}), {
+      code: "stale_version",
+      alternatives: [slot],
+    });
+    assert.deepEqual(other.alternatives, []);
   });
 });
 

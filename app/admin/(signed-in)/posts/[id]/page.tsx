@@ -6,8 +6,9 @@ import type { Media } from "@/lib/admin/media";
 import { kindNames } from "@/lib/admin/posts";
 import { canUse } from "@/lib/admin/roles";
 import { adminCall, requireRole } from "@/lib/admin/session";
-import { ApiError, unwrap } from "@/lib/api/problem";
-import type { components } from "@/lib/api/schema";
+import { apiPath } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/problem";
+import type { Post } from "@/lib/api/types/content";
 import { PostEditor } from "./_components/PostEditor";
 
 export const metadata: Metadata = { title: "Edit post" };
@@ -16,7 +17,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // The library items the post's versions name. One that has gone is left
 // out; the editor shows it as missing and approval names it.
-async function mediaOf(post: components["schemas"]["Post"]) {
+async function mediaOf(post: Post) {
   const { website, facebook, instagram, linkedin } = post.versions;
   const ids = new Set([
     ...(website?.coverImageId ? [website.coverImageId] : []),
@@ -26,12 +27,8 @@ async function mediaOf(post: components["schemas"]["Post"]) {
   ]);
   const found = await Promise.all(
     [...ids].map((mediaId) =>
-      adminCall(async (api) =>
-        unwrap(
-          await api.GET("/admin/media/{mediaId}", {
-            params: { path: { mediaId } },
-          }),
-        ),
+      adminCall((api) =>
+        api.get<Media>(apiPath`/admin/media/${mediaId}`),
       ).catch((error) => {
         if (error instanceof ApiError && error.status === 404) return null;
         throw error;
@@ -44,7 +41,7 @@ async function mediaOf(post: components["schemas"]["Post"]) {
 // Whether "Suggest versions" shows: off when the server has no AI key, and
 // off rather than an error page when the status cannot be read.
 async function aiStatus() {
-  return adminCall(async (api) => unwrap(await api.GET("/admin/ai/status")))
+  return adminCall((api) => api.get<{ enabled: boolean }>("/admin/ai/status"))
     .then((status) => status.enabled)
     .catch((error) => {
       if (error instanceof ApiError) return false;
@@ -60,12 +57,8 @@ export default async function PostPage({
   if (!user) return <NoAccess />;
   const { id } = await params;
   if (!UUID.test(id)) notFound();
-  const post = await adminCall(async (api) =>
-    unwrap(
-      await api.GET("/admin/posts/{postId}", {
-        params: { path: { postId: id } },
-      }),
-    ),
+  const post = await adminCall((api) =>
+    api.get<Post>(apiPath`/admin/posts/${id}`),
   ).catch((error) => {
     if (error instanceof ApiError && error.status === 404) notFound();
     if (error instanceof ApiError && error.status === 403) return null;

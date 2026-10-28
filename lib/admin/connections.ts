@@ -1,11 +1,9 @@
 // Settings → Connections (#153): what each platform connection's state
 // reads as, and the words for a sign-in that did not finish. Pure, so
 // node:test covers it.
-import type { components } from "../api/schema.ts";
+import type { LinkedInConnection, MetaConnection } from "../api/types/admin.ts";
 
-type Schemas = components["schemas"];
-export type MetaConnection = Schemas["MetaConnection"];
-export type LinkedInConnection = Schemas["LinkedInConnection"];
+export type { MetaConnection, LinkedInConnection };
 
 export type Provider = "meta" | "linkedin";
 export type ConnectionStatus =

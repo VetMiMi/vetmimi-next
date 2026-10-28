@@ -1,6 +1,6 @@
-import type { components } from "../api/schema.ts";
+import type { Role } from "../api/types/admin.ts";
 
-export type Role = components["schemas"]["Role"];
+export type { Role };
 
 // Whether a user with `roles` may use something open to `allowed`.
 // `site_admin` implies every other role; an empty `allowed` means anyone

@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import {
-  getMessages,
-  getTranslations,
-  setRequestLocale,
-} from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import Markdown from "react-markdown";
 import { ed, StoryCard, StoryImage } from "@/components/Editorial";
 import { JsonLd } from "@/components/JsonLd";
@@ -12,22 +8,14 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getArticle, loadStories, type Article } from "@/lib/articles";
 import { pageMetadata } from "@/lib/seo";
-import { STORIES, type Story, type StorySlug } from "@/lib/data";
 import { storyFromArticle } from "@/lib/stories";
 import { storyJsonLd } from "@/lib/structured-data";
 
-// The written stories are prerendered at build time; a published article
-// renders on its first visit and is then cached like them. Refreshed when an
-// article publishes (POST /api/revalidate), and hourly in case the API was
-// unreachable the last time the page was built.
+// A published article renders on its first visit and is then cached.
+// Refreshed when an article publishes (POST /api/revalidate), and hourly in
+// case the API was unreachable the last time the page was built.
 export const revalidate = 3600;
 
-export function generateStaticParams() {
-  return STORIES.map((item) => ({ slug: item.slug }));
-}
-
-// A published article brings its own SEO text and cover; a written story
-// uses its title and excerpt, and the site's default image.
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/stories/[slug]">): Promise<Metadata> {
@@ -35,48 +23,31 @@ export async function generateMetadata({
   const locale = requested as Locale;
   const pathname = `/stories/${slug}`;
   const article = await getArticle(locale, slug);
-  if (article) {
-    const page = pageMetadata(locale, pathname, {
-      title: article.seoTitle,
-      description: article.seoDescription,
-    });
-    const cover = article.coverImage;
-    const image = cover?.sizes[0];
-    return {
-      ...page,
-      openGraph: {
-        ...page.openGraph,
-        type: "article",
-        publishedTime: article.publishedAt,
-        images:
-          cover && image
-            ? [
-                {
-                  url: image.url,
-                  width: image.width,
-                  height: Math.round(
-                    (image.width * cover.height) / cover.width,
-                  ),
-                  alt: cover.alt || undefined,
-                },
-              ]
-            : undefined,
-      },
-    };
-  }
-  const story = STORIES.find((item) => item.slug === slug);
-  if (!story) return {};
-  const t = await getTranslations({
-    locale,
-    namespace: `stories.items.${story.slug}`,
-  });
+  if (!article) return {};
   const page = pageMetadata(locale, pathname, {
-    title: t("title"),
-    description: t("excerpt"),
+    title: article.seoTitle,
+    description: article.seoDescription,
   });
+  const cover = article.coverImage;
+  const image = cover?.sizes[0];
   return {
     ...page,
-    openGraph: { ...page.openGraph, type: "article", authors: [story.author] },
+    openGraph: {
+      ...page.openGraph,
+      type: "article",
+      publishedTime: article.publishedAt,
+      images:
+        cover && image
+          ? [
+              {
+                url: image.url,
+                width: image.width,
+                height: Math.round((image.width * cover.height) / cover.width),
+                alt: cover.alt || undefined,
+              },
+            ]
+          : undefined,
+    },
   };
 }
 
@@ -90,25 +61,15 @@ export default async function StoryDetail({
     loadStories(locale as Locale),
     getTranslations("stories"),
   ]);
-  const story = STORIES.find((item) => item.slug === slug);
-  const kind = article ? storyFromArticle(article).kind : story?.type;
-  if (!kind) notFound();
-  const typeLabel = t(`types.${kind}`);
-  const jsonLd = article
-    ? storyJsonLd(locale as Locale, {
-        slug,
-        headline: article.title,
-        description: article.excerpt,
-        datePublished: article.publishedAt,
-        image: article.coverImage?.sizes[0]?.url,
-      })
-    : story &&
-      storyJsonLd(locale as Locale, {
-        slug,
-        headline: t(`items.${story.slug}.title`),
-        description: t(`items.${story.slug}.excerpt`),
-        image: story.img.src,
-      });
+  if (!article) notFound();
+  const typeLabel = t(`types.${storyFromArticle(article).kind}`);
+  const jsonLd = storyJsonLd(locale as Locale, {
+    slug,
+    headline: article.title,
+    description: article.excerpt,
+    datePublished: article.publishedAt,
+    image: article.coverImage?.sizes[0]?.url,
+  });
   return (
     <div className={ed.page}>
       <nav
@@ -125,12 +86,8 @@ export default async function StoryDetail({
           breadcrumb and "More to explore"); only the paragraphs stay at a
           comfortable reading width. */}
       <article className={ed.container}>
-        {jsonLd && <JsonLd data={jsonLd} />}
-        {article ? (
-          <PublishedArticle article={article} typeLabel={typeLabel} />
-        ) : (
-          story && <WrittenStory story={story} typeLabel={typeLabel} />
-        )}
+        <JsonLd data={jsonLd} />
+        <PublishedArticle article={article} typeLabel={typeLabel} />
       </article>
       <section className={ed.container}>
         <div className="mb-8 flex flex-wrap items-baseline justify-between gap-5">
@@ -205,52 +162,6 @@ function PublishedArticle({
         <Markdown skipHtml disallowedElements={["img"]} unwrapDisallowed>
           {article.body}
         </Markdown>
-      </div>
-    </>
-  );
-}
-
-async function WrittenStory({
-  story,
-  typeLabel,
-}: {
-  story: Story;
-  typeLabel: string;
-}) {
-  const t = await getTranslations("stories");
-  // Optional per-story text: only some stories have a subtitle or a body yet.
-  const { stories } = await getMessages();
-  const subtitles: Partial<Record<StorySlug, string>> = stories.subtitles;
-  const bodies: Partial<Record<StorySlug, string[]>> = stories.bodies;
-  const excerpt = t(`items.${story.slug}.excerpt`);
-  const paragraphs = bodies[story.slug] ?? [excerpt];
-  return (
-    <>
-      <header className="pt-11 pb-8">
-        <p className={ed.label}>{typeLabel}</p>
-        <h1 className={articleTitle}>{t(`items.${story.slug}.title`)}</h1>
-        <p className={ed.lead}>{subtitles[story.slug] || excerpt}</p>
-        <Byline />
-        <p className="mb-5 text-[0.75rem] leading-[1.8] text-caption">
-          {t("detail.preview")}
-        </p>
-      </header>
-      <StoryImage
-        className={articleImage}
-        image={story.img}
-        alt={t("detail.imageAlt")}
-        sizes={ARTICLE_IMAGE_SIZES}
-        eager
-      />
-      <div className="max-w-[760px] pb-12">
-        {paragraphs.map((text, index) => (
-          <p
-            key={index}
-            className="mb-[1.4em] text-[1.1rem] leading-[1.9] text-muted"
-          >
-            {text}
-          </p>
-        ))}
       </div>
     </>
   );

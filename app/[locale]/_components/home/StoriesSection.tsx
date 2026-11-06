@@ -7,7 +7,7 @@ import type { StoryItem } from "@/lib/stories";
 // `stories` is the Stories page's list: published articles first.
 export function StoriesSection({ stories }: { stories: StoryItem[] }) {
   const t = useTranslations("home");
-  // Story titles and excerpts are shared with the Stories pages.
+  // Kind labels and the empty note are shared with the Stories pages.
   const tStories = useTranslations("stories");
   return (
     <section className="relative overflow-hidden bg-[#F0EEF5] px-6 py-20">
@@ -27,6 +27,11 @@ export function StoriesSection({ stories }: { stories: StoryItem[] }) {
           </p>
         </div>
 
+        {stories.length === 0 && (
+          <p className="font-body text-[0.95rem] leading-[1.8] text-ink/72">
+            {tStories("index.empty")}
+          </p>
+        )}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {stories.slice(0, 3).map(({ title, ...story }) => {
             return (
@@ -44,7 +49,7 @@ export function StoriesSection({ stories }: { stories: StoryItem[] }) {
                 )}
                 <div className="flex flex-1 flex-col p-6">
                   <div className="mb-3 font-body text-[0.65rem] font-semibold tracking-[0.12em] text-violet uppercase">
-                    {story.category ?? tStories(`types.${story.kind}`)}
+                    {tStories(`types.${story.kind}`)}
                   </div>
                   {/* `!` beats the global heading line height; the :lang
                       guard leaves Burmese on its own taller one. */}

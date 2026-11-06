@@ -1,5 +1,4 @@
 import { useTranslations } from "next-intl";
-import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import type { PublicImage, StoryItem } from "@/lib/stories";
 
@@ -27,8 +26,7 @@ export const ed = {
   actions: "mt-7 flex flex-wrap items-center gap-6",
 };
 
-// A story's picture: an imported artwork through next/image, or an API cover
-// as a plain <img>, since its web sizes already exist on the API's host.
+// A story's cover as a plain <img>: its web sizes already exist on the API's host.
 export function StoryImage({
   image,
   alt,
@@ -36,25 +34,13 @@ export function StoryImage({
   className,
   eager,
 }: {
-  image: NonNullable<StoryItem["image"]>;
+  image: PublicImage;
   alt: string;
   sizes: string;
   className?: string;
   /** The article's cover, in view on arrival: loaded straight away. */
   eager?: boolean;
 }) {
-  const loading = eager ? "eager" : "lazy";
-  if (!isPublicImage(image)) {
-    return (
-      <Image
-        className={className}
-        src={image}
-        alt={alt}
-        sizes={sizes}
-        loading={loading}
-      />
-    );
-  }
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -67,16 +53,10 @@ export function StoryImage({
       width={image.width}
       height={image.height}
       alt={alt}
-      loading={loading}
+      loading={eager ? "eager" : "lazy"}
       decoding="async"
     />
   );
-}
-
-function isPublicImage(
-  image: NonNullable<StoryItem["image"]>,
-): image is PublicImage {
-  return "sizes" in image;
 }
 
 export function StoryCard({ story }: { story: StoryItem }) {

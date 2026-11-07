@@ -13,8 +13,12 @@ import {
   type Media,
 } from "@/lib/admin/media";
 import { AltFields, altErrors, describe } from "./AltFields";
+import { shrinkImage } from "./shrinkImage";
 
 type Result = { ok: true; media: Media } | { ok: false; code: string };
+
+// A shrunk photo takes seconds; past this the page stops waiting and says so.
+const UPLOAD_TIMEOUT_MS = 60_000;
 
 // Sent with XMLHttpRequest, not fetch, because only it reports upload
 // progress. The route handler forwards the file with the session cookie.
@@ -26,6 +30,8 @@ function send(
   const done = new Promise<Result>((resolve) => {
     xhr.open("POST", "/admin/media/upload");
     xhr.responseType = "json";
+    xhr.timeout = UPLOAD_TIMEOUT_MS;
+    xhr.ontimeout = () => resolve({ ok: false, code: "timeout" });
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable)
         onProgress(Math.round((event.loaded / event.total) * 100));
@@ -61,6 +67,7 @@ export function MediaUpload({
   const [tried, setTried] = useState(false);
   const [progress, setProgress] = useState<number>();
   const [error, setError] = useState<string>();
+  const [preparing, setPreparing] = useState(false);
   const abort = useRef<() => void>(undefined);
 
   useEffect(() => () => abort.current?.(), []);
@@ -71,10 +78,15 @@ export function MediaUpload({
     [preview],
   );
 
-  function choose(event: React.ChangeEvent<HTMLInputElement>) {
-    const chosen = event.target.files?.[0];
+  async function choose(event: React.ChangeEvent<HTMLInputElement>) {
+    const picked = event.target.files?.[0];
     event.target.value = "";
-    if (!chosen) return;
+    if (!picked) return;
+    setPreparing(true);
+    const chosen = ACCEPTED_TYPES.includes(picked.type)
+      ? await shrinkImage(picked)
+      : picked;
+    setPreparing(false);
     const why = fileProblem(chosen);
     setProblem(why);
     setError(undefined);
@@ -115,8 +127,8 @@ export function MediaUpload({
           id="media-file"
           type="file"
           accept={ACCEPTED_TYPES.join(",")}
-          onChange={choose}
-          disabled={uploading}
+          onChange={(event) => void choose(event)}
+          disabled={uploading || preparing}
           aria-describedby="media-file-help media-file-error"
           className="peer sr-only"
         />
@@ -129,14 +141,18 @@ export function MediaUpload({
           )}
         >
           <UploadSimple aria-hidden="true" size={18} />
-          {file ? "Choose a different image" : "Choose an image"}
+          {preparing
+            ? "Preparing image…"
+            : file
+              ? "Choose a different image"
+              : "Choose an image"}
         </label>
         <p
           id="media-file-help"
           className="mt-2 text-[0.88rem] leading-[1.6] text-muted"
         >
-          JPEG, PNG or WebP, up to 20 MB. Camera and location details are
-          removed when it is stored.
+          JPEG, PNG or WebP. Large photos are resized before upload, and camera
+          and location details are removed.
         </p>
         <FieldError id="media-file-error" error={problem} />
       </div>

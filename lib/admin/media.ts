@@ -10,6 +10,19 @@ export type { Media };
 export const MAX_UPLOAD_BYTES = 20 << 20;
 export const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
+// Photos are shrunk in the browser to this long edge before upload: the site
+// never shows wider than 1600 px, and the API's memory stays small.
+export const LONG_EDGE = 2400;
+
+// The width and height that fit within LONG_EDGE, never enlarged.
+export function shrunkSize(width: number, height: number) {
+  const scale = Math.min(1, LONG_EDGE / Math.max(width, height));
+  return {
+    width: Math.round(width * scale),
+    height: Math.round(height * scale),
+  };
+}
+
 // Why a chosen file cannot be uploaded, before it is sent.
 export function fileProblem(file: { type: string; size: number }) {
   if (!ACCEPTED_TYPES.includes(file.type))
@@ -52,11 +65,13 @@ export function move<T>(list: readonly T[], index: number, step: -1 | 1) {
 export function uploadFailure(code: string) {
   switch (code) {
     case "payload_too_large":
-      return "This image is too large: at most 20 MB and 50 megapixels. Nothing was uploaded.";
+      return "This image is too large: at most 20 MB and 16 megapixels. Nothing was uploaded.";
     case "unsupported_media_type":
       return "This file is not a JPEG, PNG or WebP image. Nothing was uploaded.";
     case "invalid_request":
       return "Alt text and credit may be at most 300 characters each. Nothing was uploaded.";
+    case "timeout":
+      return "The upload took too long and was stopped. Nothing was uploaded. Check your connection and try again.";
     case "unauthenticated":
       return "Your session has ended. Sign in again, then upload the image.";
     case "forbidden":

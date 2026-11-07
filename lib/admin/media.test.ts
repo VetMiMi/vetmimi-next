@@ -5,6 +5,7 @@ import {
   fileProblem,
   MAX_UPLOAD_BYTES,
   move,
+  shrunkSize,
   sizeFor,
 } from "./media.ts";
 
@@ -23,6 +24,12 @@ describe("media library", () => {
       fileProblem({ type: "image/png", size: MAX_UPLOAD_BYTES + 1 }),
       "This image is 20.0 MB. Choose one of 20 MB or less.",
     );
+  });
+
+  it("shrinks a phone photo to 2400 px on its long side, never enlarging", () => {
+    assert.deepEqual(shrunkSize(4032, 3024), { width: 2400, height: 1800 });
+    assert.deepEqual(shrunkSize(3024, 4032), { width: 1800, height: 2400 });
+    assert.deepEqual(shrunkSize(1200, 800), { width: 1200, height: 800 });
   });
 
   it("needs alt text in both languages", () => {

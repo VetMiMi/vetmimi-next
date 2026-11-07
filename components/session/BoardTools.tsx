@@ -2,6 +2,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import {
   ArrowCounterClockwise,
+  CaretDown,
   DownloadSimple,
   Eraser,
   Highlighter,
@@ -71,7 +72,7 @@ function Tool({
       aria-pressed={pressed}
       title={label}
       onClick={onClick}
-      className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-canvas/12 text-canvas hover:bg-canvas/24 aria-pressed:bg-canvas aria-pressed:text-stage"
+      className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full bg-canvas/12 text-canvas hover:bg-canvas/24 aria-pressed:bg-canvas aria-pressed:text-stage"
     >
       {children}
     </button>
@@ -101,8 +102,9 @@ function Swatch({
   );
 }
 
-// The client's tools under the page: pen, marker or eraser, three sizes,
-// the colours, the paper, undo, clear (tapped twice) and a copy to keep.
+// The client's tools in one row under the page: pen, marker or eraser, a
+// button showing the current colour and size that opens a sheet with all of
+// them and the paper, then undo, clear (tapped twice) and a copy to keep.
 export function BoardTools({
   text,
   wb,
@@ -115,6 +117,7 @@ export function BoardTools({
   onPen: (pen: Pen) => void;
 }) {
   const [clearing, setClearing] = useState(false);
+  const [sheet, setSheet] = useState(false);
   const { board, act } = wb;
 
   useEffect(() => {
@@ -133,10 +136,70 @@ export function BoardTools({
     URL.revokeObjectURL(link.href);
   };
 
-  const row = "flex items-center gap-2 overflow-x-auto px-1 py-1.5";
+  const divider = <span aria-hidden="true" className="h-6 w-px bg-canvas/24" />;
   return (
-    <div role="toolbar" aria-label={text.tools} className="flex flex-col gap-1">
-      <div className={`${row} justify-center`}>
+    <div className="relative">
+      {sheet && (
+        <div
+          id="board-style"
+          className="absolute inset-x-0 bottom-full mb-2 flex flex-col gap-3 rounded-inner bg-stage p-3 shadow-lifted ring-1 ring-canvas/24"
+        >
+          <div
+            role="group"
+            aria-label={text.sizes.label}
+            className="flex gap-2"
+          >
+            {SIZES.map((size) => (
+              <Tool
+                key={size}
+                label={text.sizes[size]}
+                pressed={pen.size === size}
+                onClick={() => onPen({ ...pen, size })}
+              >
+                <span className={`rounded-full bg-current ${DOTS[size]}`} />
+              </Tool>
+            ))}
+          </div>
+          <div
+            role="group"
+            aria-label={text.colours}
+            className="flex flex-wrap gap-2"
+          >
+            {(Object.keys(COLOURS) as Colour[]).map((colour) => (
+              <Swatch
+                key={colour}
+                label={text.colour[colour]}
+                fill={COLOUR_BG[colour]}
+                pressed={pen.colour === colour && pen.tool !== "eraser"}
+                onClick={() => {
+                  onPen({
+                    ...pen,
+                    colour,
+                    tool: pen.tool === "eraser" ? "pen" : pen.tool,
+                  });
+                  setSheet(false);
+                }}
+              />
+            ))}
+          </div>
+          <div role="group" aria-label={text.paper} className="flex gap-2">
+            {(Object.keys(PAPERS) as Paper[]).map((paper) => (
+              <Swatch
+                key={paper}
+                label={text.papers[paper]}
+                fill={PAPER_BG[paper]}
+                pressed={board.paper === paper}
+                onClick={() => act({ t: "paper", paper })}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      <div
+        role="toolbar"
+        aria-label={text.tools}
+        className="flex items-center justify-center gap-1.5 py-1"
+      >
         {TOOLS.map((tool) => {
           const Icon = TOOL_ICONS[tool];
           return (
@@ -150,18 +213,25 @@ export function BoardTools({
             </Tool>
           );
         })}
-        <span aria-hidden="true" className="mx-1 h-6 w-px bg-canvas/24" />
-        {SIZES.map((size) => (
-          <Tool
-            key={size}
-            label={text.sizes[size]}
-            pressed={pen.size === size}
-            onClick={() => onPen({ ...pen, size })}
+        <button
+          type="button"
+          aria-label={text.style}
+          aria-expanded={sheet}
+          aria-controls="board-style"
+          title={text.style}
+          onClick={() => setSheet(!sheet)}
+          className="flex h-10 shrink-0 cursor-pointer items-center gap-1 rounded-full bg-canvas/12 px-2.5 text-canvas hover:bg-canvas/24 aria-expanded:bg-canvas aria-expanded:text-stage"
+        >
+          <span
+            className={`flex size-6 items-center justify-center rounded-full border border-canvas/40 ${COLOUR_BG[pen.colour]}`}
           >
-            <span className={`rounded-full bg-current ${DOTS[size]}`} />
-          </Tool>
-        ))}
-        <span aria-hidden="true" className="mx-1 h-6 w-px bg-canvas/24" />
+            <span
+              className={`rounded-full ${DOTS[pen.size]} ${pen.colour === "white" || pen.colour === "yellow" ? "bg-ink" : "bg-canvas"}`}
+            />
+          </span>
+          <CaretDown aria-hidden="true" size={14} />
+        </button>
+        {divider}
         <Tool label={text.undo} onClick={() => act({ t: "undo" })}>
           <ArrowCounterClockwise aria-hidden="true" size={20} />
         </Tool>
@@ -178,40 +248,6 @@ export function BoardTools({
         <Tool label={text.save} onClick={() => void save()}>
           <DownloadSimple aria-hidden="true" size={20} />
         </Tool>
-      </div>
-      <div className={row}>
-        <div role="group" aria-label={text.colours} className="flex gap-2">
-          {(Object.keys(COLOURS) as Colour[]).map((colour) => (
-            <Swatch
-              key={colour}
-              label={text.colour[colour]}
-              fill={COLOUR_BG[colour]}
-              pressed={pen.colour === colour && pen.tool !== "eraser"}
-              onClick={() =>
-                onPen({
-                  ...pen,
-                  colour,
-                  tool: pen.tool === "eraser" ? "pen" : pen.tool,
-                })
-              }
-            />
-          ))}
-        </div>
-        <span
-          aria-hidden="true"
-          className="mx-1 h-6 w-px shrink-0 bg-canvas/24"
-        />
-        <div role="group" aria-label={text.paper} className="flex gap-2">
-          {(Object.keys(PAPERS) as Paper[]).map((paper) => (
-            <Swatch
-              key={paper}
-              label={text.papers[paper]}
-              fill={PAPER_BG[paper]}
-              pressed={board.paper === paper}
-              onClick={() => act({ t: "paper", paper })}
-            />
-          ))}
-        </div>
       </div>
     </div>
   );

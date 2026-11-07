@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type PointerEvent } from "react";
 import type { Colour, Size, Tool } from "@/lib/session/board";
-import { drawPaper, drawStrokes } from "@/lib/session/boardCanvas";
+import { ASPECT, drawPaper, drawStrokes } from "@/lib/session/boardCanvas";
 import type { Whiteboard as Board } from "@/lib/session/useWhiteboard";
 
 export type Pen = { tool: Tool; colour: Colour; size: Size };
@@ -19,7 +19,7 @@ function at(event: PointerEvent<HTMLCanvasElement>) {
   ];
 }
 
-// The square page, as large as its space allows: the paper and starting
+// The 3:4 page, as large as its space allows: the paper and starting
 // page, the strokes above it, and Daw Mi's pointer on top. With a `pen` this
 // side draws; without one it watches and `onPoint` follows the mouse.
 export function Whiteboard({
@@ -37,7 +37,8 @@ export function Whiteboard({
   const paper = useRef<HTMLCanvasElement>(null);
   const ink = useRef<HTMLCanvasElement>(null);
   const top = useRef<HTMLCanvasElement>(null);
-  const [side, setSide] = useState(0);
+  const [width, setWidth] = useState(0);
+  const height = Math.round(width * ASPECT);
   const live = useRef<{ id: string; points: number[]; frame: number } | null>(
     null,
   );
@@ -47,7 +48,7 @@ export function Whiteboard({
     const element = box.current;
     if (!element) return;
     const observer = new ResizeObserver(([entry]) => {
-      setSide(Math.round(entry.contentRect.width * devicePixelRatio));
+      setWidth(Math.round(entry.contentRect.width * devicePixelRatio));
     });
     observer.observe(element);
     return () => observer.disconnect();
@@ -55,25 +56,31 @@ export function Whiteboard({
 
   useEffect(() => {
     const ctx = paper.current?.getContext("2d");
-    if (ctx && side) drawPaper(ctx, side, board);
-  }, [side, board]);
+    if (ctx && width) drawPaper(ctx, width, board);
+  }, [width, board]);
 
   useEffect(() => {
     const ctx = ink.current?.getContext("2d");
-    if (ctx && side) drawStrokes(ctx, side, board.strokes);
-  }, [side, board.strokes]);
+    if (ctx && width) drawStrokes(ctx, width, board.strokes);
+  }, [width, board.strokes]);
 
   useEffect(() => {
     const ctx = top.current?.getContext("2d");
-    if (!ctx || !side) return;
-    ctx.clearRect(0, 0, side, side);
+    if (!ctx || !width) return;
+    ctx.clearRect(0, 0, width, height);
     if (!pointer) return;
     ctx.strokeStyle = POINTER;
-    ctx.lineWidth = side * 0.006;
+    ctx.lineWidth = width * 0.006;
     ctx.beginPath();
-    ctx.arc(pointer.x * side, pointer.y * side, side * 0.02, 0, Math.PI * 2);
+    ctx.arc(
+      pointer.x * width,
+      pointer.y * height,
+      width * 0.02,
+      0,
+      Math.PI * 2,
+    );
     ctx.stroke();
-  }, [side, pointer]);
+  }, [width, height, pointer]);
 
   // Points are sent once per frame, not once per pointer event.
   const flush = () => {
@@ -117,14 +124,14 @@ export function Whiteboard({
         ref={box}
         role="img"
         aria-label={label}
-        className="relative size-[min(100cqw,100cqh)] overflow-hidden rounded-inner shadow-lifted"
+        className="relative aspect-[3/4] w-[min(100cqw,75cqh)] overflow-hidden rounded-inner shadow-lifted"
       >
-        <canvas ref={paper} width={side} height={side} className={layer} />
-        <canvas ref={ink} width={side} height={side} className={layer} />
+        <canvas ref={paper} width={width} height={height} className={layer} />
+        <canvas ref={ink} width={width} height={height} className={layer} />
         <canvas
           ref={top}
-          width={side}
-          height={side}
+          width={width}
+          height={height}
           onPointerDown={down}
           onPointerMove={move}
           onPointerUp={up}

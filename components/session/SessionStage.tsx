@@ -89,7 +89,8 @@ function Status({
 // words come in as props, `corner` sits before the state (Daw Mi's way back
 // to the appointment), and `children` holds the page's own dialogs. While
 // `board` is given, the whiteboard takes the space and the other person's
-// video shrinks to a tile beside it.
+// video shrinks to a tile: in the top bar on phones and tablets, beside the
+// board on wider screens.
 export function SessionStage({
   text,
   corner,
@@ -177,7 +178,9 @@ export function SessionStage({
       ref={stage}
       className={`fixed inset-0 z-[200] flex h-dvh flex-col bg-stage text-canvas ${rings}`}
     >
-      <div className="flex min-h-14 flex-wrap items-center gap-x-5 gap-y-2 px-4 pt-[max(12px,env(safe-area-inset-top))] md:px-6">
+      <div
+        className={`flex min-h-14 flex-wrap items-center gap-x-5 gap-y-2 px-4 pt-[max(12px,env(safe-area-inset-top))] md:px-6 ${board ? "pr-28 lg:pr-6" : ""}`}
+      >
         {corner}
         <div role="status">
           <Status text={text} phase={phase} otherLeft={otherLeft} />
@@ -185,7 +188,7 @@ export function SessionStage({
       </div>
 
       <div
-        className={`relative min-h-0 flex-1 ${board ? "flex flex-col gap-3 px-3 pt-2 landscape:flex-row" : ""}`}
+        className={`relative min-h-0 flex-1 ${board ? "flex px-1 pt-1 lg:gap-3 lg:px-3 lg:pt-2" : ""}`}
       >
         <video
           ref={remoteVideo}
@@ -194,7 +197,7 @@ export function SessionStage({
           aria-label={text.remote}
           className={
             board
-              ? "aspect-video h-[88px] shrink-0 self-center rounded-inner bg-ink object-cover md:h-[150px] landscape:self-start"
+              ? "absolute -top-12 right-3 z-10 aspect-video h-11 rounded-inner bg-ink object-cover shadow-lifted lg:static lg:h-[150px] lg:shrink-0 lg:shadow-none"
               : `absolute inset-0 h-full w-full object-contain portrait:object-cover ${remote ? "" : "invisible"}`
           }
         />
@@ -259,7 +262,9 @@ export function SessionStage({
         </div>
       </div>
 
-      <div className="px-4 pt-4 pb-[max(16px,env(safe-area-inset-bottom))]">
+      <div
+        className={`px-4 pb-[max(16px,env(safe-area-inset-bottom))] ${board ? "pt-2" : "pt-4"}`}
+      >
         <ControlBar
           text={text}
           mic={mic}

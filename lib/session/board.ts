@@ -1,6 +1,6 @@
 // The session whiteboard's state and the messages both browsers send each
 // other over the call's data channel. Nothing here is stored or sent to a
-// server. Points are x, y pairs from 0 to 1 across the square page.
+// server. Points are x, y pairs from 0 to 1 across the page.
 
 export const TOOLS = ["pen", "marker", "eraser"] as const;
 export const SIZES = ["small", "medium", "large"] as const;

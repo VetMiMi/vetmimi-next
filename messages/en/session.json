@@ -90,17 +90,19 @@
   },
   "board": {
     "label": "Your drawing",
-    "hint": "Draw anything you like. Daw Mi sees it as you draw. VetMiMi doesn't keep your drawing, so save a copy if you'd like one.",
+    "hint": "Draw anything. Daw Mi sees it live. It isn't saved.",
     "tools": "Drawing tools",
     "pen": "Pen",
     "marker": "Marker",
     "eraser": "Eraser",
     "sizes": {
+      "label": "Size",
       "small": "Thin",
       "medium": "Medium",
       "large": "Thick"
     },
     "colours": "Colours",
+    "style": "Colour, size and paper",
     "colour": {
       "black": "Black",
       "grey": "Grey",

@@ -5,6 +5,7 @@ import { adminCall } from "@/lib/admin/session";
 import {
   suggestedTexts,
   suggestionFailure,
+  translationFailure,
   type Language,
 } from "@/lib/admin/suggestions";
 import { apiPath } from "@/lib/api/client";
@@ -130,8 +131,8 @@ export async function reloadPost(id: string) {
 
 // "Suggest versions" (#153): the AI assistant's versions of the chosen
 // channels, written from the saved website article. Nothing is saved; the
-// editor shows them beside the current text. The assistant can take half
-// a minute, so this call waits longer than most.
+// editor shows them beside the current text. The assistant can take a
+// minute, so this call waits longer than most.
 export async function suggestVersions(
   id: string,
   channels: SocialChannel[],
@@ -151,7 +152,7 @@ export async function suggestVersions(
           channels,
           language,
         }),
-      { timeoutMs: 45_000 },
+      { timeoutMs: 100_000 },
     );
     return { ok: true, texts: suggestedTexts(suggestions) };
   } catch (error) {
@@ -159,6 +160,44 @@ export async function suggestVersions(
     return {
       ok: false,
       message: suggestionFailure(
+        error.status,
+        error.code,
+        error.retryAfterSeconds,
+      ),
+    };
+  }
+}
+
+// "Translate" on the website article: the saved article in the other
+// language, translated into `language`. Nothing is saved; the editor fills
+// the fields in. A long article can take a minute.
+export async function translateArticle(
+  id: string,
+  language: Language,
+): Promise<
+  | { ok: true; website: { title: string; excerpt: string; body: string } }
+  | { ok: false; message: string }
+> {
+  check(id);
+  if (language !== "en" && language !== "my") throw new Error("Bad language");
+  try {
+    const { website } = await adminCall(
+      (api) =>
+        api.post<PostSuggestions>(apiPath`/admin/posts/${id}/suggestions`, {
+          channels: ["website"],
+          language,
+        }),
+      { timeoutMs: 110_000 },
+    );
+    if (!website) throw new ApiError({ status: 502, code: "ai_failed" });
+    const { title, excerpt, body } = website;
+    return { ok: true, website: { title, excerpt, body } };
+  } catch (error) {
+    if (!(error instanceof ApiError)) throw error;
+    return {
+      ok: false,
+      message: translationFailure(
+        language,
         error.status,
         error.code,
         error.retryAfterSeconds,

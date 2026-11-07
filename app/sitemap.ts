@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { listArticles } from "@/lib/articles";
-import { STORIES } from "@/lib/data";
 import { services } from "@/lib/services";
 import { buildSitemap } from "@/lib/sitemap";
 
@@ -13,7 +12,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const articles = await listArticles("en");
   return buildSitemap({
     services: services.map((service) => service.slug),
-    stories: STORIES.map((story) => story.slug),
     articles,
   });
 }

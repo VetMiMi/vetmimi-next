@@ -22,15 +22,9 @@ export function StoriesIndex({ items }: { items: StoryItem[] }) {
   const [filter, setFilter] = useState<Filter>("all");
   const type = FILTERS[filter];
   const stories = items.filter((story) => !type || story.kind === type);
-  // The big card, shown only under All: the newest published article, or
-  // until there is one, the written story Daw Mi chose to feature.
-  const featured = type
-    ? undefined
-    : (stories.find((story) => story.fromApi) ??
-      stories.find((story) => story.featured));
+  // The big card, shown only under All: the newest published article.
+  const featured = type ? undefined : stories[0];
   const rest = stories.filter((story) => story !== featured);
-  // Written stories are layout previews; published articles are final.
-  const preview = items.some((story) => !story.fromApi);
   const categories = (Object.keys(FILTERS) as Filter[]).map((value) => ({
     value,
     label: t(`filters.${value}`),
@@ -41,11 +35,6 @@ export function StoriesIndex({ items }: { items: StoryItem[] }) {
         <p className={ed.label}>{t("index.label")}</p>
         <h1 className={ed.h1}>{t("index.title")}</h1>
         <p className={`${ed.lead} last:mb-0`}>{t("index.lead")}</p>
-        {preview && (
-          <p className="text-[0.75rem] leading-[1.8] text-caption">
-            {t("index.preview")}
-          </p>
-        )}
       </header>
       <section className={ed.container} aria-label={t("index.sectionLabel")}>
         <FilterBar
@@ -77,9 +66,7 @@ export function StoriesIndex({ items }: { items: StoryItem[] }) {
               </h2>
               <p className={ed.text}>{featured.excerpt}</p>
               <Link className={ed.link} href={`/stories/${featured.slug}`}>
-                {featured.fromApi
-                  ? tEditorial("readStory")
-                  : t("index.readPreview")}
+                {tEditorial("readStory")}
               </Link>
             </div>
           </article>

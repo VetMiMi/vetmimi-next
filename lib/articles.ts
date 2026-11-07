@@ -1,6 +1,5 @@
 import "server-only";
 import { cache } from "react";
-import { getTranslations } from "next-intl/server";
 import { apiConfigured, apiPath, publicApi } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/problem";
 import type {
@@ -8,8 +7,7 @@ import type {
   PublicArticleSummary,
 } from "@/lib/api/types/content";
 import type { Page } from "@/lib/api/types/shared";
-import { STORIES } from "@/lib/data";
-import { mergeStories, storyFromArticle, type StoryItem } from "@/lib/stories";
+import { storyFromArticle, type StoryItem } from "@/lib/stories";
 import type { Locale } from "@/i18n/routing";
 
 export type Article = PublicArticle;
@@ -17,8 +15,8 @@ export type Article = PublicArticle;
 // Published articles come from the API and are cached until the API calls
 // POST /api/revalidate (tags "articles" and "article:<slug>"); the sitemap
 // reads the same list, so it refreshes with them. Until the API is
-// configured, or whenever it fails, the stories in the messages still show:
-// these pages never error because of the API.
+// configured, or whenever it fails, the list is empty: these pages never
+// error because of the API.
 
 export const listArticles = cache(async (locale: Locale) => {
   if (!apiConfigured()) return [];
@@ -50,25 +48,7 @@ export const getArticle = cache(
   },
 );
 
-// Every story to list, published articles first.
+// Every story to list, newest first, as the API returns them.
 export async function loadStories(locale: Locale): Promise<StoryItem[]> {
-  const [articles, t] = await Promise.all([
-    listArticles(locale),
-    getTranslations({ locale, namespace: "stories" }),
-  ]);
-  const written: StoryItem[] = STORIES.map((story) => ({
-    slug: story.slug,
-    kind: story.type,
-    title: t(`items.${story.slug}.title`),
-    excerpt: t(`items.${story.slug}.excerpt`),
-    category: t(`items.${story.slug}.category`),
-    image: story.img,
-    featured: story.featured,
-    fromApi: false,
-  }));
-  const published = articles.map((article) => ({
-    ...storyFromArticle(article),
-    publishedAt: article.publishedAt,
-  }));
-  return mergeStories(published, written);
+  return (await listArticles(locale)).map(storyFromArticle);
 }

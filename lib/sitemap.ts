@@ -30,23 +30,16 @@ function entry(pathname: string, lastModified?: string) {
 
 // One entry per English URL, with its Burmese twin as an alternate. Only
 // published articles carry a date: the written pages have no truthful one.
-// An article that reuses a written story's slug replaces it, as on the page.
 export function buildSitemap({
   services,
-  stories,
   articles,
 }: {
   services: string[];
-  stories: string[];
   articles: SitemapArticle[];
 }): MetadataRoute.Sitemap {
-  const published = new Set(articles.map((article) => article.slug));
   return [
     ...PAGES.map((pathname) => entry(pathname)),
     ...services.map((slug) => entry(`/services/${slug}`)),
-    ...stories
-      .filter((slug) => !published.has(slug))
-      .map((slug) => entry(`/stories/${slug}`)),
     ...articles.map((article) =>
       entry(`/stories/${article.slug}`, article.publishedAt),
     ),

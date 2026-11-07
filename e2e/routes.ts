@@ -1,23 +1,15 @@
 import type { Locale } from "@/i18n/routing";
-import type { StorySlug } from "@/lib/data";
 import type { ServiceSlug } from "@/lib/services";
 
-// The one list of public routes every end-to-end spec walks. The slug lists
-// are checked against the site's own types, so adding a service or a story
-// without listing it here fails the type check. They are not imported as
-// values because lib/services.ts and lib/data.ts import images, which only
-// Next's bundler can load.
+// The one list of public routes every end-to-end spec walks. The service
+// slugs are checked against the site's own type, so adding a service without
+// listing it here fails the type check. They are not imported as values
+// because lib/services.ts imports images, which only Next's bundler can load.
 const SERVICE_SLUGS = Object.keys({
   "individual-art-therapy": true,
   "group-art-wellbeing": true,
   "workshops-programs": true,
 } satisfies Record<ServiceSlug, true>);
-
-const STORY_SLUGS = Object.keys({
-  "stop-trying-make-perfect": true,
-  "art-and-words": true,
-  "creativity-in-healthcare": true,
-} satisfies Record<StorySlug, true>);
 
 /** A path no page answers, for the not-found page. */
 export const MISSING_ROUTE = "/this-page-does-not-exist";
@@ -30,7 +22,6 @@ export const ROUTES = [
   "/art-of-wellness",
   "/portfolio",
   "/stories",
-  ...STORY_SLUGS.map((slug) => `/stories/${slug}`),
   "/contact",
   "/book",
   "/privacy",

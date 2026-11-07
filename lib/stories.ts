@@ -1,4 +1,3 @@
-import type { StaticImageData } from "next/image";
 import type {
   PostKind,
   PublicArticleSummary,
@@ -18,18 +17,13 @@ const KINDS: Record<PostKind, StoryKind> = {
   announcement: "announcement",
 };
 
-// One entry of the Stories & insights list, from the API or from the
-// stories still written in messages/<locale>/stories.json.
+// One entry of the Stories & insights list: a published article.
 export type StoryItem = {
   slug: string;
   kind: StoryKind;
   title: string;
   excerpt: string;
-  /** A written story's own label ("Reflections"); articles show their kind. */
-  category?: string;
-  image?: StaticImageData | PublicImage;
-  featured?: boolean;
-  fromApi: boolean;
+  image?: PublicImage;
 };
 
 export function storyFromArticle(article: ArticleSummary): StoryItem {
@@ -39,23 +33,5 @@ export function storyFromArticle(article: ArticleSummary): StoryItem {
     title: article.title,
     excerpt: article.excerpt,
     image: article.coverImage,
-    fromApi: true,
   };
-}
-
-// Published articles first, newest first, then every story written in the
-// messages that has not been published from the portal yet, so nothing
-// disappears before the one-off import. A slug in both comes from the API.
-export function mergeStories<T extends { slug: string }>(
-  articles: (T & { publishedAt: string })[],
-  stories: T[],
-): T[] {
-  const published = new Set(articles.map((article) => article.slug));
-  const newestFirst = [...articles].sort(
-    (a, b) => Date.parse(b.publishedAt) - Date.parse(a.publishedAt),
-  );
-  return [
-    ...newestFirst,
-    ...stories.filter((story) => !published.has(story.slug)),
-  ];
 }

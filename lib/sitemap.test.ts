@@ -9,7 +9,6 @@ before(() => {
 const build = (articles: { slug: string; publishedAt: string }[] = []) =>
   buildSitemap({
     services: ["individual-art-therapy"],
-    stories: ["art-and-words", "creativity-in-healthcare"],
     articles,
   });
 
@@ -32,31 +31,19 @@ describe("sitemap", () => {
     assert.ok(urls.every((url) => !url.includes("/my/")));
   });
 
-  it("includes services and written stories, without a date", () => {
-    const entries = build();
-    for (const path of [
-      "/services/individual-art-therapy",
-      "/stories/art-and-words",
-    ]) {
-      const entry = entries.find(
-        (item) => item.url === `https://vetmimi.example${path}`,
-      );
-      assert.ok(entry, path);
-      assert.equal(entry.lastModified, undefined);
-    }
+  it("includes services without a date", () => {
+    const entry = build().find(
+      (item) =>
+        item.url === "https://vetmimi.example/services/individual-art-therapy",
+    );
+    assert.ok(entry);
+    assert.equal(entry.lastModified, undefined);
   });
 
-  it("dates published articles and lets them replace a story's slug", () => {
-    const entries = build([
-      { slug: "art-and-words", publishedAt: "2026-10-01T09:00:00Z" },
+  it("dates published articles", () => {
+    const article = build([
       { slug: "new-article", publishedAt: "2026-10-05T09:00:00Z" },
-    ]);
-    const story = entries.filter(
-      (entry) => entry.url === "https://vetmimi.example/stories/art-and-words",
-    );
-    assert.equal(story.length, 1);
-    assert.equal(story[0].lastModified, "2026-10-01T09:00:00Z");
-    const article = entries.find(
+    ]).find(
       (entry) => entry.url === "https://vetmimi.example/stories/new-article",
     );
     assert.equal(article?.lastModified, "2026-10-05T09:00:00Z");

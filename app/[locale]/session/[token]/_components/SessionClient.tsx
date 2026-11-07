@@ -86,12 +86,14 @@ export function SessionClient({
         weak={call.state.weak}
         board={
           wb.board.open && (
-            <div className="flex size-full flex-col gap-2">
-              <p className="text-center text-[0.85rem] leading-[1.5] text-canvas/80">
-                {words.board.hint}
-              </p>
-              <div className="min-h-0 flex-1">
+            <div className="flex size-full flex-col gap-1.5">
+              <div className="relative min-h-0 flex-1">
                 <Whiteboard wb={wb} label={words.board.label} pen={pen} />
+                {wb.board.strokes.length === 0 && (
+                  <p className="pointer-events-none absolute inset-x-0 top-2 mx-auto w-fit max-w-[90%] rounded-pill bg-stage/85 px-3 py-1 text-center text-[0.82rem] leading-[1.5] text-canvas">
+                    {words.board.hint}
+                  </p>
+                )}
               </div>
               <BoardTools text={words.board} wb={wb} pen={pen} onPen={setPen} />
             </div>

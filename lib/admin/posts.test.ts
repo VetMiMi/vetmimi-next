@@ -30,10 +30,11 @@ describe("post list filters", () => {
     assert.deepEqual(parseFilters({}), { view: "all" });
     assert.deepEqual(listQuery(parseFilters({})), { limit: 50 });
     assert.deepEqual(
-      listQuery(parseFilters({ view: "in_review", q: " calm " }), "c2"),
-      { status: "in_review", q: "calm", cursor: "c2", limit: 50 },
+      listQuery(parseFilters({ view: "scheduled", q: " calm " }), "c2"),
+      { status: "scheduled", q: "calm", cursor: "c2", limit: 50 },
     );
     assert.equal(parseFilters({ view: "archived" }).view, "all");
+    assert.equal(parseFilters({ view: "in_review" }).view, "all");
   });
 
   it("keeps the default view out of the address", () => {

@@ -86,7 +86,7 @@ export function PostFields({
             Storyteller&rsquo;s consent
           </legend>
           <p className="mb-2 text-[0.88rem] leading-[1.6] text-muted">
-            A True Story needs every item ticked before it can be approved.
+            A True Story needs every item ticked before it can be published.
             {confirmedAt && ` Confirmed ${confirmedAt}.`}
           </p>
           {consentChecks.map((label, i) => (

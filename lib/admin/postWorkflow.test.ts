@@ -15,17 +15,25 @@ import {
 const now = new Date("2026-10-06T23:00:00Z");
 
 describe("workflow actions", () => {
-  it("lets an editor submit and nothing more", () => {
-    assert.deepEqual(workflowActions("draft", false), ["submit"]);
-    assert.deepEqual(workflowActions("in_review", false), []);
-    assert.deepEqual(workflowActions("approved", false), []);
+  it("gives an editor no publishing steps", () => {
+    assert.deepEqual(workflowActions("draft", false), []);
+    assert.deepEqual(workflowActions("scheduled", false), []);
   });
 
-  it("gives a site administrator the review and publishing steps", () => {
-    assert.deepEqual(workflowActions("idea", true), ["submit", "archive"]);
+  it("lets a site administrator publish or schedule straight from a draft", () => {
+    assert.deepEqual(workflowActions("draft", true), [
+      "schedule",
+      "publish",
+      "archive",
+    ]);
+    assert.deepEqual(workflowActions("idea", true), [
+      "schedule",
+      "publish",
+      "archive",
+    ]);
     assert.deepEqual(workflowActions("in_review", true), [
-      "approve",
-      "requestChanges",
+      "schedule",
+      "publish",
       "archive",
     ]);
     assert.deepEqual(workflowActions("approved", true), [

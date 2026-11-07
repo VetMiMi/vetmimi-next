@@ -81,7 +81,6 @@ export type Post = {
   status: PostStatus;
   scheduledAt?: string;
   consent: Consent;
-  reviewNote?: string;
   authorId?: string;
   approvedAt?: string;
   approvedBy?: string;

@@ -5,43 +5,37 @@ import { Button } from "@/components/admin/Button";
 import { Card } from "@/components/admin/Card";
 import { Dialog } from "@/components/admin/Dialog";
 import { Notice } from "@/components/admin/Notice";
-import { Textarea } from "@/components/admin/Textarea";
 import { useToast } from "@/components/admin/Toast";
 import type { Outcome } from "@/lib/admin/mutation";
 import { whenShort } from "@/lib/admin/posts";
 import {
   approvalProblem,
+  UNPUBLISHED,
   workflowActions,
   type WorkflowAction,
 } from "@/lib/admin/postWorkflow";
 import type { Post } from "@/lib/api/types/content";
-import { postStep, requestChanges } from "../actions";
+import { postStep } from "../actions";
 import { ScheduleForm } from "./ScheduleForm";
 import { sectionTitle } from "./WebsiteFields";
 
 type Failure = { message: string; problems: string[]; reload: boolean };
 
 const done: Partial<Record<WorkflowAction, string>> = {
-  submit: "Post submitted for review",
-  approve: "Post approved",
-  unschedule: "Schedule cancelled. The post is approved",
+  unschedule: "Schedule cancelled. The post is a draft again",
   publish: "Publishing started",
   archive: "Post archived",
 };
 
-function nextStep(post: Post, canReview: boolean) {
+function nextStep(post: Post, canPublish: boolean) {
   switch (post.status) {
     case "idea":
     case "draft":
-      return "When the post is ready, submit it for review.";
     case "in_review":
-      return canReview
-        ? "Check each channel, then approve the post or send it back with a note."
-        : "Waiting for review by the site administrator.";
     case "approved":
-      return canReview
-        ? "Schedule the post, or publish it now."
-        : "Approved. The site administrator schedules or publishes it.";
+      return canPublish
+        ? "When the post is ready, schedule it or publish it now. Each channel is checked first."
+        : "The site administrator schedules or publishes it.";
     case "scheduled":
       return `Publishes on ${whenShort(post.scheduledAt!)}, Sydney time.`;
     case "publishing":
@@ -55,32 +49,32 @@ function nextStep(post: Post, canReview: boolean) {
   }
 }
 
-// The post's next steps by role (#152): an editor submits; a site
-// administrator approves or sends back, schedules, publishes and archives.
-// Every step sends the version on the page; nothing runs while the editor
-// has unsaved changes, so what is approved is what was saved.
+// The post's next steps (#152): a site administrator schedules, publishes
+// and archives, straight from a draft. Every step sends the version on the
+// page; nothing runs while the editor has unsaved changes, so what is
+// checked and published is what was saved.
 export function Workflow({
   post,
-  canReview,
+  canPublish,
   dirty,
   onChange,
 }: {
   post: Post;
-  canReview: boolean;
+  canPublish: boolean;
   dirty: boolean;
   onChange: (post: Post) => void;
 }) {
-  const [dialog, setDialog] = useState<"publish" | "archive" | "changes">();
-  const [note, setNote] = useState("");
-  const [noteError, setNoteError] = useState<string>();
+  const [dialog, setDialog] = useState<"publish" | "archive">();
   const [failure, setFailure] = useState<Failure>();
   const [pending, startTransition] = useTransition();
   const toast = useToast();
 
-  const actions = workflowActions(post.status, canReview);
+  const actions = workflowActions(post.status, canPublish);
   const has = (action: WorkflowAction) => actions.includes(action);
   const needsConsent =
-    post.kind === "true_story" && !post.consent.confirmed && has("submit");
+    post.kind === "true_story" &&
+    !post.consent.confirmed &&
+    UNPUBLISHED.includes(post.status);
 
   function settle(outcome: Outcome<Post>, success: string) {
     if (outcome.ok) {
@@ -102,30 +96,14 @@ export function Workflow({
     });
   }
 
-  const step = (
-    action: Exclude<WorkflowAction, "requestChanges" | "schedule">,
-  ) =>
+  const step = (action: Exclude<WorkflowAction, "schedule">) =>
     startTransition(async () =>
       settle(await postStep(action, post.id, post.version), done[action]!),
     );
 
-  function sendBack() {
-    if (!note.trim()) {
-      setNoteError("Say what needs to change.");
-      return;
-    }
-    startTransition(async () => {
-      settle(
-        await requestChanges(post.id, post.version, note),
-        "Sent back with your note",
-      );
-    });
-  }
-
   function close() {
     setDialog(undefined);
     setFailure(undefined);
-    setNoteError(undefined);
   }
 
   const failureNotice = failure && (
@@ -153,7 +131,7 @@ export function Workflow({
       <h2 className={sectionTitle}>Workflow</h2>
       <div className="flex flex-col items-start gap-4">
         <p className="text-[0.92rem] leading-[1.6] text-muted">
-          {nextStep(post, canReview)}
+          {nextStep(post, canPublish)}
         </p>
         {dirty && actions.length > 0 && (
           <p className="text-[0.92rem] leading-[1.6] font-semibold text-ink">
@@ -162,43 +140,17 @@ export function Workflow({
         )}
         {needsConsent && (
           <p className="text-[0.92rem] leading-[1.6] font-semibold text-ink">
-            Tick every True Story consent item and save before submitting.
+            Tick every True Story consent item and save before publishing.
           </p>
         )}
         <fieldset
           disabled={dirty || pending}
           className="m-0 flex w-full min-w-0 flex-col items-start gap-4 border-0 p-0"
         >
-          {has("submit") && (
-            <Button
-              size="page"
-              className="w-full"
-              busy={pending}
-              disabled={needsConsent}
-              onClick={() => step("submit")}
-            >
-              Submit for review
-            </Button>
-          )}
-          {has("approve") && (
-            <div className="flex w-full flex-col gap-3">
-              <Button
-                size="page"
-                className="w-full"
-                busy={pending}
-                onClick={() => step("approve")}
-              >
-                Approve
-              </Button>
-              <Button variant="secondary" onClick={() => setDialog("changes")}>
-                Request changes
-              </Button>
-            </div>
-          )}
           {has("schedule") && (
             <ScheduleForm
               post={post}
-              primary={post.status === "approved"}
+              primary={post.status !== "scheduled"}
               onDone={(outcome) =>
                 settle(
                   outcome,
@@ -210,7 +162,11 @@ export function Workflow({
             />
           )}
           {has("publish") && (
-            <Button variant="secondary" onClick={() => setDialog("publish")}>
+            <Button
+              variant="secondary"
+              disabled={needsConsent}
+              onClick={() => setDialog("publish")}
+            >
               Publish now
             </Button>
           )}
@@ -258,33 +214,6 @@ export function Workflow({
           It leaves every list except All, and a published article leaves the
           website. What already went out on social channels stays there.
         </p>
-      </Dialog>
-      <Dialog
-        open={dialog === "changes"}
-        onClose={close}
-        title="Request changes"
-        confirmLabel="Send back"
-        busyLabel="Sending…"
-        busy={pending}
-        onConfirm={sendBack}
-      >
-        {failureNotice && <div className="mb-4">{failureNotice}</div>}
-        <p className="mb-4">
-          The post goes back to draft with your note at the top of the editor.
-        </p>
-        <Textarea
-          label="What needs to change"
-          name="reviewNote"
-          required
-          rows={4}
-          maxLength={2000}
-          value={note}
-          onChange={(event) => {
-            setNote(event.target.value);
-            setNoteError(undefined);
-          }}
-          error={noteError}
-        />
       </Dialog>
     </Card>
   );

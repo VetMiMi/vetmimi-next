@@ -27,7 +27,7 @@ const columnLabel =
 // "Suggest versions" (#153): the AI assistant drafts the switched-on social
 // channels from the saved website article, shown beside the current text.
 // Accept puts a suggestion in the field, unsaved; Discard drops it. Daw Mi
-// still edits, saves and approves: nothing here saves or publishes.
+// still edits, saves and publishes: nothing here saves or publishes.
 export function Suggestions({
   postId,
   draft,
@@ -86,7 +86,7 @@ export function Suggestions({
         <p className="text-[0.92rem] leading-[1.65] text-muted">
           The assistant writes the switched-on social posts from the saved
           website article. Nothing changes until you accept a suggestion, and
-          you still save and approve the post.
+          you still save and publish the post.
         </p>
       </div>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end">

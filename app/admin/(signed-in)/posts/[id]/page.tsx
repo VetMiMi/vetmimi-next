@@ -77,7 +77,7 @@ export default async function PostPage({
       <PostEditor
         post={post}
         media={media}
-        canReview={canUse(user.roles, ["site_admin"])}
+        canPublish={canUse(user.roles, ["site_admin"])}
         aiEnabled={aiEnabled}
       />
     </>

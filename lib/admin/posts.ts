@@ -26,8 +26,6 @@ export const views = [
   { id: "all", label: "All" },
   { id: "idea", label: "Ideas" },
   { id: "draft", label: "Drafts" },
-  { id: "in_review", label: "In review" },
-  { id: "approved", label: "Approved" },
   { id: "scheduled", label: "Scheduled" },
   { id: "published", label: "Published" },
 ] as const;

@@ -1,5 +1,5 @@
-// The publishing workflow in the post editor (#152): which actions each
-// role has at each status, scheduling in Sydney time, how a channel's
+// The publishing workflow in the post editor (#152): which actions a site
+// administrator has at each status, scheduling in Sydney time, how a channel's
 // failure reads, and what "Copy & open" copies. Pure, so node:test covers
 // it. The API decides every transition; this only chooses what to offer.
 import type { Post, PostStatus, Publication } from "../api/types/content.ts";
@@ -8,26 +8,26 @@ import { channelNames, PRACTICE_TIMEZONE } from "./posts.ts";
 import { addDays } from "../time.ts";
 import { todayIn, zonedInstant, zonedParts } from "../zonedTime.ts";
 
-export type WorkflowAction =
-  | "submit"
-  | "requestChanges"
-  | "approve"
-  | "schedule"
-  | "unschedule"
-  | "publish"
-  | "archive";
+export type WorkflowAction = "schedule" | "unschedule" | "publish" | "archive";
 
-// A content editor submits; only a site administrator reviews, schedules,
-// publishes and archives (vetmimi-api internal/httpapi/roles.go).
+// Not yet out. In review and Approved remain only on posts saved before the
+// review step was removed (vetmimi-api ADR-012).
+export const UNPUBLISHED: PostStatus[] = [
+  "idea",
+  "draft",
+  "in_review",
+  "approved",
+];
+
+// Only a site administrator schedules, publishes and archives; a content
+// editor writes drafts. There is no review step: Daw Mi is the only writer.
 export function workflowActions(
   status: PostStatus,
-  canReview: boolean,
+  canPublish: boolean,
 ): WorkflowAction[] {
+  if (!canPublish) return [];
   const actions: WorkflowAction[] = [];
-  if (status === "idea" || status === "draft") actions.push("submit");
-  if (!canReview) return actions;
-  if (status === "in_review") actions.push("approve", "requestChanges");
-  if (status === "approved") actions.push("schedule", "publish");
+  if (UNPUBLISHED.includes(status)) actions.push("schedule", "publish");
   if (status === "scheduled") actions.push("publish", "schedule", "unschedule");
   if (status !== "archived") actions.push("archive");
   return actions;
@@ -138,7 +138,7 @@ export const canRetry = (
   isSocial(publication.channel) &&
   publication.status === "failed";
 
-// ── Approval problems ───────────────────────────────────────────────────
+// ── Publishing problems ─────────────────────────────────────────────────
 
 const fieldLabels: Record<string, string> = {
   slug: "the web address",
@@ -155,7 +155,7 @@ const locales: Record<string, string> = {
   my: " in Burmese",
 };
 
-// One problem from a refused approval, from its field and the API's
+// One problem from a refused schedule or publish, from its field and the API's
 // message: "versions.website.title.en" + "is required" → "Website: the
 // title in English is required."
 export function approvalProblem(field: string, message: string) {

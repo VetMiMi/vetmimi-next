@@ -46,12 +46,12 @@ const FORM_ID = "post-form";
 export function PostEditor({
   post: loaded,
   media: loadedMedia,
-  canReview,
+  canPublish,
   aiEnabled,
 }: {
   post: Post;
   media: Media[];
-  canReview: boolean;
+  canPublish: boolean;
   aiEnabled: boolean;
 }) {
   const [post, setPost] = useState(loaded);
@@ -119,8 +119,8 @@ export function PostEditor({
         toPatch(sent, post, post.version),
       );
       if (outcome.ok) {
-        const backToReview =
-          outcome.data.status === "in_review" && post.status !== "in_review";
+        const backToDraft =
+          outcome.data.status === "draft" && post.status === "scheduled";
         const next = afterSave(sent, outcome.data);
         setPost(outcome.data);
         setSaved(next);
@@ -129,7 +129,9 @@ export function PostEditor({
         setError(undefined);
         setFieldErrors({});
         toast(
-          backToReview ? "Post saved and sent back to review" : "Post saved",
+          backToDraft
+            ? "Post saved. The schedule was cancelled: schedule it again when ready"
+            : "Post saved",
         );
       } else {
         setError({
@@ -157,9 +159,6 @@ export function PostEditor({
         onSubmit={save}
         className="flex min-w-0 flex-col gap-6"
       >
-        {post.reviewNote && post.status === "draft" && (
-          <Notice tone="info">Changes requested: {post.reviewNote}</Notice>
-        )}
         {!editable && (
           <Notice tone="info">
             This post is{" "}
@@ -238,9 +237,10 @@ export function PostEditor({
               status={post.status}
               detail={post.scheduledAt && whenShort(post.scheduledAt)}
             />
-            {(post.status === "approved" || post.status === "scheduled") && (
+            {post.status === "scheduled" && (
               <p className="text-[0.88rem] leading-[1.6] text-muted">
-                Saving a change sends this post back to review.
+                Saving a change cancels the schedule, so the post is checked
+                again before it goes out.
               </p>
             )}
             {error && (
@@ -277,7 +277,7 @@ export function PostEditor({
 
         <Workflow
           post={post}
-          canReview={canReview}
+          canPublish={canPublish}
           dirty={dirty}
           onChange={moved}
         />
@@ -286,7 +286,7 @@ export function PostEditor({
           <Channels
             post={post}
             media={media}
-            canConnect={canReview}
+            canConnect={canPublish}
             onChange={moved}
           />
         )}

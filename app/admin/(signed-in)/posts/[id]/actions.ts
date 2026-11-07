@@ -31,11 +31,11 @@ const STALE =
 
 // The post's workflow steps (#152). Each sends the version the page was
 // loaded at, so a change made elsewhere comes back as `stale_version`.
-type Step = "submit" | "approve" | "unschedule" | "publish" | "archive";
+type Step = "unschedule" | "publish" | "archive";
+
+const NOT_READY = "The post is not ready to publish yet:";
 
 const stepFailures: Record<Step, string> = {
-  submit: "The post was not submitted. It is still a draft.",
-  approve: "The post was not approved. It is still in review.",
   unschedule: "The schedule was not cancelled. The post is still scheduled.",
   publish: "The post was not published. Nothing went out.",
   archive: "The post was not archived. Its status has not changed.",
@@ -53,29 +53,8 @@ export async function postStep(step: Step, id: string, version: number) {
         stale_version: STALE,
         invalid_transition:
           "This post has moved on since you opened it. Reload to see where it is now.",
-        publish_requirements_unmet:
-          "The post is not ready to approve yet. It is still in review:",
+        publish_requirements_unmet: NOT_READY,
       },
-    },
-  );
-}
-
-export async function requestChanges(
-  id: string,
-  version: number,
-  note: string,
-) {
-  check(id);
-  return mutate(
-    `/admin/posts/${id}`,
-    (api) =>
-      api.post<Post>(apiPath`/admin/posts/${id}/request-changes`, {
-        version,
-        note: note.trim().slice(0, 2000),
-      }),
-    {
-      failure: "Changes were not requested. The post is still in review.",
-      codes: { stale_version: STALE },
     },
   );
 }
@@ -96,7 +75,7 @@ export async function schedulePost(
       }),
     {
       failure: "The post was not scheduled. Its status has not changed.",
-      codes: { stale_version: STALE },
+      codes: { stale_version: STALE, publish_requirements_unmet: NOT_READY },
     },
   );
 }

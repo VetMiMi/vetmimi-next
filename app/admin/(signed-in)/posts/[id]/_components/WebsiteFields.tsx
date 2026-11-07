@@ -8,6 +8,7 @@ import { slugify } from "@/lib/slug";
 import { ImageSlot } from "./ImageSlot";
 import { MarkdownField } from "./MarkdownField";
 import { Switch } from "@/components/admin/Switch";
+import { TranslateArticle } from "./TranslateArticle";
 
 type Website = Draft["website"];
 type Localized = Website["title"];
@@ -15,8 +16,8 @@ type Localized = Website["title"];
 export const sectionTitle = "mb-6 text-[1.35rem]";
 
 // The website article (ADR-009): its address, title, excerpt and body in
-// English and Burmese. Approval needs the address and the English title,
-// excerpt and body.
+// English and Burmese. Publishing needs the address and the English title,
+// excerpt and body. `translate` names the post when the assistant is on.
 export function WebsiteFields({
   website,
   media,
@@ -24,6 +25,7 @@ export function WebsiteFields({
   errors,
   onChange,
   onPickCover,
+  translate,
 }: {
   website: Website;
   media: Record<string, Media>;
@@ -31,6 +33,7 @@ export function WebsiteFields({
   errors: Record<string, string>;
   onChange: (patch: Partial<Website>) => void;
   onPickCover: () => void;
+  translate?: { postId: string; unsaved: boolean };
 }) {
   const err = (field: string) => errors[`versions.website.${field}`];
   const set =
@@ -61,6 +64,13 @@ export function WebsiteFields({
         checked={website.enabled}
         onChange={(enabled) => onChange({ enabled })}
       />
+      {translate && editable && (
+        <TranslateArticle
+          {...translate}
+          website={website}
+          onTranslated={onChange}
+        />
+      )}
       <div className="grid gap-[18px] md:grid-cols-2">
         <Input
           label="Title in English"

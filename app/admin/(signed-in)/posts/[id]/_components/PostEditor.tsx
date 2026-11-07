@@ -189,6 +189,9 @@ export function PostEditor({
                 setDraft((d) => ({ ...d, website: { ...d.website, ...patch } }))
               }
               onPickCover={() => setPicking("cover")}
+              translate={
+                aiEnabled ? { postId: post.id, unsaved: dirty } : undefined
+              }
             />
           </fieldset>
         </Card>

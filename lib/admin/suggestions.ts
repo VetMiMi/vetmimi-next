@@ -36,18 +36,22 @@ export function suggestedTexts(
   return texts;
 }
 
+const QUOTA =
+  "The assistant has used its free allowance for now. Your text is unchanged. Try again later, or tomorrow.";
+
 // What a refusal means for Daw Mi; her text is never touched by one.
 export function suggestionFailure(
   status: number,
   code: string,
   retryAfterSeconds?: number,
 ): string {
+  if (code === "ai_quota") return QUOTA;
   if (code === "rate_limited" || status === 429) {
     const minutes =
       retryAfterSeconds === undefined
         ? undefined
         : Math.max(1, Math.ceil(retryAfterSeconds / 60));
-    return `You have asked for 20 suggestions in the last hour, the most allowed. Try again ${minutes ? `in about ${minutes} minute${minutes === 1 ? "" : "s"}` : "later"}.`;
+    return `You have asked the assistant 20 times in the last hour, the most allowed. Try again ${minutes ? `in about ${minutes} minute${minutes === 1 ? "" : "s"}` : "later"}.`;
   }
   if (code === "action_not_allowed")
     return "Write and save the website article first: suggestions are written from it.";
@@ -58,4 +62,29 @@ export function suggestionFailure(
   if (status === 403)
     return "Your account cannot ask for suggestions. If you need to, ask the site administrator.";
   return "Suggestions could not be made just now. Your text is unchanged. Try again in a few minutes.";
+}
+
+export const languageNames: Record<Language, string> = {
+  en: "English",
+  my: "Burmese",
+};
+
+// "Translate" on the website article: a translation into `into` is made
+// from the saved article in the other language.
+export function translationFailure(
+  into: Language,
+  status: number,
+  code: string,
+  retryAfterSeconds?: number,
+): string {
+  const from = languageNames[into === "my" ? "en" : "my"];
+  if (code === "action_not_allowed")
+    return `Write and save the ${from} article first: the translation is made from it.`;
+  if (code === "ai_failed")
+    return "The assistant did not come back with a usable translation. Your text is unchanged. Try again.";
+  if (code === "feature_unavailable")
+    return "Translation is switched off on the server. Your text is unchanged.";
+  if (status >= 500)
+    return "The translation could not be made just now. Your text is unchanged. Try again in a few minutes.";
+  return suggestionFailure(status, code, retryAfterSeconds);
 }

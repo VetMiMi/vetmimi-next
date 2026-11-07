@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { suggestedTexts, suggestionFailure } from "./suggestions.ts";
+import {
+  suggestedTexts,
+  suggestionFailure,
+  translationFailure,
+} from "./suggestions.ts";
 
 describe("suggestedTexts", () => {
   it("returns only the channels suggested", () => {
@@ -51,5 +55,25 @@ describe("suggestionFailure", () => {
     assert.match(suggestionFailure(503, "feature_unavailable"), /switched off/);
     assert.match(suggestionFailure(403, "forbidden"), /cannot ask/);
     assert.match(suggestionFailure(503, "unavailable"), /few minutes/);
+    assert.match(suggestionFailure(429, "ai_quota"), /free allowance/);
+  });
+});
+
+describe("translationFailure", () => {
+  it("names the language the translation is made from", () => {
+    assert.match(
+      translationFailure("my", 422, "action_not_allowed"),
+      /save the English article first/,
+    );
+    assert.match(
+      translationFailure("en", 422, "action_not_allowed"),
+      /save the Burmese article first/,
+    );
+  });
+
+  it("shares the assistant's limits", () => {
+    assert.match(translationFailure("my", 429, "ai_quota"), /free allowance/);
+    assert.match(translationFailure("my", 429, "rate_limited"), /20 times/);
+    assert.match(translationFailure("my", 503, "unavailable"), /translation/);
   });
 });

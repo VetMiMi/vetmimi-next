@@ -48,7 +48,7 @@ export function Suggestions({
   const channels = CHANNELS.filter((channel) => draft[channel].enabled);
   const shown = CHANNELS.filter((channel) => texts[channel] !== undefined);
   const hint = pending
-    ? "This can take up to half a minute. You can keep editing meanwhile."
+    ? "This can take up to a minute. You can keep editing meanwhile."
     : channels.length === 0
       ? "Switch on Facebook, Instagram or LinkedIn above to get suggestions."
       : undefined;

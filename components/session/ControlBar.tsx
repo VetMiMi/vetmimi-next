@@ -1,6 +1,7 @@
 "use client";
 import type { KeyboardEvent, ReactNode } from "react";
 import {
+  ChalkboardSimple,
   Microphone,
   MicrophoneSlash,
   PhoneDisconnect,
@@ -61,6 +62,12 @@ function ControlButton({
   );
 }
 
+export type BoardToggle = {
+  label: string;
+  open: boolean;
+  onToggle: () => void;
+};
+
 // Brief §9 In session: 48px round buttons (the lightbox's tint) for the
 // microphone, the camera and Leave (Daw Mi's End session), which is
 // #ab4347. A pressed switch is filled canvas and shows the crossed-out
@@ -69,11 +76,13 @@ export function ControlBar({
   text,
   mic,
   camera,
+  board,
   onLeave,
 }: {
   text: StageText;
   mic: TrackToggle;
   camera: TrackToggle;
+  board?: BoardToggle;
   onLeave: () => void;
 }) {
   return (
@@ -102,6 +111,15 @@ export function ControlBar({
           <VideoCameraSlash aria-hidden="true" size={22} />
         )}
       </ControlButton>
+      {board && (
+        <ControlButton
+          label={board.label}
+          pressed={board.open}
+          onClick={board.onToggle}
+        >
+          <ChalkboardSimple aria-hidden="true" size={22} />
+        </ControlButton>
+      )}
       <ControlButton label={text.leave} danger onClick={onLeave}>
         <PhoneDisconnect aria-hidden="true" size={22} />
       </ControlButton>

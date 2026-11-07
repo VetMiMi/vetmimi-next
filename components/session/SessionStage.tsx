@@ -9,7 +9,7 @@ import {
   WifiLow,
 } from "@phosphor-icons/react";
 import type { Phase } from "@/lib/session/machine";
-import { ControlBar } from "./ControlBar";
+import { ControlBar, type BoardToggle } from "./ControlBar";
 import type { StageText } from "./text";
 import type { TrackToggle } from "./useLocalMedia";
 
@@ -87,11 +87,15 @@ function Status({
 // voice must play. If the browser blocks that, one tap starts it. The
 // visitor's page and Daw Mi's call view in /admin (#83) both use it: the
 // words come in as props, `corner` sits before the state (Daw Mi's way back
-// to the appointment), and `children` holds the page's own dialogs.
+// to the appointment), and `children` holds the page's own dialogs. While
+// `board` is given, the whiteboard takes the space and the other person's
+// video shrinks to a tile beside it.
 export function SessionStage({
   text,
   corner,
   children,
+  board,
+  boardToggle,
   phase,
   otherLeft,
   weak,
@@ -104,6 +108,8 @@ export function SessionStage({
   text: StageText;
   corner?: ReactNode;
   children?: ReactNode;
+  board?: ReactNode;
+  boardToggle?: BoardToggle;
   phase: Phase;
   otherLeft: boolean;
   weak: boolean;
@@ -178,15 +184,22 @@ export function SessionStage({
         </div>
       </div>
 
-      <div className="relative min-h-0 flex-1">
+      <div
+        className={`relative min-h-0 flex-1 ${board ? "flex flex-col gap-3 px-3 pt-2 landscape:flex-row" : ""}`}
+      >
         <video
           ref={remoteVideo}
           autoPlay
           playsInline
           aria-label={text.remote}
-          className={`absolute inset-0 h-full w-full object-contain portrait:object-cover ${remote ? "" : "invisible"}`}
+          className={
+            board
+              ? "aspect-video h-[88px] shrink-0 self-center rounded-inner bg-ink object-cover md:h-[150px] landscape:self-start"
+              : `absolute inset-0 h-full w-full object-contain portrait:object-cover ${remote ? "" : "invisible"}`
+          }
         />
-        {!remote && (
+        {board && <div className="min-h-0 min-w-0 flex-1">{board}</div>}
+        {!remote && !board && (
           <div
             aria-hidden="true"
             className="absolute inset-0 flex items-center justify-center text-canvas/40"
@@ -225,7 +238,9 @@ export function SessionStage({
           </button>
         )}
 
-        <div className="absolute right-3 bottom-3 aspect-[3/4] w-[120px] overflow-hidden rounded-inner bg-ink shadow-lifted md:w-[200px] landscape:aspect-video">
+        <div
+          className={`absolute right-3 bottom-3 aspect-[3/4] w-[120px] overflow-hidden rounded-inner bg-ink shadow-lifted md:w-[200px] landscape:aspect-video ${board ? "hidden" : ""}`}
+        >
           <video
             ref={selfVideo}
             muted
@@ -245,7 +260,13 @@ export function SessionStage({
       </div>
 
       <div className="px-4 pt-4 pb-[max(16px,env(safe-area-inset-bottom))]">
-        <ControlBar text={text} mic={mic} camera={camera} onLeave={onLeave} />
+        <ControlBar
+          text={text}
+          mic={mic}
+          camera={camera}
+          board={boardToggle}
+          onLeave={onLeave}
+        />
       </div>
       {children}
     </div>

@@ -8,7 +8,9 @@ import { usePracticeFormat } from "@/components/booking/practiceFormat";
 import { Btn } from "@/components/ui/Button";
 import { DeviceCheck } from "@/components/session/DeviceCheck";
 import { CardActions, SessionCard } from "@/components/session/SessionCard";
+import { BoardTools } from "@/components/session/BoardTools";
 import { SessionStage } from "@/components/session/SessionStage";
+import { Whiteboard, type Pen } from "@/components/session/Whiteboard";
 import {
   useLocalMedia,
   useTrackToggle,
@@ -17,6 +19,7 @@ import type { PublicSession } from "@/lib/api/session";
 import { fetchTicket } from "@/lib/session/call";
 import { isTerminal } from "@/lib/session/machine";
 import { useSession } from "@/lib/session/useSession";
+import { useWhiteboard } from "@/lib/session/useWhiteboard";
 
 const isLive = (stream: MediaStream) =>
   stream.getTracks().every((track) => track.readyState === "live");
@@ -41,7 +44,13 @@ export function SessionClient({
   const mic = useTrackToggle(stream, "audio");
   const camera = useTrackToggle(stream, "video");
   const getTicket = useCallback(() => fetchTicket(token), [token]);
-  const call = useSession(getTicket);
+  const wb = useWhiteboard();
+  const call = useSession(getTicket, wb.attach);
+  const [pen, setPen] = useState<Pen>({
+    tool: "pen",
+    colour: "black",
+    size: "medium",
+  });
   const [onStage, setOnStage] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const { phase, refresh } = call.state;
@@ -75,6 +84,19 @@ export function SessionClient({
         phase={phase}
         otherLeft={call.state.otherLeft}
         weak={call.state.weak}
+        board={
+          wb.board.open && (
+            <div className="flex size-full flex-col gap-2">
+              <p className="text-center text-[0.85rem] leading-[1.5] text-canvas/80">
+                {words.board.hint}
+              </p>
+              <div className="min-h-0 flex-1">
+                <Whiteboard wb={wb} label={words.board.label} pen={pen} />
+              </div>
+              <BoardTools text={words.board} wb={wb} pen={pen} onPen={setPen} />
+            </div>
+          )
+        }
         local={stream}
         remote={call.remote}
         mic={mic}

@@ -9,6 +9,7 @@ type PeerOptions = {
   send: (message: SignalMessage) => void;
   onRemote: (stream: MediaStream) => void;
   onState: (state: RTCPeerConnectionState) => void;
+  onChannel: (channel: RTCDataChannel) => void;
 };
 
 // One RTCPeerConnection with "perfect negotiation" (the W3C pattern):
@@ -23,13 +24,15 @@ export class PeerLink {
 
   constructor(options: PeerOptions) {
     this.options = options;
-    const { iceServers, stream, send, onRemote, onState } = options;
+    const { iceServers, stream, send, onRemote, onState, onChannel } = options;
     const pc = new RTCPeerConnection({
       iceServers,
       bundlePolicy: "max-bundle",
     });
     this.pc = pc;
     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
+    // Negotiated with a fixed id, so both sides open it without an extra offer.
+    onChannel(pc.createDataChannel("board", { negotiated: true, id: 0 }));
 
     pc.onnegotiationneeded = async () => {
       try {

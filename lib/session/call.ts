@@ -65,17 +65,20 @@ export class SessionCall {
   private readonly stream: MediaStream;
   private readonly dispatch: (event: CallEvent) => void;
   private readonly onRemote: (stream: MediaStream | null) => void;
+  private readonly onChannel: (channel: RTCDataChannel) => void;
 
   constructor(options: {
     getTicket: () => Promise<TicketResult>;
     stream: MediaStream;
     dispatch: (event: CallEvent) => void;
     onRemote: (stream: MediaStream | null) => void;
+    onChannel: (channel: RTCDataChannel) => void;
   }) {
     this.getTicket = options.getTicket;
     this.stream = options.stream;
     this.dispatch = options.dispatch;
     this.onRemote = options.onRemote;
+    this.onChannel = options.onChannel;
   }
 
   start() {
@@ -180,6 +183,7 @@ export class SessionCall {
       stream: this.stream,
       send: (message) => this.ws?.send(message),
       onRemote: this.onRemote,
+      onChannel: this.onChannel,
       onState: (state) => {
         this.dispatch({ type: "pc", state });
         clearTimeout(this.iceTimer);

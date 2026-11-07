@@ -87,5 +87,51 @@
     "text": "You can rejoin from the same link while the session is open.",
     "stay": "Stay",
     "confirm": "Leave"
+  },
+  "board": {
+    "label": "Your drawing",
+    "hint": "Draw anything you like. Daw Mi sees it as you draw. VetMiMi doesn't keep your drawing, so save a copy if you'd like one.",
+    "tools": "Drawing tools",
+    "pen": "Pen",
+    "marker": "Marker",
+    "eraser": "Eraser",
+    "sizes": {
+      "small": "Thin",
+      "medium": "Medium",
+      "large": "Thick"
+    },
+    "colours": "Colours",
+    "colour": {
+      "black": "Black",
+      "grey": "Grey",
+      "white": "White",
+      "brown": "Brown",
+      "red": "Red",
+      "coral": "Coral",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "lime": "Light green",
+      "green": "Green",
+      "teal": "Teal",
+      "sky": "Light blue",
+      "blue": "Blue",
+      "purple": "Purple",
+      "pink": "Pink",
+      "skinLight": "Light skin tone",
+      "skinMedium": "Medium skin tone",
+      "skinDeep": "Deep skin tone"
+    },
+    "paper": "Paper colour",
+    "papers": {
+      "white": "White paper",
+      "cream": "Cream paper",
+      "grey": "Grey paper",
+      "black": "Black paper"
+    },
+    "undo": "Undo",
+    "clear": "Clear",
+    "clearAgain": "Tap again to clear",
+    "save": "Save a copy",
+    "fileName": "my-drawing"
   }
 }

@@ -8,8 +8,12 @@ import { RECONNECT_LIMIT_MS } from "./reconnect";
 // for a fresh room ticket (the visitor's or Daw Mi's) and must be stable;
 // `join` starts a call with the given tracks; `leave` ends it on purpose. A
 // call that has been connecting or reconnecting for 90 s in a row gives up
-// as `failed`.
-export function useSession(getTicket: () => Promise<TicketResult>) {
+// as `failed`. `onChannel` receives the whiteboard's data channel of each
+// new peer connection and must be stable too.
+export function useSession(
+  getTicket: () => Promise<TicketResult>,
+  onChannel: (channel: RTCDataChannel) => void,
+) {
   const [state, dispatch] = useReducer(callReducer, initialCall);
   const [remote, setRemote] = useState<MediaStream | null>(null);
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -22,6 +26,7 @@ export function useSession(getTicket: () => Promise<TicketResult>) {
       stream,
       dispatch,
       onRemote: setRemote,
+      onChannel,
     });
     call.current = current;
     current.start();
@@ -34,7 +39,7 @@ export function useSession(getTicket: () => Promise<TicketResult>) {
       current.leave();
       call.current = null;
     };
-  }, [getTicket, stream]);
+  }, [getTicket, onChannel, stream]);
 
   const struggling =
     state.phase === "connecting" || state.phase === "reconnecting";

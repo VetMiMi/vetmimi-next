@@ -7,13 +7,16 @@ import { Button } from "@/components/admin/Button";
 import { Card } from "@/components/admin/Card";
 import { DeviceCheck } from "@/components/session/DeviceCheck";
 import { SessionStage } from "@/components/session/SessionStage";
+import { Whiteboard } from "@/components/session/Whiteboard";
 import {
   useLocalMedia,
   useTrackToggle,
 } from "@/components/session/useLocalMedia";
 import { isTerminal } from "@/lib/session/machine";
 import { useSession } from "@/lib/session/useSession";
+import { useWhiteboard } from "@/lib/session/useWhiteboard";
 import { startVideo } from "../../videoActions";
+import { BoardPages } from "./BoardPages";
 import { EndSessionDialog } from "./EndSessionDialog";
 import { MarkCompletedDialog } from "./MarkCompletedDialog";
 import { checkText, stageText } from "./practitionerText";
@@ -46,7 +49,8 @@ export function PractitionerSession({
   const mic = useTrackToggle(stream, "audio");
   const camera = useTrackToggle(stream, "video");
   const getTicket = useCallback(() => startVideo(id), [id]);
-  const call = useSession(getTicket);
+  const wb = useWhiteboard();
+  const call = useSession(getTicket, wb.attach);
   const [onStage, setOnStage] = useState(false);
   const [ending, setEnding] = useState(false);
   const [endedHere, setEndedHere] = useState(false);
@@ -79,6 +83,31 @@ export function PractitionerSession({
             <ArrowLeft aria-hidden="true" size={16} />
             Back to appointment
           </Link>
+        }
+        boardToggle={{
+          label: wb.board.open ? "Close whiteboard" : "Whiteboard",
+          open: wb.board.open,
+          onToggle: () => wb.act({ t: "open", open: !wb.board.open }),
+        }}
+        board={
+          wb.board.open && (
+            <div className="flex size-full flex-col gap-2">
+              <div className="min-h-0 flex-1">
+                <Whiteboard
+                  wb={wb}
+                  label={`${visitor}'s drawing`}
+                  onPoint={(point) =>
+                    wb.send(
+                      point
+                        ? { t: "pointer", x: point[0], y: point[1] }
+                        : { t: "pointer-off" },
+                    )
+                  }
+                />
+              </div>
+              <BoardPages wb={wb} visitor={visitor} />
+            </div>
+          )
         }
         phase={phase}
         otherLeft={call.state.otherLeft}

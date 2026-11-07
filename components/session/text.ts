@@ -8,3 +8,4 @@ export type CheckText = Omit<
   "title" | "when" | "intro"
 >;
 export type StageText = Omit<(typeof session)["stage"], "inSession">;
+export type BoardText = (typeof session)["board"];

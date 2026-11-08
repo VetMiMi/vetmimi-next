@@ -95,6 +95,8 @@
     "pen": "Pen",
     "marker": "Marker",
     "eraser": "Eraser",
+    "text": "Text",
+    "textHint": "Type, then press Enter",
     "sizes": {
       "label": "Size",
       "small": "Thin",

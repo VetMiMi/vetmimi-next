@@ -100,6 +100,7 @@ export function PractitionerSession({
                   wb={wb}
                   label={boardText.label}
                   pen={pen ?? undefined}
+                  textHint={boardText.textHint}
                   onPoint={(point) =>
                     wb.send(
                       point

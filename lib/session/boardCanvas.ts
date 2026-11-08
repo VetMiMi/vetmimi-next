@@ -17,6 +17,13 @@ const WIDTHS: Record<Size, number> = {
   large: 0.032,
 };
 
+export const TEXT_SIZES: Record<Size, number> = {
+  small: 0.035,
+  medium: 0.05,
+  large: 0.075,
+};
+export const TEXT_FONT = "system-ui, sans-serif";
+
 // A body outline's left half in a 100-wide page, mirrored for the right.
 const BODY_LEFT = [
   [46, 23],
@@ -86,6 +93,15 @@ function drawStroke(
   const height = width * ASPECT;
   const { points } = stroke;
   if (points.length < 2) return;
+  if (stroke.tool === "text") {
+    ctx.globalCompositeOperation = "source-over";
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = COLOURS[stroke.colour];
+    ctx.font = `${TEXT_SIZES[stroke.size] * width}px ${TEXT_FONT}`;
+    ctx.textBaseline = "top";
+    ctx.fillText(stroke.text ?? "", points[0] * width, points[1] * height);
+    return;
+  }
   const marker = stroke.tool === "marker";
   ctx.globalCompositeOperation =
     stroke.tool === "eraser" ? "destination-out" : "source-over";

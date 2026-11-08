@@ -7,6 +7,7 @@ import {
   Eraser,
   Highlighter,
   PencilSimple,
+  TextT,
   Trash,
 } from "@phosphor-icons/react";
 import {
@@ -22,7 +23,12 @@ import type { Whiteboard } from "@/lib/session/useWhiteboard";
 import type { BoardText } from "./text";
 import type { Pen } from "./Whiteboard";
 
-const TOOL_ICONS = { pen: PencilSimple, marker: Highlighter, eraser: Eraser };
+const TOOL_ICONS = {
+  pen: PencilSimple,
+  marker: Highlighter,
+  eraser: Eraser,
+  text: TextT,
+};
 const DOTS = { small: "size-1.5", medium: "size-2.5", large: "size-4" };
 
 // Swatch fills come from the board's own palette; Tailwind cannot see
@@ -102,7 +108,7 @@ function Swatch({
   );
 }
 
-// The drawing tools in one row under the page: pen, marker or eraser, a
+// The drawing tools in one row under the page: pen, marker, eraser or text, a
 // button showing the current colour and size that opens a sheet with all of
 // them and the paper, then undo, clear (tapped twice) and, for the client
 // only, a copy to keep.
@@ -201,7 +207,7 @@ export function BoardTools({
       <div
         role="toolbar"
         aria-label={text.tools}
-        className="flex items-center justify-center gap-1.5 py-1"
+        className="flex flex-wrap items-center justify-center gap-1.5 py-1"
       >
         {TOOLS.map((tool) => {
           const Icon = TOOL_ICONS[tool];

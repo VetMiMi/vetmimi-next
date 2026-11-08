@@ -79,6 +79,17 @@ describe("the session whiteboard", () => {
     );
   });
 
+  it("accepts words only on text strokes, and not too many", () => {
+    const begin = (extra: Partial<Stroke>) =>
+      parseBoardMessage(
+        JSON.stringify({ t: "begin", stroke: { ...stroke("a"), ...extra } }),
+      );
+    assert.notEqual(begin({ tool: "text", text: "hello" }), null);
+    assert.equal(begin({ tool: "text" }), null);
+    assert.equal(begin({ tool: "pen", text: "hello" }), null);
+    assert.equal(begin({ tool: "text", text: "x".repeat(201) }), null);
+  });
+
   it("drops messages it does not understand", () => {
     assert.equal(parseBoardMessage("not json"), null);
     assert.equal(parseBoardMessage(JSON.stringify({ t: "explode" })), null);

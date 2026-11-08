@@ -2,7 +2,8 @@
 // other over the call's data channel. Nothing here is stored or sent to a
 // server. Points are x, y pairs from 0 to 1 across the page.
 
-export const TOOLS = ["pen", "marker", "eraser"] as const;
+export const TOOLS = ["pen", "marker", "eraser", "text"] as const;
+export const MAX_TEXT = 200;
 export const SIZES = ["small", "medium", "large"] as const;
 export const PAGES = ["blank", "circle", "body", "frame"] as const;
 export const ROLES = ["client", "practitioner"] as const;
@@ -49,6 +50,8 @@ export type Stroke = {
   colour: Colour;
   size: Size;
   points: number[];
+  // Only for the text tool: the words, placed at the first point.
+  text?: string;
 };
 
 export type Board = {
@@ -181,7 +184,10 @@ const isStroke = (value: unknown): value is Stroke => {
     TOOLS.includes(s.tool) &&
     s.colour in COLOURS &&
     SIZES.includes(s.size) &&
-    isPoints(s.points)
+    isPoints(s.points) &&
+    (s.tool === "text"
+      ? typeof s.text === "string" && s.text.length <= MAX_TEXT
+      : s.text === undefined)
   );
 };
 

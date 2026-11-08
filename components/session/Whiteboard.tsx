@@ -1,7 +1,19 @@
 "use client";
 import { useEffect, useRef, useState, type PointerEvent } from "react";
-import type { Colour, Size, Tool } from "@/lib/session/board";
-import { ASPECT, drawPaper, drawStrokes } from "@/lib/session/boardCanvas";
+import {
+  COLOURS,
+  MAX_TEXT,
+  type Colour,
+  type Size,
+  type Tool,
+} from "@/lib/session/board";
+import {
+  ASPECT,
+  TEXT_FONT,
+  TEXT_SIZES,
+  drawPaper,
+  drawStrokes,
+} from "@/lib/session/boardCanvas";
 import type { Whiteboard as Board } from "@/lib/session/useWhiteboard";
 
 export type Pen = { tool: Tool; colour: Colour; size: Size };
@@ -27,11 +39,13 @@ export function Whiteboard({
   label,
   pen,
   onPoint,
+  textHint,
 }: {
   wb: Board;
   label: string;
   pen?: Pen;
   onPoint?: (point: number[] | null) => void;
+  textHint?: string;
 }) {
   const box = useRef<HTMLDivElement>(null);
   const paper = useRef<HTMLCanvasElement>(null);
@@ -43,6 +57,13 @@ export function Whiteboard({
     null,
   );
   const { board, pointer, act } = wb;
+  const typing = pen?.tool === "text";
+  const input = useRef<HTMLInputElement>(null);
+  // The words being typed and where they will go, drawn on the top layer
+  // until placed.
+  const [draft, setDraft] = useState<{ spot: number[]; words: string } | null>(
+    null,
+  );
 
   useEffect(() => {
     const element = box.current;
@@ -68,6 +89,19 @@ export function Whiteboard({
     const ctx = top.current?.getContext("2d");
     if (!ctx || !width) return;
     ctx.clearRect(0, 0, width, height);
+    if (draft && pen && typing) {
+      const x = draft.spot[0] * width;
+      const y = draft.spot[1] * height;
+      const size = TEXT_SIZES[pen.size] * width;
+      ctx.font = `${size}px ${TEXT_FONT}`;
+      ctx.textBaseline = "top";
+      ctx.fillStyle = COLOURS[pen.colour];
+      ctx.globalAlpha = draft.words ? 1 : 0.45;
+      ctx.fillText(draft.words || (textHint ?? ""), x, y);
+      ctx.globalAlpha = 1;
+      const end = draft.words ? x + ctx.measureText(draft.words).width : x;
+      ctx.fillRect(end + size * 0.05, y, Math.max(2, size * 0.06), size);
+    }
     if (!pointer) return;
     ctx.strokeStyle = POINTER;
     ctx.lineWidth = width * 0.006;
@@ -80,7 +114,7 @@ export function Whiteboard({
       Math.PI * 2,
     );
     ctx.stroke();
-  }, [width, height, pointer]);
+  }, [width, height, pointer, draft, pen, typing, textHint]);
 
   // Points are sent once per frame, not once per pointer event.
   const flush = () => {
@@ -91,8 +125,34 @@ export function Whiteboard({
     stroke.frame = 0;
   };
 
+  const place = () => {
+    const words = draft?.words.trim();
+    if (pen && draft && words) {
+      act({
+        t: "begin",
+        stroke: {
+          id: Math.random().toString(36).slice(2, 10),
+          by: wb.role,
+          ...pen,
+          points: draft.spot,
+          text: words,
+        },
+      });
+    }
+    setDraft(null);
+  };
+
   const down = (event: PointerEvent<HTMLCanvasElement>) => {
     if (!pen) return;
+    if (typing) {
+      // Focused here, inside the tap, so phones open the keyboard; the
+      // default is stopped so the tap doesn't take the focus back.
+      event.preventDefault();
+      place();
+      setDraft({ spot: at(event), words: "" });
+      input.current?.focus();
+      return;
+    }
     event.currentTarget.setPointerCapture(event.pointerId);
     const id = Math.random().toString(36).slice(2, 10);
     live.current = { id, points: [], frame: 0 };
@@ -137,8 +197,27 @@ export function Whiteboard({
           onPointerUp={up}
           onPointerCancel={up}
           onPointerLeave={() => !pen && onPoint?.(null)}
-          className={`${layer} touch-none ${pen ? (pen.tool === "eraser" ? "cursor-cell" : "cursor-crosshair") : ""}`}
+          className={`${layer} touch-none ${pen ? (pen.tool === "eraser" ? "cursor-cell" : typing ? "cursor-text" : "cursor-crosshair") : ""}`}
         />
+        {typing && (
+          <input
+            ref={input}
+            aria-label={textHint}
+            tabIndex={-1}
+            maxLength={MAX_TEXT}
+            enterKeyHint="done"
+            value={draft?.words ?? ""}
+            onChange={(event) =>
+              draft && setDraft({ ...draft, words: event.target.value })
+            }
+            onKeyDown={(event) => {
+              if (event.key === "Enter") place();
+              if (event.key === "Escape") setDraft(null);
+            }}
+            onBlur={place}
+            className="pointer-events-none absolute top-0 left-0 size-px text-base opacity-0"
+          />
+        )}
       </div>
     </div>
   );

@@ -88,7 +88,12 @@ export function SessionClient({
           wb.board.open && (
             <div className="flex size-full flex-col gap-1.5">
               <div className="relative min-h-0 flex-1">
-                <Whiteboard wb={wb} label={words.board.label} pen={pen} />
+                <Whiteboard
+                  wb={wb}
+                  label={words.board.label}
+                  pen={pen}
+                  textHint={words.board.textHint}
+                />
                 {wb.board.strokes.length === 0 && (
                   <p className="pointer-events-none absolute inset-x-0 top-2 mx-auto w-fit max-w-[90%] rounded-pill bg-stage/85 px-3 py-1 text-center text-[0.82rem] leading-[1.5] text-canvas">
                     {words.board.hint}

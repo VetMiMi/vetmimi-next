@@ -96,7 +96,7 @@ export function Whiteboard({
     event.currentTarget.setPointerCapture(event.pointerId);
     const id = Math.random().toString(36).slice(2, 10);
     live.current = { id, points: [], frame: 0 };
-    act({ t: "begin", stroke: { id, ...pen, points: at(event) } });
+    act({ t: "begin", stroke: { id, by: wb.role, ...pen, points: at(event) } });
   };
 
   const move = (event: PointerEvent<HTMLCanvasElement>) => {

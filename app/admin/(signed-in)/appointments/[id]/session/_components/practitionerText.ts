@@ -1,4 +1,9 @@
-import type { CheckText, StageText } from "@/components/session/text";
+import type {
+  BoardText,
+  CheckText,
+  StageText,
+} from "@/components/session/text";
+import session from "@/messages/en/session.json";
 
 // Daw Mi's words for the shared device check and stage (#83). Admin is
 // English only; the visitor's side never sees anything but "Daw Mi", but
@@ -40,3 +45,9 @@ export const stageText = (visitor: string): StageText => ({
   cameraOff: "Stop video",
   leave: "End session",
 });
+
+// The client's drawing tools in English; Daw Mi cannot save a copy.
+export const boardText: BoardText = {
+  ...session.board,
+  label: "The whiteboard",
+};

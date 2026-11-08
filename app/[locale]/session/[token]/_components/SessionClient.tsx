@@ -44,7 +44,7 @@ export function SessionClient({
   const mic = useTrackToggle(stream, "audio");
   const camera = useTrackToggle(stream, "video");
   const getTicket = useCallback(() => fetchTicket(token), [token]);
-  const wb = useWhiteboard();
+  const wb = useWhiteboard("client");
   const call = useSession(getTicket, wb.attach);
   const [pen, setPen] = useState<Pen>({
     tool: "pen",

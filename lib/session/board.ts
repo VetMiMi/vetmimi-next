@@ -5,6 +5,7 @@
 export const TOOLS = ["pen", "marker", "eraser"] as const;
 export const SIZES = ["small", "medium", "large"] as const;
 export const PAGES = ["blank", "circle", "body", "frame"] as const;
+export const ROLES = ["client", "practitioner"] as const;
 
 export const COLOURS = {
   black: "#222222",
@@ -39,9 +40,11 @@ export type Size = (typeof SIZES)[number];
 export type PageId = (typeof PAGES)[number];
 export type Colour = keyof typeof COLOURS;
 export type Paper = keyof typeof PAPERS;
+export type Role = (typeof ROLES)[number];
 
 export type Stroke = {
   id: string;
+  by: Role;
   tool: Tool;
   colour: Colour;
   size: Size;
@@ -63,7 +66,7 @@ export type BoardMessage =
   | { t: "paper"; paper: Paper }
   | { t: "begin"; stroke: Stroke }
   | { t: "points"; id: string; points: number[] }
-  | { t: "undo" }
+  | { t: "undo"; by: Role }
   | { t: "clear" }
   | { t: "pointer"; x: number; y: number }
   | { t: "pointer-off" }
@@ -110,8 +113,12 @@ function apply(board: Board, message: BoardMessage): Board {
       };
       return { ...board, strokes };
     }
-    case "undo":
-      return changed(board, { strokes: board.strokes.slice(0, -1) });
+    case "undo": {
+      // Each side undoes only its own strokes.
+      const index = board.strokes.findLastIndex((s) => s.by === message.by);
+      if (index < 0) return board;
+      return changed(board, { strokes: board.strokes.toSpliced(index, 1) });
+    }
     case "clear":
       return changed(board, { strokes: [] });
     default:
@@ -170,6 +177,7 @@ const isStroke = (value: unknown): value is Stroke => {
   const s = value as Stroke;
   return (
     typeof s?.id === "string" &&
+    ROLES.includes(s.by) &&
     TOOLS.includes(s.tool) &&
     s.colour in COLOURS &&
     SIZES.includes(s.size) &&
@@ -209,6 +217,7 @@ export function parseBoardMessage(data: unknown): BoardMessage | null {
         ? m
         : null;
     case "undo":
+      return ROLES.includes(m.by) ? m : null;
     case "clear":
     case "pointer-off":
     case "sync-end":

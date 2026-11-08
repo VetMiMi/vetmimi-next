@@ -102,19 +102,22 @@ function Swatch({
   );
 }
 
-// The client's tools in one row under the page: pen, marker or eraser, a
+// The drawing tools in one row under the page: pen, marker or eraser, a
 // button showing the current colour and size that opens a sheet with all of
-// them and the paper, then undo, clear (tapped twice) and a copy to keep.
+// them and the paper, then undo, clear (tapped twice) and, for the client
+// only, a copy to keep.
 export function BoardTools({
   text,
   wb,
   pen,
   onPen,
+  canSave = true,
 }: {
   text: BoardText;
   wb: Whiteboard;
   pen: Pen;
   onPen: (pen: Pen) => void;
+  canSave?: boolean;
 }) {
   const [clearing, setClearing] = useState(false);
   const [sheet, setSheet] = useState(false);
@@ -232,7 +235,7 @@ export function BoardTools({
           <CaretDown aria-hidden="true" size={14} />
         </button>
         {divider}
-        <Tool label={text.undo} onClick={() => act({ t: "undo" })}>
+        <Tool label={text.undo} onClick={() => act({ t: "undo", by: wb.role })}>
           <ArrowCounterClockwise aria-hidden="true" size={20} />
         </Tool>
         <Tool
@@ -245,9 +248,11 @@ export function BoardTools({
         >
           <Trash aria-hidden="true" size={20} />
         </Tool>
-        <Tool label={text.save} onClick={() => void save()}>
-          <DownloadSimple aria-hidden="true" size={20} />
-        </Tool>
+        {canSave && (
+          <Tool label={text.save} onClick={() => void save()}>
+            <DownloadSimple aria-hidden="true" size={20} />
+          </Tool>
+        )}
       </div>
     </div>
   );

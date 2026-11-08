@@ -6,8 +6,9 @@ import { ArrowLeft } from "@phosphor-icons/react";
 import { Button } from "@/components/admin/Button";
 import { Card } from "@/components/admin/Card";
 import { DeviceCheck } from "@/components/session/DeviceCheck";
+import { BoardTools } from "@/components/session/BoardTools";
 import { SessionStage } from "@/components/session/SessionStage";
-import { Whiteboard } from "@/components/session/Whiteboard";
+import { Whiteboard, type Pen } from "@/components/session/Whiteboard";
 import {
   useLocalMedia,
   useTrackToggle,
@@ -19,7 +20,7 @@ import { startVideo } from "../../videoActions";
 import { BoardPages } from "./BoardPages";
 import { EndSessionDialog } from "./EndSessionDialog";
 import { MarkCompletedDialog } from "./MarkCompletedDialog";
-import { checkText, stageText } from "./practitionerText";
+import { boardText, checkText, stageText } from "./practitionerText";
 
 const isLive = (stream: MediaStream) =>
   stream.getTracks().every((track) => track.readyState === "live");
@@ -49,7 +50,9 @@ export function PractitionerSession({
   const mic = useTrackToggle(stream, "audio");
   const camera = useTrackToggle(stream, "video");
   const getTicket = useCallback(() => startVideo(id), [id]);
-  const wb = useWhiteboard();
+  const wb = useWhiteboard("practitioner");
+  // Null while Daw Mi points instead of drawing.
+  const [pen, setPen] = useState<Pen | null>(null);
   const call = useSession(getTicket, wb.attach);
   const [onStage, setOnStage] = useState(false);
   const [ending, setEnding] = useState(false);
@@ -95,7 +98,8 @@ export function PractitionerSession({
               <div className="min-h-0 flex-1">
                 <Whiteboard
                   wb={wb}
-                  label={`${visitor}'s drawing`}
+                  label={boardText.label}
+                  pen={pen ?? undefined}
                   onPoint={(point) =>
                     wb.send(
                       point
@@ -105,7 +109,29 @@ export function PractitionerSession({
                   }
                 />
               </div>
-              <BoardPages wb={wb} visitor={visitor} />
+              {pen && (
+                <BoardTools
+                  text={boardText}
+                  wb={wb}
+                  pen={pen}
+                  onPen={setPen}
+                  canSave={false}
+                />
+              )}
+              <BoardPages
+                wb={wb}
+                visitor={visitor}
+                drawing={pen !== null}
+                onDrawing={(drawing) => {
+                  if (drawing === (pen !== null)) return;
+                  if (drawing) wb.send({ t: "pointer-off" });
+                  setPen(
+                    drawing
+                      ? { tool: "pen", colour: "purple", size: "medium" }
+                      : null,
+                  );
+                }}
+              />
             </div>
           )
         }

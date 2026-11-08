@@ -6,12 +6,13 @@ import {
   parseBoardMessage,
   syncMessages,
   type BoardMessage,
+  type Role,
 } from "./board";
 
 // The whiteboard for one side of the call. The board lives here, not on the
 // peer connection, so a reconnect keeps the drawing; when the new channel
 // opens, both sides send theirs and the one with more changes is kept.
-export function useWhiteboard() {
+export function useWhiteboard(role: Role) {
   const [state, dispatch] = useReducer(boardReducer, initialBoard);
   const channel = useRef<RTCDataChannel | null>(null);
   const board = useRef(state.board);
@@ -51,7 +52,14 @@ export function useWhiteboard() {
     };
   }, []);
 
-  return { board: state.board, pointer: state.pointer, act, send, attach };
+  return {
+    role,
+    board: state.board,
+    pointer: state.pointer,
+    act,
+    send,
+    attach,
+  };
 }
 
 export type Whiteboard = ReturnType<typeof useWhiteboard>;

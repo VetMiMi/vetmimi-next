@@ -13,8 +13,9 @@ import {
 const run = (messages: BoardMessage[], from = initialBoard) =>
   messages.reduce<BoardState>(boardReducer, from);
 
-const stroke = (id: string): Stroke => ({
+const stroke = (id: string, by: Stroke["by"] = "client"): Stroke => ({
   id,
+  by,
   tool: "pen",
   colour: "blue",
   size: "medium",
@@ -39,13 +40,26 @@ describe("the session whiteboard", () => {
     const drawn = run([
       { t: "begin", stroke: stroke("a") },
       { t: "begin", stroke: stroke("b") },
-      { t: "undo" },
+      { t: "undo", by: "client" },
     ]);
     assert.deepEqual(
       drawn.board.strokes.map((s) => s.id),
       ["a"],
     );
     assert.equal(run([{ t: "clear" }], drawn).board.strokes.length, 0);
+  });
+
+  it("undoes only the strokes of the side that asks", () => {
+    const state = run([
+      { t: "begin", stroke: stroke("a", "client") },
+      { t: "begin", stroke: stroke("b", "practitioner") },
+      { t: "undo", by: "client" },
+    ]);
+    assert.deepEqual(
+      state.board.strokes.map((s) => s.id),
+      ["b"],
+    );
+    assert.equal(run([{ t: "undo", by: "client" }], state).board, state.board);
   });
 
   it("keeps the drawing with more changes after a reconnect", () => {
@@ -77,8 +91,10 @@ describe("the session whiteboard", () => {
       ),
       null,
     );
-    assert.deepEqual(parseBoardMessage(JSON.stringify({ t: "undo" })), {
-      t: "undo",
-    });
+    assert.equal(parseBoardMessage(JSON.stringify({ t: "undo" })), null);
+    assert.deepEqual(
+      parseBoardMessage(JSON.stringify({ t: "undo", by: "practitioner" })),
+      { t: "undo", by: "practitioner" },
+    );
   });
 });

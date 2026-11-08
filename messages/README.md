@@ -36,7 +36,7 @@ Use these terms every time, so the site reads as one voice.
 | art therapy                   | အနုပညာကုထုံး                                       |
 | art therapist                 | အနုပညာကုထုံး ပညာရှင်                               |
 | art psychotherapy             | အနုပညာ စိတ်ကုထုံး                                  |
-| certified art psychotherapist | အသိအမှတ်ပြု အနုပညာ စိတ်ကုထုံး ပညာရှင်              |
+| qualified art psychotherapist | အရည်အချင်းပြည့်မီ အနုပညာ စိတ်ကုထုံး ပညာရှင်        |
 | co-founder                    | ပူးတွဲတည်ထောင်သူ                                   |
 | mental health                 | စိတ်ကျန်းမာရေး                                     |
 | mental health nurse           | စိတ်ကျန်းမာရေး သူနာပြု                             |

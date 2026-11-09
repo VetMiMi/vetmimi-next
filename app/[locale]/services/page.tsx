@@ -5,10 +5,7 @@ import type { Locale } from "@/i18n/routing";
 import { pageMetadata } from "@/lib/seo";
 import { services } from "@/lib/services";
 import type { ServiceStep } from "@/lib/services";
-import Image, { type StaticImageData } from "next/image";
-import individualArt from "@/assets/services/individual.webp";
-import groupArt from "@/assets/services/group.webp";
-import workshopsArt from "@/assets/services/workshops.webp";
+import Image from "next/image";
 import {
   TONE,
   button,
@@ -20,12 +17,6 @@ import {
   text,
   textLink,
 } from "@/components/ServiceDetail";
-
-const SERVICE_ART: Record<string, StaticImageData> = {
-  "individual-art-therapy": individualArt,
-  "group-art-wellbeing": groupArt,
-  "workshops-programs": workshopsArt,
-};
 
 const compare = "flex flex-col gap-2 border-t border-[#dcd2cf] pt-5";
 const compareLink = "text-[0.88rem] text-indigo";
@@ -70,15 +61,14 @@ export default async function Services({
                 key={service.slug}
                 className={`group grid grid-cols-2 items-center gap-[clamp(40px,6vw,88px)] max-md:grid-cols-1 max-md:gap-6 ${TONE[service.tone]}`}
               >
-                <div className="relative aspect-4/3 overflow-hidden rounded-(--radius-card) bg-(--tint) group-even:order-2 max-md:group-even:order-0">
-                  {/* The artwork files carry their own empty margin. */}
+                <figure className="w-full max-w-[380px] justify-self-center rounded-(--radius-card) bg-(--tint) p-3 group-even:order-2 max-md:max-w-[440px] max-md:group-even:order-0">
                   <Image
-                    src={SERVICE_ART[service.slug]}
-                    alt=""
-                    sizes="(max-width: 767px) 80vw, 36vw"
-                    className="absolute inset-0 h-full w-full scale-[1.12] object-contain"
+                    src={service.image}
+                    alt={t(`items.${service.slug}.imageAlt`)}
+                    sizes="(max-width: 767px) 90vw, 380px"
+                    className="aspect-4/5 w-full rounded-[12px] object-cover object-[center_30%]"
                   />
-                </div>
+                </figure>
                 <div>
                   <p className={eyebrow}>
                     {t(`items.${service.slug}.audience`)}

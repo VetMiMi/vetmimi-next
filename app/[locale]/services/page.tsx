@@ -66,7 +66,7 @@ export default async function Services({
                     src={service.image}
                     alt={t(`items.${service.slug}.imageAlt`)}
                     sizes="(max-width: 767px) 90vw, 380px"
-                    className="aspect-4/5 w-full rounded-[12px] object-cover object-[center_30%]"
+                    className="aspect-4/5 w-full rounded-[12px] object-cover object-[center_30%] max-md:aspect-4/3"
                   />
                 </figure>
                 <div>

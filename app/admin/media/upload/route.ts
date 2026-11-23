@@ -16,9 +16,10 @@ const refuse = (status: number, code: string) =>
 
 export async function POST(request: Request) {
   // The cookie is SameSite=Lax already; this also refuses a same-site page
-  // on another origin.
+  // on another origin. Hosts, not whole origins: behind Caddy the request
+  // arrives as http while the browser's Origin is https.
   const origin = request.headers.get("origin");
-  if (origin && origin !== new URL(request.url).origin)
+  if (origin && URL.parse(origin)?.host !== request.headers.get("host"))
     return refuse(403, "forbidden");
   const token = await sessionToken();
   if (!token) return refuse(401, "unauthenticated");

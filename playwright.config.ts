@@ -10,6 +10,10 @@ const desktop = {
   viewport: { width: 1280, height: 800 },
 };
 
+// The API specs keep a trace of every failed attempt, not only of the
+// retry: they can fail by timing, and then the retry may pass.
+const apiDesktop = { ...desktop, trace: "retain-on-failure" as const };
+
 export default defineConfig({
   testDir: "e2e",
   fullyParallel: true,
@@ -35,14 +39,14 @@ export default defineConfig({
           name: "api",
           testDir: "e2e/api",
           testIgnore: "session.spec.ts",
-          use: desktop,
+          use: apiDesktop,
         },
         {
           name: "api-session",
           testDir: "e2e/api",
           testMatch: "session.spec.ts",
           use: {
-            ...desktop,
+            ...apiDesktop,
             permissions: ["camera", "microphone"],
             launchOptions: {
               args: [

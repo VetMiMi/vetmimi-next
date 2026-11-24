@@ -20,7 +20,7 @@ import {
 
 // The rose border and halo show focus, so the global coral ring is turned off.
 const input =
-  "w-full rounded-(--radius-control) border border-ink/16 bg-white px-4 py-[13px] font-body text-[1rem] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-caption hover:border-ink/28 focus:border-rose focus:shadow-focus-input";
+  "w-full rounded-(--radius-control) border border-input-border bg-white px-4 py-[13px] font-body text-[1rem] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-caption hover:border-muted focus:border-rose focus:shadow-focus-input";
 const label = "mb-2 block text-[0.88rem] font-medium";
 const row = "grid grid-cols-2 gap-[18px] max-[640px]:grid-cols-1";
 

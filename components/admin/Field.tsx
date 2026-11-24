@@ -21,9 +21,8 @@ export type ControlProps = {
   "aria-describedby"?: string;
 };
 
-// The contact page's input box, with the admin border #8a8389 (3.69:1 on
-// white) in place of the public 16% ink (1.37:1, §2). Focus is the rose
-// border and halo, so the global coral ring is turned off.
+// The contact page's input box, with its #8a8389 border (3.69:1 on white,
+// §2). Focus is the rose border and halo, so the global coral ring is off.
 export const controlClass =
   "block w-full rounded-control border border-input-border bg-white px-4 py-[13px] font-body text-base text-ink outline-none transition-[border-color,box-shadow] duration-150 ease-in-out hover:border-muted focus:border-rose focus:shadow-focus-input not-focus:aria-[invalid=true]:border-action disabled:cursor-not-allowed disabled:border-input-border disabled:bg-paper disabled:text-muted motion-reduce:transition-none";
 

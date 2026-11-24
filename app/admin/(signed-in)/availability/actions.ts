@@ -194,8 +194,8 @@ export async function markPartDayOff(date: string, hours: Hours) {
   });
 }
 
-// The times a client could book for one service on one date. Null when they
-// could not be loaded.
+// The times a client could book for one service on one date: none for a
+// paused service, which the API refuses. Null when they could not be loaded.
 export async function previewDay(serviceId: string, date: string) {
   if (!UUID.test(serviceId) || !DATE.test(date)) return null;
   try {
@@ -208,6 +208,8 @@ export async function previewDay(serviceId: string, date: string) {
     );
     return preview.days.find((day) => day.date === date)?.slots ?? [];
   } catch (error) {
+    if (error instanceof ApiError && error.code === "service_not_bookable")
+      return [];
     if (error instanceof ApiError) return null;
     throw error;
   }

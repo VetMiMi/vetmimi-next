@@ -109,9 +109,18 @@ export function ClientPreview({
           </p>
         ) : (
           <>
-            <p className="mb-3 text-[0.95rem]">
-              Clients can book these times on {longDay(date)}:
-            </p>
+            {/* The API lists times even while booking is paused. */}
+            {settings.publicBookingEnabled === false ? (
+              <div className="mb-4">
+                <Notice tone="info">
+                  Visitors cannot see these times while booking is paused.
+                </Notice>
+              </div>
+            ) : (
+              <p className="mb-3 text-[0.95rem]">
+                Clients can book these times on {longDay(date)}:
+              </p>
+            )}
             {(["morning", "afternoon", "evening"] as const).map((part) => {
               const times = slots.filter(
                 (slot) => dayPart(slot.startsAt, timezone) === part,

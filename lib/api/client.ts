@@ -168,3 +168,20 @@ export async function uploadMedia(
     throw ApiError.unavailable(cause);
   }
 }
+
+// A file rather than JSON, so the caller can stream it on as it arrives.
+export async function exportAppointments(
+  token: string,
+  from: string,
+  to: string,
+) {
+  try {
+    return await fetch(apiUrl("/admin/appointments/export", { from, to }), {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+  } catch (cause) {
+    throw ApiError.unavailable(cause);
+  }
+}

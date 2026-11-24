@@ -23,6 +23,7 @@ import { todayIn } from "@/lib/zonedTime";
 import { AppointmentList } from "./_components/AppointmentList";
 import { AppointmentsTable } from "./_components/AppointmentsTable";
 import { AttentionPanel } from "./_components/AttentionPanel";
+import { ExportButton } from "./_components/ExportButton";
 import { Filters } from "./_components/Filters";
 
 export const metadata: Metadata = { title: "Appointments" };
@@ -76,13 +77,16 @@ export default async function AppointmentsPage({
         title="Appointments"
         description="Requests to answer, today's sessions and everything booked, in Sydney time."
         action={
-          <Button
-            href="/admin/appointments/new"
-            size="page"
-            icon={<Plus aria-hidden="true" size={18} />}
-          >
-            New appointment
-          </Button>
+          <div className="flex flex-col gap-3 md:flex-row">
+            <ExportButton today={todayIn(timezone)} />
+            <Button
+              href="/admin/appointments/new"
+              size="page"
+              icon={<Plus aria-hidden="true" size={18} />}
+            >
+              New appointment
+            </Button>
+          </div>
         }
       />
       <div className="mb-6">

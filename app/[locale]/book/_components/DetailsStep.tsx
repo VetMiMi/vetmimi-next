@@ -85,7 +85,9 @@ export function DetailsStep({
 
   return (
     <div>
-      <h2 className={stepTitle}>{t("step3.title")}</h2>
+      <h2 tabIndex={-1} className={stepTitle}>
+        {t("step3.title")}
+      </h2>
       <p className={stepIntro}>{t("step3.intro")}</p>
 
       {showSummary && shown.length > 0 && (

@@ -30,7 +30,7 @@ export function ServiceStep({
 
   return (
     <div>
-      <h2 className={stepTitle}>
+      <h2 tabIndex={-1} className={stepTitle}>
         {problem ? t("step1.unavailable.title") : t("step1.title")}
       </h2>
       {!problem && <p className={stepIntro}>{t("step1.intro")}</p>}

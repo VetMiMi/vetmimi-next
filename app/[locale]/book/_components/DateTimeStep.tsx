@@ -72,7 +72,9 @@ export function DateTimeStep({
 
   return (
     <div>
-      <h2 className={stepTitle}>{t("step2.title")}</h2>
+      <h2 tabIndex={-1} className={stepTitle}>
+        {t("step2.title")}
+      </h2>
       <div className="mb-8 inline-block rounded-pill bg-indigo/7 px-4 py-[0.4rem] text-[0.85rem] text-indigo">
         {service.name}
       </div>

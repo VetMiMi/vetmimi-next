@@ -79,7 +79,9 @@ export function ReviewStep({
 
   return (
     <div>
-      <h2 className={stepTitle}>{t("step4.title")}</h2>
+      <h2 tabIndex={-1} className={stepTitle}>
+        {t("step4.title")}
+      </h2>
       <p className={stepIntro}>{t("step4.intro")}</p>
 
       <div ref={alertBox}>

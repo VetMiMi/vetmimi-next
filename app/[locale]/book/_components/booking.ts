@@ -18,6 +18,9 @@ export const textButton = "cursor-pointer text-[0.9rem] text-muted";
 // Underlined: inside a sentence, its colour alone is too close to the text.
 export const inlineLink = "text-label underline underline-offset-2";
 
-export const stepTitle = "mb-2 text-[clamp(1.6rem,3vw,2.2rem)] text-ink";
+// Focus moves to a step's title when the step opens; a title is not a
+// control, so it shows no ring.
+export const stepTitle =
+  "mb-2 text-[clamp(1.6rem,3vw,2.2rem)] text-ink outline-none";
 
 export const stepIntro = "mb-8 text-ink/73";

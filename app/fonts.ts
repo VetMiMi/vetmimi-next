@@ -13,6 +13,8 @@ export const fraunces = Fraunces({
   style: ["normal", "italic"],
   axes: ["opsz"],
   display: "swap",
+  // A preload would fetch the italic on every page; few pages use it.
+  preload: false,
   variable: "--font-serif",
 });
 

@@ -97,14 +97,19 @@ function MetaCard({ connection }: { connection: MetaConnection | ApiError }) {
     return <ConnectionCard {...common} loadError={loadErrorText("meta")} />;
 
   const status = metaStatus(connection);
-  const facts: [string, string][] = [];
+  const facts: [string, string, string?][] = [];
   if (connection.status === "connected") {
-    facts.push(["Facebook Page", connection.pageName ?? "Your Page"]);
+    const { pageId, instagramUsername } = connection;
+    facts.push([
+      "Facebook Page",
+      connection.pageName ?? "Your Page",
+      pageId && `https://www.facebook.com/${encodeURIComponent(pageId)}`,
+    ]);
     facts.push([
       "Instagram",
-      connection.instagramUsername
-        ? `@${connection.instagramUsername}`
-        : "None linked to this Page",
+      instagramUsername ? `@${instagramUsername}` : "None linked to this Page",
+      instagramUsername &&
+        `https://www.instagram.com/${encodeURIComponent(instagramUsername)}/`,
     ]);
     const since = when(connection.connectedAt);
     if (since) facts.push(["Connected", since]);

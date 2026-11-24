@@ -17,6 +17,7 @@ export function Dialog({
   onConfirm,
   busy = false,
   cancelLabel = "Keep it",
+  initialFocus,
 }: {
   open: boolean;
   onClose: () => void;
@@ -28,6 +29,8 @@ export function Dialog({
   onConfirm: () => void;
   busy?: boolean;
   cancelLabel?: string;
+  // A dialog that is a one-field form starts on its field instead.
+  initialFocus?: React.RefObject<HTMLElement | null>;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const keep = useRef<HTMLButtonElement>(null);
@@ -38,11 +41,11 @@ export function Dialog({
     if (!dialog) return;
     if (open && !dialog.open) {
       dialog.showModal();
-      keep.current?.focus();
+      (initialFocus ?? keep).current?.focus();
     } else if (!open && dialog.open) {
       dialog.close();
     }
-  }, [open]);
+  }, [open, initialFocus]);
 
   return (
     <dialog

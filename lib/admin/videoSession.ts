@@ -1,29 +1,42 @@
 // What the appointment's Video session block shows (#83). Pure, so
 // node:test covers it. The API decides what Daw Mi may do (allowedActions);
 // this only picks the sentence and the button for it.
+import type { Settings } from "../api/types/admin.ts";
 import type { AppointmentDetail } from "../api/types/appointments.ts";
 import { formatClock, zoneAbbreviation, zonedParts } from "../zonedTime.ts";
 
 type Detail = AppointmentDetail;
 
 export type VideoPanelState =
-  | "none" // no VetMiMi room: in person, a pasted link, or not confirmed yet
+  | "none" // no room and no link to paste: in person, or a room comes on confirm
+  | "meeting_link" // manual mode: the link Daw Mi pastes
   | "before_window"
   | "can_start"
   | "closed" // the window has passed without the room ending
   | "ended";
 
+// A room made before the mode changed still wins: the visitor has its link.
 export function videoPanelState(
-  a: Pick<Detail, "videoRoom" | "allowedActions">,
+  a: Pick<Detail, "videoRoom" | "allowedActions" | "format">,
   now: string,
+  mode?: Settings["meetingLinkMode"],
 ): VideoPanelState {
   const room = a.videoRoom;
-  if (!room) return "none";
+  if (!room) {
+    const manual = mode === "manual_link" && a.format === "online";
+    return manual ? "meeting_link" : "none";
+  }
   if (room.state === "ended") return "ended";
   if (a.allowedActions.includes("start_video")) return "can_start";
   if (Date.parse(now) < Date.parse(room.opensAt)) return "before_window";
   return "closed";
 }
+
+export const LINK_ERROR = "Enter a link that starts with https://.";
+
+// The API keeps only an https:// address with a host.
+export const meetingLinkError = (link: string) =>
+  /^https:\/\/[^\s/?#]+\S*$/.test(link.trim()) ? undefined : LINK_ERROR;
 
 // "9:45 am" in the practice timezone.
 export const clock = (instant: string, timeZone: string) =>

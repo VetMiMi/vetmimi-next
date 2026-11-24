@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/admin/Button";
 import { Checkbox } from "@/components/admin/Checkbox";
 import { Dialog } from "@/components/admin/Dialog";
+import { Input } from "@/components/admin/Input";
 import { Notice } from "@/components/admin/Notice";
 import { Textarea } from "@/components/admin/Textarea";
 import { useToast } from "@/components/admin/Toast";
 import { clockWithZone, formatNames, longDay } from "@/lib/admin/appointments";
+import { LINK_ERROR, meetingLinkError } from "@/lib/admin/videoSession";
 import type { AppointmentDetail } from "@/lib/api/types/appointments";
 import { localDateKey } from "@/lib/time";
 import { changeStatus, type StatusAction } from "../../actions";
@@ -89,6 +91,10 @@ const order: StatusAction[] = [
 ];
 const NOT_STARTED = "This appointment has not started yet.";
 
+// The link on Confirm is optional; an empty one is fine.
+const optionalLinkError = (link: string) =>
+  link.trim() ? meetingLinkError(link) : undefined;
+
 // Buttons only for the actions the API allows now (#68); Reschedule opens
 // its own page (#69).
 export function ActionPanel({
@@ -105,6 +111,7 @@ export function ActionPanel({
   // A new key per opening empties the message from last time.
   const [opening, setOpening] = useState(0);
   const [error, setError] = useState<string>();
+  const [linkError, setLinkError] = useState<string>();
   const [stale, setStale] = useState(false);
   const [pending, startTransition] = useTransition();
   const sending = useRef(false);
@@ -112,6 +119,8 @@ export function ActionPanel({
   const toast = useToast();
   const router = useRouter();
   const started = a.startsAt <= now;
+  // Only when the API would take a link: manual mode, online, not yet begun.
+  const asksLink = a.allowedActions.includes("set_meeting_link");
 
   function show(next: StatusAction) {
     setAction(next);
@@ -122,14 +131,19 @@ export function ActionPanel({
   function close() {
     setOpen(false);
     setError(undefined);
+    setLinkError(undefined);
     setStale(false);
   }
 
   function send(action: StatusAction) {
     // A second click while the first is on its way sends nothing (§30).
     if (sending.current) return;
-    sending.current = true;
     const data = new FormData(form.current ?? undefined);
+    const meetingLink = String(data.get("meetingLink") ?? "").trim();
+    const invalidLink = optionalLinkError(meetingLink);
+    setLinkError(invalidLink);
+    if (invalidLink) return;
+    sending.current = true;
     startTransition(async () => {
       const outcome = await changeStatus(a.id, action, {
         version: a.version,
@@ -137,6 +151,7 @@ export function ActionPanel({
         notifyVisitor: steps[action].notify
           ? data.get("notifyVisitor") !== null
           : undefined,
+        meetingLink,
       });
       sending.current = false;
       if (outcome.ok) {
@@ -149,9 +164,11 @@ export function ActionPanel({
         (action === "complete" || action === "no_show") &&
         !started;
       setError(early ? NOT_STARTED : outcome.message);
+      if (outcome.fieldErrors.meetingLink) setLinkError(LINK_ERROR);
       setStale(
         outcome.code === "stale_version" ||
-          outcome.code === "invalid_transition",
+          outcome.code === "invalid_transition" ||
+          outcome.code === "action_not_allowed",
       );
     });
   }
@@ -237,8 +254,28 @@ export function ActionPanel({
           </dl>
         )}
         <p>{step.body}</p>
-        {/* Extra answers for the request; #84 adds the meeting link here. */}
-        <form key={opening} ref={form} onSubmit={(e) => e.preventDefault()}>
+        {/* Extra answers for the request. */}
+        <form
+          key={opening}
+          ref={form}
+          noValidate
+          onSubmit={(e) => e.preventDefault()}
+        >
+          {action === "confirm" && asksLink && (
+            <div className="mt-5 text-ink">
+              <Input
+                label="Meeting link"
+                name="meetingLink"
+                type="url"
+                autoComplete="off"
+                help="Starts with https://. The confirmation email includes it."
+                onBlur={(event) =>
+                  setLinkError(optionalLinkError(event.target.value))
+                }
+                error={linkError}
+              />
+            </div>
+          )}
           {step.message && (
             <div className="mt-5 text-ink">
               <Textarea

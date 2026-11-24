@@ -5,11 +5,14 @@ import { Notice } from "@/components/admin/Notice";
 import { PageHeader } from "@/components/admin/PageHeader";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { failedNotifications } from "@/lib/admin/appointments";
-import { requireRole } from "@/lib/admin/session";
+import { adminCall, requireRole } from "@/lib/admin/session";
+import { videoPanelState } from "@/lib/admin/videoSession";
+import type { Settings } from "@/lib/api/types/admin";
 import { ActionPanel } from "./_components/ActionPanel";
 import { AppointmentCard } from "./_components/AppointmentCard";
 import { cardTitle } from "./_components/Facts";
 import { CommunicationsList, HistoryList } from "./_components/HistoryList";
+import { MeetingLinkCard } from "./_components/MeetingLinkCard";
 import { PrivateNote } from "./_components/PrivateNote";
 import { VideoSessionPanel } from "./_components/VideoSessionPanel";
 import { VisitorCard } from "./_components/VisitorCard";
@@ -26,12 +29,16 @@ export default async function AppointmentPage({
   if (!(await requireRole("booking_admin"))) return <NoAccess />;
   const { id } = await params;
   const { notice } = await searchParams;
-  const a = await loadAppointment(id);
+  const [a, settings] = await Promise.all([
+    loadAppointment(id),
+    adminCall((api) => api.get<Settings>("/admin/settings")),
+  ]);
   if (!a) return <NoAccess />;
 
   const serviceName = a.service.name.en ?? a.service.slug;
   const failures = failedNotifications(a.communications);
   const now = new Date().toISOString();
+  const video = videoPanelState(a, now, settings.meetingLinkMode);
 
   return (
     <>
@@ -88,11 +95,18 @@ export default async function AppointmentPage({
             <h2 className={cardTitle}>Actions</h2>
             <ActionPanel appointment={a} serviceName={serviceName} now={now} />
           </Card>
+          {/* Beside the actions: adding the link may be all that is left. */}
+          {video === "meeting_link" && (
+            <Card as="section" className="order-1">
+              <h2 className={cardTitle}>Meeting link</h2>
+              <MeetingLinkCard appointment={a} />
+            </Card>
+          )}
           <Card as="section" className="order-3">
             <h2 className={cardTitle}>Private note</h2>
             <PrivateNote id={a.id} version={a.version} note={a.adminNote} />
           </Card>
-          {!a.videoRoom && (
+          {video === "none" && (
             <Card as="section" className="order-3">
               <h2 className={cardTitle}>Video session</h2>
               {a.meetingLink ? (

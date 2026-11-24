@@ -6,6 +6,7 @@ import type {
 } from "../api/types/appointments.ts";
 import {
   firstName,
+  meetingLinkError,
   roomWindow as withNbsp,
   videoPanelState,
 } from "./videoSession.ts";
@@ -32,9 +33,11 @@ const room = (patch: Partial<Room> = {}): Room => ({
 const detail = (
   videoRoom: Room | undefined,
   allowedActions: Action[] = [],
+  format: "online" | "in_person" = "online",
 ) => ({
   videoRoom,
   allowedActions,
+  format,
 });
 
 describe("videoPanelState", () => {
@@ -68,6 +71,48 @@ describe("videoPanelState", () => {
   it("is ended once the room has ended, whatever the clock says", () => {
     const a = detail(room({ state: "ended", endedAt: "2026-10-03T23:52:00Z" }));
     assert.equal(videoPanelState(a, "2026-10-03T23:55:00Z"), "ended");
+  });
+
+  it("offers the meeting link only for online sessions in manual mode", () => {
+    const now = "2026-10-03T22:00:00Z";
+    assert.equal(
+      videoPanelState(detail(undefined), now, "manual_link"),
+      "meeting_link",
+    );
+    assert.equal(
+      videoPanelState(detail(undefined), now, "vetmimi_room"),
+      "none",
+    );
+    assert.equal(
+      videoPanelState(detail(undefined, [], "in_person"), now, "manual_link"),
+      "none",
+    );
+    // A room made before the switch keeps its panel.
+    assert.equal(
+      videoPanelState(detail(room()), now, "manual_link"),
+      "before_window",
+    );
+  });
+});
+
+describe("meetingLinkError", () => {
+  it("accepts an https:// link, ignoring spaces around it", () => {
+    assert.equal(meetingLinkError(" https://meet.example/abc-def "), undefined);
+  });
+
+  it("refuses any other address", () => {
+    for (const link of [
+      "",
+      "http://meet.example/abc",
+      "meet.example",
+      "https://",
+    ]) {
+      assert.equal(
+        meetingLinkError(link),
+        "Enter a link that starts with https://.",
+        link,
+      );
+    }
   });
 });
 

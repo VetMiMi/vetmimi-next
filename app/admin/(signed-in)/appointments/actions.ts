@@ -23,6 +23,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const STALE =
   "This appointment has changed since you opened it. Refresh to see the latest.";
+const CANNOT_SET_LINK = "A meeting link cannot be set for this appointment.";
 
 // "Show more" on the list (#65): the next page for the same filters.
 export async function moreAppointments(
@@ -112,7 +113,14 @@ export async function changeStatus(
         apiPath`/admin/appointments/${id}/${step}`,
         statusBody(action, body),
       ),
-    { failure: failures[action], codes: { stale_version: STALE } },
+    {
+      failure: failures[action],
+      codes: {
+        stale_version: STALE,
+        // Only a confirm with a meeting link is refused this way.
+        action_not_allowed: `${CANNOT_SET_LINK} No status change was saved.`,
+      },
+    },
   );
   if (outcome.ok || outcome.code !== "invalid_transition") return outcome;
   const now = await adminCall((api) =>
@@ -136,6 +144,29 @@ export async function saveNote(id: string, version: number, note: string) {
     {
       failure: "The note was not saved. The previous note remains.",
       codes: { stale_version: STALE },
+    },
+  );
+}
+
+// No email goes out: emails not sent yet read the link when they go.
+export async function saveMeetingLink(
+  id: string,
+  version: number,
+  meetingLink: string,
+) {
+  return mutate(
+    `${BASE}/${id}`,
+    (api) =>
+      api.put<Detail>(apiPath`/admin/appointments/${id}/meeting-link`, {
+        version,
+        meetingLink: meetingLink.trim(),
+      }),
+    {
+      failure: "The link was not saved.",
+      codes: {
+        stale_version: STALE,
+        action_not_allowed: CANNOT_SET_LINK,
+      },
     },
   );
 }

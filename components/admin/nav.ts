@@ -2,6 +2,7 @@ import {
   CalendarBlank,
   ChatCircleText,
   ClockCountdown,
+  EnvelopeSimple,
   GearSix,
   Newspaper,
   Palette,
@@ -30,6 +31,12 @@ export const nav: NavItem[] = [
     label: "Appointments",
     tabLabel: "Appoint\u00ADments",
     icon: CalendarBlank,
+    roles: ["booking_admin"],
+  },
+  {
+    href: "/admin/emails",
+    label: "Emails",
+    icon: EnvelopeSimple,
     roles: ["booking_admin"],
   },
   {

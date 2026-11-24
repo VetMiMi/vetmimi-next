@@ -96,7 +96,7 @@ export default async function ArtOfWellness({
               className={frameImage}
               src={artSession}
               alt={t("hero.imageAlt")}
-              sizes="(max-width: 767px) 100vw, 480px"
+              sizes="(max-width: 767px) calc(100vw - 64px), 480px"
               preload
               placeholder="blur"
             />

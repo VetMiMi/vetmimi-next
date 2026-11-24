@@ -53,7 +53,7 @@ export default async function Services({
           className="flex flex-col gap-22 pt-5 pb-24 max-lg:gap-16 max-md:gap-14 max-md:pb-14"
           aria-label={t("index.listLabel")}
         >
-          {services.map((service) => {
+          {services.map((service, index) => {
             const name = t(`items.${service.slug}.name`);
             const steps: ServiceStep[] = t.raw(`items.${service.slug}.steps`);
             return (
@@ -65,7 +65,9 @@ export default async function Services({
                   <Image
                     src={service.image}
                     alt={t(`items.${service.slug}.imageAlt`)}
-                    sizes="(max-width: 767px) 90vw, 380px"
+                    sizes="(max-width: 767px) calc(100vw - 64px), 380px"
+                    // The first artwork is the largest thing on screen at load.
+                    preload={index === 0}
                     className="aspect-4/5 w-full rounded-[12px] object-cover object-[center_30%] max-md:aspect-4/3"
                   />
                 </figure>

@@ -48,7 +48,7 @@ export default async function Portfolio({
           {t("highlights.label")}
         </h2>
         <div className="mt-2 grid grid-cols-3 gap-[clamp(28px,4vw,48px)] max-lg:grid-cols-2 max-md:grid-cols-1">
-          {HIGHLIGHTS.map((item) => (
+          {HIGHLIGHTS.map((item, index) => (
             <article key={item.id}>
               {/* The same soft mat frame as About and Art of Wellness. */}
               <figure className="mb-[1.4rem] rounded-card bg-[#eee4e2] p-3">
@@ -56,8 +56,10 @@ export default async function Portfolio({
                   className="block aspect-[4/3] h-auto w-full rounded-xl object-cover"
                   src={item.img}
                   alt={t(`highlights.items.${item.id}.alt`)}
-                  sizes="(max-width: 767px) 100vw, 380px"
+                  sizes="(max-width: 767px) calc(100vw - 64px), 380px"
                   placeholder="blur"
+                  // The first card is the largest thing on screen at load.
+                  preload={index === 0}
                 />
               </figure>
               <p className={`${ed.text} font-script text-[1.1rem]`}>

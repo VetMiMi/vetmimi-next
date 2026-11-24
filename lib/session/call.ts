@@ -170,7 +170,14 @@ export class SessionCall {
         this.dispatch({ type: "other-left" });
         return;
       default:
-        if (this.link?.isFromNewPeer(message)) this.dropLink();
+        // A fresh link answers an offer from a new peer connection, and, on
+        // the polite side, one that crosses our own (lib/session/peer.ts).
+        if (
+          this.link?.isFromNewPeer(message) ||
+          (this.polite && this.link?.collides(message))
+        ) {
+          this.dropLink();
+        }
         if (!this.link && message.type === "offer") this.newLink();
         void this.link?.receive(message);
     }

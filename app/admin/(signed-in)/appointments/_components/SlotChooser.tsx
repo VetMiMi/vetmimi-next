@@ -82,7 +82,7 @@ export function SlotChooser({
     >
       <legend className={labelClass}>
         Date and time
-        <span aria-hidden="true" className="text-rose">
+        <span aria-hidden="true" className="text-label">
           {" "}
           *
         </span>

@@ -42,7 +42,7 @@ export function Requirement({
 }) {
   if (required)
     return (
-      <span aria-hidden="true" className="text-rose">
+      <span aria-hidden="true" className="text-label">
         {" *"}
       </span>
     );

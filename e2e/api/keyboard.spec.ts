@@ -1,7 +1,9 @@
 import type { Locator, Page } from "@playwright/test";
+import { todayIn } from "../../lib/zonedTime";
 import manage from "../../messages/en/manage.json";
 import {
   SERVICE,
+  TIMEZONE,
   adminCall,
   madeUpVisitor,
   managedRequest,
@@ -9,7 +11,7 @@ import {
   sql,
 } from "./backend";
 import { waitOutFillTime, words } from "./bookingFlow";
-import { expect, hydrated, signedIn, test } from "./fixtures";
+import { closeWithEscape, expect, hydrated, signedIn, test } from "./fixtures";
 
 // Booking UX §30 and §33 and brief §7 and §10 (#131): the main tasks done
 // with the keyboard alone, and dialogs that keep focus while open and give
@@ -60,8 +62,7 @@ async function checkDialogFocus(
     dialog.getByRole("button", { name: safeChoice, exact: true }),
   ).toBeFocused();
   await expectFocusTrapped(page, dialog);
-  await page.keyboard.press("Escape");
-  await expect(dialog).toBeHidden();
+  await closeWithEscape(page, dialog);
   await expect(trigger).toBeFocused();
 }
 
@@ -179,6 +180,30 @@ test.describe("Daw Mi with the keyboard alone", () => {
         id: appointment.id,
       }),
     ).toEqual([["confirmed"]]);
+  });
+
+  // Today, which no other spec books: they all start from tomorrow.
+  test("blocks a day", async ({ page }) => {
+    const today = todayIn(TIMEZONE);
+    await page.goto("/admin/availability");
+    const day = page.getByRole("grid").locator('button[aria-current="date"]');
+    await hydrated(day);
+    try {
+      await tabTo(page, day);
+      await page.keyboard.press("Enter");
+      await tabTo(page, page.getByRole("button", { name: "Mark as day off" }));
+      await page.keyboard.press("Enter");
+      await expect(day).toHaveAttribute("aria-label", /: day off$/);
+      await expect(day).toBeFocused();
+    } finally {
+      const blocks = await adminCall<{ items: { id: string }[] }>(
+        "GET",
+        `/admin/availability/blocks?from=${today}&to=${today}`,
+      );
+      for (const { id } of blocks.items) {
+        await adminCall("DELETE", `/admin/availability/blocks/${id}`);
+      }
+    }
   });
 
   test("pauses public booking", async ({ page }) => {

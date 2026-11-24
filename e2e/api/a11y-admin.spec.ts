@@ -8,6 +8,7 @@ import {
   sql,
 } from "./backend";
 import {
+  closeWithEscape,
   expect,
   expectNoAxeViolations,
   hydrated,
@@ -17,8 +18,10 @@ import {
 
 // Brief §10 on Daw Mi's screens (#131), at a phone's and a laptop's width,
 // against WCAG 2.2 AA with nothing allowed. The dashboard is left out until
-// its rebuild (#229) is merged.
+// its rebuild (#229) is merged. Transitions are instant, so a scan sees the
+// colours at rest, not halfway through a change.
 test.describe.configure({ timeout: 60_000 });
+test.use({ reducedMotion: "reduce" });
 
 // A page's own title, which its loading skeleton does not have.
 const titled = (page: Page, name: string) =>
@@ -30,8 +33,7 @@ async function scanDialog(page: Page, button: string, title: string) {
   const dialog = page.getByRole("dialog", { name: title });
   await expect(dialog).toBeVisible();
   await expectNoAxeViolations(page, `dialog "${title}"`);
-  await page.keyboard.press("Escape");
-  await expect(dialog).toBeHidden();
+  await closeWithEscape(page, dialog);
 }
 
 for (const width of [375, 1280]) {

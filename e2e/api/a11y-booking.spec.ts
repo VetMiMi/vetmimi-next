@@ -24,7 +24,10 @@ import { expect, expectNoAxeViolations, hydrated, test } from "./fixtures";
 // Brief §10 on the visitor's screens (#131): every /book step and result,
 // the management link and the session link, in both languages at a phone's
 // and a laptop's width, against WCAG 2.2 AA with nothing allowed.
+// Transitions are instant, so a scan sees the colours at rest, not halfway
+// through a change.
 test.describe.configure({ timeout: 60_000 });
+test.use({ reducedMotion: "reduce" });
 
 const manageWords = { en: manageEn, my: manageMy };
 const sessionWords = { en: sessionEn, my: sessionMy };
@@ -97,6 +100,7 @@ for (const width of [375, 1280]) {
           .getByRole("alert")
           .filter({ hasText: t.step2.timeLost });
         await expect(timeLost).toBeVisible();
+        await expect(page.getByRole("grid")).not.toHaveAttribute("aria-busy");
         await scan("S05, time lost");
 
         await timeLost.getByRole("radio").first().click();

@@ -62,6 +62,114 @@ jobs:
           path: playwright-report/
           retention-days: 14
 
+  # Booking, the management link, admin and video against the real Go API
+  # (e2e/api). The site is built as in web-e2e and only told where the API
+  # is when it starts.
+  web-e2e-api:
+    name: Web end-to-end with the API
+    needs: web
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: vetmimi
+          POSTGRES_PASSWORD: vetmimi
+          POSTGRES_DB: vetmimi
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U vetmimi"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      # Development mode logs emails instead of sending them and offers
+      # STUN only, so nothing leaves the runner.
+      ENV: development
+      DATABASE_URL: postgres://vetmimi:vetmimi@localhost:5432/vetmimi?sslmode=disable
+      REDIS_URL: redis://localhost:6379/0
+      PUBLIC_API_URL: http://localhost:8080
+      SITE_URL: http://localhost:3000
+      E2E_ADMIN_EMAIL: practitioner@example.com
+      E2E_EDITOR_EMAIL: editor@example.com
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build
+        env:
+          NODE_OPTIONS: --max-old-space-size=2048
+      - uses: actions/checkout@v5
+        with:
+          repository: VetMiMi/vetmimi-api
+          ref: main
+          path: vetmimi-api
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: vetmimi-api/go.mod
+          cache-dependency-path: vetmimi-api/go.sum
+      - name: Build the API
+        working-directory: vetmimi-api
+        run: go build -o "$RUNNER_TEMP/api" ./cmd/api
+      - name: Make test secrets
+        run: |
+          for name in SERVICE_KEY SIGNING_SECRET E2E_ADMIN_PASSWORD E2E_EDITOR_PASSWORD; do
+            value=$(openssl rand -hex 32)
+            echo "::add-mask::$value"
+            echo "$name=$value" >> "$GITHUB_ENV"
+          done
+          value=$(openssl rand -base64 32)
+          echo "::add-mask::$value"
+          echo "TOTP_ENCRYPTION_KEY=$value" >> "$GITHUB_ENV"
+      # Both modes migrate on start; an advisory lock makes one wait.
+      - name: Start the API and its worker
+        run: |
+          mkdir -p e2e-logs
+          "$RUNNER_TEMP/api" > e2e-logs/api.log 2>&1 &
+          "$RUNNER_TEMP/api" --mode worker > e2e-logs/worker.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl --silent --fail --output /dev/null http://localhost:8080/readyz && exit 0
+            sleep 1
+          done
+          cat e2e-logs/api.log
+          exit 1
+      # create-user reads passwords from a terminal only, so script gives it
+      # one. Two-step sign-in is not enforced yet, so --no-totp.
+      - name: Create a practitioner and a content editor
+        run: |
+          printf '%s\n%s\n' "$E2E_ADMIN_PASSWORD" "$E2E_ADMIN_PASSWORD" |
+            script -qec '"$RUNNER_TEMP/api" --mode create-user --email "$E2E_ADMIN_EMAIL" --name "Test Practitioner" --roles booking_admin --practitioner --no-totp' /dev/null
+          printf '%s\n%s\n' "$E2E_EDITOR_PASSWORD" "$E2E_EDITOR_PASSWORD" |
+            script -qec '"$RUNNER_TEMP/api" --mode create-user --email "$E2E_EDITOR_EMAIL" --name "Test Editor" --roles content_editor --no-totp' /dev/null
+      - name: Start the site
+        run: |
+          API_URL=http://localhost:8080 API_SERVICE_KEY="$SERVICE_KEY" \
+            pnpm start > e2e-logs/next.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl --silent --fail --output /dev/null http://localhost:3000/ && exit 0
+            sleep 1
+          done
+          cat e2e-logs/next.log
+          exit 1
+      - run: API_URL=http://localhost:8080 API_SERVICE_KEY="$SERVICE_KEY" pnpm e2e
+      - if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-api
+          path: |
+            playwright-report/
+            e2e-logs/
+          retention-days: 14
+
   dockerfile:
     name: Dockerfile lint
     runs-on: ubuntu-latest

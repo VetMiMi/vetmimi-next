@@ -94,3 +94,62 @@ jobs:
             fi
           done
           exit $status
+
+  lighthouse:
+    name: Lighthouse
+    needs: web
+    runs-on: ubuntu-latest
+    env:
+      # Build and serve the production branches of metadata and robots.
+      SITE_URL: http://localhost:3000
+      SITE_ENV: production
+      # Log every median, not only the failing ones.
+      LHCI_INCLUDE_PASSED_ASSERTIONS: "true"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        env:
+          NODE_OPTIONS: --max-old-space-size=2048
+      - name: Start the site
+        id: start
+        run: |
+          pnpm start > next-start.log 2>&1 &
+          for attempt in $(seq 1 60); do
+            curl --silent --fail --output /dev/null http://localhost:3000/ && exit 0
+            sleep 1
+          done
+          cat next-start.log
+          exit 1
+      - name: Audit on mobile
+        uses: treosh/lighthouse-ci-action@12.6.2
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+          artifactName: lighthouse-mobile
+      # Runs even when the mobile audit fails, so one run reports every page.
+      - name: Audit on desktop
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
+        uses: treosh/lighthouse-ci-action@12.6.2
+        with:
+          configPath: ./lighthouserc.desktop.json
+          uploadArtifacts: true
+          artifactName: lighthouse-desktop
+      # Budgets and assertions cannot share a pass, so this one ignores
+      # lighthouserc.json's assertions. Byte counts barely vary: one run.
+      - name: Check byte budgets
+        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
+        uses: treosh/lighthouse-ci-action@12.6.2
+        env:
+          LHCI_NO_LIGHTHOUSERC: "true"
+        with:
+          configPath: ./lighthouserc.json
+          budgetPath: ./budget.json
+          runs: 1
+          uploadArtifacts: true
+          artifactName: lighthouse-budgets

@@ -2,7 +2,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Btn } from "@/components/ui/Button";
 import { Notice, NoticeActions, noticeLink } from "./Notice";
-import { stepIntro, stepTitle } from "./booking";
+import { inlineLink, stepIntro, stepTitle } from "./booking";
 import type { BookableService, ServiceList } from "./booking";
 
 // Why the visitor cannot continue: the list failed to load, booking is
@@ -30,7 +30,7 @@ export function ServiceStep({
 
   return (
     <div>
-      <h2 className={stepTitle}>
+      <h2 tabIndex={-1} className={stepTitle}>
         {problem ? t("step1.unavailable.title") : t("step1.title")}
       </h2>
       {!problem && <p className={stepIntro}>{t("step1.intro")}</p>}
@@ -52,7 +52,7 @@ export function ServiceStep({
         <Notice tone="coral">
           {t.rich("step1.unavailable.paused", {
             link: (chunks) => (
-              <Link href="/contact" className="text-rose">
+              <Link href="/contact" className={inlineLink}>
                 {chunks}
               </Link>
             ),
@@ -96,7 +96,7 @@ export function ServiceStep({
           {t.rich("step1.workshops", {
             strong: (chunks) => <strong className="text-ink">{chunks}</strong>,
             link: (chunks) => (
-              <Link href="/contact" className="text-rose no-underline">
+              <Link href="/contact" className={inlineLink}>
                 {chunks}
               </Link>
             ),

@@ -239,7 +239,11 @@ export function DaysCalendar({
         days={days.filter((day) => selected.includes(day.date))}
         timezone={timezone}
         week={week}
-        onDone={() => setSelected([])}
+        // Back to the day: the panel's button that had focus goes with it.
+        onDone={() => {
+          setSelected([]);
+          buttons.current.get(focusDate)?.focus();
+        }}
       />
     </div>
   );

@@ -1,8 +1,9 @@
 import { WarningCircle } from "@phosphor-icons/react";
 
-// The details form's input, label and error, kept to the original /book look.
+// The details form's input, label and error. The input is the contact form's
+// box: its rose border and halo show focus, so the global ring is turned off.
 export const inputClass =
-  "w-full rounded-sm border border-ink/20 bg-white px-4 py-3 text-[1rem] text-ink outline-none";
+  "w-full rounded-control border border-input-border bg-white px-4 py-3 text-[1rem] text-ink outline-none transition-[border-color,box-shadow] duration-150 hover:border-muted focus:border-rose focus:shadow-focus-input";
 
 export const labelClass =
   "mb-[0.3rem] block text-[0.85rem] font-semibold text-ink";

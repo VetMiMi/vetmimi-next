@@ -227,9 +227,11 @@ export function PostEditor({
       )}
 
       {/* Sticky, and scrolled on its own when the workflow and channels
-          make it taller than the window. */}
+          make it taller than the window; focusable, so the keyboard can
+          scroll it too. */}
       <aside
         aria-label="Saving and workflow"
+        tabIndex={0}
         className="flex flex-col gap-6 min-[900px]:sticky min-[900px]:top-[104px] min-[900px]:max-h-[calc(100dvh-128px)] min-[900px]:overflow-y-auto"
       >
         <Card as="section">

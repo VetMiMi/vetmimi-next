@@ -11,7 +11,7 @@ import {
   type DetailsField,
   type Draft,
 } from "./bookingDraft";
-import { stepIntro, stepTitle, textButton } from "./booking";
+import { inlineLink, stepIntro, stepTitle, textButton } from "./booking";
 import type { BookableService } from "./booking";
 
 const FIELD_ORDER: DetailsField[] = [
@@ -85,7 +85,9 @@ export function DetailsStep({
 
   return (
     <div>
-      <h2 className={stepTitle}>{t("step3.title")}</h2>
+      <h2 tabIndex={-1} className={stepTitle}>
+        {t("step3.title")}
+      </h2>
       <p className={stepIntro}>{t("step3.intro")}</p>
 
       {showSummary && shown.length > 0 && (
@@ -110,7 +112,7 @@ export function DetailsStep({
       <div className="max-w-[520px]">
         <div className="mb-4">
           <label htmlFor="book-name" className={labelClass}>
-            {t("step3.name.label")} <span className="text-coral">*</span>
+            {t("step3.name.label")} <span className="text-action">*</span>
           </label>
           <input
             {...field("name")}
@@ -126,7 +128,7 @@ export function DetailsStep({
 
         <div className="mb-4">
           <label htmlFor="book-email" className={labelClass}>
-            {t("step3.email.label")} <span className="text-coral">*</span>
+            {t("step3.email.label")} <span className="text-action">*</span>
           </label>
           <input
             {...field("email")}
@@ -232,14 +234,14 @@ export function DetailsStep({
                       }
                       target="_blank"
                       rel="noopener"
-                      className="text-rose no-underline"
+                      className={inlineLink}
                     >
                       {chunks}
                       <span className="sr-only"> {tc("newTab")}</span>
                     </Link>
                   ),
                 })}{" "}
-                <span className="text-coral">*</span>
+                <span className="text-action">*</span>
               </span>
             </label>
             {errorFor(ack)}

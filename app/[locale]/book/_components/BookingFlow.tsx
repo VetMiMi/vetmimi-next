@@ -112,9 +112,17 @@ export function BookingFlow({
   const format = draft.format || service?.formats[0] || "online";
   const shownStep = service ? step : 1;
 
-  // A new step starts at its title, not halfway down the last one.
+  // A new step starts at its title, not halfway down the last one, and so
+  // does focus, which the last step's button took with it; a step that
+  // opens on an alert has already moved focus there.
   useEffect(() => {
-    if (shownOnce.current) column.current?.scrollIntoView({ block: "start" });
+    const area = column.current;
+    if (shownOnce.current && area) {
+      area.scrollIntoView({ block: "start" });
+      if (!area.contains(document.activeElement)) {
+        area.querySelector("h2")?.focus({ preventScroll: true });
+      }
+    }
     shownOnce.current = true;
   }, [shownStep]);
 

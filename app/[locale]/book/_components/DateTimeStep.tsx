@@ -72,7 +72,9 @@ export function DateTimeStep({
 
   return (
     <div>
-      <h2 className={stepTitle}>{t("step2.title")}</h2>
+      <h2 tabIndex={-1} className={stepTitle}>
+        {t("step2.title")}
+      </h2>
       <div className="mb-8 inline-block rounded-pill bg-indigo/7 px-4 py-[0.4rem] text-[0.85rem] text-indigo">
         {service.name}
       </div>
@@ -195,7 +197,7 @@ export function DateTimeStep({
 
       {slot && (
         <div className="mb-8 rounded-small bg-paper p-5 text-[0.9rem]">
-          <div className="mb-[0.3rem] text-[0.8rem] tracking-[0.06em] text-ink/53 uppercase">
+          <div className="mb-[0.3rem] text-[0.8rem] tracking-[0.06em] text-muted uppercase">
             {t("step2.selection")}
           </div>
           <div className="font-semibold text-ink">{service.name}</div>
@@ -215,7 +217,7 @@ export function DateTimeStep({
                 )
                 ?.focus()
             }
-            className="mt-2 cursor-pointer text-[0.9rem] text-rose underline underline-offset-2"
+            className="mt-2 cursor-pointer text-[0.9rem] text-label underline underline-offset-2"
           >
             {t("step2.change")}
           </button>

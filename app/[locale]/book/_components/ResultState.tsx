@@ -99,7 +99,7 @@ export function ResultState({ receipt }: { receipt: Receipt }) {
           <Btn href="/">{t("result.home")}</Btn>
           <Link
             href="/contact"
-            className="inline-flex items-center gap-[0.3rem] text-[0.9rem] text-rose no-underline"
+            className="inline-flex items-center gap-[0.3rem] text-[0.9rem] text-label no-underline"
           >
             {t("result.question")}
           </Link>

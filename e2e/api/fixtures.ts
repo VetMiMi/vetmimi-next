@@ -1,10 +1,13 @@
+import AxeBuilder from "@axe-core/playwright";
 import {
   test as base,
   expect,
   type BrowserContext,
   type BrowserContextOptions,
+  type Locator,
   type Page,
 } from "@playwright/test";
+import { WCAG_TAGS } from "../fixtures";
 import { visitorIp } from "./backend";
 
 type Fixtures = {
@@ -53,6 +56,48 @@ export function signedIn(role: "admin" | "editor") {
     ],
     origins: [],
   };
+}
+
+// The page as it is now against WCAG 2.2 AA. Soft, so a test that walks
+// through several states reports every one; each finding names the rule,
+// the element and why it fails.
+export async function expectNoAxeViolations(page: Page, state: string) {
+  const { violations } = await new AxeBuilder({ page })
+    .withTags(WCAG_TAGS)
+    .analyze();
+  const findings = violations.flatMap(({ id, nodes }) =>
+    nodes.map((node) => {
+      const reason = node.failureSummary?.split("\n")[1]?.trim();
+      return `${id} on ${node.target.join(" ")}: ${reason}`;
+    }),
+  );
+  expect.soft(findings, `axe: ${state}`).toEqual([]);
+}
+
+// Escape closes a dialog at once, but React hears of it in the dialog's
+// close event a moment later; a key press in between reaches a dialog React
+// still thinks is open. So this waits for that event.
+export async function closeWithEscape(page: Page, dialog: Locator) {
+  const watch = await dialog.evaluateHandle((element) => ({
+    closed: new Promise((done) =>
+      element.addEventListener("close", done, { once: true }),
+    ),
+  }));
+  await page.keyboard.press("Escape");
+  await watch.evaluate((it) => it.closed);
+  await expect(dialog).toBeHidden();
+}
+
+// Waits until React has hydrated an element, so a click or a key press
+// reaches its handler.
+export async function hydrated(target: Locator) {
+  await expect
+    .poll(() =>
+      target.evaluate((element) =>
+        Object.keys(element).some((key) => key.startsWith("__reactProps")),
+      ),
+    )
+    .toBe(true);
 }
 
 export { expect };

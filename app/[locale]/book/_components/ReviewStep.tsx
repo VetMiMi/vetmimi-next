@@ -6,7 +6,7 @@ import { Btn } from "@/components/ui/Button";
 import { FormTrap } from "@/components/ui/FormTrap";
 import { Notice, NoticeActions, noticeLink } from "./Notice";
 import { usePracticeFormat } from "@/components/booking/practiceFormat";
-import { stepIntro, stepTitle, textButton } from "./booking";
+import { inlineLink, stepIntro, stepTitle, textButton } from "./booking";
 import type { BookableService, ServiceList } from "./booking";
 import type { Draft } from "./bookingDraft";
 
@@ -56,7 +56,7 @@ export function ReviewStep({
 
   const row = (label: string, value: ReactNode, step: 1 | 2 | 3) => (
     <div className="flex items-start justify-between border-b border-ink/7 py-[0.875rem]">
-      <span className="mr-4 min-w-[100px] pt-[0.1rem] text-[0.8rem] tracking-[0.06em] text-ink/40 uppercase">
+      <span className="mr-4 min-w-[100px] pt-[0.1rem] text-[0.8rem] tracking-[0.06em] text-muted uppercase">
         {label}
       </span>
       {/* min-w-0 and anywhere-wrapping keep a long email inside the card at
@@ -68,7 +68,7 @@ export function ReviewStep({
           height. */}
       <button
         type="button"
-        className="-my-3 min-h-11 shrink-0 cursor-pointer pl-4 text-[0.82rem] text-rose underline"
+        className="-my-3 min-h-11 shrink-0 cursor-pointer pl-4 text-[0.82rem] text-label underline"
         disabled={sending}
         onClick={() => goToStep(step)}
       >
@@ -79,7 +79,9 @@ export function ReviewStep({
 
   return (
     <div>
-      <h2 className={stepTitle}>{t("step4.title")}</h2>
+      <h2 tabIndex={-1} className={stepTitle}>
+        {t("step4.title")}
+      </h2>
       <p className={stepIntro}>{t("step4.intro")}</p>
 
       <div ref={alertBox}>
@@ -145,12 +147,12 @@ export function ReviewStep({
           t("step4.rows.acknowledgements"),
           t.rich("step4.acknowledgements", {
             privacy: (chunks) => (
-              <Link href="/privacy" className="text-rose">
+              <Link href="/privacy" className={inlineLink}>
                 {chunks}
               </Link>
             ),
             policy: (chunks) => (
-              <Link href="/booking-policy" className="text-rose">
+              <Link href="/booking-policy" className={inlineLink}>
                 {chunks}
               </Link>
             ),

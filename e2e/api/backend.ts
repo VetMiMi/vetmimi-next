@@ -115,11 +115,16 @@ export async function freeSlots(from: string, to: string) {
   return availability.days.flatMap((day) => day.slots.map((s) => s.startsAt));
 }
 
-// A pending request, sent as the site sends one, at the first free time
-// from tomorrow: today's next time may start before the test is over.
-export async function requestAppointment(visitor = madeUpVisitor()) {
+// A pending request, sent as the site sends one, at `at` or else at the
+// first free time from tomorrow: today's next time may start before the
+// test is over.
+export async function requestAppointment(
+  visitor = madeUpVisitor(),
+  at?: string,
+) {
   const today = todayIn(TIMEZONE);
-  const [startsAt] = await freeSlots(addDays(today, 1), addDays(today, 14));
+  const startsAt =
+    at ?? (await freeSlots(addDays(today, 1), addDays(today, 14)))[0];
   const receipt = await publicCall<{ reference: string }>(
     "POST",
     "/public/appointments",
@@ -143,3 +148,44 @@ export async function requestAppointment(visitor = madeUpVisitor()) {
   const { reference } = receipt;
   return { id, reference, startsAt, version: Number(version), visitor };
 }
+
+// A pending request and the link its holder got by email.
+export async function managedRequest() {
+  const appointment = await requestAppointment();
+  const [[seed]] = sql(
+    "select encode(management_token_seed, 'hex') from appointments where id = :'id'",
+    { id: appointment.id },
+  );
+  return { ...appointment, link: `/manage/${linkToken("manage", seed)}` };
+}
+
+// A confirmed online appointment and its join link. Confirming creates the
+// video room, which opens shortly before the appointment starts.
+export async function confirmedRoom() {
+  const appointment = await requestAppointment();
+  await adminCall("POST", `/admin/appointments/${appointment.id}/confirm`, {
+    version: appointment.version,
+  });
+  const [[seed]] = sql(
+    "select encode(join_token_seed, 'hex') from video_rooms where appointment_id = :'id'",
+    { id: appointment.id },
+  );
+  const firstName = appointment.visitor.name.split(" ")[0];
+  return {
+    ...appointment,
+    firstName,
+    link: `/session/${linkToken("join", seed)}`,
+  };
+}
+
+const EVERY_DAY = [1, 2, 3, 4, 5, 6, 7].map((weekday) => ({
+  weekday,
+  startTime: "09:00",
+  endTime: "17:00",
+}));
+
+// Booking hours of 09:00–17:00 Sydney time every day, or none at all.
+export const setWeeklyHours = (open: boolean) =>
+  adminCall("PUT", "/admin/availability/rules", {
+    periods: open ? EVERY_DAY : [],
+  });

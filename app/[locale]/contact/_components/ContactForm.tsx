@@ -223,7 +223,7 @@ export function ContactForm({
                   onBlur={() => touch("enquiryType")}
                   className="peer pointer-events-none absolute size-px opacity-0"
                 />
-                <span className="inline-block cursor-pointer rounded-(--radius-pill) border border-ink/16 bg-white px-4 py-[9px] text-[0.88rem] transition-[background-color,border-color,color] duration-150 peer-checked:border-label peer-checked:bg-label peer-checked:text-white peer-focus-visible:shadow-focus-pill hover:border-rose">
+                <span className="inline-block cursor-pointer rounded-(--radius-pill) border border-input-border bg-white px-4 py-[9px] text-[0.88rem] transition-[background-color,border-color,color] duration-150 peer-checked:border-label peer-checked:bg-label peer-checked:text-white peer-focus-visible:border-rose peer-focus-visible:shadow-focus-pill hover:border-rose">
                   {t(`form.enquiryType.options.${type}`)}
                 </span>
               </label>

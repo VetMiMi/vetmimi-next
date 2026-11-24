@@ -164,7 +164,7 @@ jobs:
       - name: Repeat the video specs (temporary diagnostic)
         if: always()
         continue-on-error: true
-        run: API_URL=http://localhost:8080 API_SERVICE_KEY="$SERVICE_KEY" pnpm exec playwright test --project=api-session --repeat-each=4 --retries=0 --reporter=list --output=test-results-repeat
+        run: API_URL=http://localhost:8080 API_SERVICE_KEY="$SERVICE_KEY" pnpm exec playwright test --project=api-session --repeat-each=6 --retries=0 --reporter=list --output=test-results-repeat
       - if: always()
         uses: actions/upload-artifact@v4
         with:

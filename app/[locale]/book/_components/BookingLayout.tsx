@@ -22,7 +22,7 @@ export function BookingLayout({
         <div className="mx-auto max-w-[1240px]">
           <Link
             href="/services"
-            className="mb-5 inline-flex items-center gap-[0.3rem] text-[0.82rem] text-ink/40 no-underline"
+            className="mb-5 inline-flex items-center gap-[0.3rem] text-[0.82rem] text-muted no-underline"
           >
             {t("page.back")}
           </Link>

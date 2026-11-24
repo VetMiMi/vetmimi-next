@@ -148,7 +148,7 @@ All variables are server-only (there is no `NEXT_PUBLIC_`). Preview values live 
 
   These checks run in CI. Known failures are listed in `e2e/axe-baseline.json`. The baseline only ratchets down: a new failure fails the job, and so does a listed failure that has been fixed until its entry is removed. When the job fails, download the `playwright-report` artifact from the run's summary page and open `index.html` (or run `pnpm exec playwright show-report <folder>`). Each axe test includes an `axe-violations.json` attachment naming the rule, its impact and the elements involved.
 
-- **End-to-end with the API:** `e2e/api` drives the site against the real Go API: booking a request, the management link, confirming and declining in admin, and a video session between two browsers. The specs seed through the API, check the CI database with `psql`, and derive management and join links from their stored seeds as the API does, so the API needs no test-only routes.
+- **End-to-end with the API:** `e2e/api` drives the site against the real Go API: booking a request, the management link, confirming and declining in admin, and a video session between two browsers. The specs seed through the API, check the CI database with `psql`, and derive management and join links from their stored seeds as the API does, so the API needs no test-only routes. axe also checks every booking step and result, the management and session links and the admin screens there, at 375 and 1280 px (the public ones in English and Burmese), with nothing allowed; a failure names the rule, the element and why. `keyboard.spec.ts` does a booking request, a cancellation, a confirmation, blocking a day and pausing booking with the keyboard alone.
 - **CI** (`.github/workflows/ci.yml`) runs on every PR and every push to `main`, with five jobs:
   - **Web checks:** the API types match the pinned version, then lint, format, types, i18n, unit tests and build
   - **Web end-to-end:** the Playwright and axe checks above
@@ -183,7 +183,7 @@ Both build arguments are also the image's defaults at run time. The host supplie
 
 The public site, booking, manage links, the admin console (appointments, availability, services, enquiries, posts, settings) and video sessions are built and live. Before launch, the remaining work is:
 
-- the accessibility issues still in the baseline
+- a screen-reader and 200 % zoom check of booking and admin by a person (#131)
 - a review of the Burmese text by a native speaker
 - the legal pages
 - an admin dashboard and CSV export

@@ -161,18 +161,12 @@ jobs:
           cat e2e-logs/next.log
           exit 1
       - run: API_URL=http://localhost:8080 API_SERVICE_KEY="$SERVICE_KEY" pnpm e2e
-      - name: Repeat the video specs (temporary diagnostic)
-        if: always()
-        continue-on-error: true
-        run: API_URL=http://localhost:8080 API_SERVICE_KEY="$SERVICE_KEY" pnpm exec playwright test --project=api-session --repeat-each=6 --retries=0 --reporter=list --output=test-results-repeat
-      - if: always()
+      - if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-api
           path: |
             playwright-report/
-            test-results/
-            test-results-repeat/
             e2e-logs/
           retention-days: 14
 

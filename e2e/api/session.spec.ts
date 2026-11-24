@@ -2,9 +2,6 @@ import { randomBytes } from "node:crypto";
 import type { Page, WebSocketRoute } from "@playwright/test";
 import { adminCall, linkToken, requestAppointment, sql } from "./backend";
 import { expect, signedIn, test } from "./fixtures";
-import { printCalls, recordCall } from "./rtc-log";
-
-test.afterEach(async ({}, testInfo) => printCalls(testInfo));
 
 // Video sessions through the API's signalling (#85, ADR-007): the client on
 // /session/<token>, Daw Mi on the appointment's session page. The project
@@ -38,13 +35,11 @@ async function openRoom() {
 }
 
 async function clientJoins(page: Page, link: string) {
-  await recordCall(page);
   await page.goto(link);
   await page.getByRole("button", { name: "Join session" }).click();
 }
 
 async function practitionerJoins(page: Page, id: string) {
-  await recordCall(page);
   await page.goto(`/admin/appointments/${id}/session`);
   await page.getByRole("button", { name: "Start session" }).click();
 }

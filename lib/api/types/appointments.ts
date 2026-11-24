@@ -104,6 +104,13 @@ export type Communication = {
   createdAt: string;
 };
 
+// One email in GET /admin/communications, with the appointment it is about.
+export type CommunicationListItem = Communication & {
+  appointmentId: string;
+  appointmentReference: string;
+  visitorName: string;
+};
+
 export type VideoRoomSummary = {
   id: string;
   state: "waiting" | "in_session" | "ended";

@@ -35,19 +35,22 @@ export function PublicBookingSwitch({ enabled }: { enabled: boolean }) {
           <Notice tone="error">{failure}</Notice>
         </div>
       )}
+      {/* Never disabled while saving: focus would fall off a disabled box,
+          and the dialog's button already says "Pausing…". */}
       <Checkbox
         label="Public booking is open"
         name="publicBookingEnabled"
         checked={enabled}
-        disabled={pending}
         help={
           enabled
             ? "Visitors can request appointments in the hours you set."
             : "Paused. Visitors see that booking is not available and are pointed to Contact."
         }
-        onChange={(event) =>
-          event.target.checked ? set(true) : setAsking(true)
-        }
+        onChange={(event) => {
+          if (pending) return;
+          if (event.target.checked) set(true);
+          else setAsking(true);
+        }}
       />
       <Dialog
         open={asking}

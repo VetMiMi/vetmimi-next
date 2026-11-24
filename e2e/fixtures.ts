@@ -3,7 +3,13 @@ import { test as base, expect, type Response } from "@playwright/test";
 import baselineFile from "./axe-baseline.json";
 
 // WCAG 2.2 level AA, the bar brief §10 sets for every public page.
-const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
+export const WCAG_TAGS = [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21a",
+  "wcag21aa",
+  "wcag22aa",
+];
 
 // Known failures, each with a note naming the issue that fixes it. A check
 // fails both when something new breaks and when a listed failure no longer

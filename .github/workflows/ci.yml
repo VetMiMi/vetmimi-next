@@ -132,23 +132,6 @@ jobs:
           configPath: ./lighthouserc.json
           uploadArtifacts: true
           artifactName: lighthouse-mobile
-      # Temporary, while tuning: what each page loads before its largest paint.
-      - name: Show mobile LCP details
-        if: ${{ !cancelled() && steps.start.outcome == 'success' }}
-        run: |
-          jq -r -s '
-            group_by(.finalDisplayedUrl // .finalUrl)[]
-            | sort_by(.audits["largest-contentful-paint"].numericValue)
-            | .[(length / 2 | floor)] as $r
-            | ($r.audits.metrics.details.items[0]) as $m
-            | "== \($r.finalDisplayedUrl // $r.finalUrl): FCP \($m.firstContentfulPaint) LCP \($m.largestContentfulPaint) SI \($m.speedIndex) (observed FCP \($m.observedFirstContentfulPaint) LCP \($m.observedLargestContentfulPaint))",
-              "   element: \(($r.audits["largest-contentful-paint-element"].details.items[0].items[0].node.snippet // "-")[0:200])",
-              "   phases: \([$r.audits["largest-contentful-paint-element"].details.items[1].items[]? | "\(.phase) \(.timing|floor)"] | join(", "))",
-              "   bytes: \([$r.audits["resource-summary"].details.items[] | "\(.resourceType) \(.transferSize) (\(.requestCount))"] | join(", "))",
-              ($r.audits["network-requests"].details.items[]
-                | select(.transferSize > 1500)
-                | "   \(.networkRequestTime|floor)-\(.networkEndTime|floor)ms \(.transferSize) \(.resourceType) \(.priority) \(.url | sub("^http://localhost:3000"; "") | sub("^/_next/image\\?url=%2F_next%2Fstatic%2Fmedia%2F"; "img ") | sub("^/_next/static/"; "") | .[0:110])")
-          ' .lighthouseci/lhr-*.json
       # Runs even when the mobile audit fails, so one run reports every page.
       - name: Audit on desktop
         if: ${{ !cancelled() && steps.start.outcome == 'success' }}

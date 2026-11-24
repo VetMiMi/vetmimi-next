@@ -1,12 +1,6 @@
 {
-  "axe": {
-    "/book en": ["color-contrast"],
-    "/book my": ["color-contrast"]
-  },
-  "notes": {
-    "/book en": "With no API in CI the page shows its 'booking unavailable' state; the remaining contrast finding is the brief §2 colour pass on the booking flow, parked for consolidation. The link-in-text-block finding was fixed by the API-backed rebuild (#158).",
-    "/book my": "As /book en."
-  },
+  "axe": {},
+  "notes": {},
   "keyboard": [],
   "layout": []
 }

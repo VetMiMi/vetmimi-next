@@ -39,4 +39,4 @@ export function NoticeActions({ children }: { children: ReactNode }) {
 }
 
 export const noticeLink =
-  "cursor-pointer text-[0.9rem] font-semibold text-rose underline underline-offset-2";
+  "cursor-pointer text-[0.9rem] font-semibold text-label underline underline-offset-2";

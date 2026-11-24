@@ -13,7 +13,10 @@ export type ServiceList = PublicBookableServiceList;
 export type Receipt = AppointmentRequestReceipt;
 
 // The quiet text button used for Back and Edit.
-export const textButton = "cursor-pointer text-[0.9rem] text-ink/53";
+export const textButton = "cursor-pointer text-[0.9rem] text-muted";
+
+// Underlined: inside a sentence, its colour alone is too close to the text.
+export const inlineLink = "text-label underline underline-offset-2";
 
 export const stepTitle = "mb-2 text-[clamp(1.6rem,3vw,2.2rem)] text-ink";
 

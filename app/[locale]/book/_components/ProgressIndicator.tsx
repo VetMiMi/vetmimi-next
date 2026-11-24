@@ -17,13 +17,13 @@ export function ProgressIndicator({ step }: { step: number }) {
         const circle = isActive
           ? "bg-indigo text-white"
           : isComplete
-            ? "bg-rose text-white"
+            ? "bg-label text-white"
             : "border border-ink/20 bg-paper text-ink";
         const label = isActive
           ? "font-semibold text-indigo"
           : isComplete
-            ? "text-rose"
-            : "text-ink/40";
+            ? "text-label"
+            : "text-muted";
 
         return (
           <div key={s.n} className="flex min-w-0 justify-center">

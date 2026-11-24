@@ -211,7 +211,7 @@ function DayButton({
   const tone = selected
     ? "border-indigo bg-indigo text-white"
     : available
-      ? "border-transparent bg-coral/9 text-coral"
+      ? "border-transparent bg-coral/9 text-action"
       : "border-transparent text-ink/20";
   const cursor = available ? "cursor-pointer" : "cursor-default";
   const weight = available || today ? "font-semibold" : "font-normal";

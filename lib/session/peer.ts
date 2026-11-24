@@ -14,8 +14,9 @@ type PeerOptions = {
 
 // One RTCPeerConnection with "perfect negotiation" (the W3C pattern):
 // either side may offer at any time, and a collision is settled by the
-// impolite side ignoring the other's offer while the polite side rolls
-// its own back.
+// impolite side ignoring the other's offer. The polite side answers it from
+// a fresh connection instead of rolling its own offer back (SessionCall):
+// after a rollback, Chrome can gather no ICE candidates at all.
 export class PeerLink {
   readonly pc: RTCPeerConnection;
   private makingOffer = false;
@@ -73,6 +74,14 @@ export class PeerLink {
     return sdpFingerprint(current) !== sdpFingerprint(message.sdp);
   }
 
+  // An offer that crosses this side's own, still being made or unanswered.
+  collides(message: SignalMessage): boolean {
+    return (
+      message.type === "offer" &&
+      (this.makingOffer || this.pc.signalingState !== "stable")
+    );
+  }
+
   async receive(message: SignalMessage) {
     const { pc } = this;
     if (message.type === "ice") {
@@ -83,10 +92,7 @@ export class PeerLink {
       }
       return;
     }
-    const collision =
-      message.type === "offer" &&
-      (this.makingOffer || pc.signalingState !== "stable");
-    this.ignoreOffer = !this.options.polite && collision;
+    this.ignoreOffer = !this.options.polite && this.collides(message);
     if (this.ignoreOffer) return;
     try {
       await pc.setRemoteDescription({ type: message.type, sdp: message.sdp });

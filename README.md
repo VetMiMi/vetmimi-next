@@ -148,12 +148,18 @@ All variables are server-only (there is no `NEXT_PUBLIC_`). Preview values live 
 
   These checks run in CI. Known failures are listed in `e2e/axe-baseline.json`. The baseline only ratchets down: a new failure fails the job, and so does a listed failure that has been fixed until its entry is removed. When the job fails, download the `playwright-report` artifact from the run's summary page and open `index.html` (or run `pnpm exec playwright show-report <folder>`). Each axe test includes an `axe-violations.json` attachment naming the rule, its impact and the elements involved.
 
-- **CI** (`.github/workflows/ci.yml`) runs on every PR and every push to `main`, with four jobs:
+- **End-to-end with the API:** `e2e/api` drives the site against the real Go API: booking a request, the management link, confirming and declining in admin, and a video session between two browsers. The specs seed through the API, check the CI database with `psql`, and derive management and join links from their stored seeds as the API does, so the API needs no test-only routes.
+- **CI** (`.github/workflows/ci.yml`) runs on every PR and every push to `main`, with five jobs:
   - **Web checks:** the API types match the pinned version, then lint, format, types, i18n, unit tests and build
   - **Web end-to-end:** the Playwright and axe checks above
+  - **Web end-to-end with the API:** checks out `VetMiMi/vetmimi-api` at `main`, runs it and its worker beside PostgreSQL 17 and Redis 7, creates a test practitioner and a content editor, then runs `e2e/api` against the production build
   - **Dockerfile lint:** hadolint on the `Dockerfile`
   - **Commit checks:** every commit message follows the Conventional Commits format
 - **Image check** (`.github/workflows/image.yml`) builds the Docker image on PRs that change it or its dependencies, starts it, and checks `/api/health` and image resizing.
+
+### Run the end-to-end tests
+
+Both end-to-end suites run in CI only, never on the development laptop: a browser beside a production build, plus the API, its worker, PostgreSQL and Redis for `e2e/api`, needs more of its 8 GB than it can spare. Push a branch and read the two jobs on the pull request. When one fails, download its artifact from the run's summary page: `playwright-report`, or `playwright-report-api`, which also holds the API, worker and site logs.
 
 ## Self-hosting
 
@@ -177,7 +183,6 @@ Both build arguments are also the image's defaults at run time. The host supplie
 
 The public site, booking, manage links, the admin console (appointments, availability, services, enquiries, posts, settings) and video sessions are built and live. Before launch, the remaining work is:
 
-- end-to-end tests for flows that use the API
 - the accessibility issues still in the baseline
 - a review of the Burmese text by a native speaker
 - the legal pages

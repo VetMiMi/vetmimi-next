@@ -88,6 +88,7 @@ export default function ServiceDetail({ slug }: { slug: string }) {
               src={service.image}
               alt={t(`${item}.imageAlt`)}
               sizes="(max-width: 767px) calc(100vw - 64px), 400px"
+              preload
               className="block h-[280px] w-full rounded-[90px_12px_12px_12px] object-cover object-[center_30%] max-md:h-[200px]"
             />
             <figcaption className="px-1 pt-2.5 text-[0.7rem] tracking-[0.035em] text-(--accent)">

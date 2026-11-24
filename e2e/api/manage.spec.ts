@@ -1,20 +1,10 @@
 import { randomBytes } from "node:crypto";
-import { linkToken, requestAppointment, sql } from "./backend";
+import { managedRequest, sql } from "./backend";
 import { expect, test } from "./fixtures";
 
 // The appointment management link through Next and the API (#127). Booking
 // UX §7: an invalid or expired link shows a neutral page that never says
 // whether an appointment or a person exists.
-
-// A pending request and the link its holder got by email.
-async function managedRequest() {
-  const appointment = await requestAppointment();
-  const [[seed]] = sql(
-    "select encode(management_token_seed, 'hex') from appointments where id = :'id'",
-    { id: appointment.id },
-  );
-  return { ...appointment, link: `/manage/${linkToken("manage", seed)}` };
-}
 
 test.describe("management link: its holder can view, cancel and ask to reschedule", () => {
   test("view, then cancel after confirming", async ({ page }) => {

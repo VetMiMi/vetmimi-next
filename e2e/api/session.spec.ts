@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import type { Page, WebSocketRoute } from "@playwright/test";
-import { adminCall, linkToken, requestAppointment, sql } from "./backend";
+import { confirmedRoom, sql } from "./backend";
 import { expect, signedIn, test } from "./fixtures";
 
 // Video sessions through the API's signalling (#85, ADR-007): the client on
@@ -10,28 +10,15 @@ test.describe.configure({ timeout: 90_000 });
 
 const CONNECT = { timeout: 20_000 };
 
-// A confirmed online appointment whose room is open now: confirming creates
-// the room, and its window is moved to have opened a minute ago.
+// A confirmed online appointment whose room is open now: its window is
+// moved to have opened a minute ago.
 async function openRoom() {
-  const appointment = await requestAppointment();
-  await adminCall("POST", `/admin/appointments/${appointment.id}/confirm`, {
-    version: appointment.version,
-  });
-  const id = { id: appointment.id };
+  const room = await confirmedRoom();
   sql(
     "update video_rooms set opens_at = now() - interval '1 minute' where appointment_id = :'id'",
-    id,
+    { id: room.id },
   );
-  const [[seed]] = sql(
-    "select encode(join_token_seed, 'hex') from video_rooms where appointment_id = :'id'",
-    id,
-  );
-  const firstName = appointment.visitor.name.split(" ")[0];
-  return {
-    ...appointment,
-    firstName,
-    link: `/session/${linkToken("join", seed)}`,
-  };
+  return room;
 }
 
 async function clientJoins(page: Page, link: string) {

@@ -1,6 +1,4 @@
-import { adminCall, env, signIn } from "./backend";
-
-const EVERY_WEEKDAY = [1, 2, 3, 4, 5, 6, 7];
+import { adminCall, env, setWeeklyHours, signIn } from "./backend";
 
 // Runs once before the API-backed specs. Each account signs in only here,
 // because the API allows ten sign-in attempts an hour per email; the specs
@@ -19,11 +17,5 @@ export default async function globalSetup() {
     minNoticeHours: 0,
     publicBookingEnabled: true,
   });
-  await adminCall("PUT", "/admin/availability/rules", {
-    periods: EVERY_WEEKDAY.map((weekday) => ({
-      weekday,
-      startTime: "09:00",
-      endTime: "17:00",
-    })),
-  });
+  await setWeeklyHours(true);
 }

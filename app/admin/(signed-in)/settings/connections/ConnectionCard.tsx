@@ -32,7 +32,7 @@ export function ConnectionCard({
   about: string;
   status?: ConnectionStatus;
   loadError?: string;
-  facts?: [label: string, value: string][];
+  facts?: [label: string, value: string, href?: string][];
   disconnectNote: string;
   children?: React.ReactNode;
 }) {
@@ -60,12 +60,26 @@ export function ConnectionCard({
 
       {facts.length > 0 && (
         <dl className="grid gap-x-8 gap-y-5 sm:grid-cols-2">
-          {facts.map(([label, value]) => (
+          {facts.map(([label, value, href]) => (
             <div key={label} className="min-w-0">
               <dt className="mb-1 text-[0.75rem] font-semibold tracking-[0.1em] text-muted uppercase">
                 {label}
               </dt>
-              <dd className="text-[0.95rem] break-words">{value}</dd>
+              <dd className="text-[0.95rem] break-words">
+                {href ? (
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-4 transition-colors duration-150 hover:text-indigo motion-reduce:transition-none"
+                  >
+                    {value}
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                ) : (
+                  value
+                )}
+              </dd>
             </div>
           ))}
         </dl>

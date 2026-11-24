@@ -266,7 +266,8 @@ Body is `font-size: 17px; line-height: 1.7` (spec: "Body 17-18px desktop;
 
 Admin scale: page title = booking step title; section title = `1.35rem`
 Fraunces; body and table cells `0.95rem` Manrope (`.service-practical dd`);
-labels, buttons, eyebrows and table heads as above.
+labels, buttons, eyebrows and table heads as above; dashboard counts = card
+title size in Manrope, weight 600.
 
 ## 5. Spacing, radii, borders, shadows, widths
 
